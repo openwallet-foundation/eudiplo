@@ -1,5 +1,6 @@
 @if (trustList) {
   <div fxLayout="column" fxFlex fxLayoutGap="24px">
+    <app-config-ownership-notice kind="TrustList" [resourceId]="trustList.id" />
     <!-- Header -->
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Trust List Details</h2>
@@ -7,13 +8,28 @@
         <button mat-icon-button [routerLink]="['../']" matTooltip="Back to list">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['edit']" matTooltip="Edit list">
+        <button
+          mat-icon-button
+          [routerLink]="['edit']"
+          matTooltip="Edit list"
+          appConfigManaged
+          managedKind="TrustList"
+          [managedResourceId]="trustList.id"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button matTooltip="Download backup" (click)="download()">
           <mat-icon>download</mat-icon>
         </button>
-        <button mat-icon-button (click)="delete()" matTooltip="Delete list" color="warn">
+        <button
+          mat-icon-button
+          (click)="delete()"
+          matTooltip="Delete list"
+          color="warn"
+          appConfigManaged
+          managedKind="TrustList"
+          [managedResourceId]="trustList.id"
+        >
           <mat-icon>delete</mat-icon>
         </button>
       </div>

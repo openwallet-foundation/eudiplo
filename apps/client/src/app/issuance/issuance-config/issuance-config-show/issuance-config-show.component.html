@@ -1,5 +1,6 @@
 @if (config) {
   <div fxLayout="column" fxFlex fxLayoutGap="24px">
+    <app-config-ownership-notice kind="IssuanceConfig" resourceId="issuance" />
     <!-- Header -->
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Issuance Configuration</h2>
@@ -7,7 +8,14 @@
         <button mat-icon-button [routerLink]="['../']" matTooltip="Back to list">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['edit']" matTooltip="Edit configuration">
+        <button
+          mat-icon-button
+          [routerLink]="['edit']"
+          matTooltip="Edit configuration"
+          appConfigManaged
+          managedKind="IssuanceConfig"
+          managedResourceId="issuance"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button (click)="downloadConfig()" matTooltip="Download configuration">

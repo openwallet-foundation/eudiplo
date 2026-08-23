@@ -66,6 +66,17 @@
           <span matListItemTitle>Connection Settings</span>
         </mat-list-item>
 
+        @if (hasRole('tenants:manage')) {
+          <mat-list-item
+            [routerLink]="['/settings/config-portability']"
+            routerLinkActive="active-link"
+            (click)="closeSidenavOnMobile()"
+          >
+            <mat-icon matListItemIcon>move_up</mat-icon>
+            <span matListItemTitle>Config Portability</span>
+          </mat-list-item>
+        }
+
         <!-- Administration Section -->
         @if (hasRole(['tenants:manage', 'clients:manage', 'users:manage'])) {
           <mat-divider></mat-divider>

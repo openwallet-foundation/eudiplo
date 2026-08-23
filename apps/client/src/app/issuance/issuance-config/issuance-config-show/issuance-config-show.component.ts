@@ -18,6 +18,8 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { IssuanceConfig } from '@eudiplo/sdk-core';
 import { downloadJsonFile } from '../../../common/download-json.util';
 import { IssuanceConfigService } from '../issuance-config.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 interface ChainedAuthorizationServerView {
   enabled: boolean;
@@ -63,6 +65,8 @@ interface AuthorizationServerRow {
     FlexLayoutModule,
     RouterModule,
     ClipboardModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './issuance-config-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

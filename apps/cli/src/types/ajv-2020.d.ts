@@ -6,6 +6,8 @@ declare module "ajv/dist/2020" {
 
     export default class Ajv2020 extends Ajv {
         constructor(options?: Options);
-        compile<T = unknown>(schema: AnySchemaObject): import("ajv").ValidateFunction<T>;
+        compile<T = unknown>(
+            schema: AnySchemaObject,
+        ): import("ajv").ValidateFunction<T>;
     }
 }

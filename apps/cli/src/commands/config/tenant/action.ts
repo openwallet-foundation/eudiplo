@@ -1,4 +1,12 @@
-import { access, mkdir, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
+import {
+    access,
+    mkdir,
+    readFile,
+    readdir,
+    rm,
+    stat,
+    writeFile,
+} from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline/promises";
 import { readStringFlag } from "../../../options.js";
@@ -12,7 +20,6 @@ import { validateTenantConfig } from "../validate/action.js";
 const tenantDirectories = [
     "clients",
     "key-chains",
-    "certs",
     "attribute-providers",
     "webhook-endpoints",
     "issuance/credentials",
@@ -78,10 +85,14 @@ async function validateTenant(
 
     const tenantId = parsed.positionals[0];
     const path = tenantId ? join(configRoot, tenantId) : configRoot;
-    return validateTenantConfig(tenantId ? "tenant" : "tenants", {
-        ...parsed,
-        positionals: [tenantId ? "tenant" : "tenants", path],
-    }, context);
+    return validateTenantConfig(
+        tenantId ? "tenant" : "tenants",
+        {
+            ...parsed,
+            positionals: [tenantId ? "tenant" : "tenants", path],
+        },
+        context,
+    );
 }
 
 function resolveConfigRoot(
@@ -92,7 +103,9 @@ function resolveConfigRoot(
     const explicitDirectory = readStringFlag(parsed.flags, "config-directory");
     const instanceName = readStringFlag(parsed.flags, "instance");
     if (explicitDirectory && instanceName) {
-        throw new Error("Use either --instance or --config-directory, not both.");
+        throw new Error(
+            "Use either --instance or --config-directory, not both.",
+        );
     }
     if (explicitDirectory) {
         return resolve(context.cwd, explicitDirectory);
@@ -122,7 +135,9 @@ async function listTenants(
     context: CommandContext,
 ): Promise<number> {
     if (!(await exists(configRoot))) {
-        context.stdout.write(`No local tenant configurations in ${configRoot}.\n`);
+        context.stdout.write(
+            `No local tenant configurations in ${configRoot}.\n`,
+        );
         return 0;
     }
 
@@ -141,13 +156,17 @@ async function listTenants(
     tenants.sort((left, right) => left.id.localeCompare(right.id));
 
     if (tenants.length === 0) {
-        context.stdout.write(`No local tenant configurations in ${configRoot}.\n`);
+        context.stdout.write(
+            `No local tenant configurations in ${configRoot}.\n`,
+        );
         return 0;
     }
 
     context.stdout.write(`Local tenant configurations in ${configRoot}:\n`);
     for (const tenant of tenants) {
-        context.stdout.write(`- ${tenant.id}${tenant.name ? ` (${tenant.name})` : ""}\n`);
+        context.stdout.write(
+            `- ${tenant.id}${tenant.name ? ` (${tenant.name})` : ""}\n`,
+        );
     }
     return 0;
 }
@@ -172,14 +191,22 @@ async function createTenant(
         }
         validateTenantId(tenantId);
 
-        const template = parseTemplate(readStringFlag(parsed.flags, "template") ?? "empty");
+        const template = parseTemplate(
+            readStringFlag(parsed.flags, "template") ?? "empty",
+        );
         const defaultName = template === "demo" ? "Demo Tenant" : tenantId;
         const defaultDescription =
-            template === "demo" ? "The demo tenant for the EUDI Wallet" : undefined;
+            template === "demo"
+                ? "The demo tenant for the EUDI Wallet"
+                : undefined;
 
         let name = readStringFlag(parsed.flags, "name");
         if (!name && context.interactive === true) {
-            name = await promptWithDefault(prompter.ask, "Display name", defaultName);
+            name = await promptWithDefault(
+                prompter.ask,
+                "Display name",
+                defaultName,
+            );
         }
         name ??= defaultName;
 
@@ -206,7 +233,9 @@ async function createTenant(
         context.stdout.write(`Created tenant configuration ${tenantId}.\n`);
         context.stdout.write(`Directory: ${tenantPath}\n`);
         if (template === "demo") {
-            context.stdout.write("Template: demo (bundled private keys use the db provider)\n");
+            context.stdout.write(
+                "Template: demo (bundled private keys use the db provider)\n",
+            );
         }
         context.stdout.write(
             `Validate with: eudiplo config validate tenant ${tenantPath}\n`,
@@ -260,7 +289,9 @@ async function removeTenant(
 
     await rm(tenantPath, { recursive: true, force: false });
     context.stdout.write(`Removed local tenant configuration ${tenantId}.\n`);
-    context.stdout.write("The tenant in a running EUDIPLO instance was not deleted.\n");
+    context.stdout.write(
+        "The tenant in a running EUDIPLO instance was not deleted.\n",
+    );
     return 0;
 }
 
@@ -281,10 +312,14 @@ async function writeTenantInfo(
     description?: string,
 ): Promise<void> {
     const info = description ? { name, description } : { name };
-    await writeFile(join(tenantPath, "info.json"), `${JSON.stringify(info, null, 4)}\n`, {
-        encoding: "utf8",
-        mode: 0o600,
-    });
+    await writeFile(
+        join(tenantPath, "info.json"),
+        `${JSON.stringify(info, null, 4)}\n`,
+        {
+            encoding: "utf8",
+            mode: 0o600,
+        },
+    );
 }
 
 async function assertTenantTargetIsEmpty(tenantPath: string): Promise<void> {
@@ -294,7 +329,9 @@ async function assertTenantTargetIsEmpty(tenantPath: string): Promise<void> {
             throw new Error(`Tenant path points to a file: ${tenantPath}`);
         }
         if ((await readdir(tenantPath)).length > 0) {
-            throw new Error(`Tenant configuration already exists: ${tenantPath}`);
+            throw new Error(
+                `Tenant configuration already exists: ${tenantPath}`,
+            );
         }
     } catch (error) {
         if (isNodeError(error) && error.code === "ENOENT") {
@@ -316,7 +353,9 @@ function parseTemplate(value: string): TenantTemplate {
     if (value === "empty" || value === "demo") {
         return value;
     }
-    throw new Error(`Unsupported --template value: ${value}. Use empty or demo.`);
+    throw new Error(
+        `Unsupported --template value: ${value}. Use empty or demo.`,
+    );
 }
 
 async function readTenantName(infoPath: string): Promise<string | undefined> {
@@ -373,7 +412,9 @@ async function promptBoolean(
     defaultValue: boolean,
 ): Promise<boolean> {
     const suffix = defaultValue ? "Y/n" : "y/N";
-    const answer = (await prompt(`${label} [${suffix}]: `)).trim().toLowerCase();
+    const answer = (await prompt(`${label} [${suffix}]: `))
+        .trim()
+        .toLowerCase();
     if (!answer) {
         return defaultValue;
     }

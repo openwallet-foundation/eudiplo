@@ -15,7 +15,10 @@ export function createDemoCommand(
         .option("--force", "allow replacement of managed demo files")
         .option("--yes", "accept the default directory without prompting")
         .option("--no-interactive", "disable the directory prompt")
-        .option("--image-tag <tag>", "override the backend and client image tag")
+        .option(
+            "--image-tag <tag>",
+            "override the backend and client image tag",
+        )
         .action(async (directory, options) => {
             const { configPath, config } = await loadCliState(context);
             setExitCode(

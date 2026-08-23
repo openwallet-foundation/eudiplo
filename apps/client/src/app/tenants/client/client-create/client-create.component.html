@@ -1,4 +1,7 @@
 <div fxLayout="column" fxFlex fxLayoutGap="24px">
+  @if (id) {
+    <app-config-ownership-notice kind="Client" [resourceId]="id" />
+  }
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <h2>Create client</h2>
     <button matIconButton [routerLink]="['../']" matTooltip="Back to Client List">
@@ -93,6 +96,9 @@
           color="primary"
           type="submit"
           [disabled]="clientForm.invalid || isSubmitting"
+          appConfigManaged
+          managedKind="Client"
+          [managedResourceId]="id || ''"
         >
           @if (loaded) {
             {{ isSubmitting ? 'Updating...' : 'Update Client' }}

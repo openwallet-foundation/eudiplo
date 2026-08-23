@@ -4,6 +4,7 @@
   </button>
 </div>
 @if (client) {
+  <app-config-ownership-notice kind="Client" [resourceId]="client.clientId" />
   <mat-card>
     <mat-card-header>
       <mat-card-title>{{ client.clientId }}</mat-card-title>
@@ -20,8 +21,24 @@
       </mat-chip-set>
     </mat-card-content>
     <mat-card-actions fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
-      <button mat-button routerLink="edit">Edit</button>
-      <button mat-button color="warn">Delete</button>
+      <button
+        mat-button
+        routerLink="edit"
+        appConfigManaged
+        managedKind="Client"
+        [managedResourceId]="client.clientId"
+      >
+        Edit
+      </button>
+      <button
+        mat-button
+        color="warn"
+        appConfigManaged
+        managedKind="Client"
+        [managedResourceId]="client.clientId"
+      >
+        Delete
+      </button>
     </mat-card-actions>
   </mat-card>
 }

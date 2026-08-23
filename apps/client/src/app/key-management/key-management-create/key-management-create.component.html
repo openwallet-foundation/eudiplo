@@ -1,4 +1,5 @@
 <div fxLayout="column" fxFlex fxLayoutGap="24px">
+  <app-config-ownership-notice kind="KeyChain" [resourceId]="keyChainId || ''" />
   <!-- Header -->
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <h2>Edit Key Chain</h2>
@@ -120,7 +121,14 @@
       <!-- Action Buttons -->
       <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="end center">
         <button mat-button type="button" [routerLink]="['../']">Cancel</button>
-        <button mat-flat-button type="submit" color="primary">
+        <button
+          mat-flat-button
+          type="submit"
+          color="primary"
+          appConfigManaged
+          managedKind="KeyChain"
+          [managedResourceId]="keyChainId || ''"
+        >
           <mat-icon>save</mat-icon>
           Save Changes
         </button>

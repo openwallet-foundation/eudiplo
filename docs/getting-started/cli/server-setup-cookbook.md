@@ -182,12 +182,13 @@ The generated environment file includes:
 ```env
 EUDIPLO_CONFIG_MOUNT=./config:/app/config
 CONFIG_FOLDER=/app/config
-CONFIG_IMPORT=true
-CONFIG_IMPORT_FORCE=false
+CONFIG_IMPORT_MODE=create
 ```
 
 That means every tenant directory under `config/` is scanned during backend
-startup and imported if it is valid.
+startup and missing resources are imported if the folder is valid. Select
+`upsert` to reconcile existing resources or `replace` to additionally prune
+resources previously managed by the same tenant folder.
 
 !!! tip "Automated setup"
 
@@ -257,7 +258,6 @@ This creates:
   info.json
   clients/
   key-chains/
-  certs/
   attribute-providers/
   webhook-endpoints/
   issuance/

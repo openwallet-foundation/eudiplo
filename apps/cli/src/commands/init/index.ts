@@ -28,8 +28,14 @@ export function createInitCommand(
         .option("--no-interactive", "disable the setup wizard")
         .option("--start", "start the deployment after initialization")
         .option("--yes", "accept defaults without opening the wizard")
-        .option("--image-tag <tag>", "override the backend and client image tag")
-        .option("--demo", "generate demo-compatible assets without starting them")
+        .option(
+            "--image-tag <tag>",
+            "override the backend and client image tag",
+        )
+        .option(
+            "--demo",
+            "generate demo-compatible assets without starting them",
+        )
         .option("--force", "replace CLI-managed files")
         .option("--url <url>", "override the instance API URL")
         .action(async (directory, options) => {

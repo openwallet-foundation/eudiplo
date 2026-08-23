@@ -1,4 +1,5 @@
 <div class="registrar-container" fxLayout="column" fxLayoutGap="24px">
+  <app-config-ownership-notice kind="RegistrarConfig" resourceId="registrar" />
   <!-- Header -->
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Registrar Configuration</h1>
@@ -175,6 +176,9 @@
             color="warn"
             (click)="deleteConfig()"
             [disabled]="!hasConfig || isSaving"
+            appConfigManaged
+            managedKind="RegistrarConfig"
+            managedResourceId="registrar"
           >
             <mat-icon>delete</mat-icon>
             Delete
@@ -184,6 +188,9 @@
             color="primary"
             (click)="saveConfig()"
             [disabled]="configForm.invalid || isSaving"
+            appConfigManaged
+            managedKind="RegistrarConfig"
+            managedResourceId="registrar"
           >
             @if (isSaving) {
               <mat-spinner diameter="18" class="button-spinner"></mat-spinner>

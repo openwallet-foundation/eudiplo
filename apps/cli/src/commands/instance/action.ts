@@ -24,7 +24,9 @@ export async function runInstanceAdd(
         throw new Error("--url is required.");
     }
 
-    const target = parseTarget(readStringFlag(parsed.flags, "target") ?? "external");
+    const target = parseTarget(
+        readStringFlag(parsed.flags, "target") ?? "external",
+    );
     const clientUrl = readStringFlag(parsed.flags, "client-url");
     const nextConfig = upsertInstance(config, name, { target, url, clientUrl });
     await saveConfig(configPath, nextConfig);

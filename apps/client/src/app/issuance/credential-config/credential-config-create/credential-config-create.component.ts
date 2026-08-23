@@ -42,6 +42,8 @@ import {
 } from '@eudiplo/sdk-core';
 import { PresentationManagementService } from '../../../presentation/presentation-config/presentation-management.service';
 import { CredentialConfigService } from '../credential-config.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 import { JsonViewDialogComponent } from './json-view-dialog/json-view-dialog.component';
 import { configs } from './pre-config';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
@@ -76,6 +78,8 @@ import { getApiErrorMessage } from '../../../utils/error-message';
     MatExpansionModule,
     ReactiveFormsModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
     MonacoEditorModule,
     EditorComponent,
     ImageFieldComponent,

@@ -6,7 +6,10 @@ import type {
     ComposeKms,
     ComposeStorage,
 } from "../../services/compose-project.js";
-import { drivers, ensureComposeProject } from "../../services/deployment-drivers.js";
+import {
+    drivers,
+    ensureComposeProject,
+} from "../../services/deployment-drivers.js";
 import { parseTarget } from "../../services/deployment-target.js";
 import { resolveProjectDirectory } from "../../services/project-directory.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
@@ -32,13 +35,16 @@ export async function runInit(
     parsed: ParsedArgs,
     context: CommandContext,
 ): Promise<number> {
-    const target = parseTarget(readStringFlag(parsed.flags, "target") ?? "compose");
+    const target = parseTarget(
+        readStringFlag(parsed.flags, "target") ?? "compose",
+    );
     const name = readStringFlag(parsed.flags, "instance") ?? "local";
     const url = readStringFlag(parsed.flags, "url");
     const useDemoMode = parsed.flags.demo === true;
     const force = parsed.flags.force === true;
     const imageTagOverride =
-        readStringFlag(parsed.flags, "image-tag") ?? context.env.EUDIPLO_IMAGE_TAG;
+        readStringFlag(parsed.flags, "image-tag") ??
+        context.env.EUDIPLO_IMAGE_TAG;
 
     if (target === "compose") {
         const shouldPrompt = shouldOpenWizard(parsed, context);
@@ -57,7 +63,11 @@ export async function runInit(
             );
             initOptions = useDemoMode
                 ? demoInitOptions(parsed)
-                : await resolveComposeInitOptions(parsed, prompter, shouldPrompt);
+                : await resolveComposeInitOptions(
+                      parsed,
+                      prompter,
+                      shouldPrompt,
+                  );
         } finally {
             prompter.close();
         }
@@ -77,9 +87,13 @@ export async function runInit(
             `Configuration: database=${initOptions.database}, storage=${initOptions.storage}, kms=${initOptions.kms}, client=${initOptions.noClient ? "disabled" : "enabled"}, demo-tenant=${initOptions.demoTenant ? "included" : "disabled"}\n`,
         );
         context.stdout.write(`Project directory: ${projectDirectory}\n`);
-        context.stdout.write(`Environment: ${projectDirectory}/${instance.envFile}\n`);
+        context.stdout.write(
+            `Environment: ${projectDirectory}/${instance.envFile}\n`,
+        );
         context.stdout.write(`Auth client ID: ${initOptions.authClientId}\n`);
-        context.stdout.write("Auth client secret: saved in the environment file\n");
+        context.stdout.write(
+            "Auth client secret: saved in the environment file\n",
+        );
         if (initOptions.demoTenant && initOptions.kms === "vault") {
             context.stdout.write(
                 "Note: bundled demo private keys explicitly use the db provider; Vault remains the default for new keys.\n",
@@ -87,7 +101,9 @@ export async function runInit(
         }
 
         if (initOptions.start) {
-            context.stdout.write("Starting EUDIPLO with the Compose runtime...\n");
+            context.stdout.write(
+                "Starting EUDIPLO with the Compose runtime...\n",
+            );
             return (
                 (await drivers.compose.up?.({
                     instanceName: name,
@@ -103,7 +119,9 @@ export async function runInit(
     }
 
     if (parsed.subject || readStringFlag(parsed.flags, "directory")) {
-        throw new Error("Project directories are available only for compose instances.");
+        throw new Error(
+            "Project directories are available only for compose instances.",
+        );
     }
     if (!url) {
         throw new Error("External instances require --url.");
@@ -145,10 +163,16 @@ async function resolveComposeInitOptions(
         parsed.flags["demo-tenant"] === true &&
         parsed.flags["no-demo-tenant"] === true
     ) {
-        throw new Error("Use either --demo-tenant or --no-demo-tenant, not both.");
+        throw new Error(
+            "Use either --demo-tenant or --no-demo-tenant, not both.",
+        );
     }
 
-    const presetFlag = readChoiceFlag(parsed, "preset", ["minimal", "standard", "full"]);
+    const presetFlag = readChoiceFlag(parsed, "preset", [
+        "minimal",
+        "standard",
+        "full",
+    ]);
     let database = readChoiceFlag(parsed, "database", ["sqlite", "postgres"]);
     let storage = readChoiceFlag(parsed, "storage", ["local", "s3"]);
     let kms = readChoiceFlag(parsed, "kms", ["db", "vault"]);
@@ -165,25 +189,47 @@ async function resolveComposeInitOptions(
     }
     let start = parsed.flags.start === true ? true : undefined;
 
-    const hasComponentFlag = database !== undefined || storage !== undefined || kms !== undefined;
+    const hasComponentFlag =
+        database !== undefined || storage !== undefined || kms !== undefined;
     let preset = presetFlag;
 
     if (shouldPrompt && !preset && !hasComponentFlag) {
         const answer = (
-            await prompter.ask("Deployment preset (minimal/standard/full/custom) [minimal]: ")
+            await prompter.ask(
+                "Deployment preset (minimal/standard/full/custom) [minimal]: ",
+            )
         )
             .trim()
             .toLowerCase();
         if (answer && answer !== "custom") {
-            preset = parseChoice(answer, "preset", ["minimal", "standard", "full"]);
+            preset = parseChoice(answer, "preset", [
+                "minimal",
+                "standard",
+                "full",
+            ]);
         }
     }
 
     const presetOptions = presetValues(preset ?? "minimal");
     if (shouldPrompt && !preset) {
-        database ??= await promptChoice(prompter.ask, "Database", ["sqlite", "postgres"], "sqlite");
-        storage ??= await promptChoice(prompter.ask, "Storage", ["local", "s3"], "local");
-        kms ??= await promptChoice(prompter.ask, "Key management", ["db", "vault"], "db");
+        database ??= await promptChoice(
+            prompter.ask,
+            "Database",
+            ["sqlite", "postgres"],
+            "sqlite",
+        );
+        storage ??= await promptChoice(
+            prompter.ask,
+            "Storage",
+            ["local", "s3"],
+            "local",
+        );
+        kms ??= await promptChoice(
+            prompter.ask,
+            "Key management",
+            ["db", "vault"],
+            "db",
+        );
     }
     database ??= presetOptions.database;
     storage ??= presetOptions.storage;
@@ -208,23 +254,37 @@ async function resolveComposeInitOptions(
     publicUrl ??= "http://localhost:3000";
 
     if (shouldPrompt && !authClientId) {
-        authClientId = await promptWithDefault(prompter.ask, "Auth client ID", "root");
+        authClientId = await promptWithDefault(
+            prompter.ask,
+            "Auth client ID",
+            "root",
+        );
     }
     authClientId ??= "root";
 
     if (shouldPrompt && !authClientSecret) {
-        const answer = await prompter.ask("Auth client secret (leave blank to generate): ");
+        const answer = await prompter.ask(
+            "Auth client secret (leave blank to generate): ",
+        );
         authClientSecret = answer.trim() || undefined;
     }
     authClientSecret ??= randomBytes(24).toString("base64url");
 
     if (shouldPrompt && noClient === undefined) {
-        noClient = !(await promptBoolean(prompter.ask, "Include the web client?", true));
+        noClient = !(await promptBoolean(
+            prompter.ask,
+            "Include the web client?",
+            true,
+        ));
     }
     noClient ??= false;
 
     if (shouldPrompt && start === undefined) {
-        start = await promptBoolean(prompter.ask, "Start the deployment now?", true);
+        start = await promptBoolean(
+            prompter.ask,
+            "Start the deployment now?",
+            true,
+        );
     }
     start ??= false;
 
@@ -246,7 +306,10 @@ async function resolveComposeInitOptions(
     };
 }
 
-function shouldOpenWizard(parsed: ParsedArgs, context: CommandContext): boolean {
+function shouldOpenWizard(
+    parsed: ParsedArgs,
+    context: CommandContext,
+): boolean {
     return (
         context.interactive === true &&
         parsed.flags.yes !== true &&
@@ -287,7 +350,9 @@ function parseChoice<const Values extends readonly string[]>(
     if (values.includes(value)) {
         return value as Values[number];
     }
-    throw new Error(`Unsupported --${name} value: ${value}. Use ${values.join(" or ")}.`);
+    throw new Error(
+        `Unsupported --${name} value: ${value}. Use ${values.join(" or ")}.`,
+    );
 }
 
 async function promptChoice<const Values extends readonly string[]>(
@@ -296,10 +361,14 @@ async function promptChoice<const Values extends readonly string[]>(
     values: Values,
     defaultValue: Values[number],
 ): Promise<Values[number]> {
-    const answer = (await prompt(`${label} (${values.join("/")}) [${defaultValue}]: `))
+    const answer = (
+        await prompt(`${label} (${values.join("/")}) [${defaultValue}]: `)
+    )
         .trim()
         .toLowerCase();
-    return answer ? parseChoice(answer, label.toLowerCase(), values) : defaultValue;
+    return answer
+        ? parseChoice(answer, label.toLowerCase(), values)
+        : defaultValue;
 }
 
 async function promptWithDefault(
@@ -317,7 +386,9 @@ async function promptBoolean(
     defaultValue: boolean,
 ): Promise<boolean> {
     const suffix = defaultValue ? "Y/n" : "y/N";
-    const answer = (await prompt(`${label} [${suffix}]: `)).trim().toLowerCase();
+    const answer = (await prompt(`${label} [${suffix}]: `))
+        .trim()
+        .toLowerCase();
     if (!answer) {
         return defaultValue;
     }
@@ -343,6 +414,8 @@ function validateHttpUrl(value: string, label: string): void {
 
 function validateEnvInput(value: string, label: string): void {
     if (!value || /[\r\n]/.test(value)) {
-        throw new Error(`${label} must be non-empty and cannot contain line breaks.`);
+        throw new Error(
+            `${label} must be non-empty and cannot contain line breaks.`,
+        );
     }
 }

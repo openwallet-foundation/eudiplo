@@ -1,8 +1,17 @@
 {
+  "apiVersion": "eudiplo.io/key-chain/v2",
+  "kind": "KeyChain",
+  "metadata": {
+    "id": "7a9e31d4-5c28-4f0b-9e61-2bd4c7a91f35",
+    "generation": 1
+  },
+  "spec": {
     "id": "7a9e31d4-5c28-4f0b-9e61-2bd4c7a91f35",
     "description": "HAIP-compliant for mdoc",
     "usageType": "attestation",
-    "key": {
+    "keySource": {
+      "type": "private-jwk",
+      "jwk": {
         "kty": "EC",
         "d": "y2NSNIvlRAEBMFk2bjQcSKbjS1y_NBJQ6jRzIfuIxS0",
         "crv": "P-256",
@@ -10,5 +19,7 @@
         "x": "0_3S7HedSywaxlekdt6Or8pkcR13hQaCPMqt9cuZBVc",
         "y": "ZVXSCL3HlnMQWKrwMyIAe5wsAIWd3Eu1misKFr3POdA",
         "alg": "ES256"
+      }
     }
+  }
 }

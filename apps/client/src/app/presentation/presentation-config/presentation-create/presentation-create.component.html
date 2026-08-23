@@ -1,4 +1,10 @@
 <div fxLayout="column" fxLayoutGap="24px">
+  @if (!create) {
+    <app-config-ownership-notice
+      kind="PresentationConfig"
+      [resourceId]="form.get('id')?.value || ''"
+    />
+  }
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <h2>{{ create ? 'Create Presentation' : 'Update Presentation' }}</h2>
 
@@ -523,7 +529,14 @@
     <!-- Action Buttons -->
     <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="end center">
       <button mat-button type="button" [routerLink]="['../']">Cancel</button>
-      <button mat-flat-button type="submit" [disabled]="form.invalid">
+      <button
+        mat-flat-button
+        type="submit"
+        [disabled]="form.invalid"
+        appConfigManaged
+        managedKind="PresentationConfig"
+        [managedResourceId]="create ? '' : form.get('id')?.value || ''"
+      >
         <mat-icon>{{ create ? 'add' : 'save' }}</mat-icon>
         {{ create ? 'Create' : 'Save' }} Configuration
       </button>

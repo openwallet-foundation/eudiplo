@@ -1,5 +1,6 @@
 @if (provider) {
   <div fxLayout="column" fxFlex fxLayoutGap="24px">
+    <app-config-ownership-notice kind="AttributeProvider" [resourceId]="provider.id" />
     <!-- Header -->
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Attribute Provider</h2>
@@ -7,7 +8,14 @@
         <button mat-icon-button [routerLink]="['../']" matTooltip="Back to list">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['edit']" matTooltip="Edit attribute provider">
+        <button
+          mat-icon-button
+          [routerLink]="['edit']"
+          matTooltip="Edit attribute provider"
+          appConfigManaged
+          managedKind="AttributeProvider"
+          [managedResourceId]="provider.id"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button matTooltip="Download configuration" (click)="downloadConfig()">
@@ -18,6 +26,9 @@
           (click)="deleteProvider()"
           matTooltip="Delete attribute provider"
           color="warn"
+          appConfigManaged
+          managedKind="AttributeProvider"
+          [managedResourceId]="provider.id"
         >
           <mat-icon>delete</mat-icon>
         </button>

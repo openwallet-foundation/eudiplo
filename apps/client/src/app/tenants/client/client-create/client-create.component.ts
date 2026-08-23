@@ -23,6 +23,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { PresentationManagementService } from '../../../presentation/presentation-config/presentation-management.service';
 import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-client-create',
@@ -38,6 +40,8 @@ import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component'
     RouterModule,
     MatTooltipModule,
     MatDialogModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './client-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

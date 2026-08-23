@@ -328,6 +328,19 @@ export class KeycloakClientsProvider
         return secret.value!;
     }
 
+    async setClientSecret(
+        tenantId: string,
+        clientId: string,
+        secret: string,
+    ): Promise<void> {
+        const client = (await this.kc.clients.find({ clientId }))[0];
+        if (!client?.id) {
+            throw new Error(`Client ${clientId} not found in Keycloak`);
+        }
+        this.ensureTenantOwnership(tenantId, client, "updated (secret)");
+        await this.kc.clients.update({ id: client.id }, { secret });
+    }
+
     async addClient(tenantId: string, dto: CreateClientDto) {
         const clientPayload = {
             clientId: dto.clientId,

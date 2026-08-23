@@ -19,7 +19,9 @@ export type DirectoryResourceDefinition = {
     cliValidated?: boolean;
 };
 
-export type TenantResourceDefinition = FixedFileResourceDefinition | DirectoryResourceDefinition;
+export type TenantResourceDefinition =
+    | FixedFileResourceDefinition
+    | DirectoryResourceDefinition;
 
 export interface ValidationIssue {
     file: string;

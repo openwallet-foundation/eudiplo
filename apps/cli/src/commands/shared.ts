@@ -18,7 +18,10 @@ export function createPrompter(context: CommandContext): Prompter {
             if (context.prompt) {
                 return context.prompt(question);
             }
-            promptInterface ??= createInterface({ input: process.stdin, output: process.stdout });
+            promptInterface ??= createInterface({
+                input: process.stdin,
+                output: process.stdout,
+            });
             return promptInterface.question(question);
         },
         close: () => promptInterface?.close(),
@@ -43,7 +46,10 @@ export function parsedArgs(
         if (value === undefined) {
             continue;
         }
-        const flagName = name.replace(/[A-Z]/g, (character) => `-${character.toLowerCase()}`);
+        const flagName = name.replace(
+            /[A-Z]/g,
+            (character) => `-${character.toLowerCase()}`,
+        );
         if (value === false) {
             flags[`no-${flagName}`] = true;
         } else if (typeof value === "string" || typeof value === "boolean") {

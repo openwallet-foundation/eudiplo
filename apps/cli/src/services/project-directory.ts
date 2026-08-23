@@ -14,8 +14,13 @@ export function resolveProjectDirectory(
         throw new Error(`Unexpected argument: ${parsed.positionals[0]}`);
     }
     if (positionalDirectory && flagDirectory) {
-        throw new Error("Specify the project directory either positionally or with --directory.");
+        throw new Error(
+            "Specify the project directory either positionally or with --directory.",
+        );
     }
 
-    return resolve(context.cwd, positionalDirectory ?? flagDirectory ?? promptedDirectory ?? ".");
+    return resolve(
+        context.cwd,
+        positionalDirectory ?? flagDirectory ?? promptedDirectory ?? ".",
+    );
 }

@@ -34,6 +34,8 @@ import { ImageFieldComponent } from '../../../utils/image-field/image-field.comp
 import { MatCardModule } from '@angular/material/card';
 import { PresentationManagementService } from '../../../presentation/presentation-config/presentation-management.service';
 import { RegistrarService } from '../../../registrar/registrar.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-issuance-config-create',
@@ -58,6 +60,8 @@ import { RegistrarService } from '../../../registrar/registrar.service';
     MatSlideToggleModule,
     MatSlideToggle,
     ImageFieldComponent,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './issuance-config-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

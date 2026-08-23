@@ -38,7 +38,10 @@ export interface DriverCommandOptions {
 
 export interface DeploymentDriver {
     target: DeploymentTarget;
-    diagnostics(instance: InstanceConfig, context: CommandContext): Promise<string[]>;
+    diagnostics(
+        instance: InstanceConfig,
+        context: CommandContext,
+    ): Promise<string[]>;
     up?(options: DriverCommandOptions): Promise<number>;
     down?(options: DriverCommandOptions): Promise<number>;
     logs?(options: DriverCommandOptions): Promise<number>;

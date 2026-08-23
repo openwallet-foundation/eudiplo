@@ -8,10 +8,18 @@ import { AttributeProviderEntity } from '@eudiplo/sdk-core';
 import { getApiKeyAuthType } from '../../../common/auth-display.util';
 import { BaseAsyncListComponent } from '../../../common/base-async-list.component';
 import { AttributeProviderService } from '../attribute-provider.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-attribute-provider-list',
-  imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
+  imports: [
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
+    FlexLayoutModule,
+    ConfigOwnershipDirective,
+  ],
   templateUrl: './attribute-provider-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './attribute-provider-list.component.scss',

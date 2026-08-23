@@ -137,7 +137,14 @@
               <button mat-icon-button [routerLink]="getViewRoute(item)" matTooltip="View details">
                 <mat-icon>visibility</mat-icon>
               </button>
-              <button mat-icon-button [routerLink]="[item.id, 'edit']" matTooltip="Edit">
+              <button
+                mat-icon-button
+                [routerLink]="[item.id, 'edit']"
+                matTooltip="Edit"
+                appConfigManaged
+                managedKind="KeyChain"
+                [managedResourceId]="item.id"
+              >
                 <mat-icon>edit</mat-icon>
               </button>
               @if (item.rotationEnabled) {
@@ -145,6 +152,9 @@
                   mat-icon-button
                   (click)="rotateItem(item, $event)"
                   matTooltip="Rotate key now"
+                  appConfigManaged
+                  managedKind="KeyChain"
+                  [managedResourceId]="item.id"
                 >
                   <mat-icon>refresh</mat-icon>
                 </button>
@@ -154,6 +164,9 @@
                 (click)="deleteItem(item, $event)"
                 matTooltip="Delete"
                 color="warn"
+                appConfigManaged
+                managedKind="KeyChain"
+                [managedResourceId]="item.id"
               >
                 <mat-icon>delete</mat-icon>
               </button>

@@ -1,4 +1,6 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import {
     Inject,
     Injectable,
@@ -12,25 +14,28 @@ import { Request } from "express";
 import { MetricService } from "nestjs-otel";
 import { Repository } from "typeorm";
 import { AuditLogService } from "../../audit-log/audit-log.service";
-import { EncryptionService } from "../../crypto/encryption/encryption.service";
-import { RegistrarService } from "../../registrar/registrar.service";
 import {
     extractRequestMeta,
     getChangedFieldsForKeys,
     resolveAuditActor,
 } from "../../audit-log/audit-log-context.util";
+import { EncryptionService } from "../../crypto/encryption/encryption.service";
+import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service";
 import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service";
+import { ConfigMigrationService } from "../../platform/config-portability/config-migration.service";
+import { ConfigOwnershipService } from "../../platform/config-portability/config-ownership.service";
+import { RegistrarService } from "../../registrar/registrar.service";
 import { FilesService } from "../../storage/files.service";
 import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider";
 import { Role } from "../roles/role.enum";
 import { TokenPayload } from "../token.decorator";
 import { TenantEntity } from "./entities/tenant.entity";
-import { ImportTenantSchema } from "./schemas/create-tenant.schema";
 import type {
     CreateTenant,
     ImportTenant,
     UpdateTenant,
 } from "./schemas/create-tenant.schema";
+import { ImportTenantSchema } from "./schemas/create-tenant.schema";
 @Injectable()
 export class TenantService implements OnApplicationBootstrap {
     private readonly logger = new Logger(TenantService.name);
@@ -47,6 +52,9 @@ export class TenantService implements OnApplicationBootstrap {
         private readonly filesService: FilesService,
         private readonly configImportOrchestrator: ConfigImportOrchestratorService,
         private readonly tenantActionLogService: AuditLogService,
+        private readonly configOwnershipService: ConfigOwnershipService,
+        private readonly configMigrationService: ConfigMigrationService,
+        private readonly configImportModeService: ConfigImportModeService,
     ) {
         this.tenantTotal = metricService.getUpDownCounter("tenant_total", {
             description: "Total number of tenants",
@@ -80,6 +88,46 @@ export class TenantService implements OnApplicationBootstrap {
         });
 
         if (existing) {
+            const file = `${configPath}/${tenantId}/info.json`;
+            if (existsSync(file)) {
+                const configFile = readFileSync(file, "utf-8");
+                const upgraded = this.upgradeTenantConfig(configFile);
+                const validationResult = ImportTenantSchema.safeParse(
+                    upgraded.spec,
+                );
+                if (validationResult.success) {
+                    const mode = this.configImportModeService.resolve();
+                    if (mode !== "create" && mode !== "disabled") {
+                        const stored = await this.configOwnershipService.get(
+                            tenantId,
+                            "Tenant",
+                            "tenant",
+                        );
+                        const generation =
+                            upgraded.document.metadata.generation ?? 1;
+                        if (generation < stored.generation) {
+                            throw new Error(
+                                `Tenant configuration generation ${generation} is older than stored generation ${stored.generation}`,
+                            );
+                        }
+                        await this.tenantRepository.update(
+                            { id: tenantId },
+                            validationResult.data as any,
+                        );
+                        await this.configOwnershipService.markApplied({
+                            tenantId,
+                            kind: "Tenant",
+                            resourceId: "tenant",
+                            ownership: "file-managed",
+                            generation,
+                            source: `folder:${resolve(configPath, tenantId)}`,
+                            sourceHash: createHash("sha256")
+                                .update(configFile)
+                                .digest("hex"),
+                        });
+                    }
+                }
+            }
             this.logger.debug(
                 `[${tenantId}] Tenant already exists, proceeding with imports`,
             );
@@ -98,9 +146,11 @@ export class TenantService implements OnApplicationBootstrap {
 
         try {
             const configFile = readFileSync(file, "utf-8");
-            const payload = JSON.parse(configFile);
+            const upgraded = this.upgradeTenantConfig(configFile);
 
-            const validationResult = ImportTenantSchema.safeParse(payload);
+            const validationResult = ImportTenantSchema.safeParse(
+                upgraded.spec,
+            );
 
             if (!validationResult.success) {
                 this.logger.error(
@@ -121,6 +171,17 @@ export class TenantService implements OnApplicationBootstrap {
                 ...validationResult.data,
                 id: tenantId,
             } as CreateTenant);
+            await this.configOwnershipService.markApplied({
+                tenantId,
+                kind: "Tenant",
+                resourceId: "tenant",
+                ownership: "file-managed",
+                generation: upgraded.document.metadata.generation ?? 1,
+                source: `folder:${resolve(configPath, tenantId)}`,
+                sourceHash: createHash("sha256")
+                    .update(configFile)
+                    .digest("hex"),
+            });
             return true;
         } catch (error: any) {
             this.logger.error(
@@ -128,6 +189,33 @@ export class TenantService implements OnApplicationBootstrap {
             );
             return false;
         }
+    }
+
+    private upgradeTenantConfig(raw: string): {
+        spec: Record<string, unknown>;
+        document: import("../../platform/config-portability/config-resource.types").ConfigDocument;
+    } {
+        const payload = JSON.parse(raw) as Record<string, unknown>;
+        const document = this.configMigrationService.isDocument(payload)
+            ? payload
+            : this.configMigrationService.wrapLegacy(
+                  "Tenant",
+                  payload,
+                  "tenant",
+              );
+        const result = this.configMigrationService.upgrade(document);
+        const blocking = result.issues.filter(
+            (issue) => issue.severity !== "warning",
+        );
+        if (blocking.length) {
+            throw new Error(blocking.map((issue) => issue.message).join("; "));
+        }
+        return {
+            spec: this.configMigrationService.unwrapForLegacyImporter(
+                result.document,
+            ),
+            document: result.document,
+        };
     }
 
     /**

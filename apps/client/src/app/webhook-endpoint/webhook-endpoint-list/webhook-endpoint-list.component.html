@@ -32,7 +32,13 @@
       <button matIconButton [routerLink]="[endpoint.id]">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button matIconButton [routerLink]="[endpoint.id, 'edit']">
+      <button
+        matIconButton
+        [routerLink]="[endpoint.id, 'edit']"
+        appConfigManaged
+        managedKind="WebhookEndpoint"
+        [managedResourceId]="endpoint.id"
+      >
         <mat-icon>edit</mat-icon>
       </button>
     </td>

@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { KeyChainResponseDto } from '@eudiplo/sdk-core';
 import { KeyChainService } from '../key-chain.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
 
 type KeyUsageType = 'attestation' | 'statusList' | 'access' | 'trustList' | 'encrypt';
 
@@ -43,6 +44,7 @@ interface KeyDisplayItem {
     MatChipsModule,
     RouterModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './key-management-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

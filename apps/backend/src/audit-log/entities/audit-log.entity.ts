@@ -24,7 +24,11 @@ export type AuditActionType =
     | "webhook_endpoint_deleted"
     | "attribute_provider_created"
     | "attribute_provider_updated"
-    | "attribute_provider_deleted";
+    | "attribute_provider_deleted"
+    | "config_bundle_exported"
+    | "config_bundle_imported"
+    | "config_client_secret_generated"
+    | "config_resource_detached";
 
 export type AuditActorType = "user" | "client" | "system";
 

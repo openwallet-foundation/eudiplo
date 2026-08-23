@@ -1,5 +1,6 @@
 @if (config) {
   <div fxLayout="column" fxFlex fxLayoutGap="24px">
+    <app-config-ownership-notice kind="PresentationConfig" [resourceId]="config.id" />
     <!-- Header -->
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Presentation Configuration</h2>
@@ -14,7 +15,14 @@
         >
           <mat-icon>add</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['edit']" matTooltip="Edit configuration">
+        <button
+          mat-icon-button
+          [routerLink]="['edit']"
+          matTooltip="Edit configuration"
+          appConfigManaged
+          managedKind="PresentationConfig"
+          [managedResourceId]="config.id"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button [routerLink]="['copy']" matTooltip="Copy configuration">
@@ -28,6 +36,9 @@
           (click)="deletePresentation()"
           matTooltip="Delete configuration"
           color="warn"
+          appConfigManaged
+          managedKind="PresentationConfig"
+          [managedResourceId]="config.id"
         >
           <mat-icon>delete</mat-icon>
         </button>

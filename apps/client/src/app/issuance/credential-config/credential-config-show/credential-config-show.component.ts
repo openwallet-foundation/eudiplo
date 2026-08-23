@@ -17,6 +17,8 @@ import { CredentialConfig, deriveRuntimeArtifacts } from '@eudiplo/sdk-core';
 import { CredentialConfigService } from '../credential-config.service';
 import { StatusListManagementService } from '../../../status-list-management/status-list-management.service';
 import { downloadJsonFile } from '../../../common/download-json.util';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 interface ClaimFieldRow {
   key: string;
@@ -50,6 +52,8 @@ interface SchemaPathInfo {
     FlexLayoutModule,
     RouterModule,
     ClipboardModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './credential-config-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

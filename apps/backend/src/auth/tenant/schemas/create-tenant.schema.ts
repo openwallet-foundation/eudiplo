@@ -34,6 +34,8 @@ export const CreateTenantSchema = z
 export const ImportTenantSchema = CreateTenantSchema.pick({
     name: true,
     description: true,
+    sessionConfig: true,
+    statusListConfig: true,
 }).describe("Payload used when importing tenant metadata from config files.");
 
 export const UpdateTenantSchema = z

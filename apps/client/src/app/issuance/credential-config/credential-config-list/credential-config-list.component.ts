@@ -9,6 +9,7 @@ import { CredentialConfig } from '@eudiplo/sdk-core';
 import { BaseAsyncListComponent } from '../../../common/base-async-list.component';
 import { CredentialConfigService } from '../credential-config.service';
 import { DisplayFormValue } from '../credential-config.types';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-credential-config-list',
@@ -19,6 +20,7 @@ import { DisplayFormValue } from '../credential-config.types';
     MatTooltipModule,
     RouterModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './credential-config-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

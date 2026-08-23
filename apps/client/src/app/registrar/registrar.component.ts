@@ -14,6 +14,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { RegistrarConfig, RegistrarConfigRequest, RegistrarService } from './registrar.service';
+import { ConfigOwnershipDirective } from '../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../config-portability/config-ownership-notice.component';
 
 interface RegistrarPreset {
   name: string;
@@ -41,6 +43,8 @@ interface RegistrarPreset {
     FlexLayoutModule,
     ReactiveFormsModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './registrar.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

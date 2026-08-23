@@ -29,7 +29,10 @@ export async function loadConfig(path: string): Promise<CliConfig> {
     }
 }
 
-export async function saveConfig(path: string, config: CliConfig): Promise<void> {
+export async function saveConfig(
+    path: string,
+    config: CliConfig,
+): Promise<void> {
     await mkdir(dirname(path), { recursive: true, mode: 0o700 });
     await writeFile(path, `${JSON.stringify(config, null, 4)}\n`, {
         encoding: "utf8",
@@ -52,7 +55,10 @@ function validateConfig(value: unknown): CliConfig {
     }
 
     return {
-        defaultInstance: validateDefaultInstance(value.defaultInstance, instances),
+        defaultInstance: validateDefaultInstance(
+            value.defaultInstance,
+            instances,
+        ),
         instances,
     };
 }
@@ -112,7 +118,9 @@ function validateDefaultInstance(
         return undefined;
     }
     if (!Object.hasOwn(instances, value)) {
-        throw new Error(`Default instance ${value} is not defined in instances.`);
+        throw new Error(
+            `Default instance ${value} is not defined in instances.`,
+        );
     }
     return value;
 }
@@ -132,7 +140,10 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
 
     validateHttpUrl(value.url, `Instance ${name} url`);
     validateOptionalHttpUrl(value.clientUrl, `Instance ${name} clientUrl`);
-    if (typeof value.projectDirectory === "string" && !isAbsolute(value.projectDirectory)) {
+    if (
+        typeof value.projectDirectory === "string" &&
+        !isAbsolute(value.projectDirectory)
+    ) {
         throw new Error(`Instance ${name} projectDirectory must be absolute.`);
     }
 
@@ -142,7 +153,10 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
         clientUrl: optionalString(value.clientUrl),
         composeFile: optionalString(value.composeFile),
         composeFiles: optionalStringArray(value.composeFiles),
-        composeProfiles: optionalStringArray(value.composeProfiles, "composeProfiles"),
+        composeProfiles: optionalStringArray(
+            value.composeProfiles,
+            "composeProfiles",
+        ),
         envFile: optionalString(value.envFile),
         projectName: optionalString(value.projectName),
         projectDirectory: optionalString(value.projectDirectory),

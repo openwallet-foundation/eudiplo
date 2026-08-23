@@ -1,24 +1,32 @@
 {
+  "apiVersion": "eudiplo.io/presentation-config/v2",
+  "kind": "PresentationConfig",
+  "metadata": {
+    "id": "pid-mdoc-no-hook",
+    "generation": 1
+  },
+  "spec": {
     "id": "pid-mdoc-no-hook",
     "description": "Presentation mDOC ID",
     "dcql_query": {
-        "credentials": [
+      "credentials": [
+        {
+          "id": "pid-mdoc",
+          "format": "mso_mdoc",
+          "meta": {
+            "doctype_value": "eu.europa.ec.eudi.pid.1"
+          },
+          "claims": [
             {
-                "id": "pid-mdoc",
-                "format": "mso_mdoc",
-                "meta": {
-                    "doctype_value": "eu.europa.ec.eudi.pid.1"
-                },
-                "claims": [
-                    {
-                        "path": [
-                            "eu.europa.ec.eudi.pid.1",
-                            "given_name"
-                        ],
-                        "intent_to_retain": false
-                    }
-                ]
+              "path": [
+                "eu.europa.ec.eudi.pid.1",
+                "given_name"
+              ],
+              "intent_to_retain": false
             }
-        ]
+          ]
+        }
+      ]
     }
+  }
 }

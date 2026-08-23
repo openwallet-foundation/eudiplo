@@ -139,6 +139,39 @@ export class FilesService {
         };
     }
 
+    /** Save an asset restored from a configuration bundle. */
+    async saveImportedAsset(
+        tenantId: string,
+        filename: string,
+        content: Buffer,
+        contentType?: string,
+        overwrite = true,
+    ): Promise<FileEntity> {
+        const existing = await this.fileRepository.findOneBy({
+            tenantId,
+            filename,
+        });
+        if (existing) {
+            if (!overwrite) {
+                return existing;
+            }
+            await this.storage.put(existing.id, content, {
+                contentType,
+                acl: "public",
+                metadata: { originalName: filename },
+            });
+            return existing;
+        }
+
+        const id = randomUUID();
+        await this.storage.put(id, content, {
+            contentType,
+            acl: "public",
+            metadata: { originalName: filename },
+        });
+        return this.fileRepository.save({ id, filename, tenantId });
+    }
+
     /**
      * Retrieves a readable stream of the file associated with the given key.
      * @param key The unique identifier of the file.

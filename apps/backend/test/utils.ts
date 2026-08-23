@@ -54,7 +54,22 @@ import { DEVICE_JWK, mdocContext } from "./utils-mdoc";
 import { CreateWebhookEndpointDto } from "../src/issuer/configuration/webhook-endpoint/dto/create-webhook-endpoint.dto";
 
 export function readConfig<T>(path: string): T {
-    return JSON.parse(readFileSync(path, "utf-8"));
+    const input = JSON.parse(readFileSync(path, "utf-8"));
+    if (
+        typeof input?.apiVersion !== "string" ||
+        typeof input?.kind !== "string" ||
+        !input.spec ||
+        typeof input.spec !== "object"
+    ) {
+        return input as T;
+    }
+
+    const spec = structuredClone(input.spec);
+    if (input.kind === "KeyChain" && spec.keySource?.type === "private-jwk") {
+        spec.key = spec.keySource.jwk;
+        delete spec.keySource;
+    }
+    return spec as T;
 }
 
 export async function prepareMdocPresentation(
@@ -460,7 +475,7 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
     app.useGlobalPipes(createAppValidationPipe());
 
     const configService = app.get(ConfigService);
-    configService.set("CONFIG_IMPORT", false);
+    configService.set("CONFIG_IMPORT_MODE", "disabled");
     configService.set("LOG_LEVEL", "debug");
     const clientId = configService.getOrThrow<string>("AUTH_CLIENT_ID");
     const clientSecret = configService.getOrThrow<string>("AUTH_CLIENT_SECRET");
@@ -572,10 +587,7 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .set("Authorization", `Bearer ${authToken}`)
         .send(
             readConfig(
-                join(
-                    configFolder,
-                    "haip/issuance/attribute-providers/citizen-ap.json",
-                ),
+                join(configFolder, "haip/attribute-providers/citizen-ap.json"),
             ),
         )
         .expect(201);

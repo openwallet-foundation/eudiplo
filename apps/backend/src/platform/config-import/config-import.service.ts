@@ -1,7 +1,13 @@
+import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, Optional } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { ConfigMigrationService } from "../config-portability/config-migration.service";
+import { ConfigOwnershipService } from "../config-portability/config-ownership.service";
+import { ConfigResourceRegistry } from "../config-portability/config-resource.registry";
+import type { ConfigDocument } from "../config-portability/config-resource.types";
+import { ConfigImportModeService } from "./config-import-mode.service";
 import { ImportOptions, TenantImportOptions } from "./import-options";
 
 function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
@@ -25,7 +31,17 @@ function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
 export class ConfigImportService {
     private readonly logger = new Logger(ConfigImportService.name);
 
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        @Optional()
+        private readonly migrationService?: ConfigMigrationService,
+        @Optional()
+        private readonly ownershipService?: ConfigOwnershipService,
+        @Optional()
+        private readonly resourceRegistry?: ConfigResourceRegistry,
+        @Optional()
+        private readonly importModeService?: ConfigImportModeService,
+    ) {}
 
     /**
      * Import configs for a specific tenant.
@@ -36,7 +52,9 @@ export class ConfigImportService {
         options: TenantImportOptions<T>,
     ): Promise<void> {
         const configPath = this.configService.getOrThrow("CONFIG_FOLDER");
-        const force = this.configService.get<boolean>("CONFIG_IMPORT_FORCE");
+        const mode = this.resolveMode();
+        if (mode === "disabled") return;
+        const updateExisting = mode !== "create";
         const strictConfig = this.configService.get<any>(
             "CONFIG_VARIABLE_STRICT",
         );
@@ -64,10 +82,47 @@ export class ConfigImportService {
             try {
                 // Load data using custom loader or default JSON loader
                 let data: T;
-                if (options.loadData) {
+                let portableDocument: ConfigDocument | undefined;
+                const resourceKind =
+                    options.resourceKind ??
+                    this.resourceRegistry?.inferKind(options.resourceType);
+                const raw = readFileSync(filePath, "utf8");
+                if (
+                    resourceKind &&
+                    this.migrationService &&
+                    file.endsWith(".json")
+                ) {
+                    const payload = JSON.parse(raw) as Record<string, unknown>;
+                    const fileId = file.replace(/\.json$/i, "");
+                    const wrapped = this.migrationService.isDocument(payload)
+                        ? payload
+                        : this.migrationService.wrapLegacy(
+                              resourceKind,
+                              payload,
+                              String(payload.id ?? payload.clientId ?? fileId),
+                          );
+                    const upgraded = this.migrationService.upgrade(wrapped);
+                    const blocking = upgraded.issues.filter(
+                        (issue) => issue.severity !== "warning",
+                    );
+                    if (blocking.length > 0) {
+                        throw new Error(
+                            `Configuration migration requires input: ${blocking
+                                .map(
+                                    (issue) =>
+                                        `${issue.path}: ${issue.message}`,
+                                )
+                                .join("; ")}`,
+                        );
+                    }
+                    portableDocument = upgraded.document;
+                    data = this.migrationService.unwrapForLegacyImporter(
+                        upgraded.document,
+                    ) as T;
+                } else if (options.loadData) {
                     data = await Promise.resolve(options.loadData(filePath));
                 } else {
-                    const payload = JSON.parse(readFileSync(filePath, "utf8"));
+                    const payload = JSON.parse(raw);
                     data = payload as T;
                 }
 
@@ -100,7 +155,27 @@ export class ConfigImportService {
                     .checkExists(tenantId, data, file)
                     .catch(() => false);
 
-                if (exists && !force) {
+                if (
+                    exists &&
+                    portableDocument &&
+                    resourceKind &&
+                    this.ownershipService
+                ) {
+                    const stored = await this.ownershipService.get(
+                        tenantId,
+                        resourceKind,
+                        portableDocument.metadata.id,
+                    );
+                    const incomingGeneration =
+                        portableDocument.metadata.generation ?? 1;
+                    if (incomingGeneration < stored.generation) {
+                        throw new Error(
+                            `Stale configuration generation ${incomingGeneration}; stored generation is ${stored.generation}`,
+                        );
+                    }
+                }
+
+                if (exists && !updateExisting) {
                     this.logger.debug(
                         `[${tenantId}] ${options.resourceType} ${file} already exists, skipping`,
                     );
@@ -108,12 +183,21 @@ export class ConfigImportService {
                 }
 
                 // Delete existing if force is enabled
-                if (exists && force && options.deleteExisting) {
+                if (exists && updateExisting && options.deleteExisting) {
                     await options.deleteExisting(tenantId, data, file);
                 }
 
                 // Process and store item
                 await options.processItem(tenantId, data, file);
+                if (portableDocument && resourceKind && this.ownershipService) {
+                    await this.markFileManaged(
+                        tenantId,
+                        resourceKind,
+                        portableDocument,
+                        filePath,
+                        raw,
+                    );
+                }
                 counter++;
             } catch (error: any) {
                 const reason = error?.message || "Unknown error";
@@ -134,6 +218,24 @@ export class ConfigImportService {
         }
     }
 
+    private async markFileManaged(
+        tenantId: string,
+        kind: import("../config-portability/config-resource.types").ConfigResourceKind,
+        document: ConfigDocument,
+        filePath: string,
+        raw: string,
+    ): Promise<void> {
+        await this.ownershipService!.markApplied({
+            tenantId,
+            kind,
+            resourceId: document.metadata.id,
+            ownership: "file-managed",
+            generation: document.metadata.generation ?? 1,
+            source: filePath,
+            sourceHash: createHash("sha256").update(raw).digest("hex"),
+        });
+    }
+
     /**
      * Generic import method that handles the common pattern across all services.
      * @deprecated Use importConfigsForTenant with the orchestrator's tenant-by-tenant approach instead.
@@ -141,12 +243,13 @@ export class ConfigImportService {
     async importConfigs<T extends object>(
         options: ImportOptions<T>,
     ): Promise<void> {
-        if (!this.configService.get<boolean>("CONFIG_IMPORT")) {
+        const mode = this.resolveMode();
+        if (mode === "disabled") {
             return;
         }
 
         const configPath = this.configService.getOrThrow("CONFIG_FOLDER");
-        const force = this.configService.get<boolean>("CONFIG_IMPORT_FORCE");
+        const updateExisting = mode !== "create";
 
         const tenantFolders = readdirSync(configPath, {
             withFileTypes: true,
@@ -220,7 +323,7 @@ export class ConfigImportService {
                         .checkExists(tenant.name, data, file)
                         .catch(() => false);
 
-                    if (exists && !force) {
+                    if (exists && !updateExisting) {
                         this.logger.debug(
                             `[${tenant.name}] ${options.resourceType} ${file} already exists, skipping`,
                         );
@@ -228,7 +331,7 @@ export class ConfigImportService {
                     }
 
                     // Delete existing if force is enabled
-                    if (exists && force && options.deleteExisting) {
+                    if (exists && updateExisting && options.deleteExisting) {
                         await options.deleteExisting(tenant.name, data, file);
                     }
 
@@ -260,7 +363,7 @@ export class ConfigImportService {
      * ${VAR} -> replaced with process.env.VAR if defined; if undefined and no default given, logs a warning and leaves placeholder intact.
      * ${VAR:default} -> replaced with env value if defined, otherwise with "default".
      */
-    private replacePlaceholders<T>(input: T): T {
+    replacePlaceholders<T>(input: T): T {
         const seen = new WeakSet();
         const isObject = (val: any) =>
             val && typeof val === "object" && !Array.isArray(val);
@@ -322,6 +425,20 @@ export class ConfigImportService {
         };
 
         return recurse(input);
+    }
+
+    private resolveMode():
+        | "disabled"
+        | import("../config-portability/config-resource.types").ConfigImportMode {
+        if (this.importModeService) {
+            return this.importModeService.resolve();
+        }
+        if (!this.configService.get<boolean>("CONFIG_IMPORT")) {
+            return "disabled";
+        }
+        return this.configService.get<boolean>("CONFIG_IMPORT_FORCE")
+            ? "upsert"
+            : "create";
     }
 
     /**

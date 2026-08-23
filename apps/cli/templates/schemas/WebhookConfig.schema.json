@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "url": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The URL to which the webhook will send notifications."
+    },
+    "auth": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "none",
+              "description": "Disable authentication."
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "apiKey",
+              "description": "Use API key authentication."
+            },
+            "config": {
+              "type": "object",
+              "properties": {
+                "headerName": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The header name used to send the API key."
+                },
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "The API key value."
+                }
+              },
+              "required": [
+                "headerName",
+                "value"
+              ],
+              "additionalProperties": false,
+              "description": "API key authentication settings."
+            }
+          },
+          "required": [
+            "type",
+            "config"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "Webhook authentication strategy."
+    },
+    "includeRawTokensFor": {
+      "description": "List of credential IDs to include raw tokens for (for example ['sca_credential']).",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "url",
+    "auth"
+  ],
+  "additionalProperties": false,
+  "$id": "./WebhookConfig.schema.json",
+  "title": "WebhookConfig"
+}

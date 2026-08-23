@@ -122,7 +122,14 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef>Actions</th>
       <td mat-cell *matCellDef="let list">
-        <button matIconButton (click)="navigateToEdit(list)" matTooltip="Edit">
+        <button
+          matIconButton
+          (click)="navigateToEdit(list)"
+          matTooltip="Edit"
+          appConfigManaged
+          managedKind="StatusList"
+          [managedResourceId]="list.id"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         <button
@@ -130,6 +137,9 @@
           (click)="deleteList(list)"
           [disabled]="list.usedEntries > 0"
           [matTooltip]="list.usedEntries > 0 ? 'Cannot delete: entries in use' : 'Delete'"
+          appConfigManaged
+          managedKind="StatusList"
+          [managedResourceId]="list.id"
         >
           <mat-icon>delete</mat-icon>
         </button>

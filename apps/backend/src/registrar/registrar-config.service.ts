@@ -1,22 +1,25 @@
-import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
+import { join, resolve } from "node:path";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
+import { ConfigImportModeService } from "../platform/config-import/config-import-mode.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../platform/config-import/config-import-orchestrator.service";
-import { loadConfigDto } from "../shared/utils/config-file-loader.util";
-import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto";
+import { ConfigMigrationService } from "../platform/config-portability/config-migration.service";
+import { ConfigOwnershipService } from "../platform/config-portability/config-ownership.service";
 import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
 import { RegistrarAuthService } from "./registrar-auth.service";
 import type {
     CreateRegistrarConfig,
     UpdateRegistrarConfig,
 } from "./schemas/registrar.schema";
+import { CreateRegistrarConfigSchema } from "./schemas/registrar.schema";
 
 /**
  * Manages per-tenant registrar configuration: CRUD, file-based import, and
@@ -33,6 +36,9 @@ export class RegistrarConfigService {
         @InjectRepository(RegistrarConfigEntity)
         private readonly configRepository: Repository<RegistrarConfigEntity>,
         private readonly authService: RegistrarAuthService,
+        private readonly configOwnershipService: ConfigOwnershipService,
+        private readonly configMigrationService: ConfigMigrationService,
+        private readonly configImportModeService: ConfigImportModeService,
     ) {
         configImportOrchestrator.register(
             "registrar",
@@ -47,7 +53,8 @@ export class RegistrarConfigService {
      */
     private async importForTenant(tenantId: string): Promise<void> {
         const configPath = this.configService.getOrThrow("CONFIG_FOLDER");
-        const force = this.configService.get<boolean>("CONFIG_IMPORT_FORCE");
+        const mode = this.configImportModeService.resolve();
+        const updateExisting = mode !== "create" && mode !== "disabled";
         const filePath = join(configPath, tenantId, "registrar.json");
 
         if (!existsSync(filePath)) {
@@ -55,23 +62,55 @@ export class RegistrarConfigService {
         }
 
         try {
+            const raw = readFileSync(filePath, "utf8");
+            const payload = JSON.parse(raw) as Record<string, unknown>;
+            const document = this.configMigrationService.isDocument(payload)
+                ? payload
+                : this.configMigrationService.wrapLegacy(
+                      "RegistrarConfig",
+                      payload,
+                      "registrar",
+                  );
+            const upgraded = this.configMigrationService.upgrade(document);
+            const blocking = upgraded.issues.filter(
+                (issue) => issue.severity !== "warning",
+            );
+            if (blocking.length) {
+                throw new Error(
+                    blocking.map((issue) => issue.message).join("; "),
+                );
+            }
+            const config = CreateRegistrarConfigSchema.parse(
+                this.configMigrationService.unwrapForLegacyImporter(
+                    upgraded.document,
+                ),
+            );
             const existing = await this.configRepository.findOneBy({
                 tenantId,
             });
-            if (existing && !force) {
+            if (existing && !updateExisting) {
                 this.logger.debug(
                     `[${tenantId}] Registrar config already exists, skipping`,
                 );
                 return;
             }
 
-            if (existing && force) {
+            if (existing && updateExisting) {
                 await this.configRepository.delete({ tenantId });
             }
 
-            const config = loadConfigDto(filePath, CreateRegistrarConfigDto);
-
             await this.configRepository.save({ tenantId, ...config });
+            await this.configOwnershipService.markApplied({
+                tenantId,
+                kind: "RegistrarConfig",
+                resourceId: "registrar",
+                ownership: "file-managed",
+                generation: upgraded.document.metadata.generation ?? 1,
+                source: `folder:${resolve(configPath, tenantId)}`,
+                sourceHash: createHash("sha256")
+                    .update(readFileSync(filePath))
+                    .digest("hex"),
+            });
 
             this.logger.log(`[${tenantId}] Registrar config imported`);
         } catch (error: any) {

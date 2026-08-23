@@ -1,112 +1,120 @@
 {
-  "id": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3",
-  "description": "trust list for pid issuance",
-  "keyChainId": "570852d7-7e7f-40af-a0e3-a6ebffd75ed0",
-  "entities": [
-    {
-      "type": "internal",
-      "issuerKeyChainId": "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
-      "revocationKeyChainId": "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
-      "info": {
-        "name": "PID Provider",
-        "locale": "en"
-      }
-    }
-  ],
-  "data": {
-    "ListAndSchemeInformation": {
-      "LoTEVersionIdentifier": 1,
-      "LoTESequenceNumber": 2,
-      "LoTEType": "http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList",
-      "StatusDeterminationApproach": "http://uri.etsi.org/19602/EUEAAProvidersList/StatusDetn/EU",
-      "SchemeTypeCommunityRules": [
-        {
-          "locale": "en",
-          "uriValue": "http://uri.etsi.org/19602/EUEAAProviders/schemerules/EU"
-        }
-      ],
-      "SchemeTerritory": "EU",
-      "NextUpdate": "2026-02-01T09:40:29.793Z",
-      "SchemeOperatorName": [
-        {
-          "locale": "en",
-          "value": "Root Tenant"
-        }
-      ],
-      "ListIssueDateTime": "2026-01-02T09:40:29.793Z"
-    },
-    "TrustedEntitiesList": [
+  "apiVersion": "eudiplo.io/trust-list/v1",
+  "kind": "TrustList",
+  "metadata": {
+    "id": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3",
+    "generation": 1
+  },
+  "spec": {
+    "id": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3",
+    "description": "trust list for pid issuance",
+    "keyChainId": "570852d7-7e7f-40af-a0e3-a6ebffd75ed0",
+    "entities": [
       {
-        "TrustedEntityInformation": {
-          "TEInformationURI": [
-            {
-              "locale": "en",
-              "uriValue": "http://example.com/te-info"
-            }
-          ],
-          "TEName": [
-            {
-              "locale": "en",
-              "value": "PID Provider"
-            }
-          ],
-          "TEAddress": {
-            "TEElectronicAddress": [
+        "type": "internal",
+        "issuerKeyChainId": "c3f24b6e-9b71-4b62-8d37-5f1a2c9e47ad",
+        "revocationKeyChainId": "1f8c6b29-a4d3-4e7f-b2a0-9c5d13e8f746",
+        "info": {
+          "name": "PID Provider",
+          "locale": "en"
+        }
+      }
+    ],
+    "data": {
+      "ListAndSchemeInformation": {
+        "LoTEVersionIdentifier": 1,
+        "LoTESequenceNumber": 2,
+        "LoTEType": "http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList",
+        "StatusDeterminationApproach": "http://uri.etsi.org/19602/EUEAAProvidersList/StatusDetn/EU",
+        "SchemeTypeCommunityRules": [
+          {
+            "locale": "en",
+            "uriValue": "http://uri.etsi.org/19602/EUEAAProviders/schemerules/EU"
+          }
+        ],
+        "SchemeTerritory": "EU",
+        "NextUpdate": "2026-02-01T09:40:29.793Z",
+        "SchemeOperatorName": [
+          {
+            "locale": "en",
+            "value": "Root Tenant"
+          }
+        ],
+        "ListIssueDateTime": "2026-01-02T09:40:29.793Z"
+      },
+      "TrustedEntitiesList": [
+        {
+          "TrustedEntityInformation": {
+            "TEInformationURI": [
               {
                 "locale": "en",
-                "uriValue": "mailto:example@example.com"
+                "uriValue": "http://example.com/te-info"
               }
             ],
-            "TEPostalAddress": [
+            "TEName": [
               {
-                "Country": "DE",
                 "locale": "en",
-                "Locality": "",
-                "PostalCode": "",
-                "StreetAddress": ""
+                "value": "PID Provider"
               }
-            ]
-          }
-        },
-        "TrustedEntityServices": [
-          {
-            "ServiceInformation": {
-              "ServiceTypeIdentifier": "http://uri.etsi.org/19602/SvcType/EAA/Issuance",
-              "ServiceName": [
+            ],
+            "TEAddress": {
+              "TEElectronicAddress": [
                 {
                   "locale": "en",
-                  "value": "EAA-Issuance-Service"
+                  "uriValue": "mailto:example@example.com"
                 }
               ],
-              "ServiceDigitalIdentity": {
-                "X509Certificates": [
-                  {
-                    "val": "MIIBrDCCAVGgAwIBAgIUZWGM7ShXCuz/VZZrHLambLM2GUUwCgYIKoZIzj0EAwIwIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MB4XDTI2MDgwOTEwMjQ1MVoXDTM2MDgwNjEwMjQ1MVowIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHHkkbUgKSkkqXmL8utl+TLWIg8CYQS4WPJ8j/nO44YzU0ljQtPeYS65wtAJklY2sDt9VbzKlHhl/ly67zk2NLKNjMGEwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFG9BfgN82iWP/ERGyroyefQsnUtkMB8GA1UdIwQYMBaAFG9BfgN82iWP/ERGyroyefQsnUtkMAoGCCqGSM49BAMCA0kAMEYCIQDV4Bag+jxSoRqy022tRjYXeQXlTE+FOwjmr0YsK09tEAIhANHbdPYp5FF7xcnAGHYto6eGKNln8rjiyJQ+R5o+VuoS"
-                  }
-                ]
-              }
+              "TEPostalAddress": [
+                {
+                  "Country": "DE",
+                  "locale": "en",
+                  "Locality": "",
+                  "PostalCode": "",
+                  "StreetAddress": ""
+                }
+              ]
             }
           },
-          {
-            "ServiceInformation": {
-              "ServiceName": [
-                {
-                  "locale": "en",
-                  "value": "EAA-Revocation-Service"
-                }
-              ],
-              "ServiceTypeIdentifier": "http://uri.etsi.org/19602/SvcType/EAA/Revocation",
-              "ServiceDigitalIdentity": {
-                "X509Certificates": [
+          "TrustedEntityServices": [
+            {
+              "ServiceInformation": {
+                "ServiceTypeIdentifier": "http://uri.etsi.org/19602/SvcType/EAA/Issuance",
+                "ServiceName": [
                   {
-                    "val": "MIIBrDCCAVGgAwIBAgIUZWGM7ShXCuz/VZZrHLambLM2GUUwCgYIKoZIzj0EAwIwIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MB4XDTI2MDgwOTEwMjQ1MVoXDTM2MDgwNjEwMjQ1MVowIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHHkkbUgKSkkqXmL8utl+TLWIg8CYQS4WPJ8j/nO44YzU0ljQtPeYS65wtAJklY2sDt9VbzKlHhl/ly67zk2NLKNjMGEwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFG9BfgN82iWP/ERGyroyefQsnUtkMB8GA1UdIwQYMBaAFG9BfgN82iWP/ERGyroyefQsnUtkMAoGCCqGSM49BAMCA0kAMEYCIQDV4Bag+jxSoRqy022tRjYXeQXlTE+FOwjmr0YsK09tEAIhANHbdPYp5FF7xcnAGHYto6eGKNln8rjiyJQ+R5o+VuoS"
+                    "locale": "en",
+                    "value": "EAA-Issuance-Service"
                   }
-                ]
+                ],
+                "ServiceDigitalIdentity": {
+                  "X509Certificates": [
+                    {
+                      "val": "MIIBrDCCAVGgAwIBAgIUZWGM7ShXCuz/VZZrHLambLM2GUUwCgYIKoZIzj0EAwIwIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MB4XDTI2MDgwOTEwMjQ1MVoXDTM2MDgwNjEwMjQ1MVowIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHHkkbUgKSkkqXmL8utl+TLWIg8CYQS4WPJ8j/nO44YzU0ljQtPeYS65wtAJklY2sDt9VbzKlHhl/ly67zk2NLKNjMGEwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFG9BfgN82iWP/ERGyroyefQsnUtkMB8GA1UdIwQYMBaAFG9BfgN82iWP/ERGyroyefQsnUtkMAoGCCqGSM49BAMCA0kAMEYCIQDV4Bag+jxSoRqy022tRjYXeQXlTE+FOwjmr0YsK09tEAIhANHbdPYp5FF7xcnAGHYto6eGKNln8rjiyJQ+R5o+VuoS"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "ServiceInformation": {
+                "ServiceName": [
+                  {
+                    "locale": "en",
+                    "value": "EAA-Revocation-Service"
+                  }
+                ],
+                "ServiceTypeIdentifier": "http://uri.etsi.org/19602/SvcType/EAA/Revocation",
+                "ServiceDigitalIdentity": {
+                  "X509Certificates": [
+                    {
+                      "val": "MIIBrDCCAVGgAwIBAgIUZWGM7ShXCuz/VZZrHLambLM2GUUwCgYIKoZIzj0EAwIwIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MB4XDTI2MDgwOTEwMjQ1MVoXDTM2MDgwNjEwMjQ1MVowIzELMAkGA1UEBhMCREUxFDASBgNVBAMMC1Jvb3QgVGVuYW50MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEHHkkbUgKSkkqXmL8utl+TLWIg8CYQS4WPJ8j/nO44YzU0ljQtPeYS65wtAJklY2sDt9VbzKlHhl/ly67zk2NLKNjMGEwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMCAQYwHQYDVR0OBBYEFG9BfgN82iWP/ERGyroyefQsnUtkMB8GA1UdIwQYMBaAFG9BfgN82iWP/ERGyroyefQsnUtkMAoGCCqGSM49BAMCA0kAMEYCIQDV4Bag+jxSoRqy022tRjYXeQXlTE+FOwjmr0YsK09tEAIhANHbdPYp5FF7xcnAGHYto6eGKNln8rjiyJQ+R5o+VuoS"
+                    }
+                  ]
+                }
               }
             }
-          }
-        ]
-      }
-    ]
+          ]
+        }
+      ]
+    }
   }
 }

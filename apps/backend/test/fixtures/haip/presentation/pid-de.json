@@ -1,73 +1,81 @@
 {
+  "apiVersion": "eudiplo.io/presentation-config/v2",
+  "kind": "PresentationConfig",
+  "metadata": {
+    "id": "pid-de",
+    "generation": 1
+  },
+  "spec": {
     "id": "pid-de",
     "description": "Presentation ID Germany",
     "statusCheckMode": "disabled",
     "dcql_query": {
-        "credentials": [
+      "credentials": [
+        {
+          "id": "pid-sd-jwt",
+          "format": "dc+sd-jwt",
+          "meta": {
+            "vct_values": [
+              "urn:eudi:pid:de:1"
+            ]
+          },
+          "claims": [
             {
-                "id": "pid-sd-jwt",
-                "format": "dc+sd-jwt",
-                "meta": {
-                    "vct_values": [
-                        "urn:eudi:pid:de:1"
-                    ]
-                },
-                "claims": [
-                    {
-                        "path": [
-                            "given_name"
-                        ]
-                    }
-                ],
-                "trusted_authorities": [
-                    {
-                        "type": "etsi_tl",
-                        "values": [
-                            {
-                                "url": "<TENANT_URL>/trust-list/580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "id": "pid-mso-mdoc",
-                "format": "mso_mdoc",
-                "meta": {
-                    "doctype_value": "eu.europa.ec.eudi.pid.1"
-                },
-                "claims": [
-                    {
-                        "path": [
-                            "eu.europa.ec.eudi.pid.1",
-                            "given_name"
-                        ],
-                        "intent_to_retain": false
-                    }
-                ],
-                "trusted_authorities": [
-                    {
-                        "type": "etsi_tl",
-                        "values": [
-                            {
-                                "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
-                            }
-                        ]
-                    }
-                ]
+              "path": [
+                "given_name"
+              ]
             }
-        ],
-        "credential_sets": [
+          ],
+          "trusted_authorities": [
             {
-                "options": [
-                    [
-                        "pid-sd-jwt"
-                    ],
-                    [
-                        "pid-mso-mdoc"
-                    ]
-                ]
+              "type": "etsi_tl",
+              "values": [
+                {
+                  "url": "<TENANT_URL>/trust-list/580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
+                }
+              ]
             }
-        ]
+          ]
+        },
+        {
+          "id": "pid-mso-mdoc",
+          "format": "mso_mdoc",
+          "meta": {
+            "doctype_value": "eu.europa.ec.eudi.pid.1"
+          },
+          "claims": [
+            {
+              "path": [
+                "eu.europa.ec.eudi.pid.1",
+                "given_name"
+              ],
+              "intent_to_retain": false
+            }
+          ],
+          "trusted_authorities": [
+            {
+              "type": "etsi_tl",
+              "values": [
+                {
+                  "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "credential_sets": [
+        {
+          "options": [
+            [
+              "pid-sd-jwt"
+            ],
+            [
+              "pid-mso-mdoc"
+            ]
+          ]
+        }
+      ]
     }
+  }
 }

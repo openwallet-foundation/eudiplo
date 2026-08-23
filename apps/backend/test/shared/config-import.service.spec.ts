@@ -7,8 +7,8 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { ConfigService } from "@nestjs/config";
 import { Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { CreateClientDto } from "../../src/auth/client/dto/create-client.dto";
 import { CreateClientSchema } from "../../src/auth/client/schemas/client.schema";
@@ -23,6 +23,9 @@ function createConfigServiceStub(configFolder: string) {
             throw new Error(`Unexpected getOrThrow(${key})`);
         },
         get: (key: string) => {
+            if (key === "CONFIG_IMPORT") {
+                return true;
+            }
             if (key === "CONFIG_IMPORT_FORCE") {
                 return false;
             }

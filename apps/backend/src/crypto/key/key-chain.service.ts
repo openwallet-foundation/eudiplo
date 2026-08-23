@@ -69,6 +69,45 @@ export class KeyChainService {
 
     async create(tenantId: string, dto: KeyChainCreateDto): Promise<string> {
         const id = v4();
+        return this.createWithId(tenantId, id, dto);
+    }
+
+    /** Replace a key chain with newly generated material while preserving its id. */
+    async regenerate(
+        tenantId: string,
+        id: string,
+        dto: KeyChainCreateDto,
+    ): Promise<string> {
+        const previous = await this.keyChainRepository.findOneBy({
+            tenantId,
+            id,
+        });
+        const temporaryId = v4();
+        await this.createWithId(tenantId, temporaryId, dto);
+        const generated = await this.keyChainRepository.findOneByOrFail({
+            tenantId,
+            id: temporaryId,
+        });
+        try {
+            await this.keyChainRepository.save({ ...generated, id });
+            await this.keyChainRepository.delete({
+                tenantId,
+                id: temporaryId,
+            });
+        } catch (error) {
+            await this.delete(tenantId, temporaryId);
+            throw error;
+        }
+        if (previous) await this.deleteExternalKeyMaterial(previous);
+        this.logger.log(`Regenerated key chain ${id} for tenant ${tenantId}`);
+        return id;
+    }
+
+    private async createWithId(
+        tenantId: string,
+        id: string,
+        dto: KeyChainCreateDto,
+    ): Promise<string> {
         const tenant = await this.tenantRepository.findOneByOrFail({
             id: tenantId,
         });
@@ -381,6 +420,15 @@ export class KeyChainService {
             throw new NotFoundException(`Key chain ${id} not found`);
         }
 
+        await this.deleteExternalKeyMaterial(keyChain);
+
+        await this.keyChainRepository.delete({ tenantId, id });
+        this.logger.log(`Deleted key chain ${id}`);
+    }
+
+    private async deleteExternalKeyMaterial(
+        keyChain: KeyChainEntity,
+    ): Promise<void> {
         // Best-effort: ask the adapter to clean up external key material.
         try {
             const adapter = this.kmsRegistry.resolve(
@@ -392,12 +440,9 @@ export class KeyChainService {
             }
         } catch (err) {
             this.logger.warn(
-                `Failed to delete external key material for key chain ${id}: ${String(err)}`,
+                `Failed to delete external key material for key chain ${keyChain.id}: ${String(err)}`,
             );
         }
-
-        await this.keyChainRepository.delete({ tenantId, id });
-        this.logger.log(`Deleted key chain ${id}`);
     }
 
     // ─────────────────────── config import ───────────────────────

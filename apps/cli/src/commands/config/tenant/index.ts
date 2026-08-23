@@ -67,7 +67,12 @@ export function createTenantCommand(
             setExitCode(
                 await tenantCommand(
                     config,
-                    parsedArgs("config", "validate", tenantId ? [tenantId] : [], options),
+                    parsedArgs(
+                        "config",
+                        "validate",
+                        tenantId ? [tenantId] : [],
+                        options,
+                    ),
                     context,
                 ),
             );

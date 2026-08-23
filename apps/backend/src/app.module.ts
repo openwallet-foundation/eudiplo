@@ -14,6 +14,8 @@ import { IssuerModule } from "./issuer/issuer.module";
 import { RegistrarModule } from "./registrar/registrar.module";
 import { SessionModule } from "./session/session.module";
 import { ConfigImportModule } from "./platform/config-import/config-import.module";
+import { ConfigPortabilityModule } from "./platform/config-portability/config-portability.module";
+import { ConfigResourceCoreModule } from "./platform/config-portability/config-resource-core.module";
 import { VALIDATION_SCHEMA } from "./platform/config/combined.schema";
 import { DataEncryptionModule } from "./platform/data-encryption/data-encryption.module";
 import { createLoggerOptions } from "./platform/observability/logger.factory";
@@ -37,6 +39,7 @@ import { VerifierModule } from "./verifier/verifier.module";
         // before TypeORM entities are loaded
         DataEncryptionModule,
         CoreModule,
+        ConfigResourceCoreModule,
         AuthModule,
         KeyModule.forRoot(),
         MulterModule.register({
@@ -51,6 +54,7 @@ import { VerifierModule } from "./verifier/verifier.module";
         SessionModule,
         DatabaseModule,
         StorageModule.forRoot(),
+        ConfigPortabilityModule,
         ConfigImportModule,
     ],
     controllers: [],

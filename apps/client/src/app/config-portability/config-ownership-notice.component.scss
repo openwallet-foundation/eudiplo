@@ -1,0 +1,31 @@
+.managed-notice {
+  border-color: var(--mat-sys-tertiary);
+  background: var(--mat-sys-tertiary-container);
+  color: var(--mat-sys-on-tertiary-container);
+  margin-bottom: 16px;
+}
+
+mat-card-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+.message {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.message span {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  mat-card-content {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+}

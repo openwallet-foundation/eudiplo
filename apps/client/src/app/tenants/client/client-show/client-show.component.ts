@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { MatChipsModule } from '@angular/material/chips';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-client-show',
@@ -19,6 +21,8 @@ import { MatChipsModule } from '@angular/material/chips';
     RouterModule,
     FlexLayoutModule,
     MatChipsModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './client-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

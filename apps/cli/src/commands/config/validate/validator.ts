@@ -35,7 +35,12 @@ export async function validateTenantsRoot(
     const results: TenantValidationResult[] = [];
     for (const tenantId of tenantIds) {
         results.push(
-            await validateTenantDirectory(join(rootPath, tenantId), tenantId, schemas, env),
+            await validateTenantDirectory(
+                join(rootPath, tenantId),
+                tenantId,
+                schemas,
+                env,
+            ),
         );
     }
     return results;
@@ -88,7 +93,12 @@ function createValidatorFactory(
     schemas: Map<string, Record<string, unknown>>,
 ): (schemaFile: string) => ValidateFunction {
     const ajv = new Ajv2020Module.default({ allErrors: true, strict: false });
-    addFormatsModule.default(ajv as Parameters<typeof addFormatsModule.default>[0]);
+    addFormatsModule.default(
+        ajv as Parameters<typeof addFormatsModule.default>[0],
+    );
+    for (const [schemaFile, schema] of schemas) {
+        ajv.addSchema(schema, schemaFile);
+    }
     const validators = new Map<string, ValidateFunction>();
     return (schemaFile: string): ValidateFunction => {
         const cached = validators.get(schemaFile);
@@ -99,7 +109,11 @@ function createValidatorFactory(
         if (!schema) {
             throw new Error(`No bundled schema found for "${schemaFile}".`);
         }
-        const validator = ajv.compile(schema);
+        const schemaId =
+            typeof schema.$id === "string" ? schema.$id : undefined;
+        const validator =
+            (schemaId ? ajv.getSchema(schemaId) : undefined) ??
+            ajv.compile(schema);
         validators.set(schemaFile, validator);
         return validator;
     };
@@ -122,7 +136,13 @@ async function validateFixedFileEntry(
     }
 
     state.files += 1;
-    await recordValidationOutcome(filePath, entry.file, entry.resourceType, entry.schemaFile, state);
+    await recordValidationOutcome(
+        filePath,
+        entry.file,
+        entry.resourceType,
+        entry.schemaFile,
+        state,
+    );
 }
 
 async function validateDirectoryEntry(
@@ -136,14 +156,22 @@ async function validateDirectoryEntry(
     }
 
     const dirEntries = (await readdir(directoryPath, { withFileTypes: true }))
-        .filter((dirEntry) => dirEntry.isFile() && dirEntry.name.endsWith(".json"))
+        .filter(
+            (dirEntry) => dirEntry.isFile() && dirEntry.name.endsWith(".json"),
+        )
         .sort((left, right) => left.name.localeCompare(right.name));
 
     for (const dirEntry of dirEntries) {
         const relativeFile = `${entry.subfolder}/${dirEntry.name}`;
         const filePath = join(directoryPath, dirEntry.name);
         state.files += 1;
-        await recordValidationOutcome(filePath, relativeFile, entry.resourceType, entry.schemaFile, state);
+        await recordValidationOutcome(
+            filePath,
+            relativeFile,
+            entry.resourceType,
+            entry.schemaFile,
+            state,
+        );
     }
 }
 
@@ -163,7 +191,8 @@ async function recordValidationOutcome(
         state.errors,
     );
     if (isValid) {
-        state.resourceCounts[resourceType] = (state.resourceCounts[resourceType] ?? 0) + 1;
+        state.resourceCounts[resourceType] =
+            (state.resourceCounts[resourceType] ?? 0) + 1;
     }
 }
 
@@ -190,7 +219,10 @@ async function validateResourceFile(
     try {
         payload = JSON.parse(raw);
     } catch (error) {
-        errors.push({ file: relativeFile, message: `Invalid JSON: ${(error as Error).message}` });
+        errors.push({
+            file: relativeFile,
+            message: `Invalid JSON: ${(error as Error).message}`,
+        });
         return false;
     }
 
@@ -220,8 +252,9 @@ function formatErrorPath(issue: ErrorObject): string | undefined {
     if (path) {
         return path;
     }
-    const missingProperty = (issue.params as { missingProperty?: string } | undefined)
-        ?.missingProperty;
+    const missingProperty = (
+        issue.params as { missingProperty?: string } | undefined
+    )?.missingProperty;
     return missingProperty;
 }
 
@@ -256,11 +289,15 @@ function resolvePlaceholders(
         );
     }
     if (Array.isArray(value)) {
-        return value.map((item) => resolvePlaceholders(item, env, file, errors));
+        return value.map((item) =>
+            resolvePlaceholders(item, env, file, errors),
+        );
     }
     if (value && typeof value === "object") {
         const result: Record<string, unknown> = {};
-        for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
+        for (const [key, val] of Object.entries(
+            value as Record<string, unknown>,
+        )) {
             result[key] = resolvePlaceholders(val, env, file, errors);
         }
         return result;

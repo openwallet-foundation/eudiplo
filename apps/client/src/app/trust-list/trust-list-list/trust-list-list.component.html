@@ -24,7 +24,14 @@
       <button matIconButton [routerLink]="[list.id]" matTooltip="View details">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button matIconButton [routerLink]="[list.id, 'edit']" matTooltip="Edit">
+      <button
+        matIconButton
+        [routerLink]="[list.id, 'edit']"
+        matTooltip="Edit"
+        appConfigManaged
+        managedKind="TrustList"
+        [managedResourceId]="list.id"
+      >
         <mat-icon>edit</mat-icon>
       </button>
       <button matIconButton (click)="downloadConfig(list)" matTooltip="Download configuration">

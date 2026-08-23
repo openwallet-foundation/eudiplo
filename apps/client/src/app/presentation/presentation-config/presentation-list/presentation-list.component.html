@@ -58,7 +58,14 @@
       >
         <mat-icon>visibility</mat-icon>
       </button>
-      <button matIconButton [routerLink]="[config.id, 'edit']" matTooltip="Edit Configuration">
+      <button
+        matIconButton
+        [routerLink]="[config.id, 'edit']"
+        matTooltip="Edit Configuration"
+        appConfigManaged
+        managedKind="PresentationConfig"
+        [managedResourceId]="config.id"
+      >
         <mat-icon>edit</mat-icon>
       </button>
     </td>

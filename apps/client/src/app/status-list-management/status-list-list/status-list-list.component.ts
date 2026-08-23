@@ -19,6 +19,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { StatusListResponseDto } from '@eudiplo/sdk-core';
 import { StatusListManagementService } from '../status-list-management.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-status-list-list',
@@ -35,6 +36,7 @@ import { StatusListManagementService } from '../status-list-management.service';
     MatChipsModule,
     MatSnackBarModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './status-list-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

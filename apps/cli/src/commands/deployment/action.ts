@@ -1,4 +1,7 @@
-import { drivers, unsupportedCommand } from "../../services/deployment-drivers.js";
+import {
+    drivers,
+    unsupportedCommand,
+} from "../../services/deployment-drivers.js";
 import { resolveInstance } from "../../services/instance-selection.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
 
@@ -15,8 +18,15 @@ export async function runDriverCommand(
         throw new Error(unsupportedCommand(command, instance.target));
     }
     if (instance.target === "compose") {
-        const clientMode = instance.clientUrl ? "client enabled" : "client disabled";
+        const clientMode = instance.clientUrl
+            ? "client enabled"
+            : "client disabled";
         context.stdout.write(`${command} ${instanceName} (${clientMode})\n`);
     }
-    return handler({ instanceName, instance, args: parsed.positionals, context });
+    return handler({
+        instanceName,
+        instance,
+        args: parsed.positionals,
+        context,
+    });
 }

@@ -14,6 +14,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { StatusListConfigService, bitsOptions } from './status-list-config.service';
 import { StatusListConfig } from '@eudiplo/sdk-core';
+import { ConfigOwnershipDirective } from '../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-status-list-config',
@@ -31,6 +33,8 @@ import { StatusListConfig } from '@eudiplo/sdk-core';
     MatProgressSpinnerModule,
     MatDividerModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './status-list-config.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

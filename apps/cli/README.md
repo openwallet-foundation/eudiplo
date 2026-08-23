@@ -252,6 +252,26 @@ when testing changes that require a different backend or client build:
 pnpm --filter @eudiplo/cli dev demo ./eudiplo-demo --image-tag main
 ```
 
+Install the JSON Schemas bundled with the CLI into a VS Code workspace and
+associate them with the local tenant configuration tree:
+
+```bash
+eudiplo config editor setup . --config-directory ./config
+```
+
+The command merges `.vscode/settings.json` without removing unrelated settings
+or JSONC comments and can safely be rerun after a CLI upgrade.
+
+List the complete command tree or render the same reference as Markdown:
+
+```bash
+eudiplo commands
+eudiplo commands --format markdown
+```
+
+The documentation prebuild uses the Markdown renderer directly, keeping the
+published command reference synchronized with Commander definitions.
+
 Use a new project directory or add `--force` when regenerating an existing
 project, because the CLI preserves managed environment files by default. The
 `version` command still reports the CLI package version, but that value is not
@@ -272,6 +292,7 @@ src/
 │   │   └── action.ts          # instance persistence
 │   └── config/
 │       ├── index.ts           # config group
+│       ├── editor/            # VS Code schema setup command module
 │       ├── validate/          # validation command module
 │       └── tenant/            # tenant-config command module
 ├── services/

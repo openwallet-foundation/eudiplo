@@ -134,7 +134,7 @@ export class InternalClientsProvider
     async addClient(
         tenantId: string,
         dto: CreateClient,
-        secret = randomBytes(32).toString("hex"),
+        secret = dto.secret ?? randomBytes(32).toString("hex"),
     ) {
         // Hash the secret before storing
         const hashedSecret = await bcrypt.hash(secret, BCRYPT_ROUNDS);
@@ -176,6 +176,21 @@ export class InternalClientsProvider
         const hashedSecret = await bcrypt.hash(newSecret, BCRYPT_ROUNDS);
         await this.repo.update({ clientId }, { secret: hashedSecret });
         return newSecret;
+    }
+
+    async setClientSecret(
+        tenantId: string,
+        clientId: string,
+        secret: string,
+    ): Promise<void> {
+        await this.repo.findOneByOrFail({
+            clientId,
+            tenant: { id: tenantId },
+        });
+        await this.repo.update(
+            { clientId, tenant: { id: tenantId } },
+            { secret: await bcrypt.hash(secret, BCRYPT_ROUNDS) },
+        );
     }
 
     updateClient(

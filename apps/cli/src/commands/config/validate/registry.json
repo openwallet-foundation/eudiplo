@@ -15,7 +15,7 @@
         "kind": "file",
         "file": "registrar.json",
         "resourceType": "registrar config",
-        "schemaFile": "CreateRegistrarConfigDto.schema.json",
+        "schemaFile": "RegistrarConfigFile.schema.json",
         "required": false,
         "fileMatch": [
             "/assets/config/*/registrar*.json",
@@ -26,7 +26,7 @@
         "kind": "file",
         "file": "kms.json",
         "resourceType": "tenant KMS config",
-        "schemaFile": "KmsConfigDto.schema.json",
+        "schemaFile": "KmsConfigFile.schema.json",
         "required": false,
         "fileMatch": [
             "/assets/config/kms.json",
@@ -39,7 +39,7 @@
         "kind": "directory",
         "subfolder": "clients",
         "resourceType": "client config",
-        "schemaFile": "CreateClientDto.schema.json",
+        "schemaFile": "ClientConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/clients/*.json",
             "/apps/backend/test/fixtures/*/clients/*.json"
@@ -49,7 +49,7 @@
         "kind": "directory",
         "subfolder": "key-chains",
         "resourceType": "key-chain",
-        "schemaFile": "KeyChainImportDto.schema.json",
+        "schemaFile": "KeyChainConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/key-chains/*.json",
             "/apps/backend/test/fixtures/*/key-chains/*.json"
@@ -57,20 +57,9 @@
     },
     {
         "kind": "directory",
-        "subfolder": "certs",
-        "resourceType": "certificate",
-        "schemaFile": "CertImportDto.schema.json",
-        "cliValidated": false,
-        "fileMatch": [
-            "/assets/config/*/certs/*.json",
-            "/apps/backend/test/fixtures/*/certs/*.json"
-        ]
-    },
-    {
-        "kind": "directory",
         "subfolder": "attribute-providers",
         "resourceType": "attribute provider",
-        "schemaFile": "CreateAttributeProviderDto.schema.json",
+        "schemaFile": "AttributeProviderConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/attribute-providers/*.json",
             "/apps/backend/test/fixtures/*/attribute-providers/*.json"
@@ -80,7 +69,7 @@
         "kind": "directory",
         "subfolder": "webhook-endpoints",
         "resourceType": "webhook endpoint",
-        "schemaFile": "CreateWebhookEndpointDto.schema.json",
+        "schemaFile": "WebhookEndpointConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/webhook-endpoints/*.json",
             "/apps/backend/test/fixtures/*/webhook-endpoints/*.json"
@@ -90,7 +79,7 @@
         "kind": "directory",
         "subfolder": "issuance",
         "resourceType": "issuance config",
-        "schemaFile": "IssuanceConfig.schema.json",
+        "schemaFile": "IssuanceConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/issuance/issuance.json",
             "/apps/backend/test/fixtures/*/issuance/issuance.json"
@@ -100,7 +89,7 @@
         "kind": "directory",
         "subfolder": "issuance/credentials",
         "resourceType": "credential config",
-        "schemaFile": "CredentialConfigCreate.schema.json",
+        "schemaFile": "CredentialConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/issuance/credentials/*.json",
             "/apps/backend/test/fixtures/*/issuance/credentials/*.json"
@@ -110,7 +99,7 @@
         "kind": "directory",
         "subfolder": "issuance/status-lists",
         "resourceType": "status list",
-        "schemaFile": "StatusListImportDto.schema.json",
+        "schemaFile": "StatusListConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/issuance/status-lists/*.json",
             "/apps/backend/test/fixtures/*/issuance/status-lists/*.json"
@@ -120,7 +109,7 @@
         "kind": "directory",
         "subfolder": "trust-lists",
         "resourceType": "trustlist",
-        "schemaFile": "TrustListCreateDto.schema.json",
+        "schemaFile": "TrustListConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/trust-lists/*.json",
             "/apps/backend/test/fixtures/*/trust-lists/*.json"
@@ -130,7 +119,7 @@
         "kind": "directory",
         "subfolder": "presentation",
         "resourceType": "presentation config",
-        "schemaFile": "PresentationConfigCreateDto.schema.json",
+        "schemaFile": "PresentationConfigFile.schema.json",
         "fileMatch": [
             "/assets/config/*/presentation/*.json",
             "/apps/backend/test/fixtures/*/presentation/*.json"

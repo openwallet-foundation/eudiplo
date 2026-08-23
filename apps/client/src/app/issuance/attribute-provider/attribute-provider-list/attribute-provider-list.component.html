@@ -32,7 +32,13 @@
       <button matIconButton [routerLink]="[provider.id]">
         <mat-icon>visibility</mat-icon>
       </button>
-      <button matIconButton [routerLink]="[provider.id, 'edit']">
+      <button
+        matIconButton
+        [routerLink]="[provider.id, 'edit']"
+        appConfigManaged
+        managedKind="AttributeProvider"
+        [managedResourceId]="provider.id"
+      >
         <mat-icon>edit</mat-icon>
       </button>
     </td>

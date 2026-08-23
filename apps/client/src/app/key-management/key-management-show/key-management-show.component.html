@@ -1,16 +1,31 @@
 @if (keyChain) {
   <div fxLayout="column" fxFlex fxLayoutGap="16px">
+    <app-config-ownership-notice kind="KeyChain" [resourceId]="keyId" />
     <div fxLayout="row" fxLayoutAlign="space-between center">
       <h2>Key Chain: {{ description || keyId }}</h2>
       <div>
         <button mat-icon-button [routerLink]="['../']" matTooltip="Back to list">
           <mat-icon>arrow_back</mat-icon>
         </button>
-        <button mat-icon-button [routerLink]="['edit']" matTooltip="Edit key chain">
+        <button
+          mat-icon-button
+          [routerLink]="['edit']"
+          matTooltip="Edit key chain"
+          appConfigManaged
+          managedKind="KeyChain"
+          [managedResourceId]="keyId"
+        >
           <mat-icon>edit</mat-icon>
         </button>
         @if (canRotate) {
-          <button mat-icon-button (click)="rotateKey()" matTooltip="Rotate key now">
+          <button
+            mat-icon-button
+            (click)="rotateKey()"
+            matTooltip="Rotate key now"
+            appConfigManaged
+            managedKind="KeyChain"
+            [managedResourceId]="keyId"
+          >
             <mat-icon>autorenew</mat-icon>
           </button>
         }
@@ -20,7 +35,15 @@
         <button mat-icon-button (click)="exportKeyChain()" matTooltip="Export as config JSON">
           <mat-icon>download</mat-icon>
         </button>
-        <button mat-icon-button (click)="deleteKey()" color="warn" matTooltip="Delete key chain">
+        <button
+          mat-icon-button
+          (click)="deleteKey()"
+          color="warn"
+          matTooltip="Delete key chain"
+          appConfigManaged
+          managedKind="KeyChain"
+          [managedResourceId]="keyId"
+        >
           <mat-icon>delete</mat-icon>
         </button>
       </div>

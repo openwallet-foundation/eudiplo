@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "usageType": {
+      "type": "string",
+      "enum": [
+        "access",
+        "attestation",
+        "trustList",
+        "statusList",
+        "encrypt"
+      ],
+      "description": "Key usage category for the key chain."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "standalone",
+        "internalChain"
+      ],
+      "description": "Key chain mode."
+    },
+    "description": {
+      "description": "Optional key chain description.",
+      "type": "string"
+    },
+    "kmsProvider": {
+      "description": "Optional KMS provider id for key storage operations.",
+      "type": "string"
+    },
+    "rotationPolicy": {
+      "description": "Optional rotation policy.",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable or disable automatic key rotation."
+        },
+        "intervalDays": {
+          "description": "Rotation interval in days.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        },
+        "certValidityDays": {
+          "description": "Certificate validity period in days for generated leaf certificates.",
+          "type": "number",
+          "minimum": 1,
+          "maximum": 3650
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "usageType",
+    "type"
+  ],
+  "additionalProperties": false,
+  "$id": "./KeyChainCreateDto.schema.json",
+  "title": "KeyChainCreateDto"
+}

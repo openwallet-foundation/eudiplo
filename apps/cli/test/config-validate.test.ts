@@ -1,6 +1,6 @@
 import { mkdir, mkdtemp, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
@@ -40,7 +40,9 @@ describe("eudiplo config validate tenant(s)", () => {
         const code = await runCli(["config", "validate", "tenant"], context);
 
         expect(code).toBe(1);
-        expect(output.stderr).toContain("Usage: eudiplo config validate tenant <path>");
+        expect(output.stderr).toContain(
+            "Usage: eudiplo config validate tenant <path>",
+        );
     });
 
     it("passes for a valid tenant directory and reports resource counts", async () => {
@@ -52,7 +54,10 @@ describe("eudiplo config validate tenant(s)", () => {
             roles: ["issuance:manage"],
         });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("PASS root");
@@ -60,12 +65,66 @@ describe("eudiplo config validate tenant(s)", () => {
         expect(output.stdout).toContain("No errors found.");
     });
 
+    it("validates versioned demo files through compatibility file schemas", async () => {
+        const { context, output, cwd } = await createContext();
+
+        const createCode = await runCli(
+            [
+                "config",
+                "tenant",
+                "create",
+                "demo",
+                "--config-directory",
+                cwd,
+                "--template",
+                "demo",
+                "--name",
+                "Demo Tenant",
+            ],
+            context,
+        );
+        expect(createCode).toBe(0);
+
+        output.stdout = "";
+        const validateCode = await runCli(
+            ["config", "validate", "tenant", join(cwd, "demo")],
+            context,
+        );
+
+        expect(validateCode).toBe(0);
+        expect(output.stdout).toContain("PASS demo");
+        expect(output.stdout).toContain("4 key-chain");
+        expect(output.stdout).toContain("1 issuance config");
+        expect(output.stdout).toContain("2 presentation configs");
+    });
+
+    it("validates the canonical HAIP fixture envelopes", async () => {
+        const { context, output } = await createContext();
+        const haipDirectory = resolve(
+            __dirname,
+            "../../backend/test/fixtures/haip",
+        );
+
+        const code = await runCli(
+            ["config", "validate", "tenant", haipDirectory],
+            context,
+        );
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("PASS haip");
+        expect(output.stdout).toContain("23 configuration file(s)");
+        expect(output.stdout).toContain("1 attribute provider");
+    });
+
     it("does not require optional registrar or tenant KMS config files", async () => {
         const { context, output, cwd } = await createContext();
         const tenantDir = join(cwd, "root");
         await writeTenantInfo(tenantDir, { name: "Root Tenant" });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("PASS root");
@@ -75,25 +134,39 @@ describe("eudiplo config validate tenant(s)", () => {
         const { context, output, cwd } = await createContext();
         const tenantDir = join(cwd, "root");
         await writeTenantInfo(tenantDir, { name: "Root Tenant" });
-        await writeFile(join(tenantDir, "registrar.json"), JSON.stringify({}), "utf8");
+        await writeFile(
+            join(tenantDir, "registrar.json"),
+            JSON.stringify({}),
+            "utf8",
+        );
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stdout).toContain("registrar.json");
     });
 
-    it("ignores editor-only schemas such as certs that the backend does not import", async () => {
+    it("ignores unknown directories that the backend does not import", async () => {
         const { context, output, cwd } = await createContext();
         const tenantDir = join(cwd, "root");
         await writeTenantInfo(tenantDir, { name: "Root Tenant" });
-        await mkdir(join(tenantDir, "certs"), { recursive: true });
-        await writeFile(join(tenantDir, "certs", "broken.json"), "{ not json", "utf8");
+        await mkdir(join(tenantDir, "unsupported"), { recursive: true });
+        await writeFile(
+            join(tenantDir, "unsupported", "broken.json"),
+            "{ not json",
+            "utf8",
+        );
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(0);
-        expect(output.stdout).not.toContain("certs/broken.json");
+        expect(output.stdout).not.toContain("unsupported/broken.json");
     });
 
     it("fails when info.json is missing", async () => {
@@ -101,11 +174,16 @@ describe("eudiplo config validate tenant(s)", () => {
         const tenantDir = join(cwd, "root");
         await mkdir(tenantDir, { recursive: true });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stdout).toContain("FAIL root");
-        expect(output.stdout).toContain("Missing required tenant metadata file");
+        expect(output.stdout).toContain(
+            "Missing required tenant metadata file",
+        );
     });
 
     it("collects schema errors with file and readable path", async () => {
@@ -117,7 +195,10 @@ describe("eudiplo config validate tenant(s)", () => {
             // roles is required and missing
         });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stdout).toContain("FAIL root");
@@ -130,9 +211,16 @@ describe("eudiplo config validate tenant(s)", () => {
         const tenantDir = join(cwd, "root");
         await writeTenantInfo(tenantDir, { name: "Root Tenant" });
         await mkdir(join(tenantDir, "clients"), { recursive: true });
-        await writeFile(join(tenantDir, "clients", "invalid.json"), "{ not json", "utf8");
+        await writeFile(
+            join(tenantDir, "clients", "invalid.json"),
+            "{ not json",
+            "utf8",
+        );
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stdout).toContain("clients/invalid.json");
@@ -149,10 +237,15 @@ describe("eudiplo config validate tenant(s)", () => {
             roles: ["issuance:manage"],
         });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(1);
-        expect(output.stdout).toContain("Unresolved placeholder ${ROOT_CLIENT_SECRET}");
+        expect(output.stdout).toContain(
+            "Unresolved placeholder ${ROOT_CLIENT_SECRET}",
+        );
     });
 
     it("resolves placeholders from the environment for validation", async () => {
@@ -166,7 +259,10 @@ describe("eudiplo config validate tenant(s)", () => {
             roles: ["issuance:manage"],
         });
 
-        const code = await runCli(["config", "validate", "tenant", tenantDir], context);
+        const code = await runCli(
+            ["config", "validate", "tenant", tenantDir],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).not.toContain("super-secret-value");
@@ -181,12 +277,17 @@ describe("eudiplo config validate tenant(s)", () => {
         });
         await mkdir(join(cwd, "partner-a"), { recursive: true });
 
-        const code = await runCli(["config", "validate", "tenants", cwd], context);
+        const code = await runCli(
+            ["config", "validate", "tenants", cwd],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stdout).toContain("PASS root");
         expect(output.stdout).toContain("FAIL partner-a");
-        expect(output.stdout).toMatch(/Validation failed: \d+ error\(s\) in 1 tenant\(s\)\./);
+        expect(output.stdout).toMatch(
+            /Validation failed: \d+ error\(s\) in 1 tenant\(s\)\./,
+        );
     });
 
     it("supports a machine-readable json report", async () => {
@@ -222,9 +323,16 @@ describe("eudiplo config validate tenant(s)", () => {
     });
 });
 
-async function writeTenantInfo(tenantDir: string, payload: unknown): Promise<void> {
+async function writeTenantInfo(
+    tenantDir: string,
+    payload: unknown,
+): Promise<void> {
     await mkdir(tenantDir, { recursive: true });
-    await writeFile(join(tenantDir, "info.json"), JSON.stringify(payload, null, 2), "utf8");
+    await writeFile(
+        join(tenantDir, "info.json"),
+        JSON.stringify(payload, null, 2),
+        "utf8",
+    );
 }
 
 async function writeResource(
@@ -235,7 +343,11 @@ async function writeResource(
 ): Promise<void> {
     const directory = join(tenantDir, subfolder);
     await mkdir(directory, { recursive: true });
-    await writeFile(join(directory, fileName), JSON.stringify(payload, null, 2), "utf8");
+    await writeFile(
+        join(directory, fileName),
+        JSON.stringify(payload, null, 2),
+        "utf8",
+    );
 }
 
 async function createContext(): Promise<{

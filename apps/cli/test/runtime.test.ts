@@ -1,9 +1,12 @@
 import { chmod, mkdir, mkdtemp, readFile, writeFile } from "node:fs/promises";
-import { basename, join } from "node:path";
 import { tmpdir } from "node:os";
+import { basename, join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { drivers, resolveComposeRuntime } from "../src/services/deployment-drivers.js";
 import { runCli } from "../src/runtime.js";
+import {
+    drivers,
+    resolveComposeRuntime,
+} from "../src/services/deployment-drivers.js";
 import type { CommandContext } from "../src/types.js";
 
 describe("EUDIPLO CLI", () => {
@@ -17,7 +20,9 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("demo [options] [directory]");
         expect(output.stdout).toContain("Start the minimal local demo");
         expect(output.stdout).toContain("config");
-        expect(output.stdout).toContain("Validate and manage local configuration");
+        expect(output.stdout).toContain(
+            "Validate and manage local configuration",
+        );
         expect(output.stdout).not.toContain("tenant create");
         expect(output.stdout).toContain("Options:");
         expect(output.stdout).toContain("-v, --version");
@@ -40,7 +45,9 @@ describe("EUDIPLO CLI", () => {
         const code = await runCli(["init", "--help"], context);
 
         expect(code).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo init [options] [directory]");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo init [options] [directory]",
+        );
         expect(output.stdout).toContain("--target <compose|external>");
         expect(output.stdout).toContain("--instance <name>");
         expect(output.stdout).toContain("--directory <path>");
@@ -61,7 +68,9 @@ describe("EUDIPLO CLI", () => {
         const code = await runCli(["init", "-h"], context);
 
         expect(code).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo init [options] [directory]");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo init [options] [directory]",
+        );
         expect(output.stdout).toContain("--no-client");
         expect(output.stdout).not.toContain("Commands:\n    eudiplo demo");
     });
@@ -70,22 +79,43 @@ describe("EUDIPLO CLI", () => {
         const { context, output } = await createContext();
 
         expect(await runCli(["config"], context)).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo config [options] [command]");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo config [options] [command]",
+        );
         expect(output.stdout).toContain("path");
         expect(output.stdout).toContain("show [options]");
         expect(output.stdout).toContain("validate");
+        expect(output.stdout).toContain("editor");
         expect(output.stdout).toContain("tenant");
         expect(output.stdout).not.toContain("tenant create");
 
         output.stdout = "";
         expect(await runCli(["config", "tenant"], context)).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo config tenant [options] [command]");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo config tenant [options] [command]",
+        );
         expect(output.stdout).toContain("create|new [options] <tenant-id>");
         expect(output.stdout).toContain("validate [options] [tenant-id]");
         expect(output.stdout).toContain("remove|rm [options] <tenant-id>");
 
         output.stdout = "";
-        expect(await runCli(["config", "tenant", "create", "--help"], context)).toBe(0);
+        expect(
+            await runCli(["config", "editor", "setup", "--help"], context),
+        ).toBe(0);
+        expect(output.stdout).toContain(
+            "Usage: eudiplo config editor setup [options] [workspace]",
+        );
+        expect(output.stdout).toContain("--config-directory <path>");
+
+        output.stdout = "";
+        expect(await runCli(["config", "export", "--help"], context)).toBe(0);
+        expect(output.stdout).toContain("--output <path>");
+        expect(output.stdout).not.toContain("--policy");
+
+        output.stdout = "";
+        expect(
+            await runCli(["config", "tenant", "create", "--help"], context),
+        ).toBe(0);
         expect(output.stdout).toContain(
             "Usage: eudiplo config tenant create|new [options] <tenant-id>",
         );
@@ -93,22 +123,63 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).not.toContain("Commands:");
 
         output.stdout = "";
-        expect(await runCli(["config", "tenant", "validate", "--help"], context)).toBe(0);
+        expect(
+            await runCli(["config", "tenant", "validate", "--help"], context),
+        ).toBe(0);
         expect(output.stdout).toContain(
             "Usage: eudiplo config tenant validate [options] [tenant-id]",
         );
-        expect(output.stdout).toContain("Validate one or all local tenant configurations");
+        expect(output.stdout).toContain(
+            "Validate one or all local tenant configurations",
+        );
 
         output.stdout = "";
         expect(await runCli(["config", "help", "tenant"], context)).toBe(0);
         expect(output.stdout).toContain("Usage: eudiplo config tenant");
     });
 
+    it("lists the complete nested command tree", async () => {
+        const { context, output } = await createContext();
+
+        const code = await runCli(["commands"], context);
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("Available commands:");
+        expect(output.stdout).toContain(
+            "eudiplo config editor setup [options] [workspace]",
+        );
+        expect(output.stdout).toContain("eudiplo config tenant create|new");
+        expect(output.stdout).toContain(
+            "eudiplo instance add [options] <name>",
+        );
+        expect(output.stdout).not.toContain("eudiplo _complete");
+    });
+
+    it("renders the complete command reference as Markdown", async () => {
+        const { context, output } = await createContext();
+
+        const code = await runCli(
+            ["commands", "--format", "markdown"],
+            context,
+        );
+
+        expect(code).toBe(0);
+        expect(output.stdout).toContain("# EUDIPLO CLI command reference");
+        expect(output.stdout).toContain("## `eudiplo config editor setup`");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo config editor setup [options] [workspace]",
+        );
+        expect(output.stdout).toContain("--config-directory <path>");
+        expect(output.stdout).not.toContain("## `eudiplo _complete`");
+    });
+
     it("shows instance subcommands before action help", async () => {
         const { context, output } = await createContext();
 
         expect(await runCli(["instance"], context)).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo instance [options] [command]");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo instance [options] [command]",
+        );
         expect(output.stdout).toContain("list|ls");
         expect(output.stdout).toContain("show [name]");
         expect(output.stdout).toContain("use <name>");
@@ -117,7 +188,9 @@ describe("EUDIPLO CLI", () => {
 
         output.stdout = "";
         expect(await runCli(["instance", "add", "--help"], context)).toBe(0);
-        expect(output.stdout).toContain("Usage: eudiplo instance add [options] <name>");
+        expect(output.stdout).toContain(
+            "Usage: eudiplo instance add [options] <name>",
+        );
         expect(output.stdout).toContain("--url <url>");
     });
 
@@ -129,7 +202,9 @@ describe("EUDIPLO CLI", () => {
 
         output.stderr = "";
         expect(await runCli(["config", "tenant", "create"], context)).toBe(1);
-        expect(output.stderr).toContain("missing required argument 'tenant-id'");
+        expect(output.stderr).toContain(
+            "missing required argument 'tenant-id'",
+        );
     });
 
     it("prints the package version", async () => {
@@ -159,7 +234,9 @@ describe("EUDIPLO CLI", () => {
         expect(code).toBe(0);
         expect(output.stdout).toContain("@eudiplo/cli");
         expect(output.stdout).toContain("latest 99.0.0");
-        expect(output.stdout).toContain("update available: npm install -g @eudiplo/cli@latest");
+        expect(output.stdout).toContain(
+            "update available: npm install -g @eudiplo/cli@latest",
+        );
     });
 
     it("uses the standalone installer when the binary has an update", async () => {
@@ -185,7 +262,9 @@ describe("EUDIPLO CLI", () => {
         const code = await runCli(["version"], context);
 
         expect(code).toBe(0);
-        expect(output.stdout).toContain("latest unavailable: npm registry returned HTTP 404");
+        expect(output.stdout).toContain(
+            "latest unavailable: npm registry returned HTTP 404",
+        );
     });
 
     it("generates completion scripts for supported shells", async () => {
@@ -194,7 +273,8 @@ describe("EUDIPLO CLI", () => {
             bash: "complete -F _eudiplo_completion eudiplo",
             zsh: "#compdef eudiplo",
             fish: "complete -c eudiplo",
-            powershell: "Register-ArgumentCompleter -Native -CommandName eudiplo",
+            powershell:
+                "Register-ArgumentCompleter -Native -CommandName eudiplo",
         };
 
         for (const [shell, marker] of Object.entries(expectations)) {
@@ -229,7 +309,9 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("powershell\n");
 
         output.stdout = "";
-        expect(await runCli(["_complete", "init", "--target"], context)).toBe(0);
+        expect(await runCli(["_complete", "init", "--target"], context)).toBe(
+            0,
+        );
         expect(output.stdout).toContain("compose\n");
         expect(output.stdout).toContain("external\n");
     });
@@ -238,7 +320,13 @@ describe("EUDIPLO CLI", () => {
         const { context, output, configPath } = await createContext();
 
         const code = await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
 
@@ -260,7 +348,13 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toBe("No configured instances.\n");
 
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
         await runCli(
@@ -280,7 +374,13 @@ describe("EUDIPLO CLI", () => {
     it("changes the default instance and shows its details", async () => {
         const { context, output } = await createContext();
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
         await runCli(
@@ -305,27 +405,45 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("Instance staging (default)");
         expect(output.stdout).toContain("Target: external");
         expect(output.stdout).toContain("API URL: https://staging.example.com");
-        expect(output.stdout).toContain("Client URL: https://client.staging.example.com");
+        expect(output.stdout).toContain(
+            "Client URL: https://client.staging.example.com",
+        );
     });
 
     it("unregisters non-default and final instances without removing deployments", async () => {
         const { context, output, configPath } = await createContext();
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
         await runCli(
-            ["instance", "add", "staging", "--url", "https://staging.example.com"],
+            [
+                "instance",
+                "add",
+                "staging",
+                "--url",
+                "https://staging.example.com",
+            ],
             context,
         );
 
         output.stdout = "";
         expect(await runCli(["instance", "rm", "staging"], context)).toBe(0);
         expect(output.stdout).toContain("Unregistered instance staging.");
-        expect(output.stdout).toContain("Deployment resources were not removed.");
+        expect(output.stdout).toContain(
+            "Deployment resources were not removed.",
+        );
 
         output.stdout = "";
-        expect(await runCli(["instance", "remove", "production"], context)).toBe(0);
+        expect(
+            await runCli(["instance", "remove", "production"], context),
+        ).toBe(0);
         const config = JSON.parse(await readFile(configPath, "utf8"));
         expect(config).toEqual({ instances: {} });
     });
@@ -333,28 +451,53 @@ describe("EUDIPLO CLI", () => {
     it("requires switching before unregistering the default instance", async () => {
         const { context, output } = await createContext();
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
         await runCli(
-            ["instance", "add", "staging", "--url", "https://staging.example.com"],
+            [
+                "instance",
+                "add",
+                "staging",
+                "--url",
+                "https://staging.example.com",
+            ],
             context,
         );
         output.stdout = "";
 
-        expect(await runCli(["instance", "remove", "production"], context)).toBe(1);
-        expect(output.stderr).toContain("Cannot remove default instance production");
+        expect(
+            await runCli(["instance", "remove", "production"], context),
+        ).toBe(1);
+        expect(output.stderr).toContain(
+            "Cannot remove default instance production",
+        );
         expect(output.stderr).toContain("eudiplo instance use <name>");
     });
 
     it("rejects compose-only commands for external instances", async () => {
         const { context, output } = await createContext();
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
 
-        const code = await runCli(["logs", "--instance", "production"], context);
+        const code = await runCli(
+            ["logs", "--instance", "production"],
+            context,
+        );
 
         expect(code).toBe(1);
         expect(output.stderr).toContain(
@@ -369,7 +512,9 @@ describe("EUDIPLO CLI", () => {
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("Initialized compose instance local.");
-        await expect(readFile(join(cwd, "eudiplo.compose.yaml"), "utf8")).resolves.toContain(
+        await expect(
+            readFile(join(cwd, "eudiplo.compose.yaml"), "utf8"),
+        ).resolves.toContain(
             "EUDIPLO Docker Compose - Multi-Profile Deployment",
         );
         const env = await readFile(join(cwd, ".eudiplo.env"), "utf8");
@@ -384,12 +529,12 @@ describe("EUDIPLO CLI", () => {
         expect(env).toContain("STORAGE_DRIVER=local");
         expect(env).toContain("EUDIPLO_CONFIG_MOUNT=./config:/app/config");
         expect(env).not.toContain("AUTH_CLIENT_SECRET=root");
-        await expect(readFile(join(cwd, "config", "kms.json"), "utf8")).resolves.toContain(
-            '"defaultProvider": "db"',
-        );
-        await expect(readFile(join(cwd, "config", "demo", "info.json"), "utf8")).rejects.toMatchObject(
-            { code: "ENOENT" },
-        );
+        await expect(
+            readFile(join(cwd, "config", "kms.json"), "utf8"),
+        ).resolves.toContain('"defaultProvider": "db"');
+        await expect(
+            readFile(join(cwd, "config", "demo", "info.json"), "utf8"),
+        ).rejects.toMatchObject({ code: "ENOENT" });
     });
 
     it("creates init assets in a positional project directory", async () => {
@@ -404,21 +549,28 @@ describe("EUDIPLO CLI", () => {
         expect(code).toBe(0);
         await expect(
             readFile(join(projectDirectory, "eudiplo.compose.yaml"), "utf8"),
-        ).resolves.toContain("EUDIPLO Docker Compose - Multi-Profile Deployment");
-        await expect(readFile(join(projectDirectory, ".eudiplo.env"), "utf8")).resolves.toContain(
-            "DB_TYPE=postgres",
+        ).resolves.toContain(
+            "EUDIPLO Docker Compose - Multi-Profile Deployment",
         );
+        await expect(
+            readFile(join(projectDirectory, ".eudiplo.env"), "utf8"),
+        ).resolves.toContain("DB_TYPE=postgres");
 
         const config = JSON.parse(await readFile(configPath, "utf8"));
         expect(config.instances.local.projectDirectory).toBe(projectDirectory);
-        expect(config.instances.local.composeProfiles).toEqual(["postgres", "s3"]);
+        expect(config.instances.local.composeProfiles).toEqual([
+            "postgres",
+            "s3",
+        ]);
         expect(config.instances.local.clientUrl).toBeUndefined();
     });
 
     it("supports the directory flag and uses the saved directory from another cwd", async () => {
         const { context, cwd } = await createContext();
         const projectDirectory = join(cwd, "custom-project");
-        const otherDirectory = await mkdtemp(join(tmpdir(), "eudiplo-cli-other-"));
+        const otherDirectory = await mkdtemp(
+            join(tmpdir(), "eudiplo-cli-other-"),
+        );
         const originalUp = drivers.compose.up;
         let receivedDirectory: string | undefined;
         drivers.compose.up = async ({ instance }) => {
@@ -428,7 +580,10 @@ describe("EUDIPLO CLI", () => {
 
         try {
             expect(
-                await runCli(["init", "--directory", "custom-project", "--yes"], context),
+                await runCli(
+                    ["init", "--directory", "custom-project", "--yes"],
+                    context,
+                ),
             ).toBe(0);
             context.cwd = otherDirectory;
 
@@ -447,7 +602,9 @@ describe("EUDIPLO CLI", () => {
         const code = await runCli(["init", filePath, "--yes"], context);
 
         expect(code).toBe(1);
-        expect(output.stderr).toContain(`Project directory points to a file: ${filePath}`);
+        expect(output.stderr).toContain(
+            `Project directory points to a file: ${filePath}`,
+        );
     });
 
     it("initializes the standard preset with PostgreSQL and MinIO", async () => {
@@ -479,14 +636,25 @@ describe("EUDIPLO CLI", () => {
 
         const config = JSON.parse(await readFile(configPath, "utf8"));
         expect(config.instances.local.url).toBe("https://eudiplo.example.com");
-        expect(config.instances.local.composeProfiles).toEqual(["postgres", "s3"]);
+        expect(config.instances.local.composeProfiles).toEqual([
+            "postgres",
+            "s3",
+        ]);
     });
 
     it("supports custom component combinations", async () => {
         const { context, cwd, configPath } = await createContext();
 
         const code = await runCli(
-            ["init", "--database", "postgres", "--storage", "local", "--kms", "vault"],
+            [
+                "init",
+                "--database",
+                "postgres",
+                "--storage",
+                "local",
+                "--kms",
+                "vault",
+            ],
             context,
         );
 
@@ -497,7 +665,10 @@ describe("EUDIPLO CLI", () => {
         expect(env).toContain("KM_TYPE=vault");
 
         const config = JSON.parse(await readFile(configPath, "utf8"));
-        expect(config.instances.local.composeProfiles).toEqual(["postgres", "vault"]);
+        expect(config.instances.local.composeProfiles).toEqual([
+            "postgres",
+            "vault",
+        ]);
     });
 
     it("adds the bundled demo tenant during init only when requested", async () => {
@@ -514,10 +685,9 @@ describe("EUDIPLO CLI", () => {
             await readFile(join(cwd, "config", "kms.json"), "utf8"),
         );
         expect(kmsConfig.defaultProvider).toBe("vault");
-        expect(kmsConfig.providers.map((provider: { id: string }) => provider.id)).toEqual([
-            "db",
-            "vault",
-        ]);
+        expect(
+            kmsConfig.providers.map((provider: { id: string }) => provider.id),
+        ).toEqual(["db", "vault"]);
     });
 
     it("collects missing init values with the interactive wizard", async () => {
@@ -583,9 +753,13 @@ describe("EUDIPLO CLI", () => {
         expect(questions[0]).toBe("Project directory [./]: ");
         await expect(
             readFile(join(cwd, "generated-project", ".eudiplo.env"), "utf8"),
-        ).resolves.toContain("EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest");
+        ).resolves.toContain(
+            "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest",
+        );
         const config = JSON.parse(await readFile(configPath, "utf8"));
-        expect(config.instances.local.projectDirectory).toBe(join(cwd, "generated-project"));
+        expect(config.instances.local.projectDirectory).toBe(
+            join(cwd, "generated-project"),
+        );
         expect(answers).toEqual([]);
     });
 
@@ -599,10 +773,15 @@ describe("EUDIPLO CLI", () => {
         };
 
         try {
-            const code = await runCli(["init", "--preset", "full", "--start"], context);
+            const code = await runCli(
+                ["init", "--preset", "full", "--start"],
+                context,
+            );
 
             expect(code).toBe(0);
-            expect(output.stdout).toContain("Starting EUDIPLO with the Compose runtime...");
+            expect(output.stdout).toContain(
+                "Starting EUDIPLO with the Compose runtime...",
+            );
             expect(profiles).toEqual(["postgres", "s3", "vault"]);
         } finally {
             drivers.compose.up = originalUp;
@@ -612,22 +791,29 @@ describe("EUDIPLO CLI", () => {
     it("initializes compose demo instances with editable demo config when requested", async () => {
         const { context, output, cwd } = await createContext();
 
-        const code = await runCli(["init", "--target", "compose", "--demo"], context);
+        const code = await runCli(
+            ["init", "--target", "compose", "--demo"],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("Initialized compose instance local.");
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain(
             "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest",
         );
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain(
             "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:latest",
         );
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
-            "EUDIPLO_BIND_ADDRESS=127.0.0.1",
-        );
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
-            "EUDIPLO_CONFIG_MOUNT=./config:/app/config",
-        );
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain("EUDIPLO_BIND_ADDRESS=127.0.0.1");
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain("EUDIPLO_CONFIG_MOUNT=./config:/app/config");
     });
 
     it("accepts demo image tag overrides", async () => {
@@ -639,10 +825,14 @@ describe("EUDIPLO CLI", () => {
         );
 
         expect(code).toBe(0);
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain(
             "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:main",
         );
-        await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+        await expect(
+            readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+        ).resolves.toContain(
             "EUDIPLO_CLIENT_IMAGE=ghcr.io/openwallet-foundation/eudiplo-client:main",
         );
     });
@@ -664,7 +854,10 @@ describe("EUDIPLO CLI", () => {
     it("initializes compose instances without the client when requested", async () => {
         const { context, output, cwd, configPath } = await createContext();
 
-        const code = await runCli(["init", "--target", "compose", "--no-client"], context);
+        const code = await runCli(
+            ["init", "--target", "compose", "--no-client"],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("Initialized compose instance local.");
@@ -683,7 +876,12 @@ describe("EUDIPLO CLI", () => {
     it("removes the no-client override when reinitialized without the flag", async () => {
         const { context, cwd } = await createContext();
 
-        expect(await runCli(["init", "--target", "compose", "--no-client"], context)).toBe(0);
+        expect(
+            await runCli(
+                ["init", "--target", "compose", "--no-client"],
+                context,
+            ),
+        ).toBe(0);
         expect(await runCli(["init", "--target", "compose"], context)).toBe(0);
 
         await expect(
@@ -697,7 +895,9 @@ describe("EUDIPLO CLI", () => {
         drivers.compose.up = async () => 0;
 
         try {
-            expect(await runCli(["init", "--target", "compose"], context)).toBe(0);
+            expect(await runCli(["init", "--target", "compose"], context)).toBe(
+                0,
+            );
             output.stdout = "";
 
             expect(await runCli(["up"], context)).toBe(0);
@@ -713,7 +913,12 @@ describe("EUDIPLO CLI", () => {
         drivers.compose.logs = async () => 0;
 
         try {
-            expect(await runCli(["init", "--target", "compose", "--no-client"], context)).toBe(0);
+            expect(
+                await runCli(
+                    ["init", "--target", "compose", "--no-client"],
+                    context,
+                ),
+            ).toBe(0);
             output.stdout = "";
 
             expect(await runCli(["logs"], context)).toBe(0);
@@ -743,7 +948,9 @@ describe("EUDIPLO CLI", () => {
     it("rejects unsupported container runtime preferences", async () => {
         await expect(
             resolveComposeRuntime({ EUDIPLO_CONTAINER_RUNTIME: "nerdctl" }),
-        ).rejects.toThrow("EUDIPLO_CONTAINER_RUNTIME must be docker or podman.");
+        ).rejects.toThrow(
+            "EUDIPLO_CONTAINER_RUNTIME must be docker or podman.",
+        );
     });
 
     it("demo generates local assets and starts compose", async () => {
@@ -755,9 +962,13 @@ describe("EUDIPLO CLI", () => {
             const code = await runCli(["demo"], context);
 
             expect(code).toBe(0);
-            expect(output.stdout).toContain("Starting EUDIPLO demo with the Compose runtime...");
+            expect(output.stdout).toContain(
+                "Starting EUDIPLO demo with the Compose runtime...",
+            );
             expect(output.stdout).toContain("Demo mode - not for production.");
-            await expect(readFile(join(cwd, ".eudiplo.demo.env"), "utf8")).resolves.toContain(
+            await expect(
+                readFile(join(cwd, ".eudiplo.demo.env"), "utf8"),
+            ).resolves.toContain(
                 "EUDIPLO_IMAGE=ghcr.io/openwallet-foundation/eudiplo:latest",
             );
             const env = await readFile(join(cwd, ".eudiplo.demo.env"), "utf8");
@@ -791,7 +1002,9 @@ describe("EUDIPLO CLI", () => {
                 readFile(join(projectDirectory, ".eudiplo.demo.env"), "utf8"),
             ).resolves.toContain("DB_TYPE=sqlite");
             const config = JSON.parse(await readFile(configPath, "utf8"));
-            expect(config.instances.local.projectDirectory).toBe(projectDirectory);
+            expect(config.instances.local.projectDirectory).toBe(
+                projectDirectory,
+            );
         } finally {
             drivers.compose.up = originalUp;
         }
@@ -808,10 +1021,15 @@ describe("EUDIPLO CLI", () => {
         try {
             expect(await runCli(["demo"], context)).toBe(0);
             await expect(
-                readFile(join(cwd, "prompted-demo", ".eudiplo.demo.env"), "utf8"),
+                readFile(
+                    join(cwd, "prompted-demo", ".eudiplo.demo.env"),
+                    "utf8",
+                ),
             ).resolves.toContain("DB_TYPE=sqlite");
             const config = JSON.parse(await readFile(configPath, "utf8"));
-            expect(config.instances.local.projectDirectory).toBe(join(cwd, "prompted-demo"));
+            expect(config.instances.local.projectDirectory).toBe(
+                join(cwd, "prompted-demo"),
+            );
         } finally {
             drivers.compose.up = originalUp;
         }
@@ -821,11 +1039,17 @@ describe("EUDIPLO CLI", () => {
         const { context, cwd } = await createContext();
         const customFile = join(cwd, "config", "demo", "info.json");
 
-        expect(await runCli(["init", "--target", "compose", "--demo"], context)).toBe(0);
+        expect(
+            await runCli(["init", "--target", "compose", "--demo"], context),
+        ).toBe(0);
         await writeFile(customFile, "custom-demo-config", "utf8");
 
-        expect(await runCli(["init", "--target", "compose", "--demo"], context)).toBe(0);
-        await expect(readFile(customFile, "utf8")).resolves.toBe("custom-demo-config");
+        expect(
+            await runCli(["init", "--target", "compose", "--demo"], context),
+        ).toBe(0);
+        await expect(readFile(customFile, "utf8")).resolves.toBe(
+            "custom-demo-config",
+        );
     });
 
     it("demo --reset requires --force", async () => {
@@ -851,8 +1075,12 @@ describe("EUDIPLO CLI", () => {
         try {
             await writeFile(join(cwd, ".eudiplo.env"), "manual-env", "utf8");
             expect(await runCli(["demo"], context)).toBe(0);
-            expect(await runCli(["demo", "--reset", "--force"], context)).toBe(0);
-            await expect(readFile(join(cwd, ".eudiplo.env"), "utf8")).resolves.toBe("manual-env");
+            expect(await runCli(["demo", "--reset", "--force"], context)).toBe(
+                0,
+            );
+            await expect(
+                readFile(join(cwd, ".eudiplo.env"), "utf8"),
+            ).resolves.toBe("manual-env");
             expect(calls).toContain("--volumes --remove-orphans");
         } finally {
             drivers.compose.down = originalDown;
@@ -882,12 +1110,17 @@ describe("EUDIPLO CLI", () => {
         ).toBe(0);
 
         const tenantPath = join(cwd, "config", "acme");
-        expect(JSON.parse(await readFile(join(tenantPath, "info.json"), "utf8"))).toEqual({
+        expect(
+            JSON.parse(await readFile(join(tenantPath, "info.json"), "utf8")),
+        ).toEqual({
             name: "Acme GmbH",
             description: "Example tenant",
         });
         await expect(
-            readFile(join(tenantPath, "issuance", "credentials", ".gitkeep"), "utf8"),
+            readFile(
+                join(tenantPath, "issuance", "credentials", ".gitkeep"),
+                "utf8",
+            ),
         ).resolves.toBe("");
         await expect(
             readFile(join(tenantPath, "presentation", ".gitkeep"), "utf8"),
@@ -898,13 +1131,24 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("- acme (Acme GmbH)");
 
         output.stdout = "";
-        expect(await runCli(["config", "tenant", "remove", "acme"], context)).toBe(1);
-        expect(output.stderr).toContain("config tenant remove requires --force");
         expect(
-            await runCli(["config", "tenant", "rm", "acme", "--force"], context),
+            await runCli(["config", "tenant", "remove", "acme"], context),
+        ).toBe(1);
+        expect(output.stderr).toContain(
+            "config tenant remove requires --force",
+        );
+        expect(
+            await runCli(
+                ["config", "tenant", "rm", "acme", "--force"],
+                context,
+            ),
         ).toBe(0);
-        expect(output.stdout).toContain("running EUDIPLO instance was not deleted");
-        await expect(readFile(join(tenantPath, "info.json"), "utf8")).rejects.toMatchObject({
+        expect(output.stdout).toContain(
+            "running EUDIPLO instance was not deleted",
+        );
+        await expect(
+            readFile(join(tenantPath, "info.json"), "utf8"),
+        ).rejects.toMatchObject({
             code: "ENOENT",
         });
     });
@@ -930,7 +1174,10 @@ describe("EUDIPLO CLI", () => {
         ).toBe(0);
 
         await expect(
-            readFile(join(configRoot, "sample", "key-chains", "access.json"), "utf8"),
+            readFile(
+                join(configRoot, "sample", "key-chains", "access.json"),
+                "utf8",
+            ),
         ).resolves.toContain('"kmsProvider": "db"');
         await expect(
             readFile(join(configRoot, "sample", "info.json"), "utf8"),
@@ -959,18 +1206,32 @@ describe("EUDIPLO CLI", () => {
     it("runs doctor against external instances without Docker diagnostics", async () => {
         const { context, output } = await createContext({
             fetch: async (input) => {
-                const url = input instanceof URL ? input : new URL(String(input));
+                const url =
+                    input instanceof URL ? input : new URL(String(input));
                 return new Response("{}", {
-                    status: url.pathname === "/health" || url.pathname === "/api/docs" ? 200 : 404,
+                    status:
+                        url.pathname === "/health" ||
+                        url.pathname === "/api/docs"
+                            ? 200
+                            : 404,
                 });
             },
         });
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
 
-        const code = await runCli(["doctor", "--instance", "production"], context);
+        const code = await runCli(
+            ["doctor", "--instance", "production"],
+            context,
+        );
 
         expect(code).toBe(0);
         expect(output.stdout).toContain("PASS API reachability");
@@ -981,7 +1242,13 @@ describe("EUDIPLO CLI", () => {
     it("validates config and reports configured instances", async () => {
         const { context, output } = await createContext();
         await runCli(
-            ["instance", "add", "production", "--url", "https://eudiplo.example.com"],
+            [
+                "instance",
+                "add",
+                "production",
+                "--url",
+                "https://eudiplo.example.com",
+            ],
             context,
         );
 
@@ -990,7 +1257,9 @@ describe("EUDIPLO CLI", () => {
         expect(code).toBe(0);
         expect(output.stdout).toContain("Config is valid:");
         expect(output.stdout).toContain("Instances: 1");
-        expect(output.stdout).toContain("- production: external https://eudiplo.example.com");
+        expect(output.stdout).toContain(
+            "- production: external https://eudiplo.example.com",
+        );
     });
 
     it("rejects invalid config URLs", async () => {
@@ -1041,7 +1310,9 @@ describe("EUDIPLO CLI", () => {
         expect(output.stdout).toContain("Default instance: production");
         expect(output.stdout).toContain("- production (default)");
         expect(output.stdout).toContain("  target: external");
-        expect(output.stdout).toContain("  clientUrl: https://client.eudiplo.example.com");
+        expect(output.stdout).toContain(
+            "  clientUrl: https://client.eudiplo.example.com",
+        );
 
         output.stdout = "";
         expect(await runCli(["config", "show", "--json"], context)).toBe(0);

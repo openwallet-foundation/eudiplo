@@ -1,34 +1,42 @@
 {
+  "apiVersion": "eudiplo.io/presentation-config/v2",
+  "kind": "PresentationConfig",
+  "metadata": {
+    "id": "kyc",
+    "generation": 1
+  },
+  "spec": {
     "id": "kyc",
     "description": "KYC Presentation Definition with German PID MSO mDoc",
     "dcql_query": {
-        "credentials": [
+      "credentials": [
+        {
+          "id": "pid-mso-mdoc",
+          "format": "mso_mdoc",
+          "claims": [
             {
-                "id": "pid-mso-mdoc",
-                "format": "mso_mdoc",
-                "claims": [
-                    {
-                        "path": [
-                            "eu.europa.ec.eudi.pid.1",
-                            "age_over_18"
-                        ]
-                    }
-                ],
-                "meta": {
-                    "doctype_value": "eu.europa.ec.eudi.pid.1"
-                },
-                "trusted_authorities": [
-                    {
-                        "type": "etsi_tl",
-                        "values": [
-                            {
-                                "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
-                            }
-                        ]
-                    }
-                ]
+              "path": [
+                "eu.europa.ec.eudi.pid.1",
+                "age_over_18"
+              ]
             }
-        ]
+          ],
+          "meta": {
+            "doctype_value": "eu.europa.ec.eudi.pid.1"
+          },
+          "trusted_authorities": [
+            {
+              "type": "etsi_tl",
+              "values": [
+                {
+                  "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
     "lifeTime": 300
+  }
 }

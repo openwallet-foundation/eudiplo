@@ -23,6 +23,8 @@ import {
   type RegistrationCertStatus,
 } from '../../../utils/registration-cert-status';
 import { downloadJsonFile } from '../../../common/download-json.util';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-presentation-show',
@@ -40,6 +42,8 @@ import { downloadJsonFile } from '../../../common/download-json.util';
     FlexLayoutModule,
     RouterModule,
     ClipboardModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './presentation-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

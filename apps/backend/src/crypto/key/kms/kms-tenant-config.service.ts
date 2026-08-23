@@ -14,6 +14,7 @@ import {
 } from "../schemas/kms-config.schema";
 import { KmsProviderRegistry } from "./kms-provider.registry";
 import { KmsConfigService } from "./kms-config.service";
+import { ConfigMigrationService } from "../../../platform/config-portability/config-migration.service";
 
 @Injectable()
 export class KmsTenantConfigService {
@@ -21,6 +22,7 @@ export class KmsTenantConfigService {
         private readonly configService: ConfigService,
         private readonly kmsConfigService: KmsConfigService,
         private readonly kmsProviderRegistry: KmsProviderRegistry,
+        private readonly configMigrationService: ConfigMigrationService,
     ) {}
 
     getTenantConfig(tenantId: string): KmsConfig | null {
@@ -28,8 +30,28 @@ export class KmsTenantConfigService {
         if (!path || !existsSync(path)) {
             return null;
         }
+        const payload = JSON.parse(readFileSync(path, "utf8"));
+        const document = this.configMigrationService.isDocument(payload)
+            ? payload
+            : this.configMigrationService.wrapLegacy(
+                  "KmsConfig",
+                  payload,
+                  "kms",
+              );
+        if (document.kind !== "KmsConfig") {
+            throw new Error(`Expected KmsConfig in ${path}`);
+        }
+        const upgraded = this.configMigrationService.upgrade(document);
+        const blocking = upgraded.issues.filter(
+            (issue) => issue.severity !== "warning",
+        );
+        if (blocking.length) {
+            throw new Error(blocking.map((issue) => issue.message).join("; "));
+        }
         return parseRawKmsConfig(
-            JSON.parse(readFileSync(path, "utf8")),
+            this.configMigrationService.unwrapForLegacyImporter(
+                upgraded.document,
+            ),
             `tenant '${tenantId}' kms.json`,
         );
     }

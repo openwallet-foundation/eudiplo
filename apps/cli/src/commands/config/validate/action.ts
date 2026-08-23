@@ -39,7 +39,9 @@ export async function validateTenantConfig(
 ): Promise<number> {
     const pathArg = parsed.positionals[1];
     if (!pathArg) {
-        throw new Error(`Usage: eudiplo config validate ${scope} <path> [--format text|json]`);
+        throw new Error(
+            `Usage: eudiplo config validate ${scope} <path> [--format text|json]`,
+        );
     }
 
     const format = readStringFlag(parsed.flags, "format") ?? "text";
@@ -51,7 +53,14 @@ export async function validateTenantConfig(
     const schemas = await loadTenantConfigSchemas();
     const results =
         scope === "tenant"
-            ? [await validateTenantDirectory(rootPath, basename(rootPath), schemas, context.env)]
+            ? [
+                  await validateTenantDirectory(
+                      rootPath,
+                      basename(rootPath),
+                      schemas,
+                      context.env,
+                  ),
+              ]
             : await validateTenantsRoot(rootPath, schemas, context.env);
 
     context.stdout.write(

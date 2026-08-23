@@ -24,6 +24,8 @@ import {
 import { ApiService } from '../../core';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { CredentialConfigService } from '../../issuance/credential-config/credential-config.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 interface EntityInfo {
   name: string;
@@ -69,6 +71,8 @@ type TrustListEntity = InternalEntity | ExternalEntity;
     MatTooltipModule,
     FlexLayoutModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './trust-list-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

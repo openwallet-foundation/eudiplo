@@ -13,6 +13,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { SessionConfigService, cleanupModes } from './session-config.service';
 import { SessionStorageConfig } from '@eudiplo/sdk-core';
+import { ConfigOwnershipDirective } from '../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-session-config',
@@ -29,6 +31,8 @@ import { SessionStorageConfig } from '@eudiplo/sdk-core';
     MatProgressSpinnerModule,
     MatDividerModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './session-config.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -40,6 +40,8 @@ import {
 } from '../../../utils/registration-cert-status';
 import { CredentialIdsComponent } from '../../credential-ids/credential-ids.component';
 import { RegistrarService } from '../../../registrar/registrar.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-presentation-create',
@@ -61,6 +63,8 @@ import { RegistrarService } from '../../../registrar/registrar.service';
     MonacoEditorModule,
     EditorComponent,
     CredentialIdsComponent,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './presentation-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

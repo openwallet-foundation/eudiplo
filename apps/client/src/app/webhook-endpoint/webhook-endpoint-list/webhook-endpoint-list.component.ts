@@ -8,10 +8,18 @@ import { WebhookEndpointEntity } from '@eudiplo/sdk-core';
 import { getApiKeyAuthType } from '../../common/auth-display.util';
 import { BaseAsyncListComponent } from '../../common/base-async-list.component';
 import { WebhookEndpointService } from '../webhook-endpoint.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-webhook-endpoint-list',
-  imports: [MatTableModule, MatIconModule, MatButtonModule, RouterModule, FlexLayoutModule],
+  imports: [
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    RouterModule,
+    FlexLayoutModule,
+    ConfigOwnershipDirective,
+  ],
   templateUrl: './webhook-endpoint-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './webhook-endpoint-list.component.scss',

@@ -120,7 +120,7 @@ describe("Issuance - Chained AS Flow", () => {
         app.useGlobalPipes(new ValidationPipe());
 
         const configService = app.get(ConfigService);
-        configService.set("CONFIG_IMPORT", false);
+        configService.set("CONFIG_IMPORT_MODE", "disabled");
         configService.set("LOG_LEVEL", "debug");
 
         clientId = configService.getOrThrow<string>("AUTH_CLIENT_ID");

@@ -14,6 +14,7 @@ import {
   getRegistrationCertStatus,
   type RegistrationCertStatus,
 } from '../../../utils/registration-cert-status';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-presentation-list',
@@ -25,6 +26,7 @@ import {
     RouterModule,
     FlexLayoutModule,
     MatTooltipModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './presentation-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

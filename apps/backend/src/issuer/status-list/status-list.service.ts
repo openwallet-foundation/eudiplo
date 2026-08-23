@@ -1020,7 +1020,7 @@ export class StatusListService {
     /**
      * Process a status list config for import.
      */
-    private async processStatusListConfig(
+    async processStatusListConfig(
         tenantId: string,
         config: StatusListImportDto,
     ) {

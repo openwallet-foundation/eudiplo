@@ -23,6 +23,8 @@ import {
   type TrustList,
 } from '@eudiplo/sdk-core';
 import { EditorComponent } from '../../utils/editor/editor.component';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 /** Common info fields for both internal and external entities */
 interface EntityInfoForm {
@@ -67,6 +69,8 @@ interface ExternalEntityForm extends EntityInfoForm {
     ReactiveFormsModule,
     RouterModule,
     EditorComponent,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './trust-list-edit.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

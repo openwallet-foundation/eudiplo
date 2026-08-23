@@ -13,7 +13,7 @@ if [ "${BOOTSTRAP_DEMO:-false}" = "true" ]; then
         echo "[demo-bootstrap] config folder is not empty, skipping demo seed"
     fi
 
-    export CONFIG_IMPORT="${CONFIG_IMPORT:-true}"
+    export CONFIG_IMPORT_MODE="${CONFIG_IMPORT_MODE:-create}"
 fi
 
 exec "$@"

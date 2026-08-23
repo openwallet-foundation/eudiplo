@@ -29,6 +29,6 @@ import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service
         SchemaMetadataService,
         RegistrarService,
     ],
-    exports: [RegistrarService, SchemaMetadataService],
+    exports: [RegistrarService, RegistrarConfigService, SchemaMetadataService],
 })
 export class RegistrarModule {}

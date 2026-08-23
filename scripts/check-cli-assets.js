@@ -17,10 +17,6 @@ const cliDemoDirectory = join(__dirname, "../apps/cli/templates/demo-config");
 const canonicalSchemasDirectory = join(__dirname, "../schemas");
 const cliSchemasDirectory = join(__dirname, "../apps/cli/templates/schemas");
 const cliSchemasManifestPath = join(__dirname, "../apps/cli/templates/schemas.manifest.json");
-const tenantConfigRegistryPath = join(
-    __dirname,
-    "../apps/cli/src/commands/config/validate/registry.json",
-);
 
 const canonicalCompose = readFileSync(canonicalComposePath, "utf8");
 const cliCompose = readFileSync(cliComposePath, "utf8");
@@ -59,19 +55,14 @@ for (const relativePath of canonicalDemoFiles) {
 
 console.log("CLI deployment assets are in sync.");
 
-const tenantConfigRegistry = JSON.parse(readFileSync(tenantConfigRegistryPath, "utf8"));
-const requiredSchemaFiles = [
-    ...new Set(
-        tenantConfigRegistry
-            .filter((entry) => entry.cliValidated !== false)
-            .map((entry) => entry.schemaFile),
-    ),
-].sort((left, right) => left.localeCompare(right));
+const requiredSchemaFiles = readdirSync(canonicalSchemasDirectory)
+    .filter((file) => file.endsWith(".schema.json"))
+    .sort((left, right) => left.localeCompare(right));
 
 const cliSchemaManifest = JSON.parse(readFileSync(cliSchemasManifestPath, "utf8"));
 if (JSON.stringify(requiredSchemaFiles) !== JSON.stringify(cliSchemaManifest)) {
     console.error(
-        "apps/cli/templates/schemas.manifest.json is out of sync with apps/cli/src/commands/config/validate/registry.json",
+        "apps/cli/templates/schemas.manifest.json is out of sync with schemas/",
     );
     reportMissingAndExtra(requiredSchemaFiles, cliSchemaManifest);
     process.exit(1);

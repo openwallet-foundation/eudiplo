@@ -6,7 +6,9 @@ export function versionText(): string {
     return `${packageJson.name} ${packageJson.version}`;
 }
 
-export async function versionStatusText(context: CommandContext): Promise<string> {
+export async function versionStatusText(
+    context: CommandContext,
+): Promise<string> {
     const currentVersion = packageJson.version;
     const lines = [versionText()];
 
@@ -22,7 +24,9 @@ export async function versionStatusText(context: CommandContext): Promise<string
             lines.push("newer than the latest published version");
         }
     } catch (error) {
-        lines.push(`latest unavailable: ${error instanceof Error ? error.message : String(error)}`);
+        lines.push(
+            `latest unavailable: ${error instanceof Error ? error.message : String(error)}`,
+        );
     }
 
     return lines.join("\n");
@@ -76,6 +80,8 @@ function compareSemver(left: string, right: string): number {
 }
 
 function parseSemver(version: string): [number, number, number] {
-    const [major = "0", minor = "0", patch = "0"] = version.split("-", 1)[0].split(".");
+    const [major = "0", minor = "0", patch = "0"] = version
+        .split("-", 1)[0]
+        .split(".");
     return [Number(major) || 0, Number(minor) || 0, Number(patch) || 0];
 }

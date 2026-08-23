@@ -1,27 +1,35 @@
 {
-  "id": "pid-no-hook",
-  "description": "Presentation ID!!!!!",
-  "dcql_query": {
-    "credentials": [
-      {
-        "id": "pid",
-        "format": "dc+sd-jwt",
-        "meta": {
-          "vct_values": [
-            "<TENANT_URL>/credentials-metadata/vct/pid"
-          ]
-        },
-        "trusted_authorities": [
-          {
-            "type": "etsi_tl",
-            "values": [
-              {
-                "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
-              }
+  "apiVersion": "eudiplo.io/presentation-config/v2",
+  "kind": "PresentationConfig",
+  "metadata": {
+    "id": "pid-no-hook",
+    "generation": 1
+  },
+  "spec": {
+    "id": "pid-no-hook",
+    "description": "Presentation ID!!!!!",
+    "dcql_query": {
+      "credentials": [
+        {
+          "id": "pid",
+          "format": "dc+sd-jwt",
+          "meta": {
+            "vct_values": [
+              "<TENANT_URL>/credentials-metadata/vct/pid"
             ]
-          }
-        ]
-      }
-    ]
+          },
+          "trusted_authorities": [
+            {
+              "type": "etsi_tl",
+              "values": [
+                {
+                  "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
   }
 }

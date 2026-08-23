@@ -24,6 +24,11 @@ export abstract class ClientsProvider {
         tenantId: string | null,
         clientId: string,
     ): Promise<string>;
+    abstract setClientSecret(
+        tenantId: string,
+        clientId: string,
+        secret: string,
+    ): Promise<void>;
 
     abstract getClients(tenantId: string): Promise<ClientEntity[]>;
     abstract getClient(

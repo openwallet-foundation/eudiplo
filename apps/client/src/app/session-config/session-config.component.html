@@ -1,4 +1,5 @@
 <div fxLayout="column" fxFlex fxLayoutGap="24px">
+  <app-config-ownership-notice kind="Tenant" resourceId="tenant" />
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <div>
       <h2>Session Storage Configuration</h2>
@@ -149,6 +150,9 @@
           color="warn"
           (click)="onReset()"
           [disabled]="isSaving"
+          appConfigManaged
+          managedKind="Tenant"
+          managedResourceId="tenant"
           matTooltip="Reset to global defaults"
         >
           <mat-icon>restart_alt</mat-icon>
@@ -159,6 +163,9 @@
           color="primary"
           (click)="onSave()"
           [disabled]="configForm.invalid || isSaving"
+          appConfigManaged
+          managedKind="Tenant"
+          managedResourceId="tenant"
         >
           @if (isSaving) {
             <mat-spinner diameter="20" class="button-spinner"></mat-spinner>

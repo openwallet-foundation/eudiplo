@@ -10,9 +10,13 @@ export async function runStatusCommand(
     const [instanceName, instance] = resolveInstance(config, parsed);
     const checks = await runDoctor(instance, context, []);
     const health = checks.find((check) => check.name === "health endpoint");
-    context.stdout.write(`${instanceName} (${instance.target}) ${instance.url}\n`);
+    context.stdout.write(
+        `${instanceName} (${instance.target}) ${instance.url}\n`,
+    );
     if (health) {
-        context.stdout.write(`${health.status.toUpperCase()} ${health.message}\n`);
+        context.stdout.write(
+            `${health.status.toUpperCase()} ${health.message}\n`,
+        );
     }
     return health?.status === "fail" ? 1 : 0;
 }

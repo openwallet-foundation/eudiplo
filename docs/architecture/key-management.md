@@ -862,8 +862,7 @@ import system.
 **Environment Variables**:
 
 ```bash
-CONFIG_IMPORT=true
-CONFIG_IMPORT_FORCE=false  # Set to true to overwrite existing key chains
+CONFIG_IMPORT_MODE=create  # Use upsert to reconcile existing key chains
 ```
 
 **Directory Structure**:

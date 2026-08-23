@@ -1,0 +1,98 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    color: var(--mat-sys-on-surface-variant);
+    margin-top: 4px;
+  }
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  gap: 24px;
+}
+
+mat-card-content {
+  padding-top: 20px;
+}
+
+.import-controls {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 16px;
+
+  mat-form-field {
+    grid-column: 1 / -1;
+  }
+}
+
+.table-scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.muted {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.key-file {
+  margin-left: 0.75rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.issue {
+  color: var(--mat-sys-error);
+  margin: 6px 0;
+
+  &.warning {
+    color: #8a5a00;
+  }
+
+  code {
+    display: block;
+    font-size: 0.75rem;
+  }
+}
+
+.source {
+  max-width: 320px;
+  overflow-wrap: anywhere;
+}
+
+.generated-secrets {
+  border: 1px solid var(--mat-sys-error);
+
+  code {
+    display: inline-block;
+    margin: 6px;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 600px) {
+  .import-controls {
+    grid-template-columns: 1fr;
+
+    mat-form-field {
+      grid-column: auto;
+    }
+  }
+}

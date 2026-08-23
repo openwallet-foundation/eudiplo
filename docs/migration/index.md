@@ -13,6 +13,12 @@ When upgrading EUDIPLO, follow this general process:
 5. **Deploy the new version** — database migrations run automatically on startup
 6. **Verify** that the service starts correctly and your integrations work
 
+For tenant configuration, export a safe bundle before the application upgrade,
+run `eudiplo config upgrade <bundle> --dry-run`, and plan the import against the
+new instance. Config migrations are separate from database migrations and run
+sequentially per resource schema. See
+[Configuration Portability and Versioning](../architecture/configuration-portability.md).
+
 !!! warning "Always upgrade sequentially"
 
     If you are multiple major versions behind, upgrade one major version at a time. Do not skip major versions.

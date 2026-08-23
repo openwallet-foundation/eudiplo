@@ -1,20 +1,28 @@
 {
+  "apiVersion": "eudiplo.io/issuance-config/v2",
+  "kind": "IssuanceConfig",
+  "metadata": {
+    "id": "issuance",
+    "generation": 1
+  },
+  "spec": {
     "authorizationServers": [
-        {
-            "id": "issuer-built-in",
-            "type": "built-in",
-            "label": "default built-in AS"
-        }
+      {
+        "id": "issuer-built-in",
+        "type": "built-in",
+        "label": "default built-in AS"
+      }
     ],
     "batchSize": 10,
     "dPopRequired": false,
     "display": [
-        {
-            "locale": "en-US",
-            "name": "EUDI Wallet dev",
-            "logo": {
-                "uri": "company.png"
-            }
+      {
+        "locale": "en-US",
+        "name": "EUDI Wallet dev",
+        "logo": {
+          "uri": "company.png"
         }
+      }
     ]
+  }
 }

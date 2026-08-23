@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "const": "attestationBased",
+          "description": "Attestation-based policy discriminator."
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "claims": {
+                "description": "Claims constraints considered by policy evaluation.",
+                "type": "array",
+                "items": {}
+              },
+              "credentials": {
+                "type": "array",
+                "items": {},
+                "description": "Credential constraints considered by policy evaluation."
+              },
+              "credential_sets": {
+                "description": "Optional credential set constraints.",
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "credentials"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Attestation requirements used for policy enforcement."
+        }
+      },
+      "required": [
+        "policy",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "const": "none",
+          "description": "No disclosure policy enforcement."
+        }
+      },
+      "required": [
+        "policy"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "const": "allowList",
+          "description": "Allow-list based policy discriminator."
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Allowed values for policy checks."
+        }
+      },
+      "required": [
+        "policy",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "policy": {
+          "type": "string",
+          "const": "rootOfTrust",
+          "description": "Root-of-trust policy discriminator."
+        },
+        "values": {
+          "type": "string",
+          "description": "Root-of-trust identifier or reference."
+        }
+      },
+      "required": [
+        "policy",
+        "values"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "description": "Embedded disclosure policy configuration.",
+  "$id": "./EmbeddedDisclosurePolicy.schema.json",
+  "title": "EmbeddedDisclosurePolicy"
+}

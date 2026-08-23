@@ -12,6 +12,8 @@ import { WebhookEndpointEntity } from '@eudiplo/sdk-core';
 import { getApiKeyAuthType, getApiKeyHeaderName } from '../../common/auth-display.util';
 import { downloadJsonFile } from '../../common/download-json.util';
 import { WebhookEndpointService } from '../webhook-endpoint.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-webhook-endpoint-show',
@@ -24,6 +26,8 @@ import { WebhookEndpointService } from '../webhook-endpoint.service';
     MatListModule,
     FlexLayoutModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './webhook-endpoint-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

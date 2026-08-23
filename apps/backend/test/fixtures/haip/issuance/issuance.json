@@ -1,9 +1,16 @@
 {
+  "apiVersion": "eudiplo.io/issuance-config/v2",
+  "kind": "IssuanceConfig",
+  "metadata": {
+    "id": "issuance",
+    "generation": 1
+  },
+  "spec": {
     "authorizationServers": [
-        {
-            "id": "issuer-built-in",
-            "type": "built-in"
-        }
+      {
+        "id": "issuer-built-in",
+        "type": "built-in"
+      }
     ],
     "batchSize": 10,
     "dPopRequired": true,
@@ -11,12 +18,13 @@
     "credentialRequestEncryption": true,
     "walletAttestationRequired": true,
     "display": [
-        {
-            "locale": "en-US",
-            "name": "HAIP Test Issuer",
-            "logo": {
-                "uri": "company.png"
-            }
+      {
+        "locale": "en-US",
+        "name": "HAIP Test Issuer",
+        "logo": {
+          "uri": "company.png"
         }
+      }
     ]
+  }
 }

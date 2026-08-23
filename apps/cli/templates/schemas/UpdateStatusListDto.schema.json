@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "credentialConfigurationId": {
+      "description": "Updated credential configuration binding. Null means shared list.",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "keyChainId": {
+      "description": "Updated key chain id. Null means use tenant default.",
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$id": "./UpdateStatusListDto.schema.json",
+  "title": "UpdateStatusListDto"
+}

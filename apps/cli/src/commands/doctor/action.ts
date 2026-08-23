@@ -1,5 +1,9 @@
 import { drivers } from "../../services/deployment-drivers.js";
-import { formatChecks, hasFailedChecks, runDoctor } from "../../services/diagnostics.js";
+import {
+    formatChecks,
+    hasFailedChecks,
+    runDoctor,
+} from "../../services/diagnostics.js";
 import { resolveInstance } from "../../services/instance-selection.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
 

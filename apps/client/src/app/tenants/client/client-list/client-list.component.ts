@@ -17,6 +17,7 @@ import { ApiService } from '../../../core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-client-list',
@@ -30,6 +31,7 @@ import { SecretDialogComponent } from '../secret-dialog/secret-dialog.component'
     MatChipsModule,
     MatTooltipModule,
     MatDialogModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './client-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

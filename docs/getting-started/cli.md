@@ -150,6 +150,7 @@ require Docker:
 eudiplo doctor --instance production
 eudiplo status --instance production
 eudiplo config validate
+eudiplo config editor setup
 eudiplo --version
 eudiplo version
 ```
@@ -175,6 +176,17 @@ eudiplo config path
 eudiplo config show
 eudiplo config show --json
 ```
+
+`config editor setup` installs the JSON Schemas bundled with the CLI and merges
+scoped associations into `.vscode/settings.json`, providing completion and
+inline validation while editing tenant configuration. See
+[Configuration Validation](cli/configuration-validation.md) for custom workspace
+and config-directory examples.
+
+Use `eudiplo commands` for a compact list of every nested command. The
+[Command Reference](cli/command-reference.md) is generated from the same command
+definitions using `eudiplo commands --format markdown`, so its options and help
+text remain synchronized with the executable.
 
 ## Shell Completion
 

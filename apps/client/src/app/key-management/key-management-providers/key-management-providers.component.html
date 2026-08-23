@@ -1,4 +1,5 @@
 <div class="providers-container" fxLayout="column" fxLayoutGap="16px">
+  <app-config-ownership-notice kind="KmsConfig" resourceId="kms" />
   <div fxLayout="row" fxLayoutAlign="space-between center" class="header">
     <div>
       <h2>KMS Providers</h2>
@@ -11,6 +12,9 @@
         [disabled]="isSavingConfig"
         (click)="openTenantConfigEditor()"
         matTooltip="Show tenant config JSON"
+        appConfigManaged
+        managedKind="KmsConfig"
+        managedResourceId="kms"
       >
         <mat-icon>edit_note</mat-icon>
       </button>

@@ -22,6 +22,8 @@ import {
   keyChainControllerGetAll,
 } from '@eudiplo/sdk-core';
 import { StatusListManagementService } from '../status-list-management.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-status-list-edit',
@@ -41,6 +43,8 @@ import { StatusListManagementService } from '../status-list-management.service';
     MatChipsModule,
     FlexLayoutModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './status-list-edit.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

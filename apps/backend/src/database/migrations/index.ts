@@ -42,3 +42,4 @@ export { AddReaderAuthToPresentationConfig1774000000000 } from "./1774000000000-
 export { AddRootExternalKeyIdToKeyChain1774000000000 } from "./1774000000000-AddRootExternalKeyIdToKeyChain";
 export { AddNotificationEndpointEnabledToIssuanceConfig1775000000000 } from "./1775000000000-AddNotificationEndpointEnabledToIssuanceConfig";
 export { AddStatusListVersionAndUniqueConstraint1776000000000 } from "./1776000000000-AddStatusListVersionAndUniqueConstraint";
+export { AddConfigResourceMetadata1777000000000 } from "./1777000000000-AddConfigResourceMetadata";

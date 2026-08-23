@@ -15,6 +15,8 @@ import { AttributeProviderService } from '../attribute-provider.service';
 import { JsonViewDialogComponent } from '../../credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
 import { buildAuthConfig, toAuthFormValue } from '../../../common/auth-display.util';
 import { webhookSchema } from '../../../utils/schemas';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-attribute-provider-create',
@@ -31,6 +33,8 @@ import { webhookSchema } from '../../../utils/schemas';
     FlexLayoutModule,
     ReactiveFormsModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './attribute-provider-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

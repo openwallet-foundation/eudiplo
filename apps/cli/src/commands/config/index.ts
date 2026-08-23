@@ -2,6 +2,8 @@ import { Command } from "commander";
 import { runConfigPath, runConfigShow } from "./action.js";
 import type { CommandContext } from "../../types.js";
 import { loadCliState, type SetExitCode } from "../shared.js";
+import { createEditorCommand } from "./editor/index.js";
+import { createPortabilityCommands } from "./portability/index.js";
 import { createTenantCommand } from "./tenant/index.js";
 import { createValidateCommand } from "./validate/index.js";
 
@@ -24,10 +26,21 @@ export function createConfigCommand(
         .option("--json", "print config as JSON")
         .action(async (options) => {
             const { configPath, config } = await loadCliState(context);
-            setExitCode(runConfigShow(configPath, config, options.json === true, context));
+            setExitCode(
+                runConfigShow(
+                    configPath,
+                    config,
+                    options.json === true,
+                    context,
+                ),
+            );
         });
     config.addCommand(createValidateCommand(context, setExitCode));
+    config.addCommand(createEditorCommand(context, setExitCode));
     config.addCommand(createTenantCommand(context, setExitCode));
+    for (const command of createPortabilityCommands(context, setExitCode)) {
+        config.addCommand(command);
+    }
     config.action(function showConfigHelp() {
         this.outputHelp();
     });

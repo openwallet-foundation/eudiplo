@@ -12,6 +12,7 @@ import {
   trustListControllerGetAllTrustLists,
 } from '@eudiplo/sdk-core';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
 
 @Component({
   selector: 'app-trust-list-list',
@@ -24,6 +25,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
     MatTooltipModule,
     RouterModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
   ],
   templateUrl: './trust-list-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

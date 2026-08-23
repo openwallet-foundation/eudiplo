@@ -15,7 +15,7 @@ import {
     OfferResponse,
 } from "../../src/issuer/issuance/oid4vci/dto/offer-request.dto";
 import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
-import { getDefaultSecret } from "../utils";
+import { getDefaultSecret, readConfig } from "../utils";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
@@ -277,17 +277,11 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         // Generate trust anchor PEMs from the issuer's key chains
         // These are the CA certificates that signed the issuer's credential and status list
         const configFolder = resolve(__dirname + "/../fixtures");
-        const attestationKeyChain = JSON.parse(
-            readFileSync(
-                join(configFolder, "haip/key-chains/attestation.json"),
-                "utf-8",
-            ),
+        const attestationKeyChain = readConfig<{ crt?: string[] }>(
+            join(configFolder, "haip/key-chains/attestation.json"),
         );
-        const statusListKeyChain = JSON.parse(
-            readFileSync(
-                join(configFolder, "haip/key-chains/status-list.json"),
-                "utf-8",
-            ),
+        const statusListKeyChain = readConfig<{ crt?: string[] }>(
+            join(configFolder, "haip/key-chains/status-list.json"),
         );
 
         // Use configured root certificates as trust anchors (do not mint synthetic CAs).
@@ -451,15 +445,15 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         configService.set("FOLDER", tmpFolder);
         configService.set("CONFIG_FOLDER", configFolder);
         configService.set("PUBLIC_URL", `https://${PUBLIC_DOMAIN}`);
-        configService.set("CONFIG_IMPORT", true);
+        configService.set("CONFIG_IMPORT_MODE", "create");
         configService.set("LOG_LEVEL", "debug");
 
         await app.init();
         await app.listen(3000, "0.0.0.0");
 
         // Get client credentials
-        const client = JSON.parse(
-            readFileSync(join(configFolder, "haip/clients/test.json"), "utf-8"),
+        const client = readConfig<{ clientId: string; secret: string }>(
+            join(configFolder, "haip/clients/test.json"),
         );
         const clientId = client.clientId;
         const clientSecret = getDefaultSecret(client.secret);

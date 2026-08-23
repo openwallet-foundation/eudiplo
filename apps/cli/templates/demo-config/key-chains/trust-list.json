@@ -1,14 +1,25 @@
 {
+  "apiVersion": "eudiplo.io/key-chain/v2",
+  "kind": "KeyChain",
+  "metadata": {
+    "id": "570852d7-7e7f-40af-a0e3-a6ebffd75ed0",
+    "generation": 1
+  },
+  "spec": {
     "id": "570852d7-7e7f-40af-a0e3-a6ebffd75ed0",
     "description": "used to sign trust lists",
     "usageType": "trustList",
-    "key": {
+    "keySource": {
+      "type": "private-jwk",
+      "jwk": {
         "crv": "P-256",
         "d": "_iZzAnnFH_HsBzDG_hk8qpTQmh_sCwhPpvebVNjhe2A",
         "kty": "EC",
         "x": "MhpvX9dEM8NsXM-c6474d2uHrPRWrVD4WZGtVvxfQhk",
         "y": "q_uS4tQZSKu22_YgTlEFjuNdz-e-uNHzW1-x_VLicco",
         "alg": "ES256"
+      }
     },
     "kmsProvider": "db"
+  }
 }

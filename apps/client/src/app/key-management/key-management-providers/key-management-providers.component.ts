@@ -15,6 +15,8 @@ import { KmsConfigDto, KmsProviderInfoDto } from '@eudiplo/sdk-core';
 import { JsonViewDialogComponent } from '../../issuance/credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
 import { kmsConfigSchema } from '../../utils/schemas';
 import { KeyChainService } from '../key-chain.service';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 interface ProviderHealthItem {
   providerId: string;
@@ -53,6 +55,8 @@ interface ProviderRow {
     MatTooltipModule,
     RouterModule,
     FlexLayoutModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './key-management-providers.component.html',
   styleUrl: './key-management-providers.component.scss',

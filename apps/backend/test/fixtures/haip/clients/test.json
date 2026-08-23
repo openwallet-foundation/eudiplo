@@ -1,12 +1,20 @@
 {
+  "apiVersion": "eudiplo.io/client/v1",
+  "kind": "Client",
+  "metadata": {
+    "id": "test-client",
+    "generation": 1
+  },
+  "spec": {
     "clientId": "test-client",
     "secret": "${TEST_CLIENT_SECRET:test-client-secret}",
     "description": "Test client",
     "roles": [
-        "clients:manage",
-        "issuance:offer",
-        "issuance:manage",
-        "presentation:request",
-        "presentation:manage"
+      "clients:manage",
+      "issuance:offer",
+      "issuance:manage",
+      "presentation:request",
+      "presentation:manage"
     ]
+  }
 }

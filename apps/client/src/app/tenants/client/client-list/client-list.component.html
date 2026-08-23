@@ -40,7 +40,14 @@
             <mat-icon>visibility</mat-icon>
           </button>
 
-          <button matIconButton [routerLink]="[client.clientId, 'edit']" matTooltip="Edit Client">
+          <button
+            matIconButton
+            [routerLink]="[client.clientId, 'edit']"
+            matTooltip="Edit Client"
+            appConfigManaged
+            managedKind="Client"
+            [managedResourceId]="client.clientId"
+          >
             <mat-icon>edit</mat-icon>
           </button>
         }
@@ -48,10 +55,20 @@
           matIconButton
           matTooltip="Rotate Secret - Generate a new secret (invalidates current)"
           (click)="rotateSecret(client)"
+          appConfigManaged
+          managedKind="Client"
+          [managedResourceId]="client.clientId"
         >
           <mat-icon>refresh</mat-icon>
         </button>
-        <button matIconButton (click)="deleteClient(client)" matTooltip="Delete Client">
+        <button
+          matIconButton
+          (click)="deleteClient(client)"
+          matTooltip="Delete Client"
+          appConfigManaged
+          managedKind="Client"
+          [managedResourceId]="client.clientId"
+        >
           <mat-icon>delete</mat-icon>
         </button>
       </td>

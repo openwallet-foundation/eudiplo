@@ -16,6 +16,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { KeyChainService } from '../key-chain.service';
 import { KeyChainResponseDto, KeyChainUpdateDto, RotationPolicyUpdateDto } from '@eudiplo/sdk-core';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-key-management-create',
@@ -35,6 +37,8 @@ import { KeyChainResponseDto, KeyChainUpdateDto, RotationPolicyUpdateDto } from 
     FlexLayoutModule,
     ReactiveFormsModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './key-management-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -16,7 +16,10 @@ export function buildJsonReport(results: TenantValidationResult[]) {
         summary: {
             tenants: results.length,
             files: results.reduce((sum, result) => sum + result.files, 0),
-            errors: results.reduce((sum, result) => sum + result.errors.length, 0),
+            errors: results.reduce(
+                (sum, result) => sum + result.errors.length,
+                0,
+            ),
         },
     };
 }
@@ -31,7 +34,12 @@ export function formatTextReport(
             ? `Validating tenant configuration root: ${rootPath}`
             : `Validating tenant configuration: ${rootPath}`;
 
-    const lines = [header, "", ...results.flatMap(formatTenantBlock), formatSummaryLine(results)];
+    const lines = [
+        header,
+        "",
+        ...results.flatMap(formatTenantBlock),
+        formatSummaryLine(results),
+    ];
 
     return `${lines.join("\n")}\n`;
 }
@@ -40,7 +48,9 @@ function formatTenantBlock(result: TenantValidationResult): string[] {
     const lines = [`${result.valid ? "PASS" : "FAIL"} ${result.id}`];
 
     if (result.valid) {
-        for (const [resourceType, count] of Object.entries(result.resourceCounts)) {
+        for (const [resourceType, count] of Object.entries(
+            result.resourceCounts,
+        )) {
             lines.push(`  ${count} ${pluralize(resourceType, count)}`);
         }
     } else {
@@ -68,7 +78,10 @@ function formatIssueMessage(issue: ValidationIssue): string {
 
 function formatSummaryLine(results: TenantValidationResult[]): string {
     const totalFiles = results.reduce((sum, result) => sum + result.files, 0);
-    const totalErrors = results.reduce((sum, result) => sum + result.errors.length, 0);
+    const totalErrors = results.reduce(
+        (sum, result) => sum + result.errors.length,
+        0,
+    );
 
     if (totalErrors === 0) {
         return `Validated ${results.length} tenant(s) and ${totalFiles} configuration file(s).\nNo errors found.`;
@@ -78,7 +91,9 @@ function formatSummaryLine(results: TenantValidationResult[]): string {
     return `Validation failed: ${totalErrors} error(s) in ${failedTenants} tenant(s).`;
 }
 
-function groupErrorsByFile(errors: ValidationIssue[]): Array<[string, ValidationIssue[]]> {
+function groupErrorsByFile(
+    errors: ValidationIssue[],
+): Array<[string, ValidationIssue[]]> {
     const grouped = new Map<string, ValidationIssue[]>();
     for (const error of errors) {
         const existing = grouped.get(error.file);

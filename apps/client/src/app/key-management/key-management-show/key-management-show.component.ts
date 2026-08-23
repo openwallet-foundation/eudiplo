@@ -14,6 +14,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { KeyChainService } from '../key-chain.service';
 import { Subscription } from 'rxjs';
 import { JsonViewDialogComponent } from '../../issuance/credential-config/credential-config-create/json-view-dialog/json-view-dialog.component';
+import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-key-management-show',
@@ -27,6 +29,8 @@ import { JsonViewDialogComponent } from '../../issuance/credential-config/creden
     MatTooltipModule,
     FlexLayoutModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './key-management-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

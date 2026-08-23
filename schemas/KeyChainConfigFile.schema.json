@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./KeyChainConfigFile.schema.json",
+  "title": "KeyChainConfigFile",
+  "description": "A key-chain configuration file in legacy payload or versioned-envelope form.",
+  "oneOf": [
+    {
+      "$ref": "./KeyChainImportDto.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "const": "eudiplo.io/key-chain/v2"
+        },
+        "kind": {
+          "type": "string",
+          "const": "KeyChain"
+        },
+        "metadata": {
+          "$ref": "./ConfigDocumentMetadata.schema.json"
+        },
+        "spec": {
+          "$ref": "#/$defs/portableSpec"
+        }
+      },
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false
+    }
+  ],
+  "$defs": {
+    "ecPrivateJwk": {
+      "type": "object",
+      "properties": {
+        "kty": { "type": "string" },
+        "x": { "type": "string" },
+        "y": { "type": "string" },
+        "crv": { "type": "string" },
+        "d": { "type": "string" },
+        "alg": { "type": "string" },
+        "kid": { "type": "string" }
+      },
+      "required": ["kty", "x", "y", "crv", "d"],
+      "additionalProperties": false
+    },
+    "portableSpec": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Optional key-chain id duplicated from envelope metadata."
+        },
+        "description": { "type": "string" },
+        "usageType": {
+          "type": "string",
+          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"]
+        },
+        "keySource": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "private-jwk"
+            },
+            "jwk": {
+              "$ref": "#/$defs/ecPrivateJwk"
+            }
+          },
+          "required": ["type", "jwk"],
+          "additionalProperties": false
+        },
+        "crt": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "kmsProvider": { "type": "string" },
+        "rotationPolicy": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "intervalDays": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3650
+            },
+            "certValidityDays": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3650
+            }
+          },
+          "required": ["enabled"],
+          "additionalProperties": false
+        }
+      },
+      "required": ["usageType", "keySource"],
+      "additionalProperties": false
+    }
+  }
+}

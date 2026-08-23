@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./PresentationConfigFile.schema.json",
+  "title": "PresentationConfigFile",
+  "description": "A presentation configuration file in legacy payload or versioned-envelope form.",
+  "oneOf": [
+    {
+      "$ref": "./PresentationConfigCreateDto.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "const": "eudiplo.io/presentation-config/v2"
+        },
+        "kind": {
+          "type": "string",
+          "const": "PresentationConfig"
+        },
+        "metadata": {
+          "$ref": "./ConfigDocumentMetadata.schema.json"
+        },
+        "spec": {
+          "$ref": "./PresentationConfigCreateDto.schema.json"
+        }
+      },
+      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "additionalProperties": false
+    }
+  ]
+}

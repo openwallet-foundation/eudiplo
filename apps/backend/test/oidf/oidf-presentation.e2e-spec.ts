@@ -11,7 +11,7 @@ import { Logger } from "nestjs-pino";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainService } from "../../src/crypto/key/key-chain.service";
-import { getDefaultSecret } from "../utils";
+import { getDefaultSecret, readConfig } from "../utils";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
@@ -401,7 +401,7 @@ describe("OIDF", () => {
     }
 
     beforeAll(async () => {
-        // Start the app first so CONFIG_IMPORT runs and key chains are generated
+        // Start the app first so startup config reconciliation runs and key chains are generated
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
@@ -426,15 +426,15 @@ describe("OIDF", () => {
         configService.set("FOLDER", tmpFolder);
         configService.set("CONFIG_FOLDER", configFolder);
         configService.set("PUBLIC_URL", `https://${PUBLIC_DOMAIN}`);
-        configService.set("CONFIG_IMPORT", true);
+        configService.set("CONFIG_IMPORT_MODE", "create");
         configService.set("LOG_LEVEL", "debug");
 
         await app.init();
         await app.listen(3000, "0.0.0.0");
 
         // Get client credentials
-        const client = JSON.parse(
-            readFileSync(join(configFolder, "haip/clients/test.json"), "utf-8"),
+        const client = readConfig<{ clientId: string; secret: string }>(
+            join(configFolder, "haip/clients/test.json"),
         );
         const clientId = client.clientId;
         const clientSecret = getDefaultSecret(client.secret);

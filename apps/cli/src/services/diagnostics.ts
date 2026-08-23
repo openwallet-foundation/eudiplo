@@ -35,15 +35,24 @@ export async function runDoctor(
                 : `${baseUrl.href} does not use HTTPS`,
     });
 
-    checks.push(await checkEndpoint("API reachability", baseUrl, "/api/docs", context));
-    checks.push(await checkEndpoint("health endpoint", baseUrl, "/health", context));
+    checks.push(
+        await checkEndpoint("API reachability", baseUrl, "/api/docs", context),
+    );
+    checks.push(
+        await checkEndpoint("health endpoint", baseUrl, "/health", context),
+    );
     checks.push(checkAuthentication(context));
 
     if (instance.clientUrl) {
         const clientUrl = parseUrl(instance.clientUrl);
         checks.push(
             clientUrl
-                ? await checkEndpoint("client connectivity", clientUrl, "/", context)
+                ? await checkEndpoint(
+                      "client connectivity",
+                      clientUrl,
+                      "/",
+                      context,
+                  )
                 : {
                       name: "client connectivity",
                       status: "fail",
@@ -75,7 +84,10 @@ export function hasFailedChecks(checks: DoctorCheck[]): boolean {
 
 export function formatChecks(checks: DoctorCheck[]): string {
     return checks
-        .map((check) => `${formatStatus(check.status)} ${check.name}: ${check.message}`)
+        .map(
+            (check) =>
+                `${formatStatus(check.status)} ${check.name}: ${check.message}`,
+        )
         .join("\n");
 }
 
@@ -116,7 +128,8 @@ function checkAuthentication(context: CommandContext): DoctorCheck {
         return {
             name: "authentication configuration",
             status: "pass",
-            message: "Client credentials are available in environment variables.",
+            message:
+                "Client credentials are available in environment variables.",
         };
     }
 
@@ -131,7 +144,9 @@ function checkAuthentication(context: CommandContext): DoctorCheck {
 function parseUrl(value: string): URL | undefined {
     try {
         const url = new URL(value);
-        return url.protocol === "http:" || url.protocol === "https:" ? url : undefined;
+        return url.protocol === "http:" || url.protocol === "https:"
+            ? url
+            : undefined;
     } catch {
         return undefined;
     }

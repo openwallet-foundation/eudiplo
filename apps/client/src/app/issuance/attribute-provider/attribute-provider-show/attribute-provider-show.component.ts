@@ -12,6 +12,8 @@ import { AttributeProviderEntity } from '@eudiplo/sdk-core';
 import { getApiKeyAuthType, getApiKeyHeaderName } from '../../../common/auth-display.util';
 import { downloadJsonFile } from '../../../common/download-json.util';
 import { AttributeProviderService } from '../attribute-provider.service';
+import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
+import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
 
 @Component({
   selector: 'app-attribute-provider-show',
@@ -24,6 +26,8 @@ import { AttributeProviderService } from '../attribute-provider.service';
     MatListModule,
     FlexLayoutModule,
     RouterModule,
+    ConfigOwnershipDirective,
+    ConfigOwnershipNoticeComponent,
   ],
   templateUrl: './attribute-provider-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,

@@ -5,7 +5,7 @@
  * Canonical sources:
  * - deployment/docker-compose/docker-compose.yml
  * - assets/config/demo/**
- * - schemas/*.schema.json (referenced by apps/cli/src/commands/config/validate/registry.json)
+ * - schemas/*.schema.json, including file schemas and their local references
  */
 
 const { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } = require("node:fs");
@@ -20,10 +20,6 @@ const cliDemoManifestPath = join(repoRoot, "apps/cli/templates/demo-config.manif
 const canonicalSchemasDirectory = join(repoRoot, "schemas");
 const cliSchemasDirectory = join(repoRoot, "apps/cli/templates/schemas");
 const cliSchemasManifestPath = join(repoRoot, "apps/cli/templates/schemas.manifest.json");
-const tenantConfigRegistryPath = join(
-    repoRoot,
-    "apps/cli/src/commands/config/validate/registry.json",
-);
 
 function collectFilesRecursive(root) {
     const files = [];
@@ -57,14 +53,9 @@ cpSync(canonicalDemoDirectory, cliDemoDirectory, { recursive: true });
 const manifest = collectFilesRecursive(cliDemoDirectory);
 writeFileSync(cliDemoManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 
-const tenantConfigRegistry = JSON.parse(readFileSync(tenantConfigRegistryPath, "utf8"));
-const requiredSchemaFiles = [
-    ...new Set(
-        tenantConfigRegistry
-            .filter((entry) => entry.cliValidated !== false)
-            .map((entry) => entry.schemaFile),
-    ),
-].sort((left, right) => left.localeCompare(right));
+const requiredSchemaFiles = readdirSync(canonicalSchemasDirectory)
+    .filter((file) => file.endsWith(".schema.json"))
+    .sort((left, right) => left.localeCompare(right));
 
 rmSync(cliSchemasDirectory, { recursive: true, force: true });
 mkdirSync(cliSchemasDirectory, { recursive: true });

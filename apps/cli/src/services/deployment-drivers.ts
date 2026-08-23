@@ -37,7 +37,9 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
             const messages: string[] = [];
             const projectDirectory = instance.projectDirectory ?? context.cwd;
             if (!(await resolveComposeRuntime(context.env))) {
-                messages.push("Docker or Podman was not found in a supported install location.");
+                messages.push(
+                    "Docker or Podman was not found in a supported install location.",
+                );
             }
             for (const composeFile of getComposeFiles(instance)) {
                 try {
@@ -85,7 +87,8 @@ export async function ensureComposeProject(
 ): Promise<InstanceConfig> {
     await ensureProjectDirectory(cwd);
     const mode = options.mode ?? "standard";
-    const composeFileName = mode === "demo" ? demoComposeFileName : defaultComposeFileName;
+    const composeFileName =
+        mode === "demo" ? demoComposeFileName : defaultComposeFileName;
     const envFileName = mode === "demo" ? demoEnvFileName : defaultEnvFileName;
 
     const composePath = join(cwd, composeFileName);
@@ -117,8 +120,8 @@ export async function ensureComposeProject(
                 authClientSecret: options.authClientSecret,
             }),
             {
-            encoding: "utf8",
-            mode: 0o600,
+                encoding: "utf8",
+                mode: 0o600,
             },
         );
     }
@@ -134,7 +137,11 @@ export async function ensureComposeProject(
     if (mode === "demo" || options.demoTenant === true) {
         const demoConfigPath = join(cwd, demoConfigDirectory);
         const hasExistingConfig = await hasFiles(demoConfigPath);
-        if (!hasExistingConfig || options.force === true || options.reset === true) {
+        if (
+            !hasExistingConfig ||
+            options.force === true ||
+            options.reset === true
+        ) {
             await copyBundledDemoConfig(demoConfigPath, true);
         }
     }
@@ -153,7 +160,8 @@ export async function ensureComposeProject(
     return {
         target: "compose",
         url: "http://localhost:3000",
-        clientUrl: options.noClient === true ? undefined : "http://localhost:4200",
+        clientUrl:
+            options.noClient === true ? undefined : "http://localhost:4200",
         composeFile: defaultComposeFileName,
         composeFiles,
         composeProfiles: composeProfiles(options),
@@ -215,10 +223,16 @@ async function removeDemoProjectAssets(cwd: string): Promise<void> {
     await rm(join(cwd, demoEnvFileName), { force: true });
     await rm(join(cwd, defaultComposeOverrideFileName), { force: true });
     await rm(join(cwd, demoConfigDirectory), { recursive: true, force: true });
-    await rm(join(cwd, ".eudiplo/demo-config"), { recursive: true, force: true });
+    await rm(join(cwd, ".eudiplo/demo-config"), {
+        recursive: true,
+        force: true,
+    });
 }
 
-export function unsupportedCommand(command: string, target: DeploymentTarget): string {
+export function unsupportedCommand(
+    command: string,
+    target: DeploymentTarget,
+): string {
     if (target === "external") {
         return `${command} is not available for externally managed deployments`;
     }
@@ -232,7 +246,10 @@ async function runCompose(
     const projectDirectory = instance.projectDirectory ?? context.cwd;
     const composeArgs = ["compose"];
     if (instance.envFile) {
-        composeArgs.push("--env-file", resolve(projectDirectory, instance.envFile));
+        composeArgs.push(
+            "--env-file",
+            resolve(projectDirectory, instance.envFile),
+        );
     }
     for (const composeFile of getComposeFiles(instance)) {
         composeArgs.push("-f", resolve(projectDirectory, composeFile));
@@ -247,7 +264,9 @@ async function runCompose(
 
     const composeRuntime = await resolveComposeRuntime(context.env);
     if (!composeRuntime) {
-        context.stderr.write("Docker or Podman was not found in a supported install location.\n");
+        context.stderr.write(
+            "Docker or Podman was not found in a supported install location.\n",
+        );
         return 1;
     }
 
@@ -269,7 +288,9 @@ async function runCompose(
 export async function resolveComposeRuntime(
     env: NodeJS.ProcessEnv,
 ): Promise<ComposeRuntime | undefined> {
-    const preferredRuntime = parsePreferredRuntime(env.EUDIPLO_CONTAINER_RUNTIME);
+    const preferredRuntime = parsePreferredRuntime(
+        env.EUDIPLO_CONTAINER_RUNTIME,
+    );
     const candidates = preferredRuntime
         ? [preferredRuntime]
         : (["docker", "podman"] as const);
@@ -284,7 +305,9 @@ export async function resolveComposeRuntime(
     return undefined;
 }
 
-function parsePreferredRuntime(value: string | undefined): ContainerRuntimeName | undefined {
+function parsePreferredRuntime(
+    value: string | undefined,
+): ContainerRuntimeName | undefined {
     if (!value) {
         return undefined;
     }
@@ -323,7 +346,10 @@ function runtimeExecutablePaths(
                 ...pathCandidates,
             ];
         }
-        return [String.raw`C:\Program Files\RedHat\Podman\podman.exe`, ...pathCandidates];
+        return [
+            String.raw`C:\Program Files\RedHat\Podman\podman.exe`,
+            ...pathCandidates,
+        ];
     }
 
     return [
@@ -346,7 +372,10 @@ function runtimePathCandidates(
     const extensions = (env.PATHEXT ?? ".EXE;.CMD;.BAT;.COM")
         .split(";")
         .filter(Boolean);
-    return [join(pathEntry, runtime), ...extensions.map((ext) => join(pathEntry, `${runtime}${ext}`))];
+    return [
+        join(pathEntry, runtime),
+        ...extensions.map((ext) => join(pathEntry, `${runtime}${ext}`)),
+    ];
 }
 
 async function exists(path: string): Promise<boolean> {
@@ -363,14 +392,21 @@ function isNodeError(error: unknown): error is NodeJS.ErrnoException {
 }
 
 function getComposeFiles(instance: InstanceConfig): string[] {
-    return instance.composeFiles ?? (instance.composeFile ? [instance.composeFile] : []);
+    return (
+        instance.composeFiles ??
+        (instance.composeFile ? [instance.composeFile] : [])
+    );
 }
 
 async function removeIfExists(path: string): Promise<void> {
     try {
         await unlink(path);
     } catch (error) {
-        if (!(error instanceof Error) || !("code" in error) || error.code !== "ENOENT") {
+        if (
+            !(error instanceof Error) ||
+            !("code" in error) ||
+            error.code !== "ENOENT"
+        ) {
             throw error;
         }
     }

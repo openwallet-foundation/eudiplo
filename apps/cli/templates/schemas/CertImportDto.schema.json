@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Optional certificate id. If omitted, one may be generated.",
+      "type": "string",
+      "minLength": 1
+    },
+    "keyId": {
+      "description": "Optional key chain id associated with this certificate chain.",
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "description": "Optional certificate description.",
+      "type": "string"
+    },
+    "crt": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Certificate chain entries, typically PEM-encoded certificates."
+    }
+  },
+  "required": [
+    "crt"
+  ],
+  "additionalProperties": false,
+  "$id": "./CertImportDto.schema.json",
+  "title": "CertImportDto"
+}

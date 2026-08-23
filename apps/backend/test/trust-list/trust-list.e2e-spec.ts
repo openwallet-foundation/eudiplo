@@ -36,7 +36,7 @@ describe("Trust List e2e Tests", () => {
 
         const configService = app.get(ConfigService);
         const configFolder = resolve(__dirname + "/../fixtures");
-        configService.set("CONFIG_IMPORT", false);
+        configService.set("CONFIG_IMPORT_MODE", "disabled");
         configService.set("LOG_LEVEL", "debug");
         const clientId = configService.getOrThrow<string>("AUTH_CLIENT_ID");
         const clientSecret =

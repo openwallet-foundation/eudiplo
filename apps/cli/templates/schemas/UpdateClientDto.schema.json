@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "description": {
+      "description": "Optional updated description.",
+      "type": "string",
+      "minLength": 1
+    },
+    "roles": {
+      "description": "Optional replacement roles for the client.",
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "presentation:manage",
+          "presentation:request",
+          "issuance:manage",
+          "issuance:offer",
+          "clients:manage",
+          "users:manage",
+          "tenants:manage",
+          "registrar:manage"
+        ]
+      }
+    },
+    "allowedPresentationConfigs": {
+      "description": "Optional replacement allow-list of presentation config ids.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "allowedIssuanceConfigs": {
+      "description": "Optional replacement allow-list of issuance config ids.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$id": "./UpdateClientDto.schema.json",
+  "title": "UpdateClientDto"
+}

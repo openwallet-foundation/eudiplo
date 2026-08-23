@@ -1,4 +1,7 @@
 <div fxLayout="column" fxFlex fxLayoutGap="24px">
+  @if (isEditMode && listId) {
+    <app-config-ownership-notice kind="StatusList" [resourceId]="listId" />
+  }
   <!-- Header -->
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <h2>{{ isEditMode ? 'Edit' : 'Create' }} Status List</h2>
@@ -257,7 +260,15 @@
       <!-- Actions -->
       <div fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="8px">
         <button mat-button type="button" routerLink="/status-lists">Cancel</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="isSaving">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="isSaving"
+          appConfigManaged
+          managedKind="StatusList"
+          [managedResourceId]="listId || ''"
+        >
           @if (isSaving) {
             <mat-spinner diameter="20"></mat-spinner>
           } @else {

@@ -1,35 +1,43 @@
 {
+  "apiVersion": "eudiplo.io/presentation-config/v2",
+  "kind": "PresentationConfig",
+  "metadata": {
+    "id": "age-over-18",
+    "generation": 1
+  },
+  "spec": {
     "id": "age-over-18",
     "description": "Age Over 18 Presentation Definition with German PID MSO mDoc",
     "dcql_query": {
-        "credentials": [
+      "credentials": [
+        {
+          "id": "pid-mso-mdoc",
+          "format": "mso_mdoc",
+          "claims": [
             {
-                "id": "pid-mso-mdoc",
-                "format": "mso_mdoc",
-                "claims": [
-                    {
-                        "path": [
-                            "eu.europa.ec.eudi.pid.1",
-                            "age_over_18"
-                        ]
-                    }
-                ],
-                "meta": {
-                    "doctype_value": "eu.europa.ec.eudi.pid.1"
-                },
-                "trusted_authorities": [
-                    {
-                        "type": "etsi_tl",
-                        "values": [
-                            {
-                                "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
-                            }
-                        ]
-                    }
-                ]
+              "path": [
+                "eu.europa.ec.eudi.pid.1",
+                "age_over_18"
+              ]
             }
-        ]
+          ],
+          "meta": {
+            "doctype_value": "eu.europa.ec.eudi.pid.1"
+          },
+          "trusted_authorities": [
+            {
+              "type": "etsi_tl",
+              "values": [
+                {
+                  "trustListId": "580831bc-ef11-43f4-a3be-a2b6bf1b29a3"
+                }
+              ]
+            }
+          ]
+        }
+      ]
     },
-    "accessCertId": "4ac8eea5-877c-4768-af84-a8f43eba2727",
+    "accessKeyChainId": "2f71c235-87e2-43c9-b572-739a3164ce95",
     "lifeTime": 300
+  }
 }

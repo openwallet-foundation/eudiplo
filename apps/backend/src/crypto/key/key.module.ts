@@ -41,7 +41,13 @@ export class KeyModule {
                 CertService,
                 CrlValidationService,
             ],
-            exports: [KeyChainService, CertService, CrlValidationService],
+            exports: [
+                KeyChainService,
+                KmsTenantConfigService,
+                KmsProviderRegistry,
+                CertService,
+                CrlValidationService,
+            ],
         };
     }
 }

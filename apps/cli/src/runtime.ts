@@ -4,6 +4,7 @@ import {
     createCompletionCandidatesCommand,
     createCompletionCommand,
 } from "./commands/completion/index.js";
+import { createCommandsCommand } from "./commands/commands/index.js";
 import { createConfigCommand } from "./commands/config/index.js";
 import { createDemoCommand } from "./commands/demo/index.js";
 import { createDeploymentCommands } from "./commands/deployment/index.js";
@@ -31,19 +32,25 @@ export async function runCli(
         if (error instanceof CommanderError) {
             return error.exitCode;
         }
-        context.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+        context.stderr.write(
+            `${error instanceof Error ? error.message : String(error)}\n`,
+        );
         return 1;
     }
 }
 
-function createProgram(
+export function createProgram(
     context: CommandContext,
     setExitCode: (exitCode: number) => void,
 ): Command {
     const program = new Command()
         .name("eudiplo")
         .description("Deployment-aware command line tools for EUDIPLO")
-        .version(versionText(), "-v, --version", "Print the installed CLI version")
+        .version(
+            versionText(),
+            "-v, --version",
+            "Print the installed CLI version",
+        )
         .helpCommand(true)
         .addHelpText(
             "afterAll",
@@ -61,9 +68,13 @@ function createProgram(
     program.addCommand(createStatusCommand(context, setExitCode));
     program.addCommand(createVersionCommand(context, setExitCode));
     program.addCommand(createCompletionCommand(context, setExitCode));
-    program.addCommand(createCompletionCandidatesCommand(context, setExitCode), {
-        hidden: true,
-    });
+    program.addCommand(
+        createCompletionCandidatesCommand(context, setExitCode),
+        {
+            hidden: true,
+        },
+    );
+    program.addCommand(createCommandsCommand(context, () => program));
     program.action(function showRootHelp() {
         this.outputHelp();
     });
@@ -88,7 +99,8 @@ function defaultContext(): CommandContext {
         cwd: process.cwd(),
         env: process.env,
         installationMethod: isSea() ? "standalone" : "npm",
-        interactive: process.stdin.isTTY === true && process.stdout.isTTY === true,
+        interactive:
+            process.stdin.isTTY === true && process.stdout.isTTY === true,
         stdout: process.stdout,
         stderr: process.stderr,
         fetch,
