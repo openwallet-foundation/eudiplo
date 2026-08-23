@@ -279,8 +279,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="63"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:63</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="68"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:68</a></div>
                         </td>
                     </tr>
 
@@ -383,8 +383,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="94"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:94</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -484,8 +484,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="39"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:39</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="44"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -565,8 +565,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="56"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:56</a></div>
                         </td>
                     </tr>
 
@@ -657,8 +657,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="80"
-                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:80</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="85"
+                                    class="link-to-prism">src/issuer/configuration/webhook-endpoint/webhook-endpoint.controller.ts:85</a></div>
                         </td>
                     </tr>
 
@@ -766,8 +766,13 @@ import { UpdateWebhookEndpointDto } from &quot;./dto/update-webhook-endpoint.dto
 import { WebhookEndpointEntity } from &quot;./entities/webhook-endpoint.entity&quot;;
 import { WebhookEndpointService } from &quot;./webhook-endpoint.service&quot;;
 
+// Webhook endpoints are referenced from both sides: issuance configs and,
+// since 7.0 replaced the inline &#x60;webhook&#x60; payload with &#x60;webhookEndpointId&#x60;,
+// presentation configs too. Gating them on issuance alone meant a
+// verification-only tenant could not register the webhook its own presentation
+// config needs. RolesGuard is OR, so either role grants access.
 @ApiTags(&quot;Issuer&quot;)
-@Secured([Role.Issuances])
+@Secured([Role.Issuances, Role.Presentations])
 @Controller(&quot;issuer/webhook-endpoints&quot;)
 export class WebhookEndpointController {
     constructor(private readonly service: WebhookEndpointService) {}
