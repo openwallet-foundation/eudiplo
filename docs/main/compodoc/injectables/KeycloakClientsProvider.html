@@ -286,6 +286,11 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Async</span>
+                                <a href="#setClientSecret" >setClientSecret</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
                                 <a href="#updateClient" >updateClient</a>
                             </li>
                             <li>
@@ -423,7 +428,7 @@
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:331</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:344</a></code>
 </div>
                         </td>
                     </tr>
@@ -1154,7 +1159,7 @@ Used for JWT validation to fetch client restrictions.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:530</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:543</a></code>
 </div>
                         </td>
                     </tr>
@@ -1316,6 +1321,105 @@ Returns the new plain secret for one-time display.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="setClientSecret"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setClientSecret</b></span>
+                        <a href="#setClientSecret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setClientSecret(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, secret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ClientsProvider.html" target="_self" >ClientsProvider</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:331</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>secret</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="updateClient"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -1340,7 +1444,7 @@ Returns the new plain secret for one-time display.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:464</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:477</a></code>
 </div>
                         </td>
                     </tr>
@@ -1438,7 +1542,7 @@ Returns the new plain secret for one-time display.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:50</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:55</a></code>
 </div>
                         </td>
                     </tr>
@@ -1898,6 +2002,19 @@ export class KeycloakClientsProvider
             id: kcClient.id,
         });
         return secret.value!;
+    }
+
+    async setClientSecret(
+        tenantId: string,
+        clientId: string,
+        secret: string,
+    ): Promise&lt;void&gt; {
+        const client &#x3D; (await this.kc.clients.find({ clientId }))[0];
+        if (!client?.id) {
+            throw new Error(&#x60;Client ${clientId} not found in Keycloak&#x60;);
+        }
+        this.ensureTenantOwnership(tenantId, client, &quot;updated (secret)&quot;);
+        await this.kc.clients.update({ id: client.id }, { secret });
     }
 
     async addClient(tenantId: string, dto: CreateClientDto) {

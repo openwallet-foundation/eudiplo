@@ -216,12 +216,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(configService: ConfigService, kmsConfigService: <a href="../injectables/KmsConfigService.html" target="_self">KmsConfigService</a>, kmsProviderRegistry: <a href="../injectables/KmsProviderRegistry.html" target="_self">KmsProviderRegistry</a>)</code>
+<code>constructor(configService: ConfigService, kmsConfigService: <a href="../injectables/KmsConfigService.html" target="_self">KmsConfigService</a>, kmsProviderRegistry: <a href="../injectables/KmsProviderRegistry.html" target="_self">KmsProviderRegistry</a>, configMigrationService: <a href="../injectables/ConfigMigrationService.html" target="_self">ConfigMigrationService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="19" class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:19</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="20" class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:20</a></div>
                             </td>
                         </tr>
 
@@ -274,6 +274,18 @@
                                                     </td>
                                                     
                                                 </tr>
+                                                <tr>
+                                                        <td>configMigrationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigMigrationService.html" target="_self" >ConfigMigrationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
                                         </tbody>
                                     </table>
                             </div>
@@ -308,8 +320,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="60"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:60</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -375,8 +387,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:37</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -442,8 +454,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="26"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:26</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="28"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:28</a></div>
                         </td>
                     </tr>
 
@@ -511,8 +523,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:96</a></div>
                         </td>
                     </tr>
 
@@ -580,8 +592,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="69"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:69</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -647,8 +659,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:41</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:63</a></div>
                         </td>
                     </tr>
 
@@ -728,8 +740,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/crypto/key/kms/kms-tenant-config.service.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -798,6 +810,7 @@ import {
 } from &quot;../schemas/kms-config.schema&quot;;
 import { KmsProviderRegistry } from &quot;./kms-provider.registry&quot;;
 import { KmsConfigService } from &quot;./kms-config.service&quot;;
+import { ConfigMigrationService } from &quot;../../../platform/config-portability/config-migration.service&quot;;
 
 @Injectable()
 export class KmsTenantConfigService {
@@ -805,6 +818,7 @@ export class KmsTenantConfigService {
         private readonly configService: ConfigService,
         private readonly kmsConfigService: KmsConfigService,
         private readonly kmsProviderRegistry: KmsProviderRegistry,
+        private readonly configMigrationService: ConfigMigrationService,
     ) {}
 
     getTenantConfig(tenantId: string): KmsConfig | null {
@@ -812,8 +826,28 @@ export class KmsTenantConfigService {
         if (!path || !existsSync(path)) {
             return null;
         }
+        const payload &#x3D; JSON.parse(readFileSync(path, &quot;utf8&quot;));
+        const document &#x3D; this.configMigrationService.isDocument(payload)
+            ? payload
+            : this.configMigrationService.wrapLegacy(
+                  &quot;KmsConfig&quot;,
+                  payload,
+                  &quot;kms&quot;,
+              );
+        if (document.kind !&#x3D;&#x3D; &quot;KmsConfig&quot;) {
+            throw new Error(&#x60;Expected KmsConfig in ${path}&#x60;);
+        }
+        const upgraded &#x3D; this.configMigrationService.upgrade(document);
+        const blocking &#x3D; upgraded.issues.filter(
+            (issue) &#x3D;&gt; issue.severity !&#x3D;&#x3D; &quot;warning&quot;,
+        );
+        if (blocking.length) {
+            throw new Error(blocking.map((issue) &#x3D;&gt; issue.message).join(&quot;; &quot;));
+        }
         return parseRawKmsConfig(
-            JSON.parse(readFileSync(path, &quot;utf8&quot;)),
+            this.configMigrationService.unwrapForLegacyImporter(
+                upgraded.document,
+            ),
             &#x60;tenant &#x27;${tenantId}&#x27; kms.json&#x60;,
         );
     }

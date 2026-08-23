@@ -232,6 +232,11 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#setClientSecret" >setClientSecret</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#updateClient" >updateClient</a>
                             </li>
                             <li>
@@ -430,7 +435,7 @@
                                             </td>
 
                                             <td>
-                                                    <code>randomBytes(32).toString(&quot;hex&quot;)</code>
+                                                    <code>dto.secret ?? randomBytes(32).toString(&quot;hex&quot;)</code>
                                             </td>
 
                                         </tr>
@@ -826,7 +831,7 @@ Used for JWT validation to fetch client restrictions.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:192</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:207</a></code>
 </div>
                         </td>
                     </tr>
@@ -992,6 +997,105 @@ Returns the new plain secret for one-time display.</p>
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="setClientSecret"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>setClientSecret</b></span>
+                        <a href="#setClientSecret"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setClientSecret(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, clientId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, secret: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Inherited from         <code><a href="../classes/ClientsProvider.html" target="_self" >ClientsProvider</a></code>
+</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:181</a></code>
+</div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>clientId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>secret</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="updateClient"></a>
                     <span class="name">
                         <span ><b>updateClient</b></span>
@@ -1014,7 +1118,7 @@ Returns the new plain secret for one-time display.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:181</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:196</a></code>
 </div>
                         </td>
                     </tr>
@@ -1113,7 +1217,7 @@ Returns the new plain secret for one-time display.</p>
                     </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:196</a></code>
+                                <div class="io-line">        <code><a href="../classes/ClientsProvider.html#source" target="_self" >ClientsProvider:211</a></code>
 </div>
                         </td>
                     </tr>
@@ -1315,7 +1419,7 @@ export class InternalClientsProvider
     async addClient(
         tenantId: string,
         dto: CreateClient,
-        secret &#x3D; randomBytes(32).toString(&quot;hex&quot;),
+        secret &#x3D; dto.secret ?? randomBytes(32).toString(&quot;hex&quot;),
     ) {
         // Hash the secret before storing
         const hashedSecret &#x3D; await bcrypt.hash(secret, BCRYPT_ROUNDS);
@@ -1357,6 +1461,21 @@ export class InternalClientsProvider
         const hashedSecret &#x3D; await bcrypt.hash(newSecret, BCRYPT_ROUNDS);
         await this.repo.update({ clientId }, { secret: hashedSecret });
         return newSecret;
+    }
+
+    async setClientSecret(
+        tenantId: string,
+        clientId: string,
+        secret: string,
+    ): Promise&lt;void&gt; {
+        await this.repo.findOneByOrFail({
+            clientId,
+            tenant: { id: tenantId },
+        });
+        await this.repo.update(
+            { clientId, tenant: { id: tenantId } },
+            { secret: await bcrypt.hash(secret, BCRYPT_ROUNDS) },
+        );
     }
 
     updateClient(

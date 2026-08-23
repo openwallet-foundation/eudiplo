@@ -330,7 +330,6 @@
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
-                                    <span class="modifier">Private</span>
                                     <span class="modifier">Async</span>
                                 <a href="#processStatusListConfig" >processStatusListConfig</a>
                             </li>
@@ -2187,7 +2186,6 @@ Used for the status list aggregation endpoint (RFC Section 9.3).</p>
                 <td class="col-md-4">
                     <a name="processStatusListConfig"></a>
                     <span class="name">
-                            <span class="modifier">Private</span>
                             <span class="modifier">Async</span>
                         <span ><b>processStatusListConfig</b></span>
                         <a href="#processStatusListConfig"><span class="icon ion-ios-link"></span></a>
@@ -4136,7 +4134,7 @@ export class StatusListService {
     /**
      * Process a status list config for import.
      */
-    private async processStatusListConfig(
+    async processStatusListConfig(
         tenantId: string,
         config: StatusListImportDto,
     ) {

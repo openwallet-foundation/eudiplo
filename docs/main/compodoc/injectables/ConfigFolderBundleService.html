@@ -1,0 +1,1135 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ConfigFolderBundleService</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/platform/config-portability/config-folder-bundle.service.ts</code>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigPortabilityModule.html" target="_self" >ConfigPortabilityModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--property" aria-hidden="true">P</span>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Readonly</span>
+                                <a href="#logger" >logger</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#applyTenantFolder" >applyTenantFolder</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#buildBundle" >buildBundle</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#documentPath" >documentPath</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#loadAssets" >loadAssets</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#resourceFiles" >resourceFiles</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(configService: ConfigService, configImportService: <a href="../injectables/ConfigImportService.html" target="_self">ConfigImportService</a>, migrationService: <a href="../injectables/ConfigMigrationService.html" target="_self">ConfigMigrationService</a>, resourceRegistry: <a href="../injectables/ConfigResourceRegistry.html" target="_self">ConfigResourceRegistry</a>, applyService: <a href="../injectables/ConfigBundleApplyService.html" target="_self">ConfigBundleApplyService</a>, orchestrator: <a href="../injectables/ConfigImportOrchestratorService.html" target="_self">ConfigImportOrchestratorService</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:51</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configImportService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigImportService.html" target="_self" >ConfigImportService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>migrationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigMigrationService.html" target="_self" >ConfigMigrationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>resourceRegistry</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigResourceRegistry.html" target="_self" >ConfigResourceRegistry</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>applyService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigBundleApplyService.html" target="_self" >ConfigBundleApplyService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>orchestrator</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigImportOrchestratorService.html" target="_self" >ConfigImportOrchestratorService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="applyTenantFolder"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>applyTenantFolder</b></span>
+                        <a href="#applyTenantFolder"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>applyTenantFolder(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, mode: <a href="../miscellaneous/typealiases.html#ConfigImportMode" target="_self">ConfigImportMode</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>mode</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConfigImportMode" target="_self" >ConfigImportMode</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="buildBundle"></a>
+                    <span class="name">
+                        <span ><b>buildBundle</b></span>
+                        <a href="#buildBundle"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>buildBundle(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, tenantRoot: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:99</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>tenantRoot</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ConfigBundle.html" target="_self" >ConfigBundle</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="documentPath"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>documentPath</b></span>
+                        <a href="#documentPath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>documentPath(tenantRoot: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, document: <a href="../interfaces/ConfigDocument.html" target="_self">ConfigDocument</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="223"
+                                    class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:223</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantRoot</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>document</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="loadAssets"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>loadAssets</b></span>
+                        <a href="#loadAssets"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>loadAssets(tenantRoot: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="202"
+                                    class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:202</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantRoot</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>ConfigBundleAsset[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="resourceFiles"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resourceFiles</b></span>
+                        <a href="#resourceFiles"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resourceFiles(tenantRoot: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, resource: <a href="../miscellaneous/typealiases.html#FolderResource" target="_self">FolderResource</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="184"
+                                    class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:184</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantRoot</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>resource</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#FolderResource" target="_self" >FolderResource</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>string[]</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Readonly</span>
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>unknown</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>new Logger(ConfigFolderBundleService.name)</code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/platform/config-portability/config-folder-bundle.service.ts:51</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { existsSync, readdirSync, readFileSync } from &quot;node:fs&quot;;
+import { extname, join, resolve } from &quot;node:path&quot;;
+import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { ConfigService } from &quot;@nestjs/config&quot;;
+import { ConfigImportService } from &quot;../config-import/config-import.service&quot;;
+import { ConfigImportOrchestratorService } from &quot;../config-import/config-import-orchestrator.service&quot;;
+import { ConfigBundleApplyService } from &quot;./config-bundle-apply.service&quot;;
+import { ConfigMigrationService } from &quot;./config-migration.service&quot;;
+import { ConfigResourceRegistry } from &quot;./config-resource.registry&quot;;
+import type {
+    ConfigBundle,
+    ConfigBundleAsset,
+    ConfigDocument,
+    ConfigImportMode,
+    ConfigMigrationIssue,
+    ConfigResourceKind,
+} from &quot;./config-resource.types&quot;;
+
+type FolderResource &#x3D;
+    | { kind: ConfigResourceKind; file: string }
+    | { kind: ConfigResourceKind; directory: string };
+
+const FOLDER_RESOURCES: FolderResource[] &#x3D; [
+    { kind: &quot;KmsConfig&quot;, file: &quot;kms.json&quot; },
+    { kind: &quot;Client&quot;, directory: &quot;clients&quot; },
+    { kind: &quot;KeyChain&quot;, directory: &quot;key-chains&quot; },
+    { kind: &quot;RegistrarConfig&quot;, file: &quot;registrar.json&quot; },
+    { kind: &quot;AttributeProvider&quot;, directory: &quot;attribute-providers&quot; },
+    { kind: &quot;WebhookEndpoint&quot;, directory: &quot;webhook-endpoints&quot; },
+    { kind: &quot;IssuanceConfig&quot;, file: &quot;issuance/issuance.json&quot; },
+    { kind: &quot;CredentialConfig&quot;, directory: &quot;issuance/credentials&quot; },
+    { kind: &quot;TrustList&quot;, directory: &quot;trust-lists&quot; },
+    { kind: &quot;PresentationConfig&quot;, directory: &quot;presentation&quot; },
+    { kind: &quot;StatusList&quot;, directory: &quot;issuance/status-lists&quot; },
+];
+
+const MIME_TYPES: Record&lt;string, string&gt; &#x3D; {
+    &quot;.png&quot;: &quot;image/png&quot;,
+    &quot;.jpg&quot;: &quot;image/jpeg&quot;,
+    &quot;.jpeg&quot;: &quot;image/jpeg&quot;,
+    &quot;.gif&quot;: &quot;image/gif&quot;,
+    &quot;.svg&quot;: &quot;image/svg+xml&quot;,
+    &quot;.webp&quot;: &quot;image/webp&quot;,
+    &quot;.ico&quot;: &quot;image/x-icon&quot;,
+    &quot;.bmp&quot;: &quot;image/bmp&quot;,
+};
+
+@Injectable()
+export class ConfigFolderBundleService {
+    private readonly logger &#x3D; new Logger(ConfigFolderBundleService.name);
+
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly configImportService: ConfigImportService,
+        private readonly migrationService: ConfigMigrationService,
+        private readonly resourceRegistry: ConfigResourceRegistry,
+        private readonly applyService: ConfigBundleApplyService,
+        orchestrator: ConfigImportOrchestratorService,
+    ) {
+        orchestrator.registerPortableRunner(
+            &quot;versioned folder plan/apply&quot;,
+            (tenantId, mode) &#x3D;&gt; this.applyTenantFolder(tenantId, mode),
+        );
+    }
+
+    async applyTenantFolder(
+        tenantId: string,
+        mode: ConfigImportMode,
+    ): Promise&lt;void&gt; {
+        const configRoot &#x3D; resolve(
+            this.configService.getOrThrow&lt;string&gt;(&quot;CONFIG_FOLDER&quot;),
+        );
+        const tenantRoot &#x3D; join(configRoot, tenantId);
+        const bundle &#x3D; this.buildBundle(tenantId, tenantRoot);
+        const source &#x3D; &#x60;folder:${tenantRoot}&#x60;;
+        const plan &#x3D; await this.applyService.apply(
+            tenantId,
+            bundle,
+            mode,
+            source,
+        );
+        const counts &#x3D; plan.items.reduce&lt;Record&lt;string, number&gt;&gt;(
+            (result, item) &#x3D;&gt; {
+                result[item.action] &#x3D; (result[item.action] ?? 0) + 1;
+                return result;
+            },
+            {},
+        );
+        this.logger.log(
+            &#x60;[${tenantId}] Startup config ${mode} completed: ${
+                Object.entries(counts)
+                    .map(([action, count]) &#x3D;&gt; &#x60;${count} ${action}&#x60;)
+                    .join(&quot;, &quot;) || &quot;no resources&quot;
+            }&#x60;,
+        );
+    }
+
+    buildBundle(tenantId: string, tenantRoot: string): ConfigBundle {
+        const documents: ConfigDocument[] &#x3D; [];
+        const warnings: ConfigMigrationIssue[] &#x3D; [];
+
+        for (const resource of FOLDER_RESOURCES) {
+            for (const filePath of this.resourceFiles(tenantRoot, resource)) {
+                const rawPayload &#x3D; JSON.parse(
+                    readFileSync(filePath, &quot;utf8&quot;),
+                ) as Record&lt;string, unknown&gt;;
+                const payload &#x3D;
+                    this.configImportService.replacePlaceholders(rawPayload);
+                const fileId &#x3D; filePath
+                    .split(/[\\/]/)
+                    .pop()!
+                    .replace(/\.json$/i, &quot;&quot;);
+                const singletonId &#x3D; this.resourceRegistry.get(
+                    resource.kind,
+                ).singletonId;
+                const id &#x3D; String(
+                    (payload.metadata as Record&lt;string, unknown&gt; | undefined)
+                        ?.id ??
+                        singletonId ??
+                        payload.id ??
+                        payload.clientId ??
+                        fileId,
+                );
+                const input &#x3D; this.migrationService.isDocument(payload)
+                    ? payload
+                    : this.migrationService.wrapLegacy(
+                          resource.kind,
+                          payload,
+                          id,
+                      );
+                const result &#x3D; this.migrationService.upgrade(input);
+                if (result.document.kind !&#x3D;&#x3D; resource.kind) {
+                    throw new Error(
+                        &#x60;${filePath} contains ${result.document.kind}, expected ${resource.kind}&#x60;,
+                    );
+                }
+                const blocking &#x3D; result.issues.filter(
+                    (issue) &#x3D;&gt; issue.severity !&#x3D;&#x3D; &quot;warning&quot;,
+                );
+                if (blocking.length &gt; 0) {
+                    throw new Error(
+                        &#x60;${filePath} requires input: ${blocking
+                            .map((issue) &#x3D;&gt; &#x60;${issue.path}: ${issue.message}&#x60;)
+                            .join(&quot;; &quot;)}&#x60;,
+                    );
+                }
+                documents.push(result.document);
+                warnings.push(...result.issues);
+            }
+        }
+
+        const assets &#x3D; this.loadAssets(tenantRoot);
+        const resources &#x3D; documents.map((document) &#x3D;&gt; ({
+            kind: document.kind,
+            id: document.metadata.id,
+            apiVersion: document.apiVersion,
+            path: this.documentPath(tenantRoot, document),
+            sha256: sha256(JSON.stringify(document)),
+            ownership: &quot;file-managed&quot; as const,
+            generation: document.metadata.generation ?? 1,
+        }));
+        return {
+            manifest: {
+                format: &quot;eudiplo.config-bundle&quot;,
+                formatVersion: 1,
+                sourceVersion: &quot;startup-folder&quot;,
+                exportedAt: new Date(0).toISOString(),
+                tenant: tenantId,
+                resources,
+                assets: assets.map(({ path, contentType, sha256: hash }) &#x3D;&gt; ({
+                    path,
+                    contentType,
+                    sha256: hash,
+                })),
+                requirements: [],
+                warnings,
+            },
+            documents,
+            assets,
+        };
+    }
+
+    private resourceFiles(
+        tenantRoot: string,
+        resource: FolderResource,
+    ): string[] {
+        if (&quot;file&quot; in resource) {
+            const path &#x3D; join(tenantRoot, resource.file);
+            return existsSync(path) ? [path] : [];
+        }
+        const directory &#x3D; join(tenantRoot, resource.directory);
+        if (!existsSync(directory)) {
+            return [];
+        }
+        return readdirSync(directory, { withFileTypes: true })
+            .filter((entry) &#x3D;&gt; entry.isFile() &amp;&amp; entry.name.endsWith(&quot;.json&quot;))
+            .map((entry) &#x3D;&gt; join(directory, entry.name))
+            .sort();
+    }
+
+    private loadAssets(tenantRoot: string): ConfigBundleAsset[] {
+        const directory &#x3D; join(tenantRoot, &quot;images&quot;);
+        if (!existsSync(directory)) {
+            return [];
+        }
+        return readdirSync(directory, { withFileTypes: true })
+            .filter((entry) &#x3D;&gt; entry.isFile() &amp;&amp; entry.name !&#x3D;&#x3D; &quot;.gitkeep&quot;)
+            .map((entry) &#x3D;&gt; {
+                const data &#x3D; readFileSync(join(directory, entry.name));
+                return {
+                    path: &#x60;images/${entry.name}&#x60;,
+                    contentType:
+                        MIME_TYPES[extname(entry.name).toLowerCase()] ??
+                        &quot;application/octet-stream&quot;,
+                    sha256: sha256(data),
+                    data: data.toString(&quot;base64&quot;),
+                };
+            })
+            .sort((left, right) &#x3D;&gt; left.path.localeCompare(right.path));
+    }
+
+    private documentPath(tenantRoot: string, document: ConfigDocument): string {
+        const definition &#x3D; FOLDER_RESOURCES.find(
+            (candidate) &#x3D;&gt; candidate.kind &#x3D;&#x3D;&#x3D; document.kind,
+        )!;
+        if (&quot;file&quot; in definition) {
+            return definition.file;
+        }
+        return &#x60;${definition.directory}/${document.metadata.id}.json&#x60;;
+    }
+}
+
+function sha256(value: string | Buffer): string {
+    return createHash(&quot;sha256&quot;).update(value).digest(&quot;hex&quot;);
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ConfigFolderBundleService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

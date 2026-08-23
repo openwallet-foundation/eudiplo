@@ -1,0 +1,1034 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ConfigMigrationService</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/platform/config-portability/config-migration.service.ts</code>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigResourceCoreModule.html" target="_self" >ConfigResourceCoreModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#detectLegacyVersion" >detectLegacyVersion</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#isDocument" >isDocument</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#unwrapForLegacyImporter" >unwrapForLegacyImporter</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#upgrade" >upgrade</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#wrapLegacy" >wrapLegacy</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(registry: <a href="../injectables/ConfigResourceRegistry.html" target="_self">ConfigResourceRegistry</a>)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="148" class="link-to-prism">src/platform/config-portability/config-migration.service.ts:148</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>registry</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigResourceRegistry.html" target="_self" >ConfigResourceRegistry</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="detectLegacyVersion"></a>
+                    <span class="name">
+                        <span ><b>detectLegacyVersion</b></span>
+                        <a href="#detectLegacyVersion"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>detectLegacyVersion(kind: <a href="../miscellaneous/typealiases.html#ConfigResourceKind" target="_self">ConfigResourceKind</a>, spec: <a href="../miscellaneous/typealiases.html#Spec" target="_self">Spec</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="167"
+                                    class="link-to-prism">src/platform/config-portability/config-migration.service.ts:167</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConfigResourceKind" target="_self" >ConfigResourceKind</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>spec</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Spec" target="_self" >Spec</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="isDocument"></a>
+                    <span class="name">
+                        <span ><b>isDocument</b></span>
+                        <a href="#isDocument"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>isDocument(input: unknown)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="151"
+                                    class="link-to-prism">src/platform/config-portability/config-migration.service.ts:151</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>input</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="unwrapForLegacyImporter"></a>
+                    <span class="name">
+                        <span ><b>unwrapForLegacyImporter</b></span>
+                        <a href="#unwrapForLegacyImporter"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>unwrapForLegacyImporter(document: <a href="../interfaces/ConfigDocument.html" target="_self">ConfigDocument</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="259"
+                                    class="link-to-prism">src/platform/config-portability/config-migration.service.ts:259</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>document</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Record&lt;string, unknown&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="upgrade"></a>
+                    <span class="name">
+                        <span ><b>upgrade</b></span>
+                        <a href="#upgrade"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>upgrade(input: <a href="../interfaces/ConfigDocument.html" target="_self">ConfigDocument</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/platform/config-portability/config-migration.service.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>input</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ConfigMigrationResult.html" target="_self" >ConfigMigrationResult</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="wrapLegacy"></a>
+                    <span class="name">
+                        <span ><b>wrapLegacy</b></span>
+                        <a href="#wrapLegacy"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>wrapLegacy(kind: <a href="../miscellaneous/typealiases.html#ConfigResourceKind" target="_self">ConfigResourceKind</a>, spec: <a href="../miscellaneous/typealiases.html#Spec" target="_self">Spec</a>, id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="198"
+                                    class="link-to-prism">src/platform/config-portability/config-migration.service.ts:198</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#ConfigResourceKind" target="_self" >ConfigResourceKind</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>spec</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#Spec" target="_self" >Spec</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { BadRequestException, Injectable } from &quot;@nestjs/common&quot;;
+import { CONFIG_RESOURCE_KINDS } from &quot;./config-resource.types&quot;;
+import type {
+    ConfigDocument,
+    ConfigMigrationIssue,
+    ConfigMigrationResult,
+    ConfigResourceKind,
+} from &quot;./config-resource.types&quot;;
+import { ConfigResourceRegistry } from &quot;./config-resource.registry&quot;;
+
+type Spec &#x3D; Record&lt;string, any&gt;;
+
+interface ConfigMigration {
+    id: string;
+    kind: ConfigResourceKind;
+    from: number;
+    to: number;
+    migrate(spec: Spec): { spec: Spec; issues?: ConfigMigrationIssue[] };
+}
+
+const migrateTrustListRefs &#x3D; (
+    spec: Spec,
+    kind: ConfigResourceKind,
+    resourceId: string,
+): ConfigMigrationIssue[] &#x3D;&gt; {
+    const issues: ConfigMigrationIssue[] &#x3D; [];
+    const refs &#x3D; spec.walletProviderTrustLists;
+    if (Array.isArray(refs)) {
+        spec.walletProviderTrustLists &#x3D; refs.map(
+            (entry: unknown, index: number) &#x3D;&gt; {
+                if (typeof entry !&#x3D;&#x3D; &quot;string&quot;) return entry;
+                issues.push({
+                    severity: &quot;required-input&quot;,
+                    code: &quot;TRUST_LIST_VERIFIER_REQUIRED&quot;,
+                    path: &#x60;/spec/walletProviderTrustLists/${index}&#x60;,
+                    message:
+                        &quot;Provide verifierKey or verifierX509Der before import.&quot;,
+                    resource: { kind, id: resourceId },
+                });
+                return { url: entry };
+            },
+        );
+    }
+    return issues;
+};
+
+const MIGRATIONS: ConfigMigration[] &#x3D; [
+    {
+        id: &quot;IssuanceConfig/1-to-2&quot;,
+        kind: &quot;IssuanceConfig&quot;,
+        from: 1,
+        to: 2,
+        migrate(spec) {
+            const clone &#x3D; structuredClone(spec);
+            return {
+                spec: clone,
+                issues: migrateTrustListRefs(
+                    clone,
+                    &quot;IssuanceConfig&quot;,
+                    &quot;issuance&quot;,
+                ),
+            };
+        },
+    },
+    {
+        id: &quot;PresentationConfig/1-to-2&quot;,
+        kind: &quot;PresentationConfig&quot;,
+        from: 1,
+        to: 2,
+        migrate(spec) {
+            const clone &#x3D; structuredClone(spec);
+            const issues: ConfigMigrationIssue[] &#x3D; [];
+            if (clone.webhook !&#x3D;&#x3D; undefined) {
+                issues.push({
+                    severity: &quot;required-input&quot;,
+                    code: &quot;WEBHOOK_ENDPOINT_REFERENCE_REQUIRED&quot;,
+                    path: &quot;/spec/webhook&quot;,
+                    message:
+                        &quot;Create or select a webhook endpoint, set webhookEndpointId, and remove webhook.&quot;,
+                    resource: {
+                        kind: &quot;PresentationConfig&quot;,
+                        id: String(clone.id ?? &quot;unknown&quot;),
+                    },
+                });
+            }
+
+            const credentials &#x3D; clone.dcql_query?.credentials;
+            if (Array.isArray(credentials)) {
+                for (
+                    let credentialIndex &#x3D; 0;
+                    credentialIndex &lt; credentials.length;
+                    credentialIndex++
+                ) {
+                    const authorities &#x3D;
+                        credentials[credentialIndex]?.trusted_authorities;
+                    if (!Array.isArray(authorities)) continue;
+                    for (
+                        let authorityIndex &#x3D; 0;
+                        authorityIndex &lt; authorities.length;
+                        authorityIndex++
+                    ) {
+                        const authority &#x3D; authorities[authorityIndex];
+                        if (
+                            authority?.type !&#x3D;&#x3D; &quot;etsi_tl&quot; ||
+                            !Array.isArray(authority.values)
+                        ) {
+                            continue;
+                        }
+                        authority.values &#x3D; authority.values.map(
+                            (entry: unknown, valueIndex: number) &#x3D;&gt; {
+                                if (typeof entry !&#x3D;&#x3D; &quot;string&quot;) return entry;
+                                issues.push({
+                                    severity: &quot;required-input&quot;,
+                                    code: &quot;TRUST_LIST_VERIFIER_REQUIRED&quot;,
+                                    path: &#x60;/spec/dcql_query/credentials/${credentialIndex}/trusted_authorities/${authorityIndex}/values/${valueIndex}&#x60;,
+                                    message:
+                                        &quot;Provide verifierKey, verifierX509Der, or replace the URL with trustListId before import.&quot;,
+                                    resource: {
+                                        kind: &quot;PresentationConfig&quot;,
+                                        id: String(clone.id ?? &quot;unknown&quot;),
+                                    },
+                                });
+                                return { url: entry };
+                            },
+                        );
+                    }
+                }
+            }
+            return { spec: clone, issues };
+        },
+    },
+    {
+        id: &quot;KeyChain/1-to-2&quot;,
+        kind: &quot;KeyChain&quot;,
+        from: 1,
+        to: 2,
+        migrate(spec) {
+            const clone &#x3D; structuredClone(spec);
+            const key &#x3D; clone.key;
+            delete clone.key;
+            clone.keySource &#x3D; { type: &quot;private-jwk&quot;, jwk: key };
+            return { spec: clone };
+        },
+    },
+];
+
+@Injectable()
+export class ConfigMigrationService {
+    constructor(private readonly registry: ConfigResourceRegistry) {}
+
+    isDocument(input: unknown): input is ConfigDocument {
+        if (!input || typeof input !&#x3D;&#x3D; &quot;object&quot;) return false;
+        const candidate &#x3D; input as Record&lt;string, unknown&gt;;
+        return (
+            typeof candidate.apiVersion &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            typeof candidate.kind &#x3D;&#x3D;&#x3D; &quot;string&quot; &amp;&amp;
+            CONFIG_RESOURCE_KINDS.includes(
+                candidate.kind as ConfigResourceKind,
+            ) &amp;&amp;
+            !!candidate.metadata &amp;&amp;
+            typeof candidate.metadata &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp;
+            !!candidate.spec &amp;&amp;
+            typeof candidate.spec &#x3D;&#x3D;&#x3D; &quot;object&quot;
+        );
+    }
+
+    detectLegacyVersion(kind: ConfigResourceKind, spec: Spec): number {
+        if (kind &#x3D;&#x3D;&#x3D; &quot;PresentationConfig&quot;) {
+            if (spec.webhook !&#x3D;&#x3D; undefined) return 1;
+            const credentials &#x3D; spec.dcql_query?.credentials;
+            if (
+                Array.isArray(credentials) &amp;&amp;
+                credentials.some((credential: any) &#x3D;&gt;
+                    credential?.trusted_authorities?.some(
+                        (authority: any) &#x3D;&gt;
+                            authority?.type &#x3D;&#x3D;&#x3D; &quot;etsi_tl&quot; &amp;&amp;
+                            authority.values?.some(
+                                (value: unknown) &#x3D;&gt; typeof value &#x3D;&#x3D;&#x3D; &quot;string&quot;,
+                            ),
+                    ),
+                )
+            ) {
+                return 1;
+            }
+            return 2;
+        }
+        if (kind &#x3D;&#x3D;&#x3D; &quot;IssuanceConfig&quot;) {
+            return spec.walletProviderTrustLists?.some?.(
+                (entry: unknown) &#x3D;&gt; typeof entry &#x3D;&#x3D;&#x3D; &quot;string&quot;,
+            )
+                ? 1
+                : 2;
+        }
+        if (kind &#x3D;&#x3D;&#x3D; &quot;KeyChain&quot;) return spec.keySource ? 2 : 1;
+        return 1;
+    }
+
+    wrapLegacy(
+        kind: ConfigResourceKind,
+        spec: Spec,
+        id?: string,
+    ): ConfigDocument {
+        const definition &#x3D; this.registry.get(kind);
+        const version &#x3D; this.detectLegacyVersion(kind, spec);
+        const resourceId &#x3D;
+            id ??
+            String(
+                spec.id ?? spec.clientId ?? definition.singletonId ?? &quot;unknown&quot;,
+            );
+        return {
+            apiVersion: this.registry.apiVersion(kind, version),
+            kind,
+            metadata: { id: resourceId, generation: 1 },
+            spec,
+        };
+    }
+
+    upgrade(input: ConfigDocument): ConfigMigrationResult {
+        const definition &#x3D; this.registry.get(input.kind);
+        let version: number;
+        try {
+            version &#x3D; this.registry.parseApiVersion(
+                input.kind,
+                input.apiVersion,
+            );
+        } catch (error) {
+            throw new BadRequestException(String(error));
+        }
+        if (version &gt; definition.currentVersion) {
+            throw new BadRequestException(
+                &#x60;${input.kind} version ${version} is newer than supported version ${definition.currentVersion}&#x60;,
+            );
+        }
+
+        let document &#x3D; structuredClone(input);
+        const issues: ConfigMigrationIssue[] &#x3D; [];
+        const applied: string[] &#x3D; [];
+        while (version &lt; definition.currentVersion) {
+            const migration &#x3D; MIGRATIONS.find(
+                (candidate) &#x3D;&gt;
+                    candidate.kind &#x3D;&#x3D;&#x3D; input.kind &amp;&amp; candidate.from &#x3D;&#x3D;&#x3D; version,
+            );
+            if (!migration || migration.to !&#x3D;&#x3D; version + 1) {
+                throw new BadRequestException(
+                    &#x60;No migration registered for ${input.kind} v${version} to v${version + 1}&#x60;,
+                );
+            }
+            const result &#x3D; migration.migrate(document.spec as Spec);
+            document.spec &#x3D; result.spec;
+            issues.push(...(result.issues ?? []));
+            applied.push(migration.id);
+            version &#x3D; migration.to;
+            document.apiVersion &#x3D; this.registry.apiVersion(input.kind, version);
+        }
+
+        return { document, issues, migrations: applied };
+    }
+
+    unwrapForLegacyImporter(document: ConfigDocument): Record&lt;string, unknown&gt; {
+        const spec &#x3D; structuredClone(document.spec) as Spec;
+        if (
+            document.kind &#x3D;&#x3D;&#x3D; &quot;KeyChain&quot; &amp;&amp;
+            spec.keySource?.type &#x3D;&#x3D;&#x3D; &quot;private-jwk&quot;
+        ) {
+            spec.key &#x3D; spec.keySource.jwk;
+            delete spec.keySource;
+        }
+        if (
+            spec.id &#x3D;&#x3D;&#x3D; undefined &amp;&amp;
+            document.kind !&#x3D;&#x3D; &quot;Client&quot; &amp;&amp;
+            !this.registry.get(document.kind).singletonId
+        ) {
+            spec.id &#x3D; document.metadata.id;
+        }
+        return spec;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ConfigMigrationService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

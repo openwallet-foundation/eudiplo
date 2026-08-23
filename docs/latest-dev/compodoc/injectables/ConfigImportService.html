@@ -226,7 +226,17 @@
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                     <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#markFileManaged" >markFileManaged</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
                                 <a href="#replacePlaceholders" >replacePlaceholders</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#resolveMode" >resolveMode</a>
                             </li>
                             <li>
                                 <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
@@ -251,12 +261,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(configService: ConfigService)</code>
+<code>constructor(configService: ConfigService, migrationService?: <a href="../injectables/ConfigMigrationService.html" target="_self">ConfigMigrationService</a>, ownershipService?: <a href="../injectables/ConfigOwnershipService.html" target="_self">ConfigOwnershipService</a>, resourceRegistry?: <a href="../injectables/ConfigResourceRegistry.html" target="_self">ConfigResourceRegistry</a>, importModeService?: <a href="../injectables/ConfigImportModeService.html" target="_self">ConfigImportModeService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/platform/config-import/config-import.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/platform/config-import/config-import.service.ts:32</a></div>
                             </td>
                         </tr>
 
@@ -282,6 +292,54 @@
                                                   
                                                     <td>
                                                             No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>migrationService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigMigrationService.html" target="_self" >ConfigMigrationService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>ownershipService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigOwnershipService.html" target="_self" >ConfigOwnershipService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>resourceRegistry</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigResourceRegistry.html" target="_self" >ConfigResourceRegistry</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>importModeService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigImportModeService.html" target="_self" >ConfigImportModeService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            Yes
                                                     </td>
                                                     
                                                 </tr>
@@ -319,8 +377,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="379"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:379</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="496"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:496</a></div>
                         </td>
                     </tr>
 
@@ -388,8 +446,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="392"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:392</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="509"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:509</a></div>
                         </td>
                     </tr>
 
@@ -462,8 +520,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="141"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:141</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="243"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:243</a></div>
                         </td>
                     </tr>
 
@@ -541,8 +599,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="34"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:34</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="50"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:50</a></div>
                         </td>
                     </tr>
 
@@ -615,9 +673,126 @@ This is the preferred method when using the orchestrator&#39;s tenant-by-tenant 
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="replacePlaceholders"></a>
+                    <a name="markFileManaged"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>markFileManaged</b></span>
+                        <a href="#markFileManaged"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>markFileManaged(tenantId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, kind: unknown, document: <a href="../interfaces/ConfigDocument.html" target="_self">ConfigDocument</a>, filePath: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, raw: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="221"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:221</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>tenantId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>kind</td>
+                                            <td>
+                                                        <code>unknown</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>document</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConfigDocument.html" target="_self" >ConfigDocument</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>filePath</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>raw</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="replacePlaceholders"></a>
+                    <span class="name">
                         <span ><b>replacePlaceholders</b></span>
                         <a href="#replacePlaceholders"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -625,16 +800,15 @@ This is the preferred method when using the orchestrator&#39;s tenant-by-tenant 
             </tr>
             <tr>
                 <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>replacePlaceholders&lt;T&gt;(input: T)</code>
+<code>replacePlaceholders&lt;T&gt;(input: T)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="263"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:263</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="366"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:366</a></div>
                         </td>
                     </tr>
 
@@ -696,6 +870,45 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="resolveMode"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>resolveMode</b></span>
+                        <a href="#resolveMode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>resolveMode()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="430"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:430</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>&quot;disabled&quot; | unknown</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="validateConfig"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -714,8 +927,8 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="330"
-                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:330</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="447"
+                                    class="link-to-prism">src/platform/config-import/config-import.service.ts:447</a></div>
                         </td>
                     </tr>
 
@@ -876,7 +1089,7 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/platform/config-import/config-import.service.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/platform/config-import/config-import.service.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -889,10 +1102,16 @@ ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;de
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { existsSync, readdirSync, readFileSync } from &quot;node:fs&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { existsSync, readdirSync, readFileSync } from &quot;node:fs&quot;;
 import { join } from &quot;node:path&quot;;
-import { Injectable, Logger } from &quot;@nestjs/common&quot;;
+import { Injectable, Logger, Optional } from &quot;@nestjs/common&quot;;
 import { ConfigService } from &quot;@nestjs/config&quot;;
+import { ConfigMigrationService } from &quot;../config-portability/config-migration.service&quot;;
+import { ConfigOwnershipService } from &quot;../config-portability/config-ownership.service&quot;;
+import { ConfigResourceRegistry } from &quot;../config-portability/config-resource.registry&quot;;
+import type { ConfigDocument } from &quot;../config-portability/config-resource.types&quot;;
+import { ConfigImportModeService } from &quot;./config-import-mode.service&quot;;
 import { ImportOptions, TenantImportOptions } from &quot;./import-options&quot;;
 
 function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
@@ -916,7 +1135,17 @@ function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
 export class ConfigImportService {
     private readonly logger &#x3D; new Logger(ConfigImportService.name);
 
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        @Optional()
+        private readonly migrationService?: ConfigMigrationService,
+        @Optional()
+        private readonly ownershipService?: ConfigOwnershipService,
+        @Optional()
+        private readonly resourceRegistry?: ConfigResourceRegistry,
+        @Optional()
+        private readonly importModeService?: ConfigImportModeService,
+    ) {}
 
     /**
      * Import configs for a specific tenant.
@@ -927,7 +1156,9 @@ export class ConfigImportService {
         options: TenantImportOptions&lt;T&gt;,
     ): Promise&lt;void&gt; {
         const configPath &#x3D; this.configService.getOrThrow(&quot;CONFIG_FOLDER&quot;);
-        const force &#x3D; this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT_FORCE&quot;);
+        const mode &#x3D; this.resolveMode();
+        if (mode &#x3D;&#x3D;&#x3D; &quot;disabled&quot;) return;
+        const updateExisting &#x3D; mode !&#x3D;&#x3D; &quot;create&quot;;
         const strictConfig &#x3D; this.configService.get&lt;any&gt;(
             &quot;CONFIG_VARIABLE_STRICT&quot;,
         );
@@ -955,10 +1186,47 @@ export class ConfigImportService {
             try {
                 // Load data using custom loader or default JSON loader
                 let data: T;
-                if (options.loadData) {
+                let portableDocument: ConfigDocument | undefined;
+                const resourceKind &#x3D;
+                    options.resourceKind ??
+                    this.resourceRegistry?.inferKind(options.resourceType);
+                const raw &#x3D; readFileSync(filePath, &quot;utf8&quot;);
+                if (
+                    resourceKind &amp;&amp;
+                    this.migrationService &amp;&amp;
+                    file.endsWith(&quot;.json&quot;)
+                ) {
+                    const payload &#x3D; JSON.parse(raw) as Record&lt;string, unknown&gt;;
+                    const fileId &#x3D; file.replace(/\.json$/i, &quot;&quot;);
+                    const wrapped &#x3D; this.migrationService.isDocument(payload)
+                        ? payload
+                        : this.migrationService.wrapLegacy(
+                              resourceKind,
+                              payload,
+                              String(payload.id ?? payload.clientId ?? fileId),
+                          );
+                    const upgraded &#x3D; this.migrationService.upgrade(wrapped);
+                    const blocking &#x3D; upgraded.issues.filter(
+                        (issue) &#x3D;&gt; issue.severity !&#x3D;&#x3D; &quot;warning&quot;,
+                    );
+                    if (blocking.length &gt; 0) {
+                        throw new Error(
+                            &#x60;Configuration migration requires input: ${blocking
+                                .map(
+                                    (issue) &#x3D;&gt;
+                                        &#x60;${issue.path}: ${issue.message}&#x60;,
+                                )
+                                .join(&quot;; &quot;)}&#x60;,
+                        );
+                    }
+                    portableDocument &#x3D; upgraded.document;
+                    data &#x3D; this.migrationService.unwrapForLegacyImporter(
+                        upgraded.document,
+                    ) as T;
+                } else if (options.loadData) {
                     data &#x3D; await Promise.resolve(options.loadData(filePath));
                 } else {
-                    const payload &#x3D; JSON.parse(readFileSync(filePath, &quot;utf8&quot;));
+                    const payload &#x3D; JSON.parse(raw);
                     data &#x3D; payload as T;
                 }
 
@@ -991,7 +1259,27 @@ export class ConfigImportService {
                     .checkExists(tenantId, data, file)
                     .catch(() &#x3D;&gt; false);
 
-                if (exists &amp;&amp; !force) {
+                if (
+                    exists &amp;&amp;
+                    portableDocument &amp;&amp;
+                    resourceKind &amp;&amp;
+                    this.ownershipService
+                ) {
+                    const stored &#x3D; await this.ownershipService.get(
+                        tenantId,
+                        resourceKind,
+                        portableDocument.metadata.id,
+                    );
+                    const incomingGeneration &#x3D;
+                        portableDocument.metadata.generation ?? 1;
+                    if (incomingGeneration &lt; stored.generation) {
+                        throw new Error(
+                            &#x60;Stale configuration generation ${incomingGeneration}; stored generation is ${stored.generation}&#x60;,
+                        );
+                    }
+                }
+
+                if (exists &amp;&amp; !updateExisting) {
                     this.logger.debug(
                         &#x60;[${tenantId}] ${options.resourceType} ${file} already exists, skipping&#x60;,
                     );
@@ -999,12 +1287,21 @@ export class ConfigImportService {
                 }
 
                 // Delete existing if force is enabled
-                if (exists &amp;&amp; force &amp;&amp; options.deleteExisting) {
+                if (exists &amp;&amp; updateExisting &amp;&amp; options.deleteExisting) {
                     await options.deleteExisting(tenantId, data, file);
                 }
 
                 // Process and store item
                 await options.processItem(tenantId, data, file);
+                if (portableDocument &amp;&amp; resourceKind &amp;&amp; this.ownershipService) {
+                    await this.markFileManaged(
+                        tenantId,
+                        resourceKind,
+                        portableDocument,
+                        filePath,
+                        raw,
+                    );
+                }
                 counter++;
             } catch (error: any) {
                 const reason &#x3D; error?.message || &quot;Unknown error&quot;;
@@ -1025,6 +1322,24 @@ export class ConfigImportService {
         }
     }
 
+    private async markFileManaged(
+        tenantId: string,
+        kind: import(&quot;../config-portability/config-resource.types&quot;).ConfigResourceKind,
+        document: ConfigDocument,
+        filePath: string,
+        raw: string,
+    ): Promise&lt;void&gt; {
+        await this.ownershipService!.markApplied({
+            tenantId,
+            kind,
+            resourceId: document.metadata.id,
+            ownership: &quot;file-managed&quot;,
+            generation: document.metadata.generation ?? 1,
+            source: filePath,
+            sourceHash: createHash(&quot;sha256&quot;).update(raw).digest(&quot;hex&quot;),
+        });
+    }
+
     /**
      * Generic import method that handles the common pattern across all services.
      * @deprecated Use importConfigsForTenant with the orchestrator&#x27;s tenant-by-tenant approach instead.
@@ -1032,12 +1347,13 @@ export class ConfigImportService {
     async importConfigs&lt;T extends object&gt;(
         options: ImportOptions&lt;T&gt;,
     ): Promise&lt;void&gt; {
-        if (!this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT&quot;)) {
+        const mode &#x3D; this.resolveMode();
+        if (mode &#x3D;&#x3D;&#x3D; &quot;disabled&quot;) {
             return;
         }
 
         const configPath &#x3D; this.configService.getOrThrow(&quot;CONFIG_FOLDER&quot;);
-        const force &#x3D; this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT_FORCE&quot;);
+        const updateExisting &#x3D; mode !&#x3D;&#x3D; &quot;create&quot;;
 
         const tenantFolders &#x3D; readdirSync(configPath, {
             withFileTypes: true,
@@ -1111,7 +1427,7 @@ export class ConfigImportService {
                         .checkExists(tenant.name, data, file)
                         .catch(() &#x3D;&gt; false);
 
-                    if (exists &amp;&amp; !force) {
+                    if (exists &amp;&amp; !updateExisting) {
                         this.logger.debug(
                             &#x60;[${tenant.name}] ${options.resourceType} ${file} already exists, skipping&#x60;,
                         );
@@ -1119,7 +1435,7 @@ export class ConfigImportService {
                     }
 
                     // Delete existing if force is enabled
-                    if (exists &amp;&amp; force &amp;&amp; options.deleteExisting) {
+                    if (exists &amp;&amp; updateExisting &amp;&amp; options.deleteExisting) {
                         await options.deleteExisting(tenant.name, data, file);
                     }
 
@@ -1151,7 +1467,7 @@ export class ConfigImportService {
      * ${VAR} -&gt; replaced with process.env.VAR if defined; if undefined and no default given, logs a warning and leaves placeholder intact.
      * ${VAR:default} -&gt; replaced with env value if defined, otherwise with &quot;default&quot;.
      */
-    private replacePlaceholders&lt;T&gt;(input: T): T {
+    replacePlaceholders&lt;T&gt;(input: T): T {
         const seen &#x3D; new WeakSet();
         const isObject &#x3D; (val: any) &#x3D;&gt;
             val &amp;&amp; typeof val &#x3D;&#x3D;&#x3D; &quot;object&quot; &amp;&amp; !Array.isArray(val);
@@ -1213,6 +1529,20 @@ export class ConfigImportService {
         };
 
         return recurse(input);
+    }
+
+    private resolveMode():
+        | &quot;disabled&quot;
+        | import(&quot;../config-portability/config-resource.types&quot;).ConfigImportMode {
+        if (this.importModeService) {
+            return this.importModeService.resolve();
+        }
+        if (!this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT&quot;)) {
+            return &quot;disabled&quot;;
+        }
+        return this.configService.get&lt;boolean&gt;(&quot;CONFIG_IMPORT_FORCE&quot;)
+            ? &quot;upsert&quot;
+            : &quot;create&quot;;
     }
 
     /**

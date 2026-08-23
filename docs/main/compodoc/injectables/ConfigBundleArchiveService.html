@@ -1,0 +1,947 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>@eudiplo/backend documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+        <link rel="stylesheet" href="../styles/material.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+          </script>
+          <script>
+              // --- Iframe navigation tracking for Template Playground ---
+              function sendCurrentUrlToParent() {
+                  if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({
+                          type: 'compodoc-iframe-navigate',
+                          url: window.location.pathname + window.location.hash
+                      }, '*');
+                  }
+              }
+              window.addEventListener('hashchange', sendCurrentUrlToParent, false);
+              window.addEventListener('popstate', sendCurrentUrlToParent, false);
+              window.addEventListener('DOMContentLoaded', sendCurrentUrlToParent, false);
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-md-none p-0">
+               <div class="d-flex">
+                    <a href="../" class="navbar-brand">@eudiplo/backend documentation</a>
+                    <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+               </div>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search">
+    <input type="text" placeholder="Type to search">
+    <button type="button"
+        class="search-input-clear"
+        aria-label="Clear search"
+        data-search-input-clear>&times;</button>
+</div>
+            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="d-none d-md-block menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >ConfigBundleArchiveService</li>
+</ol>
+
+<div class="io-file io-file-path" data-compodoc="entity-file-path">
+    <span class="icon ion-ios-document" aria-hidden="true"></span>
+    <code>src/platform/config-portability/config-bundle-archive.service.ts</code>
+</div>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#api" 
+                class="nav-link"
+                
+                role="tab" id="api-tab" data-bs-toggle="tab" data-link="api">API</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+
+
+
+
+
+                <section data-compodoc="block-relationships">
+            <h3>Relationships</h3>
+
+            <div class="row pt-3">
+                <div class="col-sm-6">
+                    <h4>Used by</h4>
+                        <ul class="list-unstyled relationships-list">
+                                <li>
+                                            <code><a href="../modules/ConfigPortabilityModule.html" target="_self" >ConfigPortabilityModule</a></code>
+                                </li>
+                        </ul>
+                </div>
+
+                <div class="col-sm-6">
+                    <h4>Depends on</h4>
+                        <p class="comment"><i>No results matching.</i></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="tab-pane fade " id="api">
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+
+        <table class="table table-sm table-bordered index-table">
+            <tbody>
+                <tr>
+                    <td class="col-md-3">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                    <td class="col-md-9">
+                        <ul class="index-list">
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#assertSafePath" >assertSafePath</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#decode" >decode</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                <a href="#encode" >encode</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#inspectCentralDirectory" >inspectCentralDirectory</a>
+                            </li>
+                            <li>
+                                <span class="reference-badge reference-badge--method" aria-hidden="true">M</span>
+                                    <span class="modifier">Private</span>
+                                <a href="#parseJson" >parseJson</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+</section>
+
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="assertSafePath"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>assertSafePath</b></span>
+                        <a href="#assertSafePath"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>assertSafePath(path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="125"
+                                    class="link-to-prism">src/platform/config-portability/config-bundle-archive.service.ts:125</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="decode"></a>
+                    <span class="name">
+                        <span ><b>decode</b></span>
+                        <a href="#decode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>decode(input: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/platform/config-portability/config-bundle-archive.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>input</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ConfigBundle.html" target="_self" >ConfigBundle</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="encode"></a>
+                    <span class="name">
+                        <span ><b>encode</b></span>
+                        <a href="#encode"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>encode(bundle: <a href="../interfaces/ConfigBundle.html" target="_self">ConfigBundle</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="15"
+                                    class="link-to-prism">src/platform/config-portability/config-bundle-archive.service.ts:15</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bundle</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ConfigBundle.html" target="_self" >ConfigBundle</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Buffer</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="inspectCentralDirectory"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>inspectCentralDirectory</b></span>
+                        <a href="#inspectCentralDirectory"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>inspectCentralDirectory(input: Buffer)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/platform/config-portability/config-bundle-archive.service.ts:140</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Read central-directory metadata before fflate allocates expanded entry
+buffers. This makes the expanded-size limit effective against ZIP bombs.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>input</td>
+                                            <td>
+                                                        <code>Buffer</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="parseJson"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>parseJson</b></span>
+                        <a href="#parseJson"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>parseJson(value: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="241"
+                                    class="link-to-prism">src/platform/config-portability/config-bundle-archive.service.ts:241</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>value</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { createHash } from &quot;node:crypto&quot;;
+import { BadRequestException, Injectable } from &quot;@nestjs/common&quot;;
+import { strFromU8, strToU8, unzipSync, zipSync } from &quot;fflate&quot;;
+import type {
+    ConfigBundle,
+    ConfigBundleAsset,
+    ConfigDocument,
+} from &quot;./config-resource.types&quot;;
+
+const sha256 &#x3D; (value: Uint8Array): string &#x3D;&gt;
+    createHash(&quot;sha256&quot;).update(value).digest(&quot;hex&quot;);
+
+@Injectable()
+export class ConfigBundleArchiveService {
+    encode(bundle: ConfigBundle): Buffer {
+        const entries: Record&lt;string, Uint8Array&gt; &#x3D; {
+            &quot;manifest.json&quot;: strToU8(JSON.stringify(bundle.manifest, null, 2)),
+        };
+        for (const resource of bundle.manifest.resources) {
+            this.assertSafePath(resource.path);
+            const document &#x3D; bundle.documents.find(
+                (candidate) &#x3D;&gt;
+                    candidate.kind &#x3D;&#x3D;&#x3D; resource.kind &amp;&amp;
+                    candidate.apiVersion &#x3D;&#x3D;&#x3D; resource.apiVersion &amp;&amp;
+                    candidate.metadata.id &#x3D;&#x3D;&#x3D; resource.id,
+            );
+            if (!document) {
+                throw new BadRequestException(
+                    &#x60;Bundle document is missing for ${resource.kind} at ${resource.path}&#x60;,
+                );
+            }
+            const bytes &#x3D; strToU8(JSON.stringify(document));
+            if (sha256(bytes) !&#x3D;&#x3D; resource.sha256) {
+                throw new BadRequestException(
+                    &#x60;Resource checksum mismatch while packing ${resource.path}&#x60;,
+                );
+            }
+            entries[resource.path] &#x3D; bytes;
+        }
+        for (const asset of bundle.assets ?? []) {
+            this.assertSafePath(asset.path);
+            const bytes &#x3D; new Uint8Array(Buffer.from(asset.data, &quot;base64&quot;));
+            if (sha256(bytes) !&#x3D;&#x3D; asset.sha256) {
+                throw new BadRequestException(
+                    &#x60;Asset checksum mismatch while packing ${asset.path}&#x60;,
+                );
+            }
+            entries[asset.path] &#x3D; bytes;
+        }
+        return Buffer.from(zipSync(entries, { level: 6 }));
+    }
+
+    decode(input: Buffer): ConfigBundle {
+        if (input.byteLength &gt; 50 * 1024 * 1024) {
+            throw new BadRequestException(&quot;Configuration ZIP exceeds 50 MiB&quot;);
+        }
+        this.inspectCentralDirectory(input);
+        let entries: Record&lt;string, Uint8Array&gt;;
+        try {
+            entries &#x3D; unzipSync(new Uint8Array(input));
+        } catch (error) {
+            throw new BadRequestException(
+                &#x60;Invalid configuration ZIP: ${error instanceof Error ? error.message : String(error)}&#x60;,
+            );
+        }
+        for (const path of Object.keys(entries)) this.assertSafePath(path);
+        const expandedSize &#x3D; Object.values(entries).reduce(
+            (total, value) &#x3D;&gt; total + value.byteLength,
+            0,
+        );
+        if (expandedSize &gt; 100 * 1024 * 1024) {
+            throw new BadRequestException(
+                &quot;Expanded configuration ZIP exceeds 100 MiB&quot;,
+            );
+        }
+        const manifestBytes &#x3D; entries[&quot;manifest.json&quot;];
+        if (!manifestBytes) {
+            throw new BadRequestException(
+                &quot;Configuration ZIP has no manifest.json&quot;,
+            );
+        }
+        const manifest &#x3D; this.parseJson(
+            strFromU8(manifestBytes),
+            &quot;manifest.json&quot;,
+        ) as ConfigBundle[&quot;manifest&quot;];
+        const documents: ConfigDocument[] &#x3D; [];
+        for (const resource of manifest.resources ?? []) {
+            this.assertSafePath(resource.path);
+            const bytes &#x3D; entries[resource.path];
+            if (!bytes) {
+                throw new BadRequestException(
+                    &#x60;Missing resource: ${resource.path}&#x60;,
+                );
+            }
+            if (sha256(bytes) !&#x3D;&#x3D; resource.sha256) {
+                throw new BadRequestException(
+                    &#x60;Resource checksum mismatch: ${resource.path}&#x60;,
+                );
+            }
+            documents.push(
+                this.parseJson(
+                    strFromU8(bytes),
+                    resource.path,
+                ) as ConfigDocument,
+            );
+        }
+        const assets: ConfigBundleAsset[] &#x3D; (manifest.assets ?? []).map(
+            (asset) &#x3D;&gt; {
+                this.assertSafePath(asset.path);
+                const bytes &#x3D; entries[asset.path];
+                if (!bytes || sha256(bytes) !&#x3D;&#x3D; asset.sha256) {
+                    throw new BadRequestException(
+                        &#x60;Missing or invalid asset: ${asset.path}&#x60;,
+                    );
+                }
+                return {
+                    ...asset,
+                    data: Buffer.from(bytes).toString(&quot;base64&quot;),
+                };
+            },
+        );
+        return { manifest, documents, assets };
+    }
+
+    private assertSafePath(path: string): void {
+        if (
+            !path ||
+            path.startsWith(&quot;/&quot;) ||
+            path.includes(&quot;\\&quot;) ||
+            path.split(&quot;/&quot;).some((part) &#x3D;&gt; part &#x3D;&#x3D;&#x3D; &quot;..&quot; || part &#x3D;&#x3D;&#x3D; &quot;&quot;)
+        ) {
+            throw new BadRequestException(&#x60;Unsafe bundle path: ${path}&#x60;);
+        }
+    }
+
+    /**
+     * Read central-directory metadata before fflate allocates expanded entry
+     * buffers. This makes the expanded-size limit effective against ZIP bombs.
+     */
+    private inspectCentralDirectory(input: Buffer): void {
+        const eocdSignature &#x3D; 0x06054b50;
+        const centralSignature &#x3D; 0x02014b50;
+        const minimumEocdOffset &#x3D; Math.max(0, input.length - 65_557);
+        let eocd &#x3D; -1;
+        for (
+            let offset &#x3D; input.length - 22;
+            offset &gt;&#x3D; minimumEocdOffset;
+            offset--
+        ) {
+            if (input.readUInt32LE(offset) &#x3D;&#x3D;&#x3D; eocdSignature) {
+                eocd &#x3D; offset;
+                break;
+            }
+        }
+        if (eocd &lt; 0) {
+            throw new BadRequestException(
+                &quot;Invalid configuration ZIP directory&quot;,
+            );
+        }
+        const entryCount &#x3D; input.readUInt16LE(eocd + 10);
+        const centralSize &#x3D; input.readUInt32LE(eocd + 12);
+        const centralOffset &#x3D; input.readUInt32LE(eocd + 16);
+        if (
+            entryCount &#x3D;&#x3D;&#x3D; 0xffff ||
+            centralSize &#x3D;&#x3D;&#x3D; 0xffffffff ||
+            centralOffset &#x3D;&#x3D;&#x3D; 0xffffffff
+        ) {
+            throw new BadRequestException(
+                &quot;ZIP64 configuration archives are not supported&quot;,
+            );
+        }
+        if (entryCount &gt; 10_000) {
+            throw new BadRequestException(
+                &quot;Configuration ZIP contains too many entries&quot;,
+            );
+        }
+        if (centralOffset + centralSize &gt; eocd) {
+            throw new BadRequestException(
+                &quot;Invalid configuration ZIP directory&quot;,
+            );
+        }
+        let offset &#x3D; centralOffset;
+        let expandedSize &#x3D; 0;
+        const paths &#x3D; new Set&lt;string&gt;();
+        for (let index &#x3D; 0; index &lt; entryCount; index++) {
+            if (
+                offset + 46 &gt; input.length ||
+                input.readUInt32LE(offset) !&#x3D;&#x3D; centralSignature
+            ) {
+                throw new BadRequestException(
+                    &quot;Invalid configuration ZIP directory entry&quot;,
+                );
+            }
+            const flags &#x3D; input.readUInt16LE(offset + 8);
+            if ((flags &amp; 1) !&#x3D;&#x3D; 0) {
+                throw new BadRequestException(
+                    &quot;Encrypted ZIP entries are not supported&quot;,
+                );
+            }
+            const uncompressedSize &#x3D; input.readUInt32LE(offset + 24);
+            if (uncompressedSize &#x3D;&#x3D;&#x3D; 0xffffffff) {
+                throw new BadRequestException(
+                    &quot;ZIP64 configuration entries are not supported&quot;,
+                );
+            }
+            expandedSize +&#x3D; uncompressedSize;
+            if (expandedSize &gt; 100 * 1024 * 1024) {
+                throw new BadRequestException(
+                    &quot;Expanded configuration ZIP exceeds 100 MiB&quot;,
+                );
+            }
+            const filenameLength &#x3D; input.readUInt16LE(offset + 28);
+            const extraLength &#x3D; input.readUInt16LE(offset + 30);
+            const commentLength &#x3D; input.readUInt16LE(offset + 32);
+            const nextOffset &#x3D;
+                offset + 46 + filenameLength + extraLength + commentLength;
+            if (nextOffset &gt; input.length) {
+                throw new BadRequestException(
+                    &quot;Invalid configuration ZIP directory entry length&quot;,
+                );
+            }
+            const path &#x3D; input
+                .subarray(offset + 46, offset + 46 + filenameLength)
+                .toString(&quot;utf8&quot;);
+            this.assertSafePath(path);
+            if (paths.has(path)) {
+                throw new BadRequestException(
+                    &#x60;Duplicate configuration ZIP path: ${path}&#x60;,
+                );
+            }
+            paths.add(path);
+            offset &#x3D; nextOffset;
+        }
+        if (offset !&#x3D;&#x3D; centralOffset + centralSize) {
+            throw new BadRequestException(
+                &quot;Invalid configuration ZIP directory size&quot;,
+            );
+        }
+    }
+
+    private parseJson(value: string, path: string): unknown {
+        try {
+            return JSON.parse(value);
+        } catch (error) {
+            throw new BadRequestException(
+                &#x60;Invalid JSON in ${path}: ${error instanceof Error ? error.message : String(error)}&#x60;,
+            );
+        }
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'ConfigBundleArchiveService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script>
+               $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var updateDarkModeSwitchOffset = function () {
+                    var content = document.querySelector('.content');
+                    var scrollbarWidth = 0;
+
+                    if (content) {
+                         scrollbarWidth = Math.max(0, content.offsetWidth - content.clientWidth);
+                    }
+
+                    document.documentElement.style.setProperty(
+                         '--content-scrollbar-width',
+                         scrollbarWidth + 'px'
+                    );
+               };
+
+               updateDarkModeSwitchOffset();
+               requestAnimationFrame(updateDarkModeSwitchOffset);
+               window.addEventListener('resize', updateDarkModeSwitchOffset);
+
+               checkToggle(darkModeState);
+               if ($darkModeToggleSwitchers.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
