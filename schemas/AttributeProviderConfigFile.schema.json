@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "./AttributeProviderConfigFile.schema.json",
+  "title": "AttributeProviderConfigFile",
+  "description": "An attribute-provider configuration file in legacy payload or versioned-envelope form.",
+  "oneOf": [
+    {
+      "$ref": "./CreateAttributeProviderDto.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "const": "eudiplo.io/attribute-provider/v1"
+        },
+        "kind": {
+          "type": "string",
+          "const": "AttributeProvider"
+        },
+        "metadata": {
+          "$ref": "./ConfigDocumentMetadata.schema.json"
+        },
+        "spec": {
+          "$ref": "./CreateAttributeProviderDto.schema.json"
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}
