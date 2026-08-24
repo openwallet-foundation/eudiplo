@@ -3,7 +3,7 @@ import { extractConditionsFromKeyDesc, flattenMetas } from "./helpers";
 
 type Presence = "required" | "optional" | "";
 
-export interface ConfigItem {
+interface ConfigItem {
   key: string;
   type: string;
   defaultValue?: unknown;
@@ -16,7 +16,7 @@ export interface ConfigItem {
   meta: Record<string, any>;
 }
 
-export interface ConfigGroup {
+interface ConfigGroup {
   name: string;
   order: number;
   items: ConfigItem[];

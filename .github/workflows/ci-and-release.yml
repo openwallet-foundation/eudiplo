@@ -39,6 +39,9 @@ jobs:
       - name: Run linter for code
         run: pnpm run lint
 
+      - name: Check .env.example covers required config
+        run: pnpm run check:env-example
+
       - name: Run linter for documentation
         run: pnpm --filter @eudiplo/docs run lint
 

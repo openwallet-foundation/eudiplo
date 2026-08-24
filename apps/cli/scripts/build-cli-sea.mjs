@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { arch, platform } from "node:process";
 import { fileURLToPath } from "node:url";
 
-const packageDirectory = new URL("../apps/cli/", import.meta.url);
+const packageDirectory = new URL("../", import.meta.url);
 const packagePath = fileURLToPath(packageDirectory);
 const distSeaDirectory = join(packagePath, "dist-sea");
 const baseSeaConfigPath = join(packagePath, "sea-config.json");

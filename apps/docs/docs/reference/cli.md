@@ -234,11 +234,11 @@ When run in an interactive terminal, `init` opens a wizard for:
 
 **Deployment presets:**
 
-| Preset      | Database   | Storage            | Key Management  |
-| ----------- | ---------- | ------------------ | --------------- |
-| `minimal`   | SQLite     | Local filesystem   | Database-backed |
-| `standard`  | PostgreSQL | S3 via local MinIO | Database-backed |
-| `full`      | PostgreSQL | S3 via local MinIO | Vault           |
+| Preset     | Database   | Storage            | Key Management  |
+| ---------- | ---------- | ------------------ | --------------- |
+| `minimal`  | SQLite     | Local filesystem   | Database-backed |
+| `standard` | PostgreSQL | S3 via local MinIO | Database-backed |
+| `full`     | PostgreSQL | S3 via local MinIO | Vault           |
 
 Override preset choices with `--database`, `--storage`, and `--kms` flags.
 
@@ -306,7 +306,11 @@ For the complete reference in Markdown format:
 eudiplo commands --format markdown
 ```
 
-This generates the same command documentation embedded above.
+This generates the same command documentation embedded below, straight from the CLI's own command definitions.
+
+import CliCommandReference from "@site/docs/generated/cli-reference.md";
+
+<CliCommandReference />
 
 ## Related Topics
 

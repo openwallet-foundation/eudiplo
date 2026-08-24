@@ -22,92 +22,71 @@ The complete environment variable reference is organized into the following sect
 - [Session](#session) — Session cleanup and retention policies
 - [Status](#status) — Status list configuration
 - [Storage](#storage) — File storage provider (local/S3)
+- [TLS](#tls) — Built-in HTTPS termination
 - [Verifier](#verifier) — Presentation verification defaults
 - [Webhook](#webhook) — Outbound webhook security policies
 
+import ConfigTable from "@site/src/components/ConfigTable";
+
 ## Authentication
 
-import AuthConfig from '@site/docs/generated/config-auth.md';
-
-<AuthConfig />
+<ConfigTable group="auth" />
 
 ## Configuration
 
-import ConfigConfig from '@site/docs/generated/config-config.md';
-
-<ConfigConfig />
+<ConfigTable group="config" />
 
 ## Cryptography
 
-import CryptoConfig from '@site/docs/generated/config-crypto.md';
-
-<CryptoConfig />
+<ConfigTable group="crypto" />
 
 ## Database
 
-import DatabaseConfig from '@site/docs/generated/config-database.md';
-
-<DatabaseConfig />
+<ConfigTable group="database" />
 
 ## Encryption
 
-import EncryptionConfig from '@site/docs/generated/config-encryption.md';
-
-<EncryptionConfig />
+<ConfigTable group="encryption" />
 
 ## General
 
-import GeneralConfig from '@site/docs/generated/config-general.md';
-
-<GeneralConfig />
+<ConfigTable group="general" />
 
 ## Issuer
 
-import IssuerConfig from '@site/docs/generated/config-issuer.md';
-
-<IssuerConfig />
+<ConfigTable group="issuer" />
 
 ## Logging
 
-import LogConfig from '@site/docs/generated/config-log.md';
-
-<LogConfig />
+<ConfigTable group="log" />
 
 ## Observability
 
-import ObservabilityConfig from '@site/docs/generated/config-observability.md';
-
-<ObservabilityConfig />
+<ConfigTable group="observability" />
 
 ## Session
 
-import SessionConfig from '@site/docs/generated/config-session.md';
-
-<SessionConfig />
+<ConfigTable group="session" />
 
 ## Status
 
-import StatusConfig from '@site/docs/generated/config-status.md';
-
-<StatusConfig />
+<ConfigTable group="status" />
 
 ## Storage
 
-import StorageConfig from '@site/docs/generated/config-storage.md';
+<ConfigTable group="storage" />
 
-<StorageConfig />
+## TLS
+
+<ConfigTable group="tls" />
 
 ## Verifier
 
-import VerifierConfig from '@site/docs/generated/config-verifier.md';
-
-<VerifierConfig />
+<ConfigTable group="verifier" />
 
 ## Webhook
 
-import WebhookConfig from '@site/docs/generated/config-webhook.md';
-
-<WebhookConfig />
+<ConfigTable group="webhook" />
 
 :::info
 Key Management System (KMS) and Registrar provider settings are configured via JSON files (`kms.json`, `registrar.json`), not environment variables — see [Key Management System (KMS)](../administration/kms.md) and [Registrar](../trust/registrar.md).

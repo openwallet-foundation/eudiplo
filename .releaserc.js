@@ -32,7 +32,7 @@ module.exports = {
         [
             '@semantic-release/exec',
             {
-                prepareCmd: 'node scripts/sync-sdk-version.js ${nextRelease.version} && node scripts/sync-cli-version.js ${nextRelease.version}',
+                prepareCmd: 'node scripts/sync-sdk-version.js ${nextRelease.version} && node apps/cli/scripts/sync-cli-version.cjs ${nextRelease.version}',
                 publishCmd: 'chmod +x scripts/release-docker.sh && DOCKER_RELEASE_VERSION=${nextRelease.version} ./scripts/release-docker.sh',
             },
         ],
@@ -42,7 +42,7 @@ module.exports = {
         [
             '@semantic-release/exec',
             {
-                publishCmd: 'node scripts/publish-cli.js latest',
+                publishCmd: 'node apps/cli/scripts/publish-cli.cjs latest',
             },
         ],
         ['@semantic-release/github', {

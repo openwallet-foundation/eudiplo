@@ -3,7 +3,7 @@
  * Syncs the CLI version with the main EUDIPLO release version.
  * Called by semantic-release during the prepare phase.
  *
- * Usage: node scripts/sync-cli-version.js <version>
+ * Usage: node apps/cli/scripts/sync-cli-version.cjs <version>
  */
 
 const { readFileSync, writeFileSync } = require("node:fs");
@@ -12,11 +12,11 @@ const { join } = require("node:path");
 const version = process.argv[2];
 
 if (!version) {
-    console.error("Usage: node sync-cli-version.js <version>");
+    console.error("Usage: node apps/cli/scripts/sync-cli-version.cjs <version>");
     process.exit(1);
 }
 
-const cliPackagePath = join(__dirname, "../apps/cli/package.json");
+const cliPackagePath = join(__dirname, "../package.json");
 
 try {
     const pkg = JSON.parse(readFileSync(cliPackagePath, "utf-8"));

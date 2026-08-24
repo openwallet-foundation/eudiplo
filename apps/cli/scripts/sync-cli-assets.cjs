@@ -11,7 +11,7 @@
 const { cpSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } = require("node:fs");
 const { join, relative } = require("node:path");
 
-const repoRoot = join(__dirname, "..");
+const repoRoot = join(__dirname, "../../..");
 const canonicalComposePath = join(repoRoot, "deployment/docker-compose/docker-compose.yml");
 const cliComposePath = join(repoRoot, "apps/cli/templates/docker-compose.yml");
 const canonicalDemoDirectory = join(repoRoot, "assets/config/demo");

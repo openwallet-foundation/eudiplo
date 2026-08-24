@@ -81,14 +81,14 @@ jobs:
           PRE_VERSION="${CURRENT_VERSION}-main.${SHORT_SHA}"
           echo "Publishing version: ${PRE_VERSION}"
           npm version "${PRE_VERSION}" --no-git-tag-version
-          node ../../scripts/sync-cli-version.js "${PRE_VERSION}"
+          node ../../apps/cli/scripts/sync-cli-version.cjs "${PRE_VERSION}"
 
       - name: Publish SDK to npm with main tag
         working-directory: packages/eudiplo-sdk-core
         run: npm publish --tag main --access public --provenance
 
       - name: Publish CLI to npm with main tag
-        run: node scripts/publish-cli.js main
+        run: node apps/cli/scripts/publish-cli.cjs main
 
   prepare-release:
     name: Prepare versioned release
@@ -248,7 +248,7 @@ jobs:
 
       - name: Sync CLI version
         shell: bash
-        run: node scripts/sync-cli-version.js "${{ needs.prepare-release.outputs.next_version }}"
+        run: node apps/cli/scripts/sync-cli-version.cjs "${{ needs.prepare-release.outputs.next_version }}"
 
       - name: Install dependencies
         run: pnpm --filter @eudiplo/cli... install --frozen-lockfile
