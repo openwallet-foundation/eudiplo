@@ -26,13 +26,13 @@ flowchart TD
     C -->|used by| D
 ```
 
-| Concept               | Description                                                                 |
-| --------------------- | --------------------------------------------------------------------------- |
-| **Root Account**      | The default admin account. Used to create and manage tenants.               |
-| **Tenant**            | An isolated workspace with its own keys, credentials, and configurations.   |
-| **Keys & Certificates** | Cryptographic keys for signing credentials. Auto-generated on first use. |
-| **Credential Config** | Defines what a credential looks like (claims, format, display).             |
-| **Issuance Config**   | Groups credential configs and defines issuer metadata.                      |
+| Concept                 | Description                                                               |
+| ----------------------- | ------------------------------------------------------------------------- |
+| **Root Account**        | The default admin account. Used to create and manage tenants.             |
+| **Tenant**              | An isolated workspace with its own keys, credentials, and configurations. |
+| **Keys & Certificates** | Cryptographic keys for signing credentials. Auto-generated on first use.  |
+| **Credential Config**   | Defines what a credential looks like (claims, format, display).           |
+| **Issuance Config**     | Groups credential configs and defines issuer metadata.                    |
 
 ## Step 1: Login as Root
 
