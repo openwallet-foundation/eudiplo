@@ -110,8 +110,8 @@ learn how to test and submit changes.
 
 ## Try EUDIPLO
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
 
 <Tabs>
 <TabItem value="cli" label="Standalone CLI">
@@ -137,5 +137,9 @@ Both options run the same **EUDIPLO CLI**.
 - **npm package**: `@eudiplo/cli`, requires Node.js 22+.
 - The demo requires Docker and Docker Compose, or Podman and Podman Compose.
 - `eudiplo demo` creates a local demo deployment for evaluation, not production.
+
+:::info[Documentation lifecycle]
+The documentation on the `main` branch represents the current development state and is used for preview deployments. Published, stable documentation is frozen per major release version. This keeps the active docs current without creating a large number of historical snapshots for every minor or patch release.
+:::
 
 Continue with the [Getting Started guide](./getting-started/index.md).

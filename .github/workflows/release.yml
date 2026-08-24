@@ -396,6 +396,15 @@ jobs:
           echo "new_release=true" >> "$GITHUB_OUTPUT"
           echo "version=${EXPECTED_TAG}" >> "$GITHUB_OUTPUT"
 
+      - name: Create major-version docs snapshot
+        if: steps.semantic_release.outputs.new_release == 'true' && needs.prepare-release.outputs.is_major == 'true'
+        env:
+          VERSION: ${{ needs.prepare-release.outputs.next_version }}
+        run: |
+          MAJOR_VERSION="${VERSION%%.*}"
+          echo "Creating Docusaurus docs snapshot for major version ${MAJOR_VERSION}"
+          VERSION="$MAJOR_VERSION" pnpm --filter @eudiplo/docs run version:release
+
       - name: Build and deploy release docs
         if: steps.semantic_release.outputs.new_release == 'true'
         run: |
@@ -413,3 +422,15 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_BRANCH: production
+
+      - name: Deploy release website to Cloudflare Pages
+        if: steps.semantic_release.outputs.new_release == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_BRANCH: production
+        run: |
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured"; exit 1; }
+          pnpm --filter @eudiplo/website run deploy
