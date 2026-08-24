@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OAuth2Client } from '@badgateway/oauth2-client';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs/internal/firstValueFrom';
-import { client, clientControllerGetClientSecret, ClientEntity } from '@eudiplo/sdk-core';
+import { client } from '@eudiplo/sdk-core';
 import type { Client } from '@eudiplo/sdk-core/api/client/index';
 import { environment } from '../../environments/environment';
 import { OidcService } from './oidc.service';
@@ -123,6 +123,7 @@ export class ApiService {
 
   setClient(url: string) {
     this.baseUrl = url;
+    this.client = client;
     // Configure SDK client to ensure it requests a fresh token when needed.
     client.setConfig({
       baseUrl: url,
@@ -499,25 +500,5 @@ export class ApiService {
         );
       }, 1000);
     }
-  }
-
-  async createConfigUrl(clientEntity: ClientEntity, apiUrl: string) {
-    const currentUrl = `${globalThis.location.protocol}//${globalThis.location.host}/login`;
-    const url = new URL(currentUrl);
-
-    if (!clientEntity.secret) {
-      clientEntity.secret = await clientControllerGetClientSecret<true>({
-        path: { id: clientEntity.clientId },
-      }).then((res) => res.data.secret);
-    }
-
-    if (clientEntity.clientId) {
-      url.searchParams.append('clientId', clientEntity.clientId);
-    }
-    if (clientEntity.secret) {
-      url.searchParams.append('clientSecret', clientEntity.secret);
-    }
-    url.searchParams.append('apiUrl', apiUrl);
-    return url.toString();
   }
 }

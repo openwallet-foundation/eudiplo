@@ -7,15 +7,12 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import {
-    DeprecateSchemaMetadataDto,
-    UpdateSchemaMetadataDto,
-} from "./dto/schema-metadata.dto";
-import {
     type CreateSchemaMetadataMultipartDto,
     type SchemaMetadata,
     type SchemaMetadataVocabulariesDto,
     schemaMetadataControllerCreateSchemaMetadata,
     schemaMetadataControllerFindAll,
+    schemaMetadataControllerFindAllByRelyingParty,
     schemaMetadataControllerFindOne,
     schemaMetadataControllerGetInternalMetadata,
     schemaMetadataControllerGetLatestVersionInfo,
@@ -25,9 +22,12 @@ import {
     schemaMetadataControllerRemove,
     schemaMetadataControllerSetVersionDeprecation,
     schemaMetadataControllerUpdateMetadata,
-    schemaMetadataControllerFindAllByRelyingParty,
 } from "../generated";
 import { RegistrarAuthService } from "../registrar-auth.service";
+import {
+    DeprecateSchemaMetadataDto,
+    UpdateSchemaMetadataDto,
+} from "./dto/schema-metadata.dto";
 
 type SchemaMetadataFilters = {
     attestationId?: string;

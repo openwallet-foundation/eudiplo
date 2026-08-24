@@ -3,12 +3,12 @@ import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 import type {
     AccessCertificate,
-    MetadataSchema,
-    SchemaMetadata,
-    TrustAuthority,
     UpdateIssuerOfferDto as GeneratedUpdateIssuerOfferDto,
     UpdateSchemaMetadataDto as GeneratedUpdateSchemaMetadataDto,
     IssuerOfferEntry,
+    MetadataSchema,
+    SchemaMetadata,
+    TrustAuthority,
 } from "../../generated";
 
 const ATTESTATION_LOS_VALUES = [

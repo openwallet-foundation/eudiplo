@@ -79,9 +79,9 @@ export class ClientCreateComponent implements OnInit {
       allowedIssuanceConfigs: [[]],
     });
 
-    // Filter out tenants:manage if current user doesn't have it
+    // Only global tenant managers can grant global or tenant administrator roles.
     if (!this.jwtService.hasRole('tenants:manage')) {
-      this.availableRoles = roles.filter((r) => r !== 'tenants:manage');
+      this.availableRoles = roles.filter((r) => r !== 'tenants:manage' && r !== 'tenant:admin');
     }
   }
   ngOnInit(): void {

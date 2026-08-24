@@ -1,17 +1,28 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { renderCommandReference } from "../apps/cli/src/commands/commands/render.js";
 import { createProgram } from "../apps/cli/src/runtime.js";
 import type { CommandContext } from "../apps/cli/src/types.js";
 
-const outputPath = resolve("docs/getting-started/cli/command-reference.md");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const outputPath = resolve(
+    __dirname,
+    "../apps/docs/docs/generated/cli-reference.md",
+);
+
+const GENERATED_WARNING = [
+    "> **Auto-generated.** Do not edit manually.",
+    "> Run `pnpm --filter @eudiplo/docs run prebuild` (scripts/generate-cli-reference.ts).",
+    "",
+].join("\n");
 
 async function main(): Promise<void> {
     const context = documentationContext();
     const program = createProgram(context, () => undefined);
     const markdown = renderCommandReference(program, "markdown");
     await mkdir(dirname(outputPath), { recursive: true });
-    await writeFile(outputPath, markdown, "utf8");
+    await writeFile(outputPath, `${GENERATED_WARNING}\n${markdown}`, "utf8");
     console.log(`Generated ${outputPath}`);
 }
 

@@ -2,10 +2,10 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 import {
-    ChainedAsTokenConfigSchema,
-    UpstreamOidcConfigSchema,
     ChainedAsTokenConfig,
+    ChainedAsTokenConfigSchema,
     UpstreamOidcConfig,
+    UpstreamOidcConfigSchema,
 } from "./chained-as-config.dto";
 
 export type AuthorizationServerType =

@@ -4,8 +4,8 @@ import { AuditLogModule } from "../../../audit-log/audit-log.module";
 import { RegistrarModule } from "../../../registrar/registrar.module";
 import { CredentialConfigModule } from "../credentials/credential-config.module";
 import { IssuanceConfig } from "./entities/issuance-config.entity";
-import { IssuanceConfigController } from "./issuance-config.controller";
 import { IssuanceService } from "./issuance.service";
+import { IssuanceConfigController } from "./issuance-config.controller";
 
 @Module({
     imports: [

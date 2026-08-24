@@ -49,7 +49,9 @@ export const routes: Routes = [
         (m) => m.ConfigPortabilityComponent
       ),
     canActivate: [AuthGuard, RoleGuard],
-    data: { role: getRole('tenants:manage') },
+    data: {
+      role: [getRole('tenants:manage'), getRole('tenant:admin')],
+    },
   },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
 

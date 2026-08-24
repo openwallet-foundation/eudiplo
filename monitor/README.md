@@ -4,7 +4,7 @@ This folder contains a complete observability setup for EUDIPLO using
 OpenTelemetry, Prometheus, Tempo, Loki, and Grafana.
 
 > **Note**: For comprehensive documentation, see the
-> [Monitoring Guide](../docs/getting-started/monitor.md).
+> [Monitoring Guide](../apps/docs/docs/administration/monitoring.md).
 
 ## Architecture
 

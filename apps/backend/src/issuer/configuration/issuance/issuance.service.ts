@@ -1,30 +1,30 @@
 import { createHash } from "node:crypto";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { decodeJwt } from "jose";
 import { Request } from "express";
-import { v4 } from "uuid";
+import { decodeJwt } from "jose";
 import { Repository } from "typeorm";
+import { v4 } from "uuid";
 import { AuditLogService } from "../../../audit-log/audit-log.service";
-import { TokenPayload } from "../../../auth/token.decorator";
-import { RegistrarService } from "../../../registrar/registrar.service";
-import { normalizeTrustListRefs } from "../../../trust/types";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
 } from "../../../audit-log/audit-log-context.util";
-import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
+import { TokenPayload } from "../../../auth/token.decorator";
 import { ConfigImportService } from "../../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../../platform/config-import/config-import-orchestrator.service";
+import { RegistrarService } from "../../../registrar/registrar.service";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
 import { FilesService } from "../../../storage/files.service";
+import { normalizeTrustListRefs } from "../../../trust/types";
 import { CredentialConfigService } from "../credentials/credential-config/credential-config.service";
-import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate.dto";
 import { DisplayInfo } from "./dto/display.dto";
 import { IssuanceDto } from "./dto/issuance.dto";
+import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate.dto";
 import { IssuanceConfig } from "./entities/issuance-config.entity";
 import { IssuanceConfigSchema } from "./schemas/issuance.schema";
 /**

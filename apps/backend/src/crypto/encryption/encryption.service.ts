@@ -8,8 +8,8 @@ import {
     JWK,
     jwtDecrypt,
 } from "jose";
-import { KeyUsageType } from "../key/types/key-usage-type";
 import { KeyChainService } from "../key/key-chain.service";
+import { KeyUsageType } from "../key/types/key-usage-type";
 
 /**
  * Service for handling encryption and decryption operations.

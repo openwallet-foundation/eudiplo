@@ -6,11 +6,18 @@ import {
     Req,
     Res,
 } from "@nestjs/common";
-import { ApiBody, ApiProduces, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiExtraModels,
+    ApiProduces,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Request, Response } from "express";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../auth/token.decorator";
+import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { Iso18013Service } from "../iso18013/iso18013.service";
 import {
     PresentationRequest,
@@ -19,6 +26,7 @@ import {
 import { Oid4vpService } from "../oid4vp/oid4vp.service";
 
 @ApiTags("Verifier")
+@ApiExtraModels(OfferResponse)
 @Secured([Role.PresentationRequest, Role.Presentations])
 @Controller("verifier/offer")
 export class VerifierOfferController {

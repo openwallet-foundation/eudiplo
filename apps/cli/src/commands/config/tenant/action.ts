@@ -312,9 +312,15 @@ async function writeTenantInfo(
     description?: string,
 ): Promise<void> {
     const info = description ? { name, description } : { name };
+    const document = {
+        apiVersion: "eudiplo.io/tenant/v1",
+        kind: "Tenant",
+        metadata: { id: tenantPath.split(/[/\\]/).pop()!, generation: 1 },
+        spec: info,
+    };
     await writeFile(
         join(tenantPath, "info.json"),
-        `${JSON.stringify(info, null, 4)}\n`,
+        `${JSON.stringify(document, null, 4)}\n`,
         {
             encoding: "utf8",
             mode: 0o600,
@@ -361,7 +367,8 @@ function parseTemplate(value: string): TenantTemplate {
 async function readTenantName(infoPath: string): Promise<string | undefined> {
     try {
         const info = JSON.parse(await readFile(infoPath, "utf8"));
-        return typeof info.name === "string" ? info.name : undefined;
+        const name = info.spec?.name ?? info.name;
+        return typeof name === "string" ? name : undefined;
     } catch {
         return undefined;
     }

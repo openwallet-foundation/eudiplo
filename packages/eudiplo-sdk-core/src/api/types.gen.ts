@@ -4,6 +4,13 @@ export type ClientOptions = {
     baseUrl: string;
 };
 
+export type VersionResponseDto = {
+    /**
+     * Running service version
+     */
+    version: string;
+};
+
 export type GrafanaConfigDto = {
     /**
      * Base URL of the Grafana instance
@@ -24,38 +31,122 @@ export type FrontendConfigResponseDto = {
      * Grafana observability configuration
      */
     grafana: GrafanaConfigDto;
+    /**
+     * Active startup configuration import mode
+     */
+    configImportMode: 'disabled' | 'create' | 'upsert' | 'replace';
 };
 
 export type RoleDto = {
     /**
      * OAuth2 roles
      */
-    role: 'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage';
+    role: 'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'tenant:admin' | 'registrar:manage';
 };
 
 export type ClientCredentialsDto = {
     grant_type?: string;
-    client_id: string;
-    client_secret: string;
+    client_id?: string;
+    client_secret?: string;
 };
 
 export type TokenResponse = {
+    /**
+     * Bearer access token
+     */
     access_token: string;
+    /**
+     * Optional refresh token
+     */
     refresh_token?: string;
+    /**
+     * Token type
+     */
     token_type: string;
+    /**
+     * Access token lifetime in seconds
+     */
     expires_in: number;
+    /**
+     * Opaque state value echoed from the request
+     */
     state: string;
 };
 
+export type OAuthTokenErrorResponseDto = {
+    /**
+     * OAuth2 error code
+     */
+    error: string;
+    /**
+     * Human-readable error description
+     */
+    error_description?: string;
+    /**
+     * URI identifying the error
+     */
+    error_uri?: string;
+};
+
+export type KeyResponseDto = {
+    /**
+     * JSON Web Keys
+     */
+    keys: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+/**
+ * Payload used when importing tenant metadata from config files.
+ */
 export type ImportTenantDto = {
     /**
-     * The name of the tenant.
+     * Display name of the tenant.
      */
-    name: string;
+    name?: string;
     /**
-     * The description of the tenant.
+     * Optional tenant description.
      */
     description?: string;
+    /**
+     * Optional tenant-specific session storage configuration.
+     */
+    sessionConfig?: {
+        /**
+         * Session time-to-live in seconds.
+         */
+        ttlSeconds?: number;
+        /**
+         * Whether to fully delete or anonymize expired sessions.
+         */
+        cleanupMode?: 'full' | 'anonymize';
+    };
+    /**
+     * Optional tenant-specific status list defaults.
+     */
+    statusListConfig?: {
+        /**
+         * Default status list capacity.
+         */
+        capacity?: number;
+        /**
+         * Bits-per-status setting (1, 2, 4, or 8).
+         */
+        bits?: 1 | 2 | 4 | 8;
+        /**
+         * JWT TTL for status list tokens in seconds.
+         */
+        ttl?: number;
+        /**
+         * Regenerate status list JWTs immediately after status updates.
+         */
+        immediateUpdate?: boolean;
+        /**
+         * Include aggregation_uri in generated status list JWTs.
+         */
+        enableAggregation?: boolean;
+    };
 };
 
 export type SessionStorageConfig = {
@@ -92,7 +183,50 @@ export type StatusListConfig = {
     enableAggregation?: boolean;
 };
 
-export type TenantEntity = {
+export type ClientEntity = {
+    /**
+     * Unique client identifier
+     */
+    clientId: string;
+    /**
+     * Tenant identifier the client belongs to
+     */
+    tenantId?: string;
+    /**
+     * Client description
+     */
+    description?: string;
+    /**
+     * Roles assigned to the client
+     */
+    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'tenant:admin' | 'registrar:manage'>;
+    /**
+     * List of presentation config IDs this client can use. If empty/null, all configs are allowed.
+     */
+    allowedPresentationConfigs?: Array<string>;
+    /**
+     * List of issuance config IDs this client can use. If empty/null, all configs are allowed.
+     */
+    allowedIssuanceConfigs?: Array<string>;
+};
+
+export type TenantResponseDto = {
+    /**
+     * Unique tenant identifier
+     */
+    id: string;
+    /**
+     * Tenant display name
+     */
+    name: string;
+    /**
+     * Tenant description
+     */
+    description?: string;
+    /**
+     * Tenant status
+     */
+    status: string;
     /**
      * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
      */
@@ -102,93 +236,119 @@ export type TenantEntity = {
      */
     statusListConfig?: StatusListConfig;
     /**
-     * The unique identifier for the tenant.
+     * Managed clients attached to the tenant
+     */
+    clients?: Array<ClientEntity>;
+};
+
+/**
+ * Payload for creating a tenant.
+ */
+export type CreateTenantDto = {
+    /**
+     * Unique tenant identifier.
      */
     id: string;
     /**
-     * The name of the tenant.
+     * Display name of the tenant.
      */
-    name: string;
+    name?: string;
     /**
-     * The description of the tenant.
+     * Optional tenant description.
      */
     description?: string;
     /**
-     * The current status of the tenant.
+     * Optional default role assignments for the tenant.
      */
-    status: string;
+    roles?: Array<'tenants:manage' | 'issuance:offer' | 'issuance:manage' | 'presentation:request' | 'presentation:manage' | 'clients:manage' | 'users:manage' | 'registrar:manage' | 'tenant:admin'>;
     /**
-     * The clients associated with the tenant.
+     * Optional tenant-specific session storage configuration.
      */
-    clients: Array<ClientEntity>;
+    sessionConfig?: {
+        /**
+         * Session time-to-live in seconds.
+         */
+        ttlSeconds?: number;
+        /**
+         * Whether to fully delete or anonymize expired sessions.
+         */
+        cleanupMode?: 'full' | 'anonymize';
+    };
+    /**
+     * Optional tenant-specific status list defaults.
+     */
+    statusListConfig?: {
+        /**
+         * Default status list capacity.
+         */
+        capacity?: number;
+        /**
+         * Bits-per-status setting (1, 2, 4, or 8).
+         */
+        bits?: 1 | 2 | 4 | 8;
+        /**
+         * JWT TTL for status list tokens in seconds.
+         */
+        ttl?: number;
+        /**
+         * Regenerate status list JWTs immediately after status updates.
+         */
+        immediateUpdate?: boolean;
+        /**
+         * Include aggregation_uri in generated status list JWTs.
+         */
+        enableAggregation?: boolean;
+    };
 };
 
-export type ClientEntity = {
+export type TenantClientCredentialsDto = {
     /**
-     * List of presentation config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedPresentationConfigs?: Array<string>;
-    /**
-     * List of issuance config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedIssuanceConfigs?: Array<string>;
-    /**
-     * The unique identifier for the client.
+     * Generated client identifier
      */
     clientId: string;
     /**
-     * The secret key for the client.
+     * Generated client secret
      */
-    secret?: string;
-    /**
-     * The unique identifier for the tenant that the client belongs to. Only null for accounts that manage tenants, that do not belong to a client
-     */
-    tenantId?: string;
-    /**
-     * The description of the client.
-     */
-    description?: string;
-    /**
-     * The roles assigned to the client.
-     */
-    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-    /**
-     * The tenant that the client belongs to.
-     */
-    tenant?: TenantEntity;
+    clientSecret: string;
 };
 
-export type CreateTenantDto = {
+export type TenantCreateResponseDto = {
     /**
-     * Status list configuration for this tenant. Only affects newly created status lists.
-     */
-    statusListConfig?: StatusListConfig;
-    /**
-     * The unique identifier for the tenant.
+     * Unique tenant identifier
      */
     id: string;
     /**
-     * The name of the tenant.
+     * Tenant display name
      */
     name: string;
     /**
-     * The description of the tenant.
+     * Tenant description
      */
     description?: string;
     /**
-     * Session storage configuration. Controls TTL and cleanup behavior.
+     * Tenant status
+     */
+    status: string;
+    /**
+     * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
      */
     sessionConfig?: SessionStorageConfig;
-    roles?: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-};
-
-export type UpdateTenantDto = {
     /**
      * Status list configuration for this tenant. Only affects newly created status lists.
      */
     statusListConfig?: StatusListConfig;
     /**
-     * The name of the tenant.
+     * One-time generated client credentials for admin access
+     */
+    client?: TenantClientCredentialsDto;
+};
+
+/**
+ * Payload for partially updating tenant metadata.
+ */
+export type UpdateTenantDto = {
+    /**
+     * Display name of the tenant.
      */
     name?: string;
     /**
@@ -196,15 +356,49 @@ export type UpdateTenantDto = {
      */
     description?: string | null;
     /**
-     * Session storage configuration. Controls TTL and cleanup behavior.
+     * Optional tenant-specific session storage configuration.
      */
-    sessionConfig?: SessionStorageConfig;
+    sessionConfig?: {
+        /**
+         * Session time-to-live in seconds.
+         */
+        ttlSeconds?: number;
+        /**
+         * Whether to fully delete or anonymize expired sessions.
+         */
+        cleanupMode?: 'full' | 'anonymize';
+    };
+    /**
+     * Optional tenant-specific status list defaults.
+     */
+    statusListConfig?: {
+        /**
+         * Default status list capacity.
+         */
+        capacity?: number;
+        /**
+         * Bits-per-status setting (1, 2, 4, or 8).
+         */
+        bits?: 1 | 2 | 4 | 8;
+        /**
+         * JWT TTL for status list tokens in seconds.
+         */
+        ttl?: number;
+        /**
+         * Regenerate status list JWTs immediately after status updates.
+         */
+        immediateUpdate?: boolean;
+        /**
+         * Include aggregation_uri in generated status list JWTs.
+         */
+        enableAggregation?: boolean;
+    };
 };
 
 export type AuditLogResponseDto = {
     id: string;
     tenantId: string;
-    actionType: 'tenant_created' | 'tenant_updated' | 'tenant_deleted' | 'presentation_config_created' | 'presentation_config_updated' | 'presentation_config_deleted' | 'issuance_config_updated' | 'credential_config_created' | 'credential_config_updated' | 'credential_config_deleted' | 'status_list_config_updated' | 'status_list_config_reset' | 'webhook_endpoint_created' | 'webhook_endpoint_updated' | 'webhook_endpoint_deleted' | 'attribute_provider_created' | 'attribute_provider_updated' | 'attribute_provider_deleted';
+    actionType: 'tenant_created' | 'tenant_updated' | 'tenant_deleted' | 'presentation_config_created' | 'presentation_config_updated' | 'presentation_config_deleted' | 'issuance_config_updated' | 'credential_config_created' | 'credential_config_updated' | 'credential_config_deleted' | 'status_list_config_updated' | 'status_list_config_reset' | 'webhook_endpoint_created' | 'webhook_endpoint_updated' | 'webhook_endpoint_deleted' | 'attribute_provider_created' | 'attribute_provider_updated' | 'attribute_provider_deleted' | 'config_bundle_exported' | 'config_bundle_imported' | 'config_client_secret_generated' | 'config_resource_detached';
     actorType: 'user' | 'client' | 'system';
     actorId?: string;
     actorDisplay?: string;
@@ -220,2418 +414,56 @@ export type AuditLogResponseDto = {
 };
 
 export type ClientSecretResponseDto = {
+    /**
+     * One-time client secret
+     */
     secret: string;
 };
 
 export type UpdateClientDto = {
     /**
-     * List of presentation config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedPresentationConfigs?: Array<string>;
-    /**
-     * List of issuance config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedIssuanceConfigs?: Array<string>;
-    /**
-     * The description of the client.
+     * Optional updated description.
      */
     description?: string;
     /**
-     * The roles assigned to the client.
+     * Optional replacement roles for the client.
      */
-    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
+    roles?: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'tenant:admin' | 'registrar:manage'>;
+    /**
+     * Optional replacement allow-list of presentation config ids.
+     */
+    allowedPresentationConfigs?: Array<string> | null;
+    /**
+     * Optional replacement allow-list of issuance config ids.
+     */
+    allowedIssuanceConfigs?: Array<string> | null;
 };
 
 export type CreateClientDto = {
     /**
-     * List of presentation config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedPresentationConfigs?: Array<string>;
-    /**
-     * List of issuance config IDs this client can use. If empty/null, all configs are allowed.
-     */
-    allowedIssuanceConfigs?: Array<string>;
-    /**
-     * The unique identifier for the client.
+     * Unique client identifier.
      */
     clientId: string;
     /**
-     * The secret key for the client.
+     * Optional client secret for confidential clients.
      */
     secret?: string;
     /**
-     * The description of the client.
+     * Optional human-readable client description.
      */
     description?: string;
     /**
-     * The roles assigned to the client.
+     * Roles assigned to the client. At least one role is required.
      */
-    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-};
-
-export type StatusListImportDto = {
+    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'tenant:admin' | 'registrar:manage'>;
     /**
-     * Unique identifier for the status list
+     * Optional allow-list of presentation config ids this client can use.
      */
-    id: string;
+    allowedPresentationConfigs?: Array<string> | null;
     /**
-     * Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.
+     * Optional allow-list of issuance config ids this client can use.
      */
-    credentialConfigurationId?: string;
-    /**
-     * Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.
-     */
-    keyChainId?: string;
-    /**
-     * Capacity of the status list. If not provided, uses tenant or global defaults.
-     */
-    capacity?: number;
-    /**
-     * Bits per status value. If not provided, uses tenant or global defaults.
-     */
-    bits?: 1 | 2 | 4 | 8;
-};
-
-export type StatusListAggregationDto = {
-    /**
-     * Array of status list token URIs
-     */
-    status_lists: Array<string>;
-};
-
-export type UpdateStatusListConfigDto = {
-    /**
-     * The capacity of the status list. Set to null to reset to global default.
-     */
-    capacity?: number;
-    /**
-     * Bits per status entry. Set to null to reset to global default.
-     */
-    bits?: 1 | 2 | 4 | 8;
-    /**
-     * TTL in seconds for the status list JWT. Set to null to reset to global default.
-     */
-    ttl?: number;
-    /**
-     * If true, regenerate JWT on every status change. Set to null to reset to default (false).
-     */
-    immediateUpdate?: boolean;
-    /**
-     * If true, include aggregation_uri in status list JWTs for pre-fetching support. Set to null to reset to default (true).
-     */
-    enableAggregation?: boolean;
-};
-
-export type StatusListResponseDto = {
-    /**
-     * Unique identifier for the status list
-     */
-    id: string;
-    /**
-     * The tenant ID
-     */
-    tenantId: string;
-    /**
-     * Credential configuration ID this list is bound to. Null means shared.
-     */
-    credentialConfigurationId?: string;
-    /**
-     * Key chain ID used for signing. Null means using the tenant's default.
-     */
-    keyChainId?: string;
-    /**
-     * Bits per status value
-     */
-    bits: 1 | 2 | 4 | 8;
-    /**
-     * Total capacity of the status list
-     */
-    capacity: number;
-    /**
-     * Number of entries in use
-     */
-    usedEntries: number;
-    /**
-     * Number of available entries
-     */
-    availableEntries: number;
-    /**
-     * The public URI for this status list
-     */
-    uri: string;
-    /**
-     * Creation timestamp
-     */
-    createdAt: string;
-    /**
-     * JWT expiration timestamp. Null if JWT has not been generated yet.
-     */
-    expiresAt?: string;
-};
-
-export type CreateStatusListDto = {
-    /**
-     * Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.
-     */
-    credentialConfigurationId?: string;
-    /**
-     * Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.
-     */
-    keyChainId?: string;
-    /**
-     * Bits per status value. More bits allow more status states. Defaults to tenant configuration.
-     */
-    bits?: 1 | 2 | 4 | 8;
-    /**
-     * Maximum number of credential status entries. Defaults to tenant configuration.
-     */
-    capacity?: number;
-};
-
-export type UpdateStatusListDto = {
-    /**
-     * Credential configuration ID to bind this list exclusively to. Set to null to make this a shared list.
-     */
-    credentialConfigurationId?: string;
-    /**
-     * Key chain ID to use for signing. Set to null to use the tenant's default StatusList key chain.
-     */
-    keyChainId?: string;
-};
-
-export type AuthorizeQueries = {
-    issuer_state?: string;
-    response_type?: string;
-    client_id?: string;
-    redirect_uri?: string;
-    resource?: string;
-    scope?: string;
-    code_challenge?: string;
-    code_challenge_method?: string;
-    dpop_jkt?: string;
-    request_uri?: string;
-    auth_session?: string;
-    state?: string;
-    /**
-     * RFC 9396 authorization details. When passed via
-     * application/x-www-form-urlencoded (PAR) the value is a JSON string; when
-     * passed inside a signed request object it can already be an array.
-     */
-    authorization_details?: {
-        [key: string]: unknown;
-    };
-};
-
-export type OfferRequestDto = {
-    /**
-     * The type of response expected for the offer request.
-     */
-    response_type: 'uri' | 'dc-api' | 'iso-18013-7';
-    /**
-     * Authorization server id from issuer configuration. If omitted, the first enabled server is used.
-     */
-    authorization_server?: string;
-    /**
-     * Credential claims configuration per credential. Keys must match credentialConfigurationIds.
-     */
-    credentialClaims?: {
-        [key: string]: {
-            type: 'inline';
-            claims: {
-                [key: string]: unknown;
-            };
-        } | {
-            type: 'attributeProvider';
-            attributeProviderId: string;
-        } | {
-            type: 'webhook';
-            webhook: {
-                url: string;
-                auth?: {
-                    [key: string]: unknown;
-                };
-            };
-        };
-    };
-    /**
-     * The flow type for the offer request.
-     */
-    flow: 'authorization_code' | 'pre_authorized_code';
-    /**
-     * Transaction code for pre-authorized code flow.
-     */
-    tx_code?: string;
-    /**
-     * Description for the transaction code (e.g., "Please enter the PIN sent to your email").
-     */
-    tx_code_description?: string;
-    /**
-     * List of credential configuration ids to be included in the offer.
-     */
-    credentialConfigurationIds: Array<string>;
-    /**
-     * ID of the webhook endpoint to notify about the status of the issuance process.
-     */
-    webhookEndpointId?: string;
-};
-
-export type WebHookAuthConfigNone = {
-    /**
-     * The type of authentication used for the webhook.
-     */
-    type: 'none';
-};
-
-export type ApiKeyConfig = {
-    /**
-     * The name of the header where the API key will be sent.
-     */
-    headerName: string;
-    /**
-     * The value of the API key to be sent in the header.
-     */
-    value: string;
-};
-
-export type WebHookAuthConfigHeader = {
-    /**
-     * The type of authentication used for the webhook.
-     */
-    type: 'apiKey';
-    /**
-     * Configuration for API key authentication.
-     * This is required if the type is 'apiKey'.
-     */
-    config: ApiKeyConfig;
-};
-
-export type WebhookConfig = {
-    /**
-     * Optional authentication configuration for the webhook.
-     * If not provided, no authentication will be used.
-     */
-    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    /**
-     * List of credential IDs to include raw tokens for (e.g., ['sca_credential'])
-     */
-    includeRawTokensFor?: Array<string>;
-    /**
-     * The URL to which the webhook will send notifications.
-     */
-    url: string;
-};
-
-export type TransactionData = {
-    type: string;
-    credential_ids: Array<string>;
-};
-
-export type Session = {
-    /**
-     * Status of the session.
-     */
-    status: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
-    /**
-     * Unique identifier for the session.
-     */
-    id: string;
-    /**
-     * The timestamp when the request was created.
-     */
-    createdAt: string;
-    /**
-     * The timestamp when the request was last updated.
-     */
-    updatedAt: string;
-    /**
-     * The timestamp when the request is set to expire.
-     */
-    expiresAt?: string;
-    /**
-     * Flag indicating whether to use the DC API for the presentation request.
-     */
-    useDcApi: boolean;
-    /**
-     * DC API sub-protocol: "oid4vp" (OpenID4VP via DC API) or "iso-18013-7" (org.iso.mdoc).
-     * Null/undefined means the standard OID4VP flow (useDcApi=false).
-     */
-    dcApiProtocol?: string;
-    /**
-     * Browser page origin recorded at offer time for BrowserHandover session transcript.
-     * Used exclusively by the ISO 18013-7 Annex C flow.
-     */
-    browserOrigin?: string;
-    /**
-     * Tenant ID for multi-tenancy support.
-     */
-    tenantId: string;
-    /**
-     * The tenant that owns this object.
-     */
-    tenant: TenantEntity;
-    authorization_code?: string;
-    /**
-     * Refresh token for the session - used to obtain a new access token.
-     */
-    refresh_token?: string;
-    /**
-     * Expiration timestamp for the refresh token.
-     * Used to validate refresh_token grant requests.
-     */
-    refresh_token_expires_at?: string;
-    /**
-     * Request URI from the authorization request.
-     */
-    request_uri?: string;
-    /**
-     * Authorization queries associated with the session.
-     * Encrypted at rest.
-     */
-    auth_queries?: AuthorizeQueries;
-    /**
-     * Credential offer object containing details about the credential offer or presentation request.
-     * Encrypted at rest.
-     */
-    offer?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Offer URL for the credential offer.
-     */
-    offerUrl?: string;
-    /**
-     * Credential payload containing the offer request details.
-     * Encrypted at rest - may contain sensitive claim data.
-     */
-    credentialPayload?: OfferRequestDto;
-    /**
-     * ID of the webhook endpoint to notify about issuance status.
-     */
-    webhookEndpointId?: string;
-    /**
-     * Notifications associated with the session.
-     */
-    notifications: Array<{
-        [key: string]: unknown;
-    }>;
-    requestId?: string;
-    /**
-     * The URL of the presentation auth request.
-     */
-    requestUrl?: string;
-    /**
-     * Signed presentation auth request.
-     */
-    requestObject?: string;
-    /**
-     * Per-authorization-request private encryption key used to decrypt
-     * wallet responses. Encrypted at rest.
-     */
-    responseEncryptionPrivateJwk?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Verified credentials from the presentation process.
-     * Encrypted at rest - contains personal information.
-     */
-    credentials?: Array<{
-        [key: string]: unknown;
-    }>;
-    /**
-     * Nonce from the Verifiable Presentation request.
-     */
-    vp_nonce?: string;
-    /**
-     * Client ID used in the OID4VP authorization request.
-     */
-    clientId?: string;
-    /**
-     * Cryptographic random nonce used in wallet-facing URLs (response_uri, request_uri, state).
-     * Per OID4VP spec Section 13.3, this separates the wallet-facing identifier (request-id)
-     * from the frontend-facing session ID (transaction-id) to prevent session fixation.
-     */
-    walletNonce?: string;
-    /**
-     * Cryptographic random code generated after successful VP Token processing.
-     * Per OID4VP spec Section 13.3, included in redirect_uri so only the legitimate
-     * frontend (which receives the redirect) can confirm the session completed.
-     */
-    responseCode?: string;
-    /**
-     * Response URI used in the OID4VP authorization request.
-     */
-    responseUri?: string;
-    /**
-     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
-     */
-    redirectUri?: string;
-    /**
-     * Where to send the claims webhook response.
-     */
-    parsedWebhook?: WebhookConfig;
-    /**
-     * Transaction data to include in the OID4VP authorization request.
-     * Can be overridden per-request from the presentation configuration.
-     */
-    transaction_data?: Array<TransactionData>;
-    /**
-     * Per-session clock skew tolerance for presentation credential JWT time validation.
-     */
-    skewSeconds?: number;
-    externalIssuer?: string;
-    /**
-     * The subject (sub) from the external authorization server token.
-     * Used to identify the user at the external AS.
-     */
-    externalSubject?: string;
-    /**
-     * Error reason if the session failed.
-     * Stores the error message when status is 'failed'.
-     */
-    errorReason?: string;
-    /**
-     * Number of failed tx_code (transaction code) validation attempts.
-     * Used to enforce brute-force protection in the pre-authorized code flow.
-     * Reset implicitly when the session is consumed successfully.
-     */
-    txCodeFailedAttempts: number;
-    /**
-     * Flag indicating whether the session offer has been consumed.
-     * Prevents replay attacks by ensuring each offer can only be used once.
-     * For OID4VCI: set after successful token exchange.
-     * For OID4VP: set after successful response validation.
-     */
-    consumed: boolean;
-    /**
-     * Timestamp of the first consumption event for the session offer.
-     * For OID4VCI this can be URI resolution or later flow completion.
-     * Null if no consumption event has happened yet.
-     */
-    consumedAt?: string;
-};
-
-export type PaginatedSessionResponseDto = {
-    /**
-     * The sessions for the current page.
-     */
-    items: Array<Session>;
-    /**
-     * Total number of sessions matching the query
-     */
-    total: number;
-    /**
-     * Current page number (1-based)
-     */
-    page: number;
-    /**
-     * Number of items per page
-     */
-    pageSize: number;
-    /**
-     * Total number of pages
-     */
-    totalPages: number;
-};
-
-export type SessionLogEntryResponseDto = {
-    /**
-     * Log entry ID
-     */
-    id: string;
-    /**
-     * Session ID
-     */
-    sessionId: string;
-    /**
-     * Timestamp of the log entry
-     */
-    timestamp: string;
-    /**
-     * Log level
-     */
-    level: 'info' | 'warn' | 'error';
-    /**
-     * Flow stage
-     */
-    stage?: string;
-    /**
-     * Log message
-     */
-    message: string;
-    /**
-     * Additional structured detail
-     */
-    detail?: {
-        [key: string]: unknown;
-    };
-};
-
-export type StatusUpdateDto = {
-    /**
-     * The session ID of the user
-     */
-    sessionId: string;
-    /**
-     * The ID of the credential configuration
-     * This is optional, if not provided, all credentials will be revoked of the session.
-     */
-    credentialConfigurationId?: string;
-    /**
-     * The status of the credential
-     * 0 = valid, 1 = revoked, 2 = suspended
-     */
-    status: number;
-};
-
-export type UpdateSessionConfigDto = {
-    /**
-     * Time-to-live for sessions in seconds. Set to null to use global default.
-     */
-    ttlSeconds?: number;
-    /**
-     * Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.
-     */
-    cleanupMode?: 'full' | 'anonymize';
-};
-
-export type ManagedUserDto = {
-    id: string;
-    username: string;
-    email?: string;
-    enabled: boolean;
-    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-    tenantId?: string;
-    /**
-     * One-time temporary password returned only on user creation.
-     */
-    temporaryPassword?: string;
-};
-
-export type CreateUserDto = {
-    username: string;
-    email?: string;
-    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-    /**
-     * One-time temporary password returned only on user creation.
-     */
-    temporaryPassword?: string;
-    enabled?: boolean;
-};
-
-export type UpdateUserDto = {
-    username?: string;
-    email?: string;
-    roles?: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'registrar:manage'>;
-    /**
-     * One-time temporary password returned only on user creation.
-     */
-    temporaryPassword?: string;
-    enabled?: boolean;
-    password?: string;
-};
-
-export type AuthenticationMethodNone = {
-    method: 'none';
-};
-
-export type AuthenticationUrlConfig = {
-    /**
-     * The URL used in the OID4VCI authorized code flow.
-     * This URL is where users will be redirected for authentication.
-     */
-    url: string;
-    /**
-     * Optional webhook configuration for authentication callbacks
-     */
-    webhook?: WebhookConfig;
-};
-
-export type AuthenticationMethodAuth = {
-    method: 'auth';
-    config: AuthenticationUrlConfig;
-};
-
-export type PresentationDuringIssuanceConfig = {
-    /**
-     * Link to the presentation configuration that is relevant for the issuance process
-     */
-    type: string;
-};
-
-export type AuthenticationMethodPresentation = {
-    method: 'presentationDuringIssuance';
-    config: PresentationDuringIssuanceConfig;
-};
-
-export type ManagedAuthorizationServerConfig = {
-    /**
-     * Authorization server implementation type
-     */
-    type: 'external' | 'oid4vp' | 'chained' | 'built-in';
-    /**
-     * Unique identifier for this authorization server
-     */
-    id: string;
-    /**
-     * Human-friendly label for the UI
-     */
-    label?: string;
-    /**
-     * Whether this managed authorization server is enabled
-     */
-    enabled?: boolean;
-};
-
-export type ExternalAuthorizationServerConfig = {
-    /**
-     * Authorization server implementation type
-     */
-    type: 'external';
-    /**
-     * Unique identifier for this authorization server
-     */
-    id: string;
-    /**
-     * Human-friendly label for the UI
-     */
-    label?: string;
-    /**
-     * Whether this managed authorization server is enabled
-     */
-    enabled?: boolean;
-    /**
-     * Issuer URL for external authorization servers
-     */
-    issuer: string;
-};
-
-export type ChainedAsTokenConfig = {
-    /**
-     * Access token lifetime in seconds
-     */
-    lifetimeSeconds?: number;
-    /**
-     * Key ID for token signing
-     */
-    signingKeyId?: string;
-    /**
-     * Whether refresh tokens should be issued
-     */
-    refreshTokenEnabled?: boolean;
-    /**
-     * Refresh token lifetime in seconds
-     */
-    refreshTokenExpiresInSeconds?: number;
-};
-
-export type Oid4VpAuthorizationServerConfig = {
-    /**
-     * Authorization server implementation type
-     */
-    type: 'oid4vp';
-    /**
-     * Stable identifier used in the AS URL path
-     */
-    id: string;
-    /**
-     * Human-friendly label for the UI
-     */
-    label?: string;
-    /**
-     * Whether this managed authorization server is enabled
-     */
-    enabled?: boolean;
-    /**
-     * Presentation configuration ID to use for OID4VP
-     */
-    presentationConfigId: string;
-    /**
-     * Immediately redirect the browser into the wallet OID4VP request
-     */
-    immediateWalletRedirect?: boolean;
-    /**
-     * Token configuration for this authorization server
-     */
-    token?: ChainedAsTokenConfig;
-    /**
-     * Require DPoP for token requests issued by this authorization server
-     */
-    requireDPoP?: boolean;
-};
-
-export type UpstreamOidcConfig = {
-    /**
-     * The OIDC issuer URL of the upstream provider
-     */
-    issuer: string;
-    /**
-     * The client ID registered with the upstream provider
-     */
-    clientId: string;
-    /**
-     * The client secret for confidential clients
-     */
-    clientSecret?: string;
-    /**
-     * Scopes to request from the upstream provider
-     */
-    scopes?: Array<string>;
-};
-
-export type ChainedAuthorizationServerConfig = {
-    /**
-     * Authorization server implementation type
-     */
-    type: 'chained';
-    /**
-     * Unique identifier for this authorization server
-     */
-    id: string;
-    /**
-     * Human-friendly label for the UI
-     */
-    label?: string;
-    /**
-     * Whether this managed authorization server is enabled
-     */
-    enabled?: boolean;
-    /**
-     * Upstream OIDC provider configuration for chained mode
-     */
-    upstream: UpstreamOidcConfig;
-    /**
-     * Token configuration for this authorization server
-     */
-    token?: ChainedAsTokenConfig;
-    /**
-     * Require DPoP for token requests issued by this authorization server
-     */
-    requireDPoP?: boolean;
-};
-
-export type BuiltInAuthorizationServerConfig = {
-    /**
-     * Authorization server implementation type
-     */
-    type: 'built-in';
-    /**
-     * Unique identifier for this authorization server
-     */
-    id: string;
-    /**
-     * Human-friendly label for the UI
-     */
-    label?: string;
-    /**
-     * Whether this managed authorization server is enabled
-     */
-    enabled?: boolean;
-    /**
-     * Token configuration for this authorization server
-     */
-    token?: ChainedAsTokenConfig;
-    /**
-     * Require DPoP for token requests issued by this authorization server
-     */
-    requireDPoP?: boolean;
-};
-
-export type WalletProviderTrustListRefDto = {
-    url: string;
-    /**
-     * JWK used to verify the trust-list JWT signature.
-     */
-    verifierKey?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.
-     */
-    verifierX509Der?: string;
-};
-
-export type FederationTrustAnchorConfig = {
-    /**
-     * Entity identifier (sub) of the federation trust anchor.
-     */
-    entityId: string;
-    /**
-     * Federation endpoint URL for the trust anchor entity configuration.
-     */
-    entityConfigurationUri: string;
-};
-
-export type FederationConfig = {
-    /**
-     * Role this tenant plays in the OpenID Federation topology.
-     */
-    role?: 'trust_anchor' | 'intermediate' | 'leaf';
-    /**
-     * Trust decision strategy when both LoTE trust lists and OpenID Federation are configured.
-     */
-    mode?: 'federation-only' | 'hybrid';
-    /**
-     * Entity identifier of this issuer/verifier in the federation.
-     */
-    entityId?: string;
-    /**
-     * Whether federation checks are enforced for upstream metadata and signer trust decisions.
-     */
-    enforceSigningPolicy?: boolean;
-    /**
-     * Cache TTL in seconds for federation entity statements and trust chain results.
-     */
-    cacheTtlSeconds?: number;
-    /**
-     * Configured federation trust anchors.
-     */
-    trustAnchors: Array<FederationTrustAnchorConfig>;
-};
-
-export type IssuerRegistrationCertificateConfig = {
-    /**
-     * Enable inclusion of a registration certificate in credential issuer metadata.
-     */
-    enabled?: boolean;
-    /**
-     * import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.
-     */
-    mode?: 'import' | 'generate';
-    /**
-     * Existing registration certificate JWT used when mode is import.
-     */
-    jwt?: string;
-    /**
-     * Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).
-     */
-    privacyPolicy?: string;
-    /**
-     * Support URI used when generating a registration certificate (optional if registrar defaults are configured).
-     */
-    supportUri?: string;
-};
-
-export type IssuerRegistrationCertificateCache = {
-    /**
-     * Cached registration certificate JWT generated by EUDIPLO.
-     */
-    readonly jwt?: string;
-    /**
-     * Config fingerprint used to detect cache invalidation.
-     */
-    readonly fingerprint?: string;
-    /**
-     * JWT iat claim, seconds since epoch.
-     */
-    readonly issuedAt?: number;
-    /**
-     * JWT exp claim, seconds since epoch.
-     */
-    readonly expiresAt?: number;
-};
-
-export type DisplayLogo = {
-    uri: string;
-    alt_text?: string;
-};
-
-export type DisplayInfo = {
-    name?: string;
-    locale?: string;
-    logo?: DisplayLogo;
-};
-
-export type IssuanceConfig = {
-    /**
-     * Trust lists containing trusted wallet providers.
-     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
-     */
-    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
-    /**
-     * Key ID for signing access tokens. If unset, the default signing key is used.
-     */
-    signingKeyId?: string;
-    /**
-     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
-     */
-    authorizationServers: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
-    /**
-     * Optional OpenID Federation configuration used for trust evaluation.
-     * When omitted, trust checks rely on existing LoTE trust-list behavior.
-     */
-    federation?: FederationConfig;
-    /**
-     * Optional registration certificate configuration for issuer metadata (`issuer_info`).
-     * Supports importing an existing JWT or generating one via registrar.
-     */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
-    /**
-     * Server-managed cache for generated issuer registration certificates.
-     */
-    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
-    /**
-     * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
-     */
-    credentialResponseEncryption?: boolean;
-    /**
-     * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
-     */
-    credentialRequestEncryption?: boolean;
-    /**
-     * Whether the issuer notification endpoint is enabled and advertised in metadata.
-     */
-    notificationEndpointEnabled?: boolean;
-    /**
-     * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
-     */
-    txCodeMaxAttempts?: number;
-    /**
-     * The tenant that owns this object.
-     */
-    tenant: TenantEntity;
-    /**
-     * Value to determine the amount of credentials that are issued in a batch.
-     * Default is 1.
-     */
-    batchSize?: number;
-    /**
-     * Indicates whether DPoP is required for the issuance process. Default value is true.
-     */
-    dPopRequired?: boolean;
-    /**
-     * Indicates whether wallet attestation is required for the token endpoint.
-     * When enabled, wallets must provide OAuth-Client-Attestation headers.
-     * Default value is false.
-     */
-    walletAttestationRequired?: boolean;
-    display: Array<DisplayInfo>;
-    /**
-     * The timestamp when the VP request was created.
-     */
-    createdAt: string;
-    /**
-     * The timestamp when the VP request was last updated.
-     */
-    updatedAt: string;
-};
-
-export type UpdateIssuanceDto = {
-    /**
-     * Trust lists containing trusted wallet providers.
-     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
-     */
-    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
-    /**
-     * Key ID for signing access tokens. If unset, the default signing key is used.
-     */
-    signingKeyId?: string;
-    /**
-     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
-     */
-    authorizationServers?: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
-    /**
-     * Optional OpenID Federation configuration used for trust evaluation.
-     * When omitted, trust checks rely on existing LoTE trust-list behavior.
-     */
-    federation?: FederationConfig;
-    /**
-     * Optional registration certificate configuration for issuer metadata (`issuer_info`).
-     * Supports importing an existing JWT or generating one via registrar.
-     */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
-    /**
-     * Server-managed cache for generated issuer registration certificates.
-     */
-    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
-    /**
-     * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
-     */
-    credentialResponseEncryption?: boolean;
-    /**
-     * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
-     */
-    credentialRequestEncryption?: boolean;
-    /**
-     * Whether the issuer notification endpoint is enabled and advertised in metadata.
-     */
-    notificationEndpointEnabled?: boolean;
-    /**
-     * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
-     */
-    txCodeMaxAttempts?: number;
-    /**
-     * Value to determine the amount of credentials that are issued in a batch.
-     * Default is 1.
-     */
-    batchSize?: number;
-    /**
-     * Indicates whether DPoP is required for the issuance process. Default value is true.
-     */
-    dPopRequired?: boolean;
-    /**
-     * Indicates whether wallet attestation is required for the token endpoint.
-     * When enabled, wallets must provide OAuth-Client-Attestation headers.
-     * Default value is false.
-     */
-    walletAttestationRequired?: boolean;
-    display?: Array<DisplayInfo>;
-};
-
-export type ClaimsQuery = {
-    id?: string;
-    path: Array<string>;
-    values?: Array<string>;
-};
-
-export type CredentialSetQuery = {
-    options: Array<Array<string>>;
-    required?: boolean;
-};
-
-export type PolicyCredential = {
-    claims?: Array<ClaimsQuery>;
-    credentials: Array<{
-        [key: string]: unknown;
-    }>;
-    credential_sets?: Array<CredentialSetQuery>;
-};
-
-export type AttestationBasedPolicy = {
-    policy: 'attestationBased';
-    values: Array<PolicyCredential>;
-};
-
-export type NoneTrustPolicy = {
-    policy: 'none';
-};
-
-export type AllowListPolicy = {
-    policy: 'allowList';
-    values: Array<string>;
-};
-
-export type RootOfTrustPolicy = {
-    policy: 'rootOfTrust';
-    values: string;
-};
-
-export type Vct = {
-    vct?: string;
-    name?: string;
-    description?: string;
-    extends?: string;
-    'extends#integrity'?: string;
-    schema_uri?: string;
-    'schema_uri#integrity'?: string;
-};
-
-export type IaeActionOpenid4VpPresentation = {
-    /**
-     * Action type discriminator
-     */
-    type: 'openid4vp_presentation';
-    /**
-     * Optional label for this step (for display purposes)
-     */
-    label?: string;
-    /**
-     * ID of the presentation configuration to use for this step
-     */
-    presentationConfigId: string;
-};
-
-export type IaeActionRedirectToWeb = {
-    /**
-     * Action type discriminator
-     */
-    type: 'redirect_to_web';
-    /**
-     * Optional label for this step (for display purposes)
-     */
-    label?: string;
-    /**
-     * URL to redirect the user to for web-based interaction
-     */
-    url: string;
-    /**
-     * URL where the external service should redirect back after completion. If not provided, the service must call back to the IAE endpoint.
-     */
-    callbackUrl?: string;
-    /**
-     * Description of what the user should do on the web page (for wallet display)
-     */
-    description?: string;
-};
-
-export type WebhookEndpointEntity = {
-    /**
-     * Unique identifier for the webhook endpoint
-     */
-    id: string;
-    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    tenantId: string;
-    tenant: TenantEntity;
-    name: string;
-    description?: string;
-    url: string;
-};
-
-export type SchemaUriEntry = {
-    /**
-     * Credential config ID to resolve and upload its schema content. When set, uri can be omitted and is resolved server-side.
-     */
-    credentialConfigId?: string;
-    /**
-     * Attestation format this schema URI applies to (e.g. dc+sd-jwt, mso_mdoc)
-     */
-    format?: string;
-    /**
-     * URI pointing to the schema document for this format
-     */
-    uri?: string;
-    /**
-     * Schema-format specific metadata (for example { vct: 'urn:example:vct' } for dc+sd-jwt).
-     */
-    meta?: {
-        [key: string]: unknown;
-    };
-};
-
-export type TrustAuthorityEntry = {
-    /**
-     * Trust list ID to resolve from the database. When set, frameworkType, value, and verificationMethod are derived automatically.
-     */
-    trustListId?: string;
-    /**
-     * Trust framework type (ignored when trustListId is set)
-     */
-    frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
-    /**
-     * URI of the trust list or trust anchor (ignored when trustListId is set)
-     */
-    value?: string;
-    /**
-     * Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.
-     */
-    verificationMethod?: {
-        [key: string]: unknown;
-    } | string;
-};
-
-export type SchemaMetaConfig = {
-    /**
-     * Optional override for the schema ID (attestation identifier URI). When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).
-     */
-    id?: string;
-    /**
-     * Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
-     */
-    name?: string;
-    /**
-     * Schema version in SemVer format
-     */
-    version?: string;
-    /**
-     * URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
-     */
-    rulebookURI?: string;
-    /**
-     * Attestation Level of Security
-     */
-    attestationLoS?: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
-    /**
-     * Cryptographic binding type
-     */
-    bindingType?: 'claim' | 'key' | 'biometric' | 'none';
-    /**
-     * Schema URIs per attestation format. When omitted, the format is derived from the credential config format field.
-     */
-    schemaURIs?: Array<SchemaUriEntry>;
-    /**
-     * Trust authorities for this attestation schema
-     */
-    trustedAuthorities?: Array<TrustAuthorityEntry>;
-};
-
-export type EmbeddedDisclosurePolicy = {
-    policy: string;
-};
-
-export type KeyAttestationsRequired = {
-    /**
-     * List of required key storage types (e.g., iso_18045_high, iso_18045_moderate)
-     */
-    key_storage?: Array<string>;
-    /**
-     * List of required user authentication types (e.g., iso_18045_high, iso_18045_moderate)
-     */
-    user_authentication?: Array<string>;
-};
-
-export type DisplayImage = {
-    uri: string;
-};
-
-export type Display = {
-    name: string;
-    description: string;
-    locale: string;
-    background_color?: string;
-    text_color?: string;
-    background_image?: DisplayImage;
-    logo?: DisplayImage;
-};
-
-export type IssuerMetadataCredentialConfig = {
-    /**
-     * Key attestation requirements for JWT proofs for this credential.
-     * When set, this is published in proof_types_supported.jwt.key_attestations_required
-     * for this specific credential configuration.
-     */
-    keyAttestationsRequired?: KeyAttestationsRequired;
-    /**
-     * Supported proof types for this credential configuration. Defaults to ['attestation', 'jwt'].
-     */
-    proofTypesSupported?: Array<'jwt' | 'attestation'>;
-    format: 'mso_mdoc' | 'dc+sd-jwt';
-    display: Array<Display>;
-    scope?: string;
-    /**
-     * Document type for mDOC credentials (e.g., "org.iso.18013.5.1.mDL").
-     * Only applicable when format is "mso_mdoc".
-     */
-    docType?: string;
-};
-
-export type FieldDisplayDto = {
-    /**
-     * Locale code based on BCP47 (RFC 5646)
-     */
-    locale: string;
-    /**
-     * Display name
-     */
-    name: string;
-    /**
-     * Optional display description
-     */
-    description?: string;
-};
-
-export type ClaimFieldDefinitionDto = {
-    /**
-     * Path to claim value. For nested child fields this can be relative to the parent path.
-     */
-    path: Array<string | number | null>;
-    /**
-     * Claim value type
-     */
-    type: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array';
-    /**
-     * Default value
-     */
-    defaultValue?: string | number | boolean | {
-        [key: string]: unknown;
-    } | Array<unknown> | null;
-    /**
-     * Whether claim is mandatory
-     */
-    mandatory?: boolean;
-    /**
-     * Whether claim is disclosable in SD-JWT
-     */
-    disclosable?: boolean;
-    /**
-     * Namespace for mDOC field. Optional when the namespace is already present as the first path segment.
-     */
-    namespace?: string;
-    display?: Array<FieldDisplayDto>;
-    /**
-     * Additional JSON schema constraints for this field
-     */
-    constraints?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Optional nested child fields. Child paths may be specified relative to the parent field path.
-     */
-    children?: Array<ClaimFieldDefinitionDto>;
-};
-
-export type AttributeProviderEntity = {
-    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    id: string;
-    tenantId: string;
-    tenant: TenantEntity;
-    name: string;
-    description?: string;
-    url: string;
-};
-
-export type KeyChainEntity = {
-    /**
-     * Unique identifier for the key chain.
-     * This is the ID referenced by other entities (e.g., issuance config's signingKeyId).
-     */
-    id: string;
-    /**
-     * Tenant ID for the key chain.
-     */
-    tenantId: string;
-    /**
-     * The tenant that owns this key chain.
-     */
-    tenant: TenantEntity;
-    /**
-     * Human-readable description of the key chain.
-     */
-    description?: string;
-    /**
-     * The purpose/role of this key chain in the system.
-     */
-    usageType: 'access' | 'attestation' | 'trustList' | 'statusList' | 'encrypt';
-    /**
-     * The usage type of the keys (sign or encrypt).
-     */
-    usage: 'sign' | 'encrypt';
-    /**
-     * The KMS provider used for this key chain.
-     * References a configured KMS provider name.
-     */
-    kmsProvider: string;
-    /**
-     * External key identifier for cloud KMS providers.
-     * This field stores the provider-specific key reference for the active signing key.
-     */
-    externalKeyId?: string;
-    /**
-     * External key identifier for cloud KMS providers for the root CA key.
-     * Used when rotating internal-chain key chains backed by external KMS.
-     */
-    rootExternalKeyId?: string;
-    rootJwk?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Root CA certificate in PEM format.
-     * Self-signed certificate for the root CA key.
-     */
-    rootCertificate?: string;
-    activeJwk: {
-        [key: string]: unknown;
-    };
-    /**
-     * Certificate for the active signing key in PEM format.
-     * Either CA-signed (if rootKey exists) or self-signed.
-     */
-    activeCertificate: string;
-    rotationEnabled: boolean;
-    /**
-     * Rotation interval in days. Key material will be rotated after this many days.
-     */
-    rotationIntervalDays?: number;
-    /**
-     * Certificate validity in days when generating new certificates.
-     */
-    certValidityDays?: number;
-    /**
-     * Timestamp of when the key was last rotated.
-     */
-    lastRotatedAt?: string;
-    previousJwk?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Certificate for the previous signing key in PEM format.
-     */
-    previousCertificate?: string;
-    /**
-     * Expiry date for the previous key.
-     * After this date, the previous key should be deleted.
-     */
-    previousKeyExpiry?: string;
-    createdAt: string;
-    /**
-     * The timestamp when the key chain was last updated.
-     */
-    updatedAt: string;
-};
-
-export type CredentialConfig = {
-    /**
-     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
-     */
-    vct?: string | Vct | null;
-    /**
-     * List of IAE actions to execute before credential issuance
-     */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
-    /**
-     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
-     *
-     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
-     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
-     *
-     * The underlying TS11 specification is not yet finalized.
-     */
-    schemaMeta?: SchemaMetaConfig;
-    /**
-     * Embedded disclosure policy (discriminated union by `policy`).
-     * The discriminator makes class-transformer instantiate the right subclass,
-     * and then class-validator runs that subclass’s rules.
-     */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
-    id: string;
-    description?: string;
-    /**
-     * The tenant that owns this object.
-     */
-    tenant: TenantEntity;
-    config: IssuerMetadataCredentialConfig;
-    fields: Array<ClaimFieldDefinitionDto>;
-    /**
-     * Reference to the attribute provider used for fetching claims.
-     * Optional: if set, claims will be fetched from this provider during issuance.
-     */
-    attributeProviderId?: string;
-    attributeProvider?: AttributeProviderEntity;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    webhookEndpoint?: WebhookEndpointEntity;
-    keyBinding?: boolean;
-    /**
-     * Reference to the key chain used for signing.
-     * Optional: if not specified, the default attestation key chain will be used.
-     */
-    keyChainId?: string;
-    keyChain?: KeyChainEntity;
-    statusManagement?: boolean;
-    /**
-     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
-     * or use federation-based trust (iss claim).
-     * Default: "x5c" (federation must be explicitly selected)
-     */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
-    lifeTime?: number;
-};
-
-export type CredentialConfigCreate = {
-    /**
-     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
-     */
-    vct?: string | Vct | null;
-    /**
-     * List of IAE actions to execute before credential issuance
-     */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
-    /**
-     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
-     *
-     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
-     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
-     *
-     * The underlying TS11 specification is not yet finalized.
-     */
-    schemaMeta?: SchemaMetaConfig;
-    /**
-     * Embedded disclosure policy (discriminated union by `policy`).
-     * The discriminator makes class-transformer instantiate the right subclass,
-     * and then class-validator runs that subclass’s rules.
-     */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
-    id: string;
-    description?: string;
-    config: IssuerMetadataCredentialConfig;
-    fields: Array<ClaimFieldDefinitionDto>;
-    /**
-     * Reference to the attribute provider used for fetching claims.
-     * Optional: if set, claims will be fetched from this provider during issuance.
-     */
-    attributeProviderId?: string;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    keyBinding?: boolean;
-    /**
-     * Reference to the key chain used for signing.
-     * Optional: if not specified, the default attestation key chain will be used.
-     */
-    keyChainId?: string;
-    statusManagement?: boolean;
-    /**
-     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
-     * or use federation-based trust (iss claim).
-     * Default: "x5c" (federation must be explicitly selected)
-     */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
-    lifeTime?: number;
-};
-
-export type CredentialConfigUpdate = {
-    /**
-     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
-     */
-    vct?: string | Vct | null;
-    /**
-     * List of IAE actions to execute before credential issuance
-     */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
-    /**
-     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
-     *
-     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
-     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
-     *
-     * The underlying TS11 specification is not yet finalized.
-     */
-    schemaMeta?: SchemaMetaConfig;
-    /**
-     * Embedded disclosure policy (discriminated union by `policy`).
-     * The discriminator makes class-transformer instantiate the right subclass,
-     * and then class-validator runs that subclass’s rules.
-     */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
-    id?: string;
-    description?: string;
-    config?: IssuerMetadataCredentialConfig;
-    fields?: Array<ClaimFieldDefinitionDto>;
-    /**
-     * Reference to the attribute provider used for fetching claims.
-     * Optional: if set, claims will be fetched from this provider during issuance.
-     */
-    attributeProviderId?: string;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    keyBinding?: boolean;
-    /**
-     * Reference to the key chain used for signing.
-     * Optional: if not specified, the default attestation key chain will be used.
-     */
-    keyChainId?: string;
-    statusManagement?: boolean;
-    /**
-     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
-     * or use federation-based trust (iss claim).
-     * Default: "x5c" (federation must be explicitly selected)
-     */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
-    lifeTime?: number;
-};
-
-export type SignSchemaMetaConfigDto = {
-    /**
-     * The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.
-     */
-    config: SchemaMetaConfig;
-    /**
-     * ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.
-     */
-    credentialConfigId?: string;
-    /**
-     * How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.
-     */
-    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
-};
-
-export type SignVersionSchemaMetaConfigDto = {
-    /**
-     * The schema metadata configuration to submit as a new version. Must include the existing id.
-     */
-    config: SchemaMetaConfig;
-    /**
-     * Optional credential config to update pinning for after successful version publish.
-     */
-    credentialConfigId?: string;
-    /**
-     * How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.
-     */
-    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
-};
-
-export type VocabularyEntryDto = {
-    /**
-     * Stable machine-readable value to submit in schema metadata category/tags fields.
-     */
-    code: string;
-    /**
-     * Display label for UI rendering.
-     */
-    label: string;
-    /**
-     * Vocabulary lifecycle status.
-     */
-    status: 'active' | 'deprecated';
-    /**
-     * Replacement code when status is deprecated.
-     */
-    replacedBy?: string;
-};
-
-export type SchemaMetadataVocabulariesDto = {
-    /**
-     * Vocabulary publication version for cache invalidation.
-     */
-    version: string;
-    /**
-     * Allowed category values that can be used when updating schema metadata category.
-     */
-    categories: Array<VocabularyEntryDto>;
-    /**
-     * Allowed tag values that can be used when updating schema metadata tags.
-     */
-    tags: Array<VocabularyEntryDto>;
-};
-
-export type MetadataSchemaDto = {
-    /**
-     * Unique identifier for this schema entry
-     */
-    id: string;
-    /**
-     * The credential format identifier
-     */
-    formatIdentifier: 'dc+sd-jwt' | 'mso_mdoc';
-    /**
-     * URI to the schema definition
-     */
-    uri?: string;
-    /**
-     * Format-specific metadata for the schema entry
-     */
-    meta?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Subresource Integrity hash for the schema
-     */
-    integrity?: string;
-};
-
-export type TrustAuthorityDto = {
-    /**
-     * Unique identifier for this trust authority entry
-     */
-    id: string;
-    /**
-     * Type of trust framework
-     */
-    frameworkType: 'etsi_tl';
-    /**
-     * URI or identifier for the trust list / authority
-     */
-    value: string;
-    /**
-     * Verification method for the trust list signature (e.g., JWK)
-     */
-    verificationMethod?: {
-        [key: string]: unknown;
-    };
-};
-
-export type IssuerOfferEntryDto = {
-    /**
-     * URL where the user can receive a credential offer from this issuer.
-     */
-    credentialOfferUrl: string;
-    /**
-     * Human-readable description explaining when this issuer offer is relevant for the user.
-     */
-    description: string;
-};
-
-export type AccessCertificateRefDto = {
-    id: string;
-    relyingPartyId: string;
-    certificate: string;
-    revoked: string;
-    createdAt: string;
-};
-
-export type SchemaMetadataResponseDto = {
-    /**
-     * The unique, server-assigned identifier (UUID) for the schema metadata
-     */
-    id: string;
-    /**
-     * Version of this schema metadata (SemVer)
-     */
-    version: string;
-    /**
-     * URI of the human-readable Rulebook document
-     */
-    rulebookURI?: string;
-    /**
-     * Subresource Integrity hash for the rulebook URI
-     */
-    rulebookIntegrity?: string;
-    /**
-     * Level of security (LoS) of this attestation
-     */
-    attestationLoS: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
-    /**
-     * Required binding type between attestation and holder
-     */
-    bindingType: 'claim' | 'key' | 'biometric' | 'none';
-    /**
-     * Credential formats in which this attestation is available
-     */
-    supportedFormats: Array<'dc+sd-jwt' | 'mso_mdoc'>;
-    /**
-     * Format-specific schema URIs for this schema metadata
-     */
-    schemaURIs: Array<MetadataSchemaDto>;
-    /**
-     * Trust frameworks / trust anchors applicable to this schema metadata
-     */
-    trustedAuthorities: Array<TrustAuthorityDto>;
-    /**
-     * Domain category for filtering
-     */
-    category?: 'identity' | 'health' | 'finance' | 'education' | 'mobility' | 'employment' | 'other';
-    /**
-     * Free-form tags for filtering and search
-     */
-    tags?: Array<string>;
-    /**
-     * Optional human-readable schema name for UI display and filtering.
-     */
-    displayName?: string;
-    /**
-     * Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.
-     */
-    issuerOffers: Array<IssuerOfferEntryDto>;
-    /**
-     * The original signed JWT
-     */
-    signedJwt: string;
-    /**
-     * Issuer from the JWT (`iss` claim)
-     */
-    issuer: string;
-    /**
-     * The access certificate used to sign this schema metadata
-     */
-    signerCertificate?: AccessCertificateRefDto;
-    /**
-     * Timestamp when the JWT was issued (from the `iat` claim)
-     */
-    issuedAt: string;
-    /**
-     * Server creation timestamp
-     */
-    createdAt: string;
-    /**
-     * Last update timestamp
-     */
-    updatedAt: string;
-    /**
-     * Whether this version is deprecated
-     */
-    deprecated: boolean;
-    /**
-     * Deprecation message shown to consumers
-     */
-    deprecationMessage?: string;
-    /**
-     * The version that supersedes this one
-     */
-    supersededByVersion?: string;
-    /**
-     * Timestamp when this version was marked as deprecated
-     */
-    deprecatedAt?: string;
-};
-
-export type UpdateIssuerOfferDto = {
-    /**
-     * URL where the user can receive a credential offer from this issuer.
-     */
-    credentialOfferUrl?: string;
-    /**
-     * Human-readable description to help users choose the right issuer.
-     */
-    description?: string;
-};
-
-export type UpdateSchemaMetadataDto = {
-    /**
-     * Domain category for filtering
-     */
-    category?: 'identity' | 'health' | 'finance' | 'education' | 'mobility' | 'employment' | 'other';
-    /**
-     * Predefined tags for filtering and search
-     */
-    tags?: Array<'pid' | 'eudi' | 'kyc' | 'aml' | 'age-verification' | 'residency' | 'membership' | 'education' | 'employment' | 'mobility'>;
-    /**
-     * Optional human-readable schema name for UI display and search
-     */
-    displayName?: string;
-    /**
-     * Issuer offer entries shown to users, each with credential-offer URL and description
-     */
-    issuerOffers?: Array<UpdateIssuerOfferDto>;
-};
-
-export type DeprecateSchemaMetadataDto = {
-    /**
-     * Whether to mark this version as deprecated
-     */
-    deprecated: boolean;
-    /**
-     * Deprecation message shown to consumers
-     */
-    message?: string;
-    /**
-     * The version that supersedes this one
-     */
-    supersededByVersion?: string;
-};
-
-export type CreateAttributeProviderDto = {
-    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    id: string;
-    name: string;
-    description?: string;
-    url: string;
-};
-
-export type UpdateAttributeProviderDto = {
-    auth?: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    id?: string;
-    name?: string;
-    description?: string;
-    url?: string;
-};
-
-export type CreateWebhookEndpointDto = {
-    /**
-     * Unique identifier for the webhook endpoint
-     */
-    id: string;
-    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    name: string;
-    description?: string;
-    url: string;
-};
-
-export type UpdateWebhookEndpointDto = {
-    /**
-     * Unique identifier for the webhook endpoint
-     */
-    id?: string;
-    auth?: WebHookAuthConfigNone | WebHookAuthConfigHeader;
-    name?: string;
-    description?: string;
-    url?: string;
-};
-
-export type TrustListEntityInfo = {
-    name: string;
-    lang?: string;
-    uri?: string;
-    country?: string;
-    locality?: string;
-    postalCode?: string;
-    streetAddress?: string;
-    contactUri?: string;
-};
-
-export type InternalTrustListEntity = {
-    type: 'internal';
-    issuerKeyChainId: string;
-    revocationKeyChainId: string;
-    info: TrustListEntityInfo;
-};
-
-export type ExternalTrustListEntity = {
-    type: 'external';
-    issuerCertPem: string;
-    revocationCertPem: string;
-    info: TrustListEntityInfo;
-};
-
-export type TrustListCreateDto = {
-    description?: string;
-    /**
-     * The full trust list JSON (generated LoTE structure)
-     */
-    data?: {
-        [key: string]: unknown;
-    };
-    entities: Array<InternalTrustListEntity | ExternalTrustListEntity>;
-    id?: string;
-    keyChainId?: string;
-};
-
-export type TrustList = {
-    /**
-     * Unique identifier for the trust list
-     */
-    id: string;
-    description?: string;
-    /**
-     * The tenant ID for which the VP request is made.
-     */
-    tenantId: string;
-    /**
-     * The tenant that owns this object.
-     */
-    tenant: TenantEntity;
-    keyChainId: string;
-    keyChain: KeyChainEntity;
-    /**
-     * The full trust list JSON (generated LoTE structure)
-     */
-    data?: {
-        [key: string]: unknown;
-    };
-    /**
-     * The original entity configuration used to create this trust list.
-     * Stored for round-tripping when editing.
-     */
-    entityConfig?: Array<{
-        [key: string]: unknown;
-    }>;
-    /**
-     * The sequence number for versioning (incremented on updates)
-     */
-    sequenceNumber: number;
-    /**
-     * The signed JWT representation of this trust list
-     */
-    jwt: string;
-    createdAt: string;
-    updatedAt: string;
-};
-
-export type TrustListVersion = {
-    id: string;
-    trustListId: string;
-    trustList: TrustList;
-    tenantId: string;
-    /**
-     * The sequence number at the time this version was created
-     */
-    sequenceNumber: number;
-    /**
-     * The full trust list JSON at this version
-     */
-    data: {
-        [key: string]: unknown;
-    };
-    /**
-     * The entity configuration at this version
-     */
-    entityConfig?: {
-        [key: string]: unknown;
-    };
-    /**
-     * The signed JWT at this version
-     */
-    jwt: string;
-    createdAt: string;
-};
-
-export type TrustListRef = {
-    /**
-     * Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.
-     */
-    trustListId?: string;
-    /**
-     * Trust-list JWT URL. Required for external trust lists when trustListId is not set.
-     */
-    url?: string;
-    /**
-     * JWK used to verify trust-list JWT signatures for external trusted authority values.
-     */
-    verifierKey?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.
-     */
-    verifierX509Der?: string;
-};
-
-export type TrustedAuthorityQueryEtsiTl = {
-    type: 'etsi_tl';
-    values: Array<TrustListRef>;
-};
-
-export type TrustedAuthorityQueryOpenIdFederation = {
-    type: 'openid_federation';
-    values: Array<string>;
-};
-
-export type DcSdJwtCredentialQueryMeta = {
-    /**
-     * VCT identifiers accepted for dc+sd-jwt credentials.
-     */
-    vct_values: Array<string>;
-};
-
-export type MsoMdocCredentialQueryMeta = {
-    /**
-     * Document type identifier accepted for mso_mdoc credentials.
-     */
-    doctype_value: string;
-};
-
-export type MsoMdocClaimsQuery = {
-    /**
-     * Whether the holder should be allowed to retain the claim in an mso_mdoc response.
-     */
-    intent_to_retain?: boolean;
-    id?: string;
-    path: Array<string>;
-    values?: Array<string>;
-};
-
-export type CredentialQueryDcSdJwt = {
-    /**
-     * Credential format discriminator.
-     */
-    format: 'dc+sd-jwt';
-    /**
-     * Ordered alternative claim combinations for this credential query.
-     */
-    claim_sets?: Array<Array<string>>;
-    /**
-     * Trusted authority constraints (discriminated by type) for this credential query.
-     */
-    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
-    /**
-     * dc+sd-jwt schema metadata for the requested credential.
-     */
-    meta: DcSdJwtCredentialQueryMeta;
-    claims?: Array<ClaimsQuery>;
-    id: string;
-    multiple?: boolean;
-};
-
-export type CredentialQueryMsoMdoc = {
-    /**
-     * Credential format discriminator.
-     */
-    format: 'mso_mdoc';
-    /**
-     * Ordered alternative claim combinations for this credential query.
-     */
-    claim_sets?: Array<Array<string>>;
-    /**
-     * Trusted authority constraints (discriminated by type) for this credential query.
-     */
-    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
-    /**
-     * mso_mdoc document type metadata for the requested credential.
-     */
-    meta: MsoMdocCredentialQueryMeta;
-    claims?: Array<MsoMdocClaimsQuery>;
-    id: string;
-    multiple?: boolean;
-};
-
-export type Dcql = {
-    /**
-     * Format-discriminated credential queries.
-     */
-    credentials?: Array<CredentialQueryDcSdJwt | CredentialQueryMsoMdoc>;
-    credential_sets?: Array<CredentialSetQuery>;
-};
-
-export type RegistrationCertificatePurpose = {
-    lang: string;
-    content: string;
-};
-
-export type RegistrationCertificateBody = {
-    privacy_policy?: string;
-    support_uri?: string;
-    intermediary?: string;
-    purpose?: Array<RegistrationCertificatePurpose>;
-    credentials?: Array<{
-        [key: string]: unknown;
-    }>;
-    provided_attestations?: Array<{
-        [key: string]: unknown;
-    }>;
-};
-
-export type RegistrationCertificateRequest = {
-    /**
-     * Optional registrar-side certificate identifier.
-     * If provided and still valid, EUDIPLO reuses it instead of creating a new certificate.
-     */
-    id?: string;
-    /**
-     * Registration certificate creation payload.
-     * This is merged with tenant-level registrar defaults when a certificate is created.
-     */
-    body?: RegistrationCertificateBody;
-    /**
-     * Optional pre-existing registration certificate JWT.
-     * If provided, EUDIPLO forwards it as-is and does not create a new one.
-     */
-    jwt?: string;
-};
-
-export type PresentationAttachment = {
-    format: string;
-    data: {
-        [key: string]: unknown;
-    };
-    credential_ids?: Array<string>;
-};
-
-export type PresentationConfig = {
-    /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
-    /**
-     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
-     */
-    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
-    /**
-     * Server-managed cache of the materialized registration certificate. Read-only; values supplied by clients are ignored.
-     */
-    readonly registrationCertCache?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Unique identifier for the VP request.
-     */
-    id: string;
-    /**
-     * The tenant that owns this object.
-     */
-    tenant: TenantEntity;
-    /**
-     * Description of the presentation configuration.
-     */
-    description?: string;
-    /**
-     * Lifetime how long the presentation request is valid after creation, in seconds.
-     */
-    lifeTime?: number;
-    /**
-     * The DCQL query to be used for the VP request.
-     */
-    dcql_query: Dcql;
-    transaction_data?: Array<TransactionData>;
-    /**
-     * The registration certificate request containing the necessary details.
-     */
-    registration_cert?: RegistrationCertificateRequest;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    /**
-     * The timestamp when the VP request was created.
-     */
-    createdAt: string;
-    /**
-     * The timestamp when the VP request was last updated.
-     */
-    updatedAt: string;
-    /**
-     * Attestation that should be attached
-     */
-    attached?: Array<PresentationAttachment>;
-    /**
-     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
-     * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
-     */
-    redirectUri?: string;
-    /**
-     * Optional ID of the access certificate to use for signing the presentation request.
-     * If not provided, the default access certificate for the tenant will be used.
-     *
-     * Note: This is intentionally NOT a TypeORM relationship because CertEntity uses
-     * a composite primary key (id + tenantId), and SQLite cannot create foreign keys
-     * that reference only part of a composite primary key. The relationship is handled
-     * at the application level in the service layer.
-     */
-    accessKeyChainId?: string;
-    /**
-     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
-     *
-     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
-     * signed with the tenant's Access key chain (selected by
-     * {@link accessKeyChainId}), letting the wallet cryptographically
-     * authenticate the verifier — the mDOC equivalent of the signed request
-     * object used in the OID4VP flow. Defaults to disabled (null/false).
-     *
-     * Only affects `response_type: "iso-18013-7"` offers.
-     */
-    readerAuth?: boolean;
-};
-
-export type ResolveIssuerMetadataDto = {
-    /**
-     * Issuer URL or full OpenID4VCI metadata URL to resolve server-side.
-     */
-    issuerUrl: string;
-};
-
-export type ResolveSchemaMetadataDto = {
-    /**
-     * Schema metadata URL to resolve server-side. The response must contain a signedJwt field.
-     */
-    schemaMetadataUrl: string;
-};
-
-export type ResolveSchemaMetadataJwtDto = {
-    /**
-     * Signed schema metadata JWT to resolve server-side. The JWT will be verified, resolved, and converted to DCQL.
-     */
-    signedJwt: string;
-};
-
-export type PresentationConfigCreateDto = {
-    /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
-    /**
-     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
-     */
-    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
-    /**
-     * Unique identifier for the VP request.
-     */
-    id: string;
-    /**
-     * Description of the presentation configuration.
-     */
-    description?: string;
-    /**
-     * Lifetime how long the presentation request is valid after creation, in seconds.
-     */
-    lifeTime?: number;
-    /**
-     * The DCQL query to be used for the VP request.
-     */
-    dcql_query: Dcql;
-    transaction_data?: Array<TransactionData>;
-    /**
-     * The registration certificate request containing the necessary details.
-     */
-    registration_cert?: RegistrationCertificateRequest;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    /**
-     * Attestation that should be attached
-     */
-    attached?: Array<PresentationAttachment>;
-    /**
-     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
-     * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
-     */
-    redirectUri?: string;
-    /**
-     * Optional ID of the access certificate to use for signing the presentation request.
-     * If not provided, the default access certificate for the tenant will be used.
-     *
-     * Note: This is intentionally NOT a TypeORM relationship because CertEntity uses
-     * a composite primary key (id + tenantId), and SQLite cannot create foreign keys
-     * that reference only part of a composite primary key. The relationship is handled
-     * at the application level in the service layer.
-     */
-    accessKeyChainId?: string;
-    /**
-     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
-     *
-     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
-     * signed with the tenant's Access key chain (selected by
-     * {@link accessKeyChainId}), letting the wallet cryptographically
-     * authenticate the verifier — the mDOC equivalent of the signed request
-     * object used in the OID4VP flow. Defaults to disabled (null/false).
-     *
-     * Only affects `response_type: "iso-18013-7"` offers.
-     */
-    readerAuth?: boolean;
-};
-
-export type PresentationConfigUpdateDto = {
-    /**
-     * Clock skew tolerance for credential JWT time validation, in seconds.
-     */
-    skewSeconds?: number;
-    /**
-     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
-     */
-    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
-    /**
-     * Unique identifier for the VP request.
-     */
-    id?: string;
-    /**
-     * Description of the presentation configuration.
-     */
-    description?: string;
-    /**
-     * Lifetime how long the presentation request is valid after creation, in seconds.
-     */
-    lifeTime?: number;
-    /**
-     * The DCQL query to be used for the VP request.
-     */
-    dcql_query?: Dcql;
-    transaction_data?: Array<TransactionData>;
-    /**
-     * The registration certificate request containing the necessary details.
-     */
-    registration_cert?: RegistrationCertificateRequest;
-    /**
-     * Reference to the webhook endpoint used for notifications.
-     * Optional: if set, notifications will be sent to this endpoint.
-     */
-    webhookEndpointId?: string;
-    /**
-     * Attestation that should be attached
-     */
-    attached?: Array<PresentationAttachment>;
-    /**
-     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
-     * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
-     */
-    redirectUri?: string;
-    /**
-     * Optional ID of the access certificate to use for signing the presentation request.
-     * If not provided, the default access certificate for the tenant will be used.
-     *
-     * Note: This is intentionally NOT a TypeORM relationship because CertEntity uses
-     * a composite primary key (id + tenantId), and SQLite cannot create foreign keys
-     * that reference only part of a composite primary key. The relationship is handled
-     * at the application level in the service layer.
-     */
-    accessKeyChainId?: string;
-    /**
-     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
-     *
-     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
-     * signed with the tenant's Access key chain (selected by
-     * {@link accessKeyChainId}), letting the wallet cryptographically
-     * authenticate the verifier — the mDOC equivalent of the signed request
-     * object used in the OID4VP flow. Defaults to disabled (null/false).
-     *
-     * Only affects `response_type: "iso-18013-7"` offers.
-     */
-    readerAuth?: boolean;
+    allowedIssuanceConfigs?: Array<string> | null;
 };
 
 export type RegistrationCertificateDefaults = {
@@ -2678,362 +510,103 @@ export type RegistrarConfigResponseDto = {
 
 export type CreateRegistrarConfigDto = {
     /**
-     * The base URL of the registrar API
+     * Base URL of the registrar service.
      */
     registrarUrl: string;
     /**
-     * The OIDC issuer URL for authentication (e.g., Keycloak realm URL)
+     * OIDC discovery or issuer URL used for authentication.
      */
     oidcUrl: string;
     /**
-     * The OIDC client ID for the registrar
+     * OAuth client ID used against the registrar.
      */
     clientId: string;
     /**
-     * The OIDC client secret (optional, for confidential clients)
+     * Optional OAuth client secret for registrar authentication.
      */
     clientSecret?: string;
     /**
-     * The username for OIDC login
+     * Username used for registrar authentication.
      */
     username: string;
     /**
-     * The password for OIDC login (stored in plaintext)
+     * Password used for registrar authentication.
      */
     password: string;
     /**
-     * Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)
+     * Optional default registration certificate values.
      */
-    registrationCertificateDefaults?: RegistrationCertificateDefaults;
+    registrationCertificateDefaults?: {
+        [key: string]: unknown;
+    } | null;
 };
 
 export type UpdateRegistrarConfigDto = {
     /**
-     * The base URL of the registrar API
+     * Base URL of the registrar service.
      */
     registrarUrl?: string;
     /**
-     * The OIDC issuer URL for authentication (e.g., Keycloak realm URL)
+     * OIDC discovery or issuer URL used for authentication.
      */
     oidcUrl?: string;
     /**
-     * The OIDC client ID for the registrar
+     * OAuth client ID used against the registrar.
      */
     clientId?: string;
     /**
-     * The OIDC client secret (optional, for confidential clients)
+     * Optional OAuth client secret for registrar authentication.
      */
     clientSecret?: string;
     /**
-     * The username for OIDC login
+     * Username used for registrar authentication.
      */
     username?: string;
     /**
-     * The password for OIDC login (stored in plaintext)
+     * Password used for registrar authentication.
      */
     password?: string;
     /**
-     * Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)
+     * Optional default registration certificate values.
      */
-    registrationCertificateDefaults?: RegistrationCertificateDefaults;
+    registrationCertificateDefaults?: {
+        [key: string]: unknown;
+    } | null;
 };
 
 export type CreateAccessCertificateDto = {
     /**
-     * The ID of the key to create an access certificate for
+     * Key chain id used to issue the access certificate.
      */
     keyId: string;
 };
 
-export type DeferredCredentialRequestDto = {
+export type ManagedUserDto = {
+    id: string;
+    username: string;
+    email?: string;
+    enabled: boolean;
+    roles: Array<'presentation:manage' | 'presentation:request' | 'issuance:manage' | 'issuance:offer' | 'clients:manage' | 'users:manage' | 'tenants:manage' | 'tenant:admin' | 'registrar:manage'>;
+    tenantId?: string;
     /**
-     * The transaction identifier previously returned by the Credential Endpoint
+     * One-time temporary password returned only on user creation.
      */
-    transaction_id: string;
+    temporaryPassword?: string;
 };
 
-export type NotificationRequestDto = {
-    notification_id: string;
-    event: 'credential_accepted' | 'credential_failure' | 'credential_deleted';
+export type CreateUserDto = {
+    username: string;
+    email?: string;
+    roles: Array<'tenants:manage' | 'issuance:offer' | 'issuance:manage' | 'presentation:request' | 'presentation:manage' | 'clients:manage' | 'users:manage' | 'registrar:manage' | 'tenant:admin'>;
+    enabled?: boolean;
 };
 
-export type OfferResponse = {
-    uri: string;
-    /**
-     * URI for cross-device flows (no redirect after completion)
-     */
-    crossDeviceUri?: string;
-    session: string;
-};
-
-export type CompleteDeferredDto = {
-    /**
-     * Claims to include in the credential. The structure should match the credential configuration's expected claims.
-     */
-    claims: {
-        [key: string]: unknown;
-    };
-};
-
-export type DeferredOperationResponse = {
-    /**
-     * The transaction ID
-     */
-    transactionId: string;
-    /**
-     * The new status of the transaction
-     */
-    status: 'pending' | 'ready' | 'retrieved' | 'expired' | 'failed';
-    /**
-     * Optional message
-     */
-    message?: string;
-};
-
-export type FailDeferredDto = {
-    /**
-     * Optional error message explaining why the issuance failed
-     */
-    error?: string;
-};
-
-export type EcPublic = {
-    /**
-     * The key type, which is always 'EC' for Elliptic Curve keys.
-     */
-    kty: string;
-    /**
-     * The algorithm intended for use with the key, such as 'ES256'.
-     */
-    crv: string;
-    /**
-     * The x coordinate of the EC public key.
-     */
-    x: string;
-    /**
-     * The y coordinate of the EC public key.
-     */
-    y: string;
-};
-
-export type JwksResponseDto = {
-    /**
-     * An array of EC public keys in JWK format.
-     */
-    keys: Array<EcPublic>;
-};
-
-export type AuthorizationResponse = {
-    /**
-     * The response string containing the authorization details (JWE-encrypted VP token).
-     * Required for success responses, absent for error responses.
-     */
-    response?: string;
-    /**
-     * When set to true, the authorization response will be sent to the client.
-     */
-    sendResponse?: boolean;
-    error?: string;
-    /**
-     * Human-readable description of the error.
-     */
-    error_description?: string;
-    /**
-     * URI with additional information about the error.
-     */
-    error_uri?: string;
-    /**
-     * State value from the authorization request (for correlation).
-     */
-    state?: string;
-};
-
-export type Object = {
-    [key: string]: unknown;
-};
-
-export type ParResponseDto = {
-    /**
-     * The request URI for the Pushed Authorization Request.
-     */
-    request_uri: string;
-    /**
-     * The expiration time for the request URI in seconds.
-     */
-    expires_in: number;
-};
-
-export type InteractiveAuthorizationRequestDto = {
-    /**
-     * Response type (for initial request)
-     */
-    response_type?: string;
-    /**
-     * Client identifier (for initial request)
-     */
-    client_id?: string;
-    /**
-     * Comma-separated list of supported interaction types (for initial request)
-     */
-    interaction_types_supported?: string;
-    /**
-     * Redirect URI (for initial request)
-     */
-    redirect_uri?: string;
-    /**
-     * OAuth scope
-     */
-    scope?: string;
-    /**
-     * PKCE code challenge
-     */
-    code_challenge?: string;
-    /**
-     * PKCE code challenge method
-     */
-    code_challenge_method?: string;
-    /**
-     * Authorization details
-     */
-    authorization_details?: {
-        [key: string]: unknown;
-    };
-    /**
-     * State parameter
-     */
-    state?: string;
-    /**
-     * Issuer state from credential offer
-     */
-    issuer_state?: string;
-    /**
-     * Auth session identifier (for follow-up request)
-     */
-    auth_session?: string;
-    /**
-     * OpenID4VP response (for follow-up request)
-     */
-    openid4vp_response?: string;
-    /**
-     * PKCE code verifier (for follow-up request)
-     */
-    code_verifier?: string;
-    /**
-     * JAR request JWT (by value)
-     */
-    request?: string;
-    /**
-     * JAR request URI (by reference)
-     */
-    request_uri?: string;
-};
-
-export type InteractiveAuthorizationCodeResponseDto = {
-    /**
-     * Response status
-     */
-    status: string;
-    /**
-     * Authorization code
-     */
-    code: string;
-};
-
-export type InteractiveAuthorizationErrorResponseDto = {
-    /**
-     * OAuth error code
-     */
-    error: string;
-    /**
-     * Human-readable error description
-     */
-    error_description?: string;
-};
-
-export type ChainedAsParResponseDto = {
-    /**
-     * The request URI to use at the authorization endpoint
-     */
-    request_uri: string;
-    /**
-     * The lifetime of the request URI in seconds
-     */
-    expires_in: number;
-};
-
-export type ChainedAsErrorResponseDto = {
-    /**
-     * Error code
-     */
-    error: string;
-    /**
-     * Human-readable error description
-     */
-    error_description?: string;
-};
-
-export type ChainedAsTokenRequestDto = {
-    /**
-     * Grant type ('authorization_code' or 'refresh_token')
-     */
-    grant_type: string;
-    /**
-     * Authorization code received in the callback (authorization_code grant)
-     */
-    code?: string;
-    /**
-     * Refresh token (refresh_token grant)
-     */
-    refresh_token?: string;
-    /**
-     * Client identifier
-     */
-    client_id?: string;
-    /**
-     * Redirect URI (must match the one used in PAR)
-     */
-    redirect_uri?: string;
-    /**
-     * PKCE code verifier
-     */
-    code_verifier?: string;
-};
-
-export type ChainedAsTokenResponseDto = {
-    /**
-     * The access token
-     */
-    access_token: string;
-    /**
-     * Token type (Bearer or DPoP)
-     */
-    token_type: string;
-    /**
-     * Token lifetime in seconds
-     */
-    expires_in: number;
-    /**
-     * Scope granted
-     */
-    scope?: string;
-    /**
-     * Authorized credential configurations
-     */
-    authorization_details?: Array<{
-        [key: string]: unknown;
-    }>;
-    /**
-     * C_NONCE for credential request
-     */
-    c_nonce?: string;
-    /**
-     * C_NONCE lifetime in seconds
-     */
-    c_nonce_expires_in?: number;
-    /**
-     * Refresh token (issued when refresh tokens are enabled)
-     */
-    refresh_token?: string;
+export type UpdateUserDto = {
+    username?: string;
+    email?: string;
+    roles?: Array<'tenants:manage' | 'issuance:offer' | 'issuance:manage' | 'presentation:request' | 'presentation:manage' | 'clients:manage' | 'users:manage' | 'registrar:manage' | 'tenant:admin'>;
+    enabled?: boolean;
+    password?: string;
 };
 
 export type KmsProviderCapabilitiesDto = {
@@ -3087,6 +660,29 @@ export type KmsProvidersResponseDto = {
      * The default KMS provider name.
      */
     default: string;
+};
+
+export type ProviderHealthResponseDto = {
+    /**
+     * KMS provider id
+     */
+    providerId: string;
+    /**
+     * KMS provider type
+     */
+    type: string;
+    /**
+     * Whether the provider health check passed
+     */
+    ok: boolean;
+    /**
+     * Health check latency in milliseconds
+     */
+    latencyMs?: number;
+    /**
+     * Optional health check error
+     */
+    error?: string;
 };
 
 export type KmsConfigDto = {
@@ -3594,16 +1190,57 @@ export type KeyChainCreateDto = {
     /**
      * Rotation policy configuration. Only applicable for the signing key (root CA never rotates).
      */
-    rotationPolicy?: RotationPolicyCreateDto;
+    rotationPolicy?: RotationPolicyCreateDto & {
+        /**
+         * Enable or disable automatic key rotation.
+         */
+        enabled?: boolean;
+        /**
+         * Rotation interval in days.
+         */
+        intervalDays?: number;
+        /**
+         * Certificate validity period in days for generated leaf certificates.
+         */
+        certValidityDays?: number;
+    };
+};
+
+export type KeyChainIdResponseDto = {
+    /**
+     * The created or imported key chain ID
+     */
+    id: string;
 };
 
 export type EcJwk = {
+    /**
+     * Key type (for example EC).
+     */
     kty: string;
+    /**
+     * Elliptic curve public x coordinate.
+     */
     x: string;
+    /**
+     * Elliptic curve public y coordinate.
+     */
     y: string;
+    /**
+     * Elliptic curve name.
+     */
     crv: string;
+    /**
+     * Private key value.
+     */
     d: string;
+    /**
+     * Optional algorithm hint.
+     */
     alg?: string;
+    /**
+     * Optional key identifier.
+     */
     kid?: string;
 };
 
@@ -3630,7 +1267,36 @@ export type KeyChainImportDto = {
     /**
      * The private key in JWK format.
      */
-    key: EcJwk;
+    key: EcJwk & {
+        /**
+         * Key type (for example EC).
+         */
+        kty?: string;
+        /**
+         * Elliptic curve public x coordinate.
+         */
+        x?: string;
+        /**
+         * Elliptic curve public y coordinate.
+         */
+        y?: string;
+        /**
+         * Elliptic curve name.
+         */
+        crv?: string;
+        /**
+         * Private key value.
+         */
+        d?: string;
+        /**
+         * Optional algorithm hint.
+         */
+        alg?: string;
+        /**
+         * Optional key identifier.
+         */
+        kid?: string;
+    };
     /**
      * Human-readable description.
      */
@@ -3650,7 +1316,20 @@ export type KeyChainImportDto = {
     /**
      * Rotation policy. When enabled, the imported key becomes a root CA signer and a new leaf key is generated. If crt is provided, the selected root CA certificate must have CA=true and its public key must match the imported private key.
      */
-    rotationPolicy?: RotationPolicyImportDto;
+    rotationPolicy?: RotationPolicyImportDto & {
+        /**
+         * Enable automatic rotation for imported key chains.
+         */
+        enabled?: boolean;
+        /**
+         * Rotation interval in days.
+         */
+        intervalDays?: number;
+        /**
+         * Certificate validity period in days.
+         */
+        certValidityDays?: number;
+    };
 };
 
 export type RotationPolicyUpdateDto = {
@@ -3676,54 +1355,2903 @@ export type KeyChainUpdateDto = {
     /**
      * Rotation policy configuration.
      */
-    rotationPolicy?: RotationPolicyUpdateDto;
+    rotationPolicy?: RotationPolicyUpdateDto & {
+        /**
+         * Optional replacement for rotation enabled flag.
+         */
+        enabled?: boolean;
+        /**
+         * Optional replacement for rotation interval in days.
+         */
+        intervalDays?: number;
+        /**
+         * Optional replacement for certificate validity period in days.
+         */
+        certValidityDays?: number;
+    };
     /**
      * Active certificate chain in PEM format. Used for external certificate updates.
      */
     activeCertificate?: string;
 };
 
-export type PresentationRequest = {
+export type TenantEntity = {
     /**
-     * The type of response expected from the presentation request.
+     * Unique tenant identifier
      */
-    response_type: 'uri' | 'dc-api' | 'iso-18013-7';
+    id: string;
     /**
-     * Identifier of the presentation configuration
+     * Tenant display name
      */
-    requestId: string;
+    name: string;
     /**
-     * Webhook configuration to receive the response.
-     * If not provided, the configured webhook from the configuration will be used.
+     * Tenant description
      */
-    webhook?: WebhookConfig;
+    description?: string;
     /**
-     * Optional redirect URI to which the user-agent should be redirected after the presentation is completed.
+     * Tenant status
+     */
+    status: string;
+    /**
+     * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
+     */
+    sessionConfig?: SessionStorageConfig;
+    /**
+     * Status list configuration for this tenant. Only affects newly created status lists.
+     */
+    statusListConfig?: StatusListConfig;
+    clients: Array<Array<ClientEntity>>;
+};
+
+export type AttributeProviderEntity = {
+    /**
+     * Tenant identifier
+     */
+    tenantId: string;
+    /**
+     * Attribute provider name
+     */
+    name: string;
+    /**
+     * Attribute provider description
+     */
+    description?: string;
+    /**
+     * Attribute provider URL
+     */
+    url: string;
+    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
+    id: string;
+    tenant: TenantEntity;
+};
+
+export type CreateAttributeProviderDto = {
+    /**
+     * Unique attribute provider identifier.
+     */
+    id: string;
+    /**
+     * Display name of the attribute provider.
+     */
+    name: string;
+    /**
+     * Optional attribute provider description.
+     */
+    description?: string | null;
+    /**
+     * Base URL of the attribute provider endpoint.
+     */
+    url: string;
+    /**
+     * Authentication configuration for outbound provider requests.
+     */
+    auth: {
+        /**
+         * Disable authentication for attribute provider calls.
+         */
+        type: 'none';
+    } | {
+        /**
+         * Use API key authentication.
+         */
+        type: 'apiKey';
+        /**
+         * API key authentication settings.
+         */
+        config: {
+            /**
+             * HTTP header name carrying the API key.
+             */
+            headerName: string;
+            /**
+             * API key value.
+             */
+            value: string;
+        };
+    };
+};
+
+export type UpdateAttributeProviderDto = {
+    /**
+     * Unique attribute provider identifier.
+     */
+    id?: string;
+    /**
+     * Display name of the attribute provider.
+     */
+    name?: string;
+    /**
+     * Optional attribute provider description.
+     */
+    description?: string | null;
+    /**
+     * Base URL of the attribute provider endpoint.
+     */
+    url?: string;
+    /**
+     * Authentication configuration for outbound provider requests.
+     */
+    auth?: {
+        /**
+         * Disable authentication for attribute provider calls.
+         */
+        type: 'none';
+    } | {
+        /**
+         * Use API key authentication.
+         */
+        type: 'apiKey';
+        /**
+         * API key authentication settings.
+         */
+        config: {
+            /**
+             * HTTP header name carrying the API key.
+             */
+            headerName: string;
+            /**
+             * API key value.
+             */
+            value: string;
+        };
+    };
+};
+
+export type AuthorizeQueries = {
+    issuer_state?: string;
+    response_type?: string;
+    client_id?: string;
+    redirect_uri?: string;
+    resource?: string;
+    scope?: string;
+    code_challenge?: string;
+    code_challenge_method?: string;
+    dpop_jkt?: string;
+    request_uri?: string;
+    auth_session?: string;
+    state?: string;
+    /**
+     * RFC 9396 authorization details. When passed via
+     * application/x-www-form-urlencoded (PAR) the value is a JSON string; when
+     * passed inside a signed request object it can already be an array.
+     */
+    authorization_details?: string | Array<unknown>;
+};
+
+export type OfferRequestDto = {
+    /**
+     * The type of response expected for the offer request.
+     */
+    response_type: 'uri' | 'iso-18013-7' | 'dc-api';
+    /**
+     * Authorization server id from issuer configuration. If omitted, the first enabled server is used.
+     */
+    authorization_server?: string;
+    /**
+     * Credential claims configuration per credential. Keys must match credentialConfigurationIds.
+     */
+    credentialClaims?: {
+        [key: string]: {
+            type: 'inline';
+            claims: {
+                [key: string]: unknown;
+            };
+        } | {
+            type: 'attributeProvider';
+            attributeProviderId: string;
+        } | {
+            type: 'webhook';
+            webhook: {
+                url: string;
+                auth?: {
+                    [key: string]: unknown;
+                };
+            };
+        };
+    };
+    /**
+     * The flow type for the offer request.
+     */
+    flow: 'authorization_code' | 'pre_authorized_code';
+    /**
+     * Transaction code for pre-authorized code flow.
+     */
+    tx_code?: string;
+    /**
+     * Description for the transaction code (e.g., "Please enter the PIN sent to your email").
+     */
+    tx_code_description?: string;
+    /**
+     * List of credential configuration ids to be included in the offer.
+     */
+    credentialConfigurationIds: Array<string>;
+    /**
+     * ID of the webhook endpoint to notify about the status of the issuance process.
+     */
+    webhookEndpointId?: string;
+};
+
+export type WebHookAuthConfigNone = {
+    /**
+     * The type of authentication used for the webhook.
+     */
+    type: never;
+};
+
+export type ApiKeyConfig = {
+    /**
+     * The name of the header where the API key will be sent.
+     */
+    headerName: string;
+    /**
+     * The value of the API key to be sent in the header.
+     */
+    value: string;
+};
+
+export type WebHookAuthConfigHeader = {
+    /**
+     * The type of authentication used for the webhook.
+     */
+    type: never;
+    /**
+     * Configuration for API key authentication.
+     * This is required if the type is 'apiKey'.
+     */
+    config: ApiKeyConfig & {
+        headerName?: string;
+        value?: string;
+    };
+};
+
+export type WebhookConfig = {
+    /**
+     * Optional authentication configuration for the webhook.
+     * If not provided, no authentication will be used.
+     */
+    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
+    /**
+     * List of credential IDs to include raw tokens for (e.g., ['sca_credential'])
+     */
+    includeRawTokensFor?: Array<string>;
+    /**
+     * The URL to which the webhook will send notifications.
+     */
+    url: string;
+};
+
+export type TransactionData = {
+    type: string;
+    credential_ids: Array<string>;
+};
+
+export type Session = {
+    /**
+     * Status of the session.
+     */
+    status: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
+    /**
+     * Unique identifier for the session.
+     */
+    id: string;
+    /**
+     * The timestamp when the request was created.
+     */
+    createdAt: string;
+    /**
+     * The timestamp when the request was last updated.
+     */
+    updatedAt: string;
+    /**
+     * The timestamp when the request is set to expire.
+     */
+    expiresAt?: string;
+    /**
+     * Flag indicating whether to use the DC API for the presentation request.
+     */
+    useDcApi: boolean;
+    /**
+     * DC API sub-protocol: "oid4vp" (OpenID4VP via DC API) or "iso-18013-7" (org.iso.mdoc).
+     * Null/undefined means the standard OID4VP flow (useDcApi=false).
+     */
+    dcApiProtocol?: string;
+    /**
+     * Browser page origin recorded at offer time for BrowserHandover session transcript.
+     * Used exclusively by the ISO 18013-7 Annex C flow.
+     */
+    browserOrigin?: string;
+    /**
+     * Tenant ID for multi-tenancy support.
+     */
+    tenantId: string;
+    /**
+     * The tenant that owns this object.
+     */
+    tenant: TenantEntity;
+    authorization_code?: string;
+    /**
+     * Refresh token for the session - used to obtain a new access token.
+     */
+    refresh_token?: string;
+    /**
+     * Expiration timestamp for the refresh token.
+     * Used to validate refresh_token grant requests.
+     */
+    refresh_token_expires_at?: string;
+    /**
+     * Request URI from the authorization request.
+     */
+    request_uri?: string;
+    /**
+     * Authorization queries associated with the session.
+     * Encrypted at rest.
+     */
+    auth_queries?: AuthorizeQueries;
+    /**
+     * Credential offer object containing details about the credential offer or presentation request.
+     * Encrypted at rest.
+     */
+    offer?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Offer URL for the credential offer.
+     */
+    offerUrl?: string;
+    /**
+     * Credential payload containing the offer request details.
+     * Encrypted at rest - may contain sensitive claim data.
+     */
+    credentialPayload?: OfferRequestDto;
+    /**
+     * ID of the webhook endpoint to notify about issuance status.
+     */
+    webhookEndpointId?: string;
+    /**
+     * Notifications associated with the session.
+     */
+    notifications: Array<{
+        [key: string]: unknown;
+    }>;
+    requestId?: string;
+    /**
+     * The URL of the presentation auth request.
+     */
+    requestUrl?: string;
+    /**
+     * Signed presentation auth request.
+     */
+    requestObject?: string;
+    /**
+     * Per-authorization-request private encryption key used to decrypt
+     * wallet responses. Encrypted at rest.
+     */
+    responseEncryptionPrivateJwk?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Verified credentials from the presentation process.
+     * Encrypted at rest - contains personal information.
+     */
+    credentials?: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * Nonce from the Verifiable Presentation request.
+     */
+    vp_nonce?: string;
+    /**
+     * Client ID used in the OID4VP authorization request.
+     */
+    clientId?: string;
+    /**
+     * Cryptographic random nonce used in wallet-facing URLs (response_uri, request_uri, state).
+     * Per OID4VP spec Section 13.3, this separates the wallet-facing identifier (request-id)
+     * from the frontend-facing session ID (transaction-id) to prevent session fixation.
+     */
+    walletNonce?: string;
+    /**
+     * Cryptographic random code generated after successful VP Token processing.
+     * Per OID4VP spec Section 13.3, included in redirect_uri so only the legitimate
+     * frontend (which receives the redirect) can confirm the session completed.
+     */
+    responseCode?: string;
+    /**
+     * Response URI used in the OID4VP authorization request.
+     */
+    responseUri?: string;
+    /**
+     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
+     */
+    redirectUri?: string;
+    /**
+     * Where to send the claims webhook response.
+     */
+    parsedWebhook?: WebhookConfig;
+    /**
+     * Transaction data to include in the OID4VP authorization request.
+     * Can be overridden per-request from the presentation configuration.
+     */
+    transaction_data?: Array<TransactionData>;
+    /**
+     * Per-session clock skew tolerance for presentation credential JWT time validation.
+     */
+    skewSeconds?: number;
+    externalIssuer?: string;
+    /**
+     * Identifier of the authorization server selected when this issuance session
+     * was created. Required for deterministic mapping of external AS access
+     * tokens back to the correct issuance session.
+     */
+    authorizationServerId?: string;
+    /**
+     * The subject (sub) from the external authorization server token.
+     * Used to identify the user at the external AS.
+     */
+    externalSubject?: string;
+    /**
+     * Error reason if the session failed.
+     * Stores the error message when status is 'failed'.
+     */
+    errorReason?: string;
+    /**
+     * Number of failed tx_code (transaction code) validation attempts.
+     * Used to enforce brute-force protection in the pre-authorized code flow.
+     * Reset implicitly when the session is consumed successfully.
+     */
+    txCodeFailedAttempts: number;
+    /**
+     * Flag indicating whether the session offer has been consumed.
+     * Prevents replay attacks by ensuring each offer can only be used once.
+     * For OID4VCI: set after successful token exchange.
+     * For OID4VP: set after successful response validation.
+     */
+    consumed: boolean;
+    /**
+     * Timestamp of the first consumption event for the session offer.
+     * For OID4VCI this can be URI resolution or later flow completion.
+     * Null if no consumption event has happened yet.
+     */
+    consumedAt?: string;
+};
+
+export type PaginatedSessionResponseDto = {
+    /**
+     * The sessions for the current page.
+     */
+    items: Array<Session>;
+    /**
+     * Total number of sessions matching the query
+     */
+    total: number;
+    /**
+     * Current page number (1-based)
+     */
+    page: number;
+    /**
+     * Number of items per page
+     */
+    pageSize: number;
+    /**
+     * Total number of pages
+     */
+    totalPages: number;
+};
+
+export type SessionLogEntryResponseDto = {
+    /**
+     * Log entry ID
+     */
+    id: string;
+    /**
+     * Session ID
+     */
+    sessionId: string;
+    /**
+     * Timestamp of the log entry
+     */
+    timestamp: string;
+    /**
+     * Log level
+     */
+    level: 'info' | 'warn' | 'error';
+    /**
+     * Flow stage
+     */
+    stage?: string;
+    /**
+     * Log message
+     */
+    message: string;
+    /**
+     * Additional structured detail
+     */
+    detail?: {
+        [key: string]: unknown;
+    };
+};
+
+export type StatusUpdateDto = {
+    /**
+     * Session identifier used to locate credentials for status updates.
+     */
+    sessionId: string;
+    /**
+     * Optional credential configuration id. If omitted, all credentials linked to the session are updated.
+     */
+    credentialConfigurationId?: string;
+    /**
+     * New credential status: 0 = valid, 1 = revoked, 2 = suspended.
+     */
+    status: number;
+};
+
+export type UpdateSessionConfigDto = {
+    /**
+     * Time-to-live for sessions in seconds. Set to null to use global default.
+     */
+    ttlSeconds?: number | null;
+    /**
+     * Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.
+     */
+    cleanupMode?: 'full' | 'anonymize';
+};
+
+export type StatusListImportDto = {
+    /**
+     * Unique identifier for the status list
+     */
+    id: string;
+    /**
+     * Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.
+     */
+    credentialConfigurationId?: string;
+    /**
+     * Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.
+     */
+    keyChainId?: string;
+    /**
+     * Capacity of the status list. If not provided, uses tenant or global defaults.
+     */
+    capacity?: number;
+    /**
+     * Bits per status value. If not provided, uses tenant or global defaults.
+     */
+    bits?: 1 | 2 | 4 | 8;
+};
+
+export type StatusListAggregationDto = {
+    /**
+     * Array of status list token URIs
+     */
+    status_lists: Array<string>;
+};
+
+export type UpdateStatusListConfigDto = {
+    /**
+     * The capacity of the status list. Set to null to reset to global default.
+     */
+    capacity?: number | null;
+    /**
+     * Bits per status entry. Set to null to reset to global default.
+     */
+    bits?: 1 | 2 | 4 | 8;
+    /**
+     * TTL in seconds for the status list JWT. Set to null to reset to global default.
+     */
+    ttl?: number | null;
+    /**
+     * If true, regenerate JWT on every status change. Set to null to reset to default (false).
+     */
+    immediateUpdate?: boolean | null;
+    /**
+     * If true, include aggregation_uri in status list JWTs for pre-fetching support. Set to null to reset to default (true).
+     */
+    enableAggregation?: boolean | null;
+};
+
+export type StatusListResponseDto = {
+    /**
+     * Unique identifier for the status list
+     */
+    id: string;
+    /**
+     * The tenant ID
+     */
+    tenantId: string;
+    /**
+     * Credential configuration ID this list is bound to. Null means shared.
+     */
+    credentialConfigurationId?: string;
+    /**
+     * Key chain ID used for signing. Null means using the tenant's default.
+     */
+    keyChainId?: string;
+    /**
+     * Bits per status value
+     */
+    bits: 1 | 2 | 4 | 8;
+    /**
+     * Total capacity of the status list
+     */
+    capacity: number;
+    /**
+     * Number of entries in use
+     */
+    usedEntries: number;
+    /**
+     * Number of available entries
+     */
+    availableEntries: number;
+    /**
+     * The public URI for this status list
+     */
+    uri: string;
+    /**
+     * Creation timestamp
+     */
+    createdAt: string;
+    /**
+     * JWT expiration timestamp. Null if JWT has not been generated yet.
+     */
+    expiresAt?: string;
+};
+
+export type CreateStatusListDto = {
+    /**
+     * Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.
+     */
+    credentialConfigurationId?: string;
+    /**
+     * Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.
+     */
+    keyChainId?: string;
+    /**
+     * Bits per status value. More bits allow more status states. Defaults to tenant configuration.
+     */
+    bits?: 1 | 2 | 4 | 8;
+    /**
+     * Maximum number of credential status entries. Defaults to tenant configuration.
+     */
+    capacity?: number;
+};
+
+export type UpdateStatusListDto = {
+    /**
+     * Credential configuration ID to bind this list exclusively to. Set to null to make this a shared list.
+     */
+    credentialConfigurationId?: string | null;
+    /**
+     * Key chain ID to use for signing. Set to null to use the tenant's default StatusList key chain.
+     */
+    keyChainId?: string | null;
+};
+
+export type ClaimsQuery = {
+    id?: string;
+    path: Array<string>;
+    values?: Array<string>;
+};
+
+export type CredentialSetQuery = {
+    options: Array<Array<string>>;
+    required?: boolean;
+};
+
+export type PolicyCredential = {
+    claims?: Array<unknown>;
+    credentials: Array<unknown>;
+    credential_sets?: Array<unknown>;
+};
+
+export type AttestationBasedPolicy = {
+    policy: 'attestationBased';
+    values: Array<{
+        claims?: Array<unknown>;
+        credentials: Array<unknown>;
+        credential_sets?: Array<unknown>;
+    }>;
+};
+
+export type NoneTrustPolicy = {
+    policy: string;
+};
+
+export type AllowListPolicy = {
+    policy: string;
+    values: Array<string>;
+};
+
+export type RootOfTrustPolicy = {
+    policy: string;
+    values: string;
+};
+
+export type Vct = {
+    vct?: string;
+    name?: string;
+    description?: string;
+    extends?: string;
+    'extends#integrity'?: string;
+    schema_uri?: string;
+    'schema_uri#integrity'?: string;
+};
+
+export type IaeActionOpenid4VpPresentation = {
+    /**
+     * Action type discriminator
+     */
+    type: 'openid4vp_presentation';
+    /**
+     * ID of the presentation configuration to use for this step
+     */
+    presentationConfigId: string;
+    label?: string;
+};
+
+export type IaeActionRedirectToWeb = {
+    /**
+     * Action type discriminator
+     */
+    type: 'redirect_to_web';
+    /**
+     * URL to redirect the user to for web-based interaction
+     */
+    url: string;
+    /**
+     * URL where the external service should redirect back after completion. If not provided, the service must call back to the IAE endpoint.
+     */
+    callbackUrl?: string;
+    /**
+     * Description of what the user should do on the web page (for wallet display)
+     */
+    description?: string;
+    label?: string;
+};
+
+export type WebhookEndpointEntity = {
+    /**
+     * Unique identifier for the webhook endpoint
+     */
+    id: string;
+    /**
+     * Tenant identifier
+     */
+    tenantId: string;
+    /**
+     * Webhook endpoint name
+     */
+    name: string;
+    /**
+     * Webhook endpoint description
+     */
+    description?: string;
+    /**
+     * Webhook endpoint URL
+     */
+    url: string;
+    auth: WebHookAuthConfigNone | WebHookAuthConfigHeader;
+    tenant: TenantEntity;
+};
+
+export type SchemaUriEntry = {
+    /**
+     * Credential config ID to resolve and upload its schema content. When set, uri can be omitted and is resolved server-side.
+     */
+    credentialConfigId?: string;
+    /**
+     * Attestation format this schema URI applies to (e.g. dc+sd-jwt, mso_mdoc)
+     */
+    format?: string;
+    /**
+     * URI pointing to the schema document for this format
+     */
+    uri?: string;
+    /**
+     * Schema-format specific metadata (for example { vct: 'urn:example:vct' } for dc+sd-jwt).
+     */
+    meta?: {
+        [key: string]: unknown;
+    };
+};
+
+export type TrustAuthorityEntry = {
+    /**
+     * Trust list ID to resolve from the database. When set, frameworkType, value, and verificationMethod are derived automatically.
+     */
+    trustListId?: string;
+    /**
+     * Trust framework type (ignored when trustListId is set)
+     */
+    frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+    /**
+     * URI of the trust list or trust anchor (ignored when trustListId is set)
+     */
+    value?: string;
+    /**
+     * Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.
+     */
+    verificationMethod?: {
+        [key: string]: unknown;
+    } | string;
+};
+
+export type SchemaMetaConfig = {
+    /**
+     * Optional override for the schema ID (attestation identifier URI). When not set, derived from vct (dc+sd-jwt) or docType (mso_mdoc).
+     */
+    id?: string;
+    /**
+     * Human-readable name of the schema metadata entry. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
+     */
+    name?: string;
+    /**
+     * Schema version in SemVer format
+     */
+    version?: string;
+    /**
+     * URI of the Attestation Rulebook. Required when publishing new schema metadata; optional when linking an existing schema metadata id to a credential config.
+     */
+    rulebookURI?: string;
+    /**
+     * Attestation Level of Security
+     */
+    attestationLoS?: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
+    /**
+     * Cryptographic binding type
+     */
+    bindingType?: 'claim' | 'key' | 'biometric' | 'none';
+    /**
+     * Schema URIs per attestation format. When omitted, the format is derived from the credential config format field.
+     */
+    schemaURIs?: Array<{
+        credentialConfigId?: string;
+        format?: string;
+        uri?: string;
+        meta?: {
+            [key: string]: unknown;
+        };
+    }>;
+    /**
+     * Trust authorities for this attestation schema
+     */
+    trustedAuthorities?: Array<{
+        trustListId?: string;
+        frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+        value?: string;
+        verificationMethod?: {
+            [key: string]: unknown;
+        } | string;
+    }>;
+};
+
+export type EmbeddedDisclosurePolicy = {
+    policy: string;
+};
+
+export type KeyAttestationsRequired = {
+    /**
+     * List of required key storage types (e.g., iso_18045_high, iso_18045_moderate)
+     */
+    key_storage?: Array<string>;
+    /**
+     * List of required user authentication types (e.g., iso_18045_high, iso_18045_moderate)
+     */
+    user_authentication?: Array<string>;
+};
+
+export type CredentialReusePolicy = {
+    id: string;
+    options?: Array<{
+        details: Array<'once_only' | 'limited_time' | 'limited-time' | 'rotating-batch' | 'per-relying-party'>;
+        batch_size?: number;
+        reissue_trigger_unused?: number;
+        reissue_trigger_lifetime_left?: number;
+    }>;
+};
+
+export type DisplayImage = {
+    uri: string;
+};
+
+export type Display = {
+    name: string;
+    description: string;
+    locale: string;
+    background_color?: string;
+    text_color?: string;
+    background_image?: DisplayImage;
+    logo?: DisplayImage;
+};
+
+export type IssuerMetadataCredentialConfig = {
+    /**
+     * Key attestation requirements for JWT proofs for this credential.
+     * When set, this is published in proof_types_supported.jwt.key_attestations_required
+     * for this specific credential configuration.
+     */
+    keyAttestationsRequired?: KeyAttestationsRequired;
+    /**
+     * Supported proof types for this credential configuration. Defaults to ['attestation', 'jwt'].
+     */
+    proofTypesSupported?: Array<'jwt' | 'attestation'>;
+    credentialReusePolicy?: CredentialReusePolicy;
+    format: 'mso_mdoc' | 'dc+sd-jwt';
+    display: Array<Display>;
+    scope?: string;
+    /**
+     * Document type for mDOC credentials (e.g., "org.iso.18013.5.1.mDL").
+     * Only applicable when format is "mso_mdoc".
+     */
+    docType?: string;
+};
+
+export type FieldDisplayDto = {
+    /**
+     * Display name
+     */
+    name: string;
+    /**
+     * Optional display description
+     */
+    description?: string;
+    locale: string;
+};
+
+export type ClaimFieldDefinitionDto = {
+    /**
+     * Path to claim value. For nested child fields this can be relative to the parent path.
+     */
+    path: Array<string | number | null>;
+    /**
+     * Claim value type
+     */
+    type: 'string' | 'number' | 'integer' | 'boolean' | 'object' | 'array';
+    /**
+     * Default value
+     */
+    defaultValue?: string | number | boolean | {
+        [key: string]: unknown;
+    } | Array<unknown> | null;
+    /**
+     * Whether claim is mandatory
+     */
+    mandatory?: boolean;
+    /**
+     * Whether claim is disclosable in SD-JWT
+     */
+    disclosable?: boolean;
+    /**
+     * Namespace for mDOC field. Optional when the namespace is already present as the first path segment.
+     */
+    namespace?: string;
+    display?: Array<{
+        locale: string;
+        name: string;
+        description?: string;
+    }>;
+    /**
+     * Additional JSON schema constraints for this field
+     */
+    constraints?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Optional nested child fields. Child paths may be specified relative to the parent field path.
+     */
+    children?: Array<ClaimFieldDefinitionDto>;
+};
+
+export type KeyChainEntity = {
+    /**
+     * Unique identifier for the key chain.
+     * This is the ID referenced by other entities (e.g., issuance config's signingKeyId).
+     */
+    id: string;
+    /**
+     * Tenant ID for the key chain.
+     */
+    tenantId: string;
+    /**
+     * The tenant that owns this key chain.
+     */
+    tenant: TenantEntity;
+    /**
+     * Human-readable description of the key chain.
+     */
+    description?: string;
+    /**
+     * The purpose/role of this key chain in the system.
+     */
+    usageType: 'access' | 'attestation' | 'trustList' | 'statusList' | 'encrypt';
+    /**
+     * The usage type of the keys (sign or encrypt).
+     */
+    usage: 'sign' | 'encrypt';
+    /**
+     * The KMS provider used for this key chain.
+     * References a configured KMS provider name.
+     */
+    kmsProvider: string;
+    /**
+     * External key identifier for cloud KMS providers.
+     * This field stores the provider-specific key reference for the active signing key.
+     */
+    externalKeyId?: string;
+    /**
+     * External key identifier for cloud KMS providers for the root CA key.
+     * Used when rotating internal-chain key chains backed by external KMS.
+     */
+    rootExternalKeyId?: string;
+    rootJwk?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Root CA certificate in PEM format.
+     * Self-signed certificate for the root CA key.
+     */
+    rootCertificate?: string;
+    activeJwk: {
+        [key: string]: unknown;
+    };
+    /**
+     * Certificate for the active signing key in PEM format.
+     * Either CA-signed (if rootKey exists) or self-signed.
+     */
+    activeCertificate: string;
+    rotationEnabled: boolean;
+    /**
+     * Rotation interval in days. Key material will be rotated after this many days.
+     */
+    rotationIntervalDays?: number;
+    /**
+     * Certificate validity in days when generating new certificates.
+     */
+    certValidityDays?: number;
+    /**
+     * Timestamp of when the key was last rotated.
+     */
+    lastRotatedAt?: string;
+    previousJwk?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Certificate for the previous signing key in PEM format.
+     */
+    previousCertificate?: string;
+    /**
+     * Expiry date for the previous key.
+     * After this date, the previous key should be deleted.
+     */
+    previousKeyExpiry?: string;
+    createdAt: string;
+    /**
+     * The timestamp when the key chain was last updated.
+     */
+    updatedAt: string;
+};
+
+export type CredentialConfig = {
+    /**
+     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
+     */
+    vct?: string | Vct | null;
+    /**
+     * List of IAE actions to execute before credential issuance
+     */
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    /**
+     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
+     *
+     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
+     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
+     *
+     * The underlying TS11 specification is not yet finalized.
+     */
+    schemaMeta?: SchemaMetaConfig;
+    /**
+     * Embedded disclosure policy (discriminated union by `policy`).
+     * The discriminator metadata is retained for OpenAPI schema generation.
+     */
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    id: string;
+    description?: string;
+    /**
+     * The tenant that owns this object.
+     */
+    tenant: TenantEntity;
+    config: IssuerMetadataCredentialConfig;
+    fields: Array<ClaimFieldDefinitionDto>;
+    /**
+     * Reference to the attribute provider used for fetching claims.
+     * Optional: if set, claims will be fetched from this provider during issuance.
+     */
+    attributeProviderId?: string;
+    attributeProvider?: AttributeProviderEntity;
+    /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    webhookEndpoint?: WebhookEndpointEntity;
+    keyBinding?: boolean;
+    /**
+     * Reference to the key chain used for signing.
+     * Optional: if not specified, the default attestation key chain will be used.
+     */
+    keyChainId?: string;
+    keyChain?: KeyChainEntity;
+    statusManagement?: boolean;
+    /**
+     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
+     * or use federation-based trust (iss claim).
+     * Default: "x5c" (federation must be explicitly selected)
+     */
+    sdJwtTrustFormat?: 'x5c' | 'federation';
+    lifeTime?: number;
+};
+
+export type CredentialConfigCreate = {
+    /**
+     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
+     */
+    vct?: string | Vct | null;
+    /**
+     * List of IAE actions to execute before credential issuance
+     */
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    /**
+     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
+     *
+     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
+     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
+     *
+     * The underlying TS11 specification is not yet finalized.
+     */
+    schemaMeta?: SchemaMetaConfig;
+    /**
+     * Embedded disclosure policy (discriminated union by `policy`).
+     * The discriminator metadata is retained for OpenAPI schema generation.
+     */
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    id: string;
+    description?: string;
+    config: IssuerMetadataCredentialConfig;
+    fields: Array<ClaimFieldDefinitionDto>;
+    /**
+     * Reference to the attribute provider used for fetching claims.
+     * Optional: if set, claims will be fetched from this provider during issuance.
+     */
+    attributeProviderId?: string;
+    /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    keyBinding?: boolean;
+    /**
+     * Reference to the key chain used for signing.
+     * Optional: if not specified, the default attestation key chain will be used.
+     */
+    keyChainId?: string;
+    statusManagement?: boolean;
+    /**
+     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
+     * or use federation-based trust (iss claim).
+     * Default: "x5c" (federation must be explicitly selected)
+     */
+    sdJwtTrustFormat?: 'x5c' | 'federation';
+    lifeTime?: number;
+};
+
+export type CredentialConfigUpdate = {
+    /**
+     * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
+     */
+    vct?: string | Vct | null;
+    /**
+     * List of IAE actions to execute before credential issuance
+     */
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    /**
+     * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
+     *
+     * When present, EUDIPLO can generate a SchemaMeta object per the TS11 spec
+     * using the GET /issuer/credentials/:id/schema-metadata endpoint.
+     *
+     * The underlying TS11 specification is not yet finalized.
+     */
+    schemaMeta?: SchemaMetaConfig;
+    /**
+     * Embedded disclosure policy (discriminated union by `policy`).
+     * The discriminator metadata is retained for OpenAPI schema generation.
+     */
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    id?: string;
+    description?: string;
+    config?: IssuerMetadataCredentialConfig;
+    fields?: Array<ClaimFieldDefinitionDto>;
+    /**
+     * Reference to the attribute provider used for fetching claims.
+     * Optional: if set, claims will be fetched from this provider during issuance.
+     */
+    attributeProviderId?: string;
+    /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    keyBinding?: boolean;
+    /**
+     * Reference to the key chain used for signing.
+     * Optional: if not specified, the default attestation key chain will be used.
+     */
+    keyChainId?: string;
+    statusManagement?: boolean;
+    /**
+     * For SD-JWT credentials: determines whether to include certificate chain (x5c)
+     * or use federation-based trust (iss claim).
+     * Default: "x5c" (federation must be explicitly selected)
+     */
+    sdJwtTrustFormat?: 'x5c' | 'federation';
+    lifeTime?: number;
+};
+
+export type TrustListRef = {
+    /**
+     * Managed local trust-list identifier. When provided, verifier material is resolved server-side from the trust list key chain.
+     */
+    trustListId?: string;
+    /**
+     * Trust-list JWT URL. Required for external trust lists when trustListId is not set.
+     */
+    url?: string;
+    /**
+     * JWK used to verify trust-list JWT signatures for external trusted authority values.
+     */
+    verifierKey?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Base64 DER-encoded X.509 certificate used to verify trust-list JWT signatures for external trusted authority values.
+     */
+    verifierX509Der?: string;
+};
+
+export type TrustedAuthorityQueryEtsiTl = {
+    type: 'etsi_tl';
+    values: Array<TrustListRef>;
+};
+
+export type TrustedAuthorityQueryOpenIdFederation = {
+    type: 'openid_federation';
+    values: Array<string>;
+};
+
+export type DcSdJwtCredentialQueryMeta = {
+    /**
+     * VCT identifiers accepted for dc+sd-jwt credentials.
+     */
+    vct_values: Array<string>;
+};
+
+export type MsoMdocCredentialQueryMeta = {
+    /**
+     * Document type identifier accepted for mso_mdoc credentials.
+     */
+    doctype_value: string;
+};
+
+export type MsoMdocClaimsQuery = {
+    /**
+     * Whether the holder should be allowed to retain the claim in an mso_mdoc response.
+     */
+    intent_to_retain?: boolean;
+    id?: string;
+    path: Array<string>;
+    values?: Array<string>;
+};
+
+export type CredentialQueryDcSdJwt = {
+    /**
+     * Credential format discriminator.
+     */
+    format: 'dc+sd-jwt';
+    /**
+     * Ordered alternative claim combinations for this credential query.
+     */
+    claim_sets?: Array<Array<string>>;
+    /**
+     * Trusted authority constraints (discriminated by type) for this credential query.
+     */
+    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
+    /**
+     * dc+sd-jwt schema metadata for the requested credential.
+     */
+    meta: DcSdJwtCredentialQueryMeta;
+    claims?: Array<ClaimsQuery>;
+    id: string;
+    multiple?: boolean;
+};
+
+export type CredentialQueryMsoMdoc = {
+    /**
+     * Credential format discriminator.
+     */
+    format: 'mso_mdoc';
+    /**
+     * Ordered alternative claim combinations for this credential query.
+     */
+    claim_sets?: Array<Array<string>>;
+    /**
+     * Trusted authority constraints (discriminated by type) for this credential query.
+     */
+    trusted_authorities?: Array<TrustedAuthorityQueryEtsiTl | TrustedAuthorityQueryOpenIdFederation>;
+    /**
+     * mso_mdoc document type metadata for the requested credential.
+     */
+    meta: MsoMdocCredentialQueryMeta;
+    claims?: Array<MsoMdocClaimsQuery>;
+    id: string;
+    multiple?: boolean;
+};
+
+export type Dcql = {
+    /**
+     * Format-discriminated credential queries.
+     */
+    credentials?: Array<CredentialQueryDcSdJwt | CredentialQueryMsoMdoc>;
+    credential_sets?: Array<CredentialSetQuery>;
+};
+
+export type RegistrationCertificatePurpose = {
+    lang: string;
+    content: string;
+};
+
+export type RegistrationCertificateBody = {
+    privacy_policy?: string;
+    support_uri?: string;
+    intermediary?: string;
+    purpose?: Array<{
+        lang: string;
+        content: string;
+    }>;
+    credentials?: Array<{
+        [key: string]: unknown;
+    }>;
+    provided_attestations?: Array<{
+        [key: string]: unknown;
+    }>;
+};
+
+export type RegistrationCertificateRequest = {
+    /**
+     * Optional registrar-side certificate identifier.
+     * If provided and still valid, EUDIPLO reuses it instead of creating a new certificate.
+     */
+    id?: string;
+    /**
+     * Registration certificate creation payload.
+     * This is merged with tenant-level registrar defaults when a certificate is created.
+     */
+    body?: RegistrationCertificateBody & {
+        privacy_policy?: string;
+        support_uri?: string;
+        intermediary?: string;
+        purpose?: Array<{
+            lang: string;
+            content: string;
+        }>;
+        credentials?: Array<{
+            [key: string]: unknown;
+        }>;
+        provided_attestations?: Array<{
+            [key: string]: unknown;
+        }>;
+    };
+    /**
+     * Optional pre-existing registration certificate JWT.
+     * If provided, EUDIPLO forwards it as-is and does not create a new one.
+     */
+    jwt?: string;
+};
+
+export type PresentationAttachment = {
+    format: string;
+    data: {
+        [key: string]: unknown;
+    };
+    credential_ids?: Array<string>;
+};
+
+export type PresentationConfig = {
+    /**
+     * Clock skew tolerance for credential JWT time validation, in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Status list verification mode for presentations: strict (default), best_effort, or disabled.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
+     * Server-managed cache of the materialized registration certificate. Read-only; values supplied by clients are ignored.
+     */
+    readonly registrationCertCache?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Unique identifier for the VP request.
+     */
+    id: string;
+    /**
+     * The tenant that owns this object.
+     */
+    tenant: TenantEntity;
+    /**
+     * Description of the presentation configuration.
+     */
+    description?: string;
+    /**
+     * Lifetime how long the presentation request is valid after creation, in seconds.
+     */
+    lifeTime?: number;
+    /**
+     * The DCQL query to be used for the VP request.
+     */
+    dcql_query: Dcql;
+    transaction_data?: Array<TransactionData>;
+    /**
+     * The registration certificate request containing the necessary details.
+     */
+    registration_cert?: RegistrationCertificateRequest;
+    /**
+     * Reference to the webhook endpoint used for notifications.
+     * Optional: if set, notifications will be sent to this endpoint.
+     */
+    webhookEndpointId?: string;
+    /**
+     * The timestamp when the VP request was created.
+     */
+    createdAt: string;
+    /**
+     * The timestamp when the VP request was last updated.
+     */
+    updatedAt: string;
+    /**
+     * Attestation that should be attached
+     */
+    attached?: Array<PresentationAttachment>;
+    /**
+     * Redirect URI to which the user-agent should be redirected after the presentation is completed.
      * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
      */
     redirectUri?: string;
     /**
-     * Optional expected browser origin for DC API key-binding audience.
-     * Example: "http://localhost:8080"
+     * Optional ID of the access certificate to use for signing the presentation request.
+     * If not provided, the default access certificate for the tenant will be used.
+     *
+     * Note: This is intentionally NOT a TypeORM relationship because CertEntity uses
+     * a composite primary key (id + tenantId), and SQLite cannot create foreign keys
+     * that reference only part of a composite primary key. The relationship is handled
+     * at the application level in the service layer.
      */
-    expected_origin?: string;
+    accessKeyChainId?: string;
     /**
-     * Optional transaction data to include in the OID4VP request.
-     * If provided, this will override the transaction_data from the presentation configuration.
+     * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
+     *
+     * When `true`, the DeviceRequest embeds a detached `readerAuth` COSE_Sign1
+     * signed with the tenant's Access key chain (selected by
+     * {@link accessKeyChainId}), letting the wallet cryptographically
+     * authenticate the verifier — the mDOC equivalent of the signed request
+     * object used in the OID4VP flow. Defaults to disabled (null/false).
+     *
+     * Only affects `response_type: "iso-18013-7"` offers.
      */
-    transaction_data?: Array<TransactionData>;
+    readerAuth?: boolean;
+};
+
+export type ResolveIssuerMetadataDto = {
     /**
-     * Optional clock skew tolerance for this presentation offer, in seconds.
-     * If provided, this overrides the presentation configuration for the created session.
+     * Issuer URL or full OpenID4VCI metadata URL to resolve server-side.
+     */
+    issuerUrl: string;
+};
+
+export type CredentialIssuerMetadataDto = {
+    /**
+     * The issuer identifier, typically a URL.
+     */
+    credential_issuer: string;
+    /**
+     * List of authorization servers that support the credential issuer.
+     */
+    authorization_servers: Array<string>;
+    /**
+     * The URL of the credential issuance endpoint.
+     */
+    credential_endpoint: string;
+    /**
+     * The URL of the notification endpoint for credential issuance.
+     */
+    notification_endpoint: string;
+    batch_credential_issuance: {
+        batch_size: number;
+    };
+    /**
+     * Display information for the credentials that are getting issued.
+     */
+    display: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * Object of credentials configurations supported by the issuer.
+     */
+    credential_configurations_supported: {
+        [key: string]: unknown;
+    };
+    /**
+     * The URL of the preferred authorization server.
+     */
+    authorization_server: string;
+    /**
+     * The URL of the status list aggregation endpoint.
+     * Per RFC 9528 Section 9.2, enables verifiers to pre-fetch all status lists for offline validation.
+     */
+    status_list_aggregation_endpoint?: string;
+    credential_response_encryption?: {
+        alg_values_supported: Array<string>;
+        enc_values_supported: Array<string>;
+        encryption_required: boolean;
+    };
+};
+
+export type ResolveSchemaMetadataDto = {
+    /**
+     * Schema metadata URL to resolve server-side. The response must contain a signedJwt field.
+     */
+    schemaMetadataUrl: string;
+};
+
+export type ResolvedSchemaMetadataSchemaUriDto = {
+    /**
+     * Optional format identifier
+     */
+    formatIdentifier?: string;
+    /**
+     * Schema URI
+     */
+    uri: string;
+};
+
+export type ResolvedSchemaMetadataTrustedAuthorityDto = {
+    /**
+     * Trust framework type
+     */
+    frameworkType?: string;
+    /**
+     * Trust-framework-specific value
+     */
+    value?: string;
+    /**
+     * Whether the authority is LoTE
+     */
+    isLoTE?: boolean;
+};
+
+export type ResolvedSchemaMetadataReferenceDto = {
+    /**
+     * Resolved reference format
+     */
+    format: string;
+    /**
+     * Resolved reference URI
+     */
+    uri: string;
+    /**
+     * Integrity hash for the reference
+     */
+    integrity?: string;
+    /**
+     * Additional metadata attached to the reference
+     */
+    meta?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Parsed schema document for the reference
+     */
+    parsedSchema?: {
+        [key: string]: unknown;
+    };
+};
+
+export type ResolvedSchemaMetadataSchemaDto = {
+    /**
+     * Schema metadata identifier
+     */
+    id: string;
+    /**
+     * Schema metadata version
+     */
+    version?: string;
+    /**
+     * Human-readable name
+     */
+    name?: string;
+    /**
+     * Human-readable description
+     */
+    description?: string;
+    /**
+     * Category label
+     */
+    category?: string;
+    /**
+     * Free-form tags
+     */
+    tags?: Array<string>;
+    /**
+     * Supported credential formats
+     */
+    supportedFormats: Array<string>;
+    /**
+     * Resolved schema URIs
+     */
+    schemaURIs: Array<ResolvedSchemaMetadataSchemaUriDto>;
+    /**
+     * Trusted authorities resolved from the schema metadata
+     */
+    trustedAuthorities: Array<ResolvedSchemaMetadataTrustedAuthorityDto>;
+    /**
+     * Resolved referenced schemas
+     */
+    resolvedReferences: Array<ResolvedSchemaMetadataReferenceDto>;
+    /**
+     * Derived DCQL query
+     */
+    dcqlQuery: {
+        [key: string]: unknown;
+    };
+};
+
+export type ResolvedSchemaMetadataResponseDto = {
+    /**
+     * Signed JWT returned by the resolver
+     */
+    signedJwt: string;
+    schema: ResolvedSchemaMetadataSchemaDto;
+};
+
+export type ResolveSchemaMetadataJwtDto = {
+    /**
+     * Signed schema metadata JWT to resolve server-side. The JWT will be verified, resolved, and converted to DCQL.
+     */
+    signedJwt: string;
+};
+
+export type MetadataSchemaDto = {
+    /**
+     * Unique identifier for this schema entry
+     */
+    id: string;
+    /**
+     * The credential format identifier
+     */
+    formatIdentifier: 'dc+sd-jwt' | 'mso_mdoc';
+    /**
+     * URI to the schema definition
+     */
+    uri?: string;
+    /**
+     * Format-specific metadata for the schema entry
+     */
+    meta?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Subresource Integrity hash for the schema
+     */
+    integrity?: string;
+};
+
+export type TrustAuthorityDto = {
+    /**
+     * Unique identifier for this trust authority entry
+     */
+    id: string;
+    /**
+     * Type of trust framework
+     */
+    frameworkType: 'etsi_tl';
+    /**
+     * URI or identifier for the trust list / authority
+     */
+    value: string;
+    /**
+     * Verification method for the trust list signature (e.g., JWK)
+     */
+    verificationMethod?: {
+        [key: string]: unknown;
+    };
+};
+
+export type IssuerOfferEntryDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl: string;
+    /**
+     * Human-readable description explaining when this issuer offer is relevant for the user.
+     */
+    description: string;
+};
+
+export type AccessCertificateRefDto = {
+    id: string;
+    relyingPartyId: string;
+    certificate: string;
+    revoked: string;
+    createdAt: string;
+};
+
+export type SchemaMetadataResponseDto = {
+    /**
+     * The unique, server-assigned identifier (UUID) for the schema metadata
+     */
+    id: string;
+    /**
+     * Version of this schema metadata (SemVer)
+     */
+    version: string;
+    /**
+     * URI of the human-readable Rulebook document
+     */
+    rulebookURI?: string;
+    /**
+     * Subresource Integrity hash for the rulebook URI
+     */
+    rulebookIntegrity?: string;
+    /**
+     * Level of security (LoS) of this attestation
+     */
+    attestationLoS: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
+    /**
+     * Required binding type between attestation and holder
+     */
+    bindingType: 'claim' | 'key' | 'biometric' | 'none';
+    /**
+     * Credential formats in which this attestation is available
+     */
+    supportedFormats: Array<'dc+sd-jwt' | 'mso_mdoc'>;
+    /**
+     * Format-specific schema URIs for this schema metadata
+     */
+    schemaURIs: Array<MetadataSchemaDto>;
+    /**
+     * Trust frameworks / trust anchors applicable to this schema metadata
+     */
+    trustedAuthorities: Array<TrustAuthorityDto>;
+    /**
+     * Domain category for filtering
+     */
+    category?: 'identity' | 'health' | 'finance' | 'education' | 'mobility' | 'employment' | 'other';
+    /**
+     * Free-form tags for filtering and search
+     */
+    tags?: Array<string>;
+    /**
+     * Optional human-readable schema name for UI display and filtering.
+     */
+    displayName?: string;
+    /**
+     * Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.
+     */
+    issuerOffers: Array<IssuerOfferEntryDto>;
+    /**
+     * The original signed JWT
+     */
+    signedJwt: string;
+    /**
+     * Issuer from the JWT (`iss` claim)
+     */
+    issuer: string;
+    /**
+     * The access certificate used to sign this schema metadata
+     */
+    signerCertificate?: AccessCertificateRefDto;
+    /**
+     * Timestamp when the JWT was issued (from the `iat` claim)
+     */
+    issuedAt: string;
+    /**
+     * Server creation timestamp
+     */
+    createdAt: string;
+    /**
+     * Last update timestamp
+     */
+    updatedAt: string;
+    /**
+     * Whether this version is deprecated
+     */
+    deprecated: boolean;
+    /**
+     * Deprecation message shown to consumers
+     */
+    deprecationMessage?: string;
+    /**
+     * The version that supersedes this one
+     */
+    supersededByVersion?: string;
+    /**
+     * Timestamp when this version was marked as deprecated
+     */
+    deprecatedAt?: string;
+};
+
+export type PresentationConfigCreateDto = {
+    /**
+     * Presentation configuration identifier.
+     */
+    id: string;
+    /**
+     * Optional presentation configuration description.
+     */
+    description?: string | null;
+    /**
+     * Presentation request lifetime in seconds.
+     */
+    lifeTime?: number;
+    /**
+     * Clock skew tolerance in seconds.
      */
     skewSeconds?: number;
+    /**
+     * Revocation/status check mode.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
+     * DCQL query defining requested credentials and claims.
+     */
+    dcql_query: {
+        /**
+         * Credential queries requested by the verifier.
+         */
+        credentials: Array<{
+            /**
+             * Credential query identifier.
+             */
+            id: string;
+            /**
+             * Allow multiple matching credentials.
+             */
+            multiple?: boolean;
+            /**
+             * Optional claim set constraints.
+             */
+            claim_sets?: Array<Array<string>>;
+            /**
+             * Optional trusted authority constraints.
+             */
+            trusted_authorities?: Array<{
+                /**
+                 * Trusted authority type discriminator for ETSI trust lists.
+                 */
+                type: 'etsi_tl';
+                /**
+                 * Trust list references for ETSI TL verification.
+                 */
+                values: Array<{
+                    /**
+                     * Optional trust list id reference.
+                     */
+                    trustListId?: string;
+                    /**
+                     * Optional trust list URL reference.
+                     */
+                    url?: string | string;
+                    /**
+                     * Optional verifier key material.
+                     */
+                    verifierKey?: {
+                        [key: string]: unknown;
+                    };
+                    /**
+                     * Optional verifier certificate in DER/base64 form.
+                     */
+                    verifierX509Der?: string;
+                }>;
+            } | {
+                /**
+                 * Trusted authority type discriminator for OpenID Federation.
+                 */
+                type: 'openid_federation';
+                /**
+                 * OpenID Federation authority identifiers.
+                 */
+                values: Array<string>;
+            }>;
+            /**
+             * Credential format discriminator.
+             */
+            format: 'dc+sd-jwt';
+            meta: {
+                /**
+                 * Accepted VCT values.
+                 */
+                vct_values: Array<string>;
+            };
+            /**
+             * Optional claim-level constraints.
+             */
+            claims?: Array<{
+                /**
+                 * Optional claim query id.
+                 */
+                id?: string;
+                /**
+                 * Path to the claim value in presented credentials.
+                 */
+                path: Array<string | number>;
+                /**
+                 * Optional allowed values for the claim.
+                 */
+                values?: Array<string>;
+            }>;
+        } | {
+            /**
+             * Credential query identifier.
+             */
+            id: string;
+            /**
+             * Allow multiple matching credentials.
+             */
+            multiple?: boolean;
+            /**
+             * Optional claim set constraints.
+             */
+            claim_sets?: Array<Array<string>>;
+            /**
+             * Optional trusted authority constraints.
+             */
+            trusted_authorities?: Array<{
+                /**
+                 * Trusted authority type discriminator for ETSI trust lists.
+                 */
+                type: 'etsi_tl';
+                /**
+                 * Trust list references for ETSI TL verification.
+                 */
+                values: Array<{
+                    /**
+                     * Optional trust list id reference.
+                     */
+                    trustListId?: string;
+                    /**
+                     * Optional trust list URL reference.
+                     */
+                    url?: string | string;
+                    /**
+                     * Optional verifier key material.
+                     */
+                    verifierKey?: {
+                        [key: string]: unknown;
+                    };
+                    /**
+                     * Optional verifier certificate in DER/base64 form.
+                     */
+                    verifierX509Der?: string;
+                }>;
+            } | {
+                /**
+                 * Trusted authority type discriminator for OpenID Federation.
+                 */
+                type: 'openid_federation';
+                /**
+                 * OpenID Federation authority identifiers.
+                 */
+                values: Array<string>;
+            }>;
+            /**
+             * Credential format discriminator.
+             */
+            format: 'mso_mdoc';
+            meta: {
+                /**
+                 * Expected mDoc doctype value.
+                 */
+                doctype_value: string;
+            };
+            /**
+             * Optional mDoc claim-level constraints.
+             */
+            claims?: Array<{
+                /**
+                 * Optional claim query id.
+                 */
+                id?: string;
+                /**
+                 * Path to the claim value in presented credentials.
+                 */
+                path: Array<string | number>;
+                /**
+                 * Optional allowed values for the claim.
+                 */
+                values?: Array<string>;
+                /**
+                 * Whether relying party intends to retain the claim.
+                 */
+                intent_to_retain?: boolean;
+            }>;
+        }>;
+        /**
+         * Optional higher-level credential set requirements.
+         */
+        credential_sets?: Array<{
+            /**
+             * Alternative credential query id combinations.
+             */
+            options: Array<Array<string>>;
+            /**
+             * Whether this credential set is mandatory.
+             */
+            required?: boolean;
+        }>;
+    };
+    /**
+     * Optional transaction data descriptors.
+     */
+    transaction_data?: Array<{
+        /**
+         * Transaction data type identifier.
+         */
+        type: string;
+        /**
+         * Credential query ids this transaction data applies to.
+         */
+        credential_ids: Array<string>;
+        [key: string]: unknown;
+    }>;
+    /**
+     * Optional registration certificate request settings.
+     */
+    registration_cert?: {
+        id?: string;
+        body?: {
+            privacy_policy?: string;
+            support_uri?: string;
+            intermediary?: string;
+            purpose?: Array<{
+                lang: string;
+                content: string;
+            }>;
+            credentials?: Array<{
+                [key: string]: unknown;
+            }>;
+            provided_attestations?: Array<{
+                [key: string]: unknown;
+            }>;
+        };
+        jwt?: string;
+    } | null;
+    /**
+     * Optional webhook endpoint id for presentation callbacks.
+     */
+    webhookEndpointId?: string | null;
+    /**
+     * Optional attachments included with presentation requests.
+     */
+    attached?: Array<{
+        /**
+         * Attachment format identifier.
+         */
+        format: string;
+        /**
+         * Attachment payload.
+         */
+        data: unknown;
+        /**
+         * Optional credential query ids bound to this attachment.
+         */
+        credential_ids?: Array<string>;
+    }> | null;
+    /**
+     * Optional redirect URI after presentation completion.
+     */
+    redirectUri?: string | null;
+    /**
+     * Optional key chain id for access token/auth operations.
+     */
+    accessKeyChainId?: string | null;
+    /**
+     * Whether reader authentication is required for mDoc requests.
+     */
+    readerAuth?: boolean | null;
 };
 
-export type FileUploadDto = {
-    file: Blob | File;
+export type PresentationConfigUpdateDto = {
+    /**
+     * Presentation configuration identifier.
+     */
+    id?: string;
+    /**
+     * Optional presentation configuration description.
+     */
+    description?: string | null;
+    /**
+     * Presentation request lifetime in seconds.
+     */
+    lifeTime?: number;
+    /**
+     * Clock skew tolerance in seconds.
+     */
+    skewSeconds?: number;
+    /**
+     * Revocation/status check mode.
+     */
+    statusCheckMode?: 'strict' | 'best_effort' | 'disabled';
+    /**
+     * DCQL query defining requested credentials and claims.
+     */
+    dcql_query?: {
+        /**
+         * Credential queries requested by the verifier.
+         */
+        credentials: Array<{
+            /**
+             * Credential query identifier.
+             */
+            id: string;
+            /**
+             * Allow multiple matching credentials.
+             */
+            multiple?: boolean;
+            /**
+             * Optional claim set constraints.
+             */
+            claim_sets?: Array<Array<string>>;
+            /**
+             * Optional trusted authority constraints.
+             */
+            trusted_authorities?: Array<{
+                /**
+                 * Trusted authority type discriminator for ETSI trust lists.
+                 */
+                type: 'etsi_tl';
+                /**
+                 * Trust list references for ETSI TL verification.
+                 */
+                values: Array<{
+                    /**
+                     * Optional trust list id reference.
+                     */
+                    trustListId?: string;
+                    /**
+                     * Optional trust list URL reference.
+                     */
+                    url?: string | string;
+                    /**
+                     * Optional verifier key material.
+                     */
+                    verifierKey?: {
+                        [key: string]: unknown;
+                    };
+                    /**
+                     * Optional verifier certificate in DER/base64 form.
+                     */
+                    verifierX509Der?: string;
+                }>;
+            } | {
+                /**
+                 * Trusted authority type discriminator for OpenID Federation.
+                 */
+                type: 'openid_federation';
+                /**
+                 * OpenID Federation authority identifiers.
+                 */
+                values: Array<string>;
+            }>;
+            /**
+             * Credential format discriminator.
+             */
+            format: 'dc+sd-jwt';
+            meta: {
+                /**
+                 * Accepted VCT values.
+                 */
+                vct_values: Array<string>;
+            };
+            /**
+             * Optional claim-level constraints.
+             */
+            claims?: Array<{
+                /**
+                 * Optional claim query id.
+                 */
+                id?: string;
+                /**
+                 * Path to the claim value in presented credentials.
+                 */
+                path: Array<string | number>;
+                /**
+                 * Optional allowed values for the claim.
+                 */
+                values?: Array<string>;
+            }>;
+        } | {
+            /**
+             * Credential query identifier.
+             */
+            id: string;
+            /**
+             * Allow multiple matching credentials.
+             */
+            multiple?: boolean;
+            /**
+             * Optional claim set constraints.
+             */
+            claim_sets?: Array<Array<string>>;
+            /**
+             * Optional trusted authority constraints.
+             */
+            trusted_authorities?: Array<{
+                /**
+                 * Trusted authority type discriminator for ETSI trust lists.
+                 */
+                type: 'etsi_tl';
+                /**
+                 * Trust list references for ETSI TL verification.
+                 */
+                values: Array<{
+                    /**
+                     * Optional trust list id reference.
+                     */
+                    trustListId?: string;
+                    /**
+                     * Optional trust list URL reference.
+                     */
+                    url?: string | string;
+                    /**
+                     * Optional verifier key material.
+                     */
+                    verifierKey?: {
+                        [key: string]: unknown;
+                    };
+                    /**
+                     * Optional verifier certificate in DER/base64 form.
+                     */
+                    verifierX509Der?: string;
+                }>;
+            } | {
+                /**
+                 * Trusted authority type discriminator for OpenID Federation.
+                 */
+                type: 'openid_federation';
+                /**
+                 * OpenID Federation authority identifiers.
+                 */
+                values: Array<string>;
+            }>;
+            /**
+             * Credential format discriminator.
+             */
+            format: 'mso_mdoc';
+            meta: {
+                /**
+                 * Expected mDoc doctype value.
+                 */
+                doctype_value: string;
+            };
+            /**
+             * Optional mDoc claim-level constraints.
+             */
+            claims?: Array<{
+                /**
+                 * Optional claim query id.
+                 */
+                id?: string;
+                /**
+                 * Path to the claim value in presented credentials.
+                 */
+                path: Array<string | number>;
+                /**
+                 * Optional allowed values for the claim.
+                 */
+                values?: Array<string>;
+                /**
+                 * Whether relying party intends to retain the claim.
+                 */
+                intent_to_retain?: boolean;
+            }>;
+        }>;
+        /**
+         * Optional higher-level credential set requirements.
+         */
+        credential_sets?: Array<{
+            /**
+             * Alternative credential query id combinations.
+             */
+            options: Array<Array<string>>;
+            /**
+             * Whether this credential set is mandatory.
+             */
+            required?: boolean;
+        }>;
+    };
+    /**
+     * Optional transaction data descriptors.
+     */
+    transaction_data?: Array<{
+        /**
+         * Transaction data type identifier.
+         */
+        type: string;
+        /**
+         * Credential query ids this transaction data applies to.
+         */
+        credential_ids: Array<string>;
+        [key: string]: unknown;
+    }>;
+    /**
+     * Optional registration certificate request settings.
+     */
+    registration_cert?: {
+        id?: string;
+        body?: {
+            privacy_policy?: string;
+            support_uri?: string;
+            intermediary?: string;
+            purpose?: Array<{
+                lang: string;
+                content: string;
+            }>;
+            credentials?: Array<{
+                [key: string]: unknown;
+            }>;
+            provided_attestations?: Array<{
+                [key: string]: unknown;
+            }>;
+        };
+        jwt?: string;
+    } | null;
+    /**
+     * Optional webhook endpoint id for presentation callbacks.
+     */
+    webhookEndpointId?: string | null;
+    /**
+     * Optional attachments included with presentation requests.
+     */
+    attached?: Array<{
+        /**
+         * Attachment format identifier.
+         */
+        format: string;
+        /**
+         * Attachment payload.
+         */
+        data: unknown;
+        /**
+         * Optional credential query ids bound to this attachment.
+         */
+        credential_ids?: Array<string>;
+    }> | null;
+    /**
+     * Optional redirect URI after presentation completion.
+     */
+    redirectUri?: string | null;
+    /**
+     * Optional key chain id for access token/auth operations.
+     */
+    accessKeyChainId?: string | null;
+    /**
+     * Whether reader authentication is required for mDoc requests.
+     */
+    readerAuth?: boolean | null;
 };
 
-export type IssuanceConfigWritable = {
+export type TrustListEntityInfo = {
+    name: string;
+    lang?: string;
+    uri?: string;
+    country?: string;
+    locality?: string;
+    postalCode?: string;
+    streetAddress?: string;
+    contactUri?: string;
+};
+
+export type InternalTrustListEntity = {
+    type: 'internal';
+    issuerKeyChainId: string;
+    revocationKeyChainId: string;
+    info: TrustListEntityInfo;
+};
+
+export type ExternalTrustListEntity = {
+    type: 'external';
+    issuerCertPem: string;
+    revocationCertPem: string;
+    info: TrustListEntityInfo;
+};
+
+export type TrustListCreateDto = {
+    description?: string;
+    /**
+     * The full trust list JSON (generated LoTE structure)
+     */
+    data?: {
+        [key: string]: unknown;
+    };
+    entities: Array<InternalTrustListEntity | ExternalTrustListEntity>;
+    id?: string;
+    keyChainId?: string;
+};
+
+export type TrustList = {
+    /**
+     * Unique identifier for the trust list
+     */
+    id: string;
+    description?: string;
+    /**
+     * The tenant ID for which the VP request is made.
+     */
+    tenantId: string;
+    /**
+     * The tenant that owns this object.
+     */
+    tenant: TenantEntity;
+    keyChainId: string;
+    keyChain: KeyChainEntity;
+    /**
+     * The full trust list JSON (generated LoTE structure)
+     */
+    data?: {
+        [key: string]: unknown;
+    };
+    /**
+     * The original entity configuration used to create this trust list.
+     * Stored for round-tripping when editing.
+     */
+    entityConfig?: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * The sequence number for versioning (incremented on updates)
+     */
+    sequenceNumber: number;
+    /**
+     * The signed JWT representation of this trust list
+     */
+    jwt: string;
+    createdAt: string;
+    updatedAt: string;
+};
+
+export type TrustListVersion = {
+    id: string;
+    trustListId: string;
+    trustList: TrustList;
+    tenantId: string;
+    /**
+     * The sequence number at the time this version was created
+     */
+    sequenceNumber: number;
+    /**
+     * The full trust list JSON at this version
+     */
+    data: {
+        [key: string]: unknown;
+    };
+    /**
+     * The entity configuration at this version
+     */
+    entityConfig?: {
+        [key: string]: unknown;
+    };
+    /**
+     * The signed JWT at this version
+     */
+    jwt: string;
+    createdAt: string;
+};
+
+export type TrustListCacheStatsDto = {
+    /**
+     * Whether the trust list cache is populated
+     */
+    hasCache: boolean;
+};
+
+export type StatusListCacheStatsDto = {
+    /**
+     * Number of cached status list entries
+     */
+    size: number;
+    /**
+     * Number of cached JWT status list entries
+     */
+    jwtCacheSize: number;
+    /**
+     * Cached status list URIs
+     */
+    uris: Array<string>;
+};
+
+export type CacheStatsResponseDto = {
+    trustListCache: TrustListCacheStatsDto;
+    statusListCache: StatusListCacheStatsDto;
+};
+
+export type AuthenticationMethodNone = {
+    method: 'none';
+};
+
+export type AuthenticationUrlConfig = {
+    /**
+     * The URL used in the OID4VCI authorized code flow.
+     * This URL is where users will be redirected for authentication.
+     */
+    url: string;
+    /**
+     * Optional webhook configuration for authentication callbacks
+     */
+    webhook?: WebhookConfig & {
+        url?: string;
+        auth?: {
+            type: 'none';
+        } | {
+            type: 'apiKey';
+            config: {
+                headerName: string;
+                value: string;
+            };
+        };
+        includeRawTokensFor?: Array<string>;
+    };
+};
+
+export type AuthenticationMethodAuth = {
+    method: 'auth';
+    config: AuthenticationUrlConfig & {
+        url?: string;
+        webhook?: {
+            url: string;
+            auth: {
+                type: 'none';
+            } | {
+                type: 'apiKey';
+                config: {
+                    headerName: string;
+                    value: string;
+                };
+            };
+            includeRawTokensFor?: Array<string>;
+        };
+    };
+};
+
+export type PresentationDuringIssuanceConfig = {
+    /**
+     * Link to the presentation configuration that is relevant for the issuance process
+     */
+    type: string;
+};
+
+export type AuthenticationMethodPresentation = {
+    method: 'presentationDuringIssuance';
+    config: PresentationDuringIssuanceConfig & {
+        type?: string;
+    };
+};
+
+export type ManagedAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'external' | 'oid4vp' | 'chained' | 'built-in';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
+     * Human-friendly label for the UI
+     */
+    label?: string;
+    /**
+     * Whether this managed authorization server is enabled
+     */
+    enabled?: boolean;
+};
+
+export type ExternalAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'external';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
+     * Issuer URL for external authorization servers
+     */
+    issuer: string;
+    sessionBinding?: {
+        method: string;
+        claim: string;
+    };
+    label?: string;
+    enabled?: boolean;
+};
+
+export type ChainedAsTokenConfig = {
+    /**
+     * Access token lifetime in seconds
+     */
+    lifetimeSeconds?: number;
+    /**
+     * Key ID for token signing
+     */
+    signingKeyId?: string;
+    /**
+     * Whether refresh tokens should be issued
+     */
+    refreshTokenEnabled?: boolean;
+    /**
+     * Refresh token lifetime in seconds
+     */
+    refreshTokenExpiresInSeconds?: number;
+};
+
+export type Oid4VpAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'oid4vp';
+    /**
+     * Stable identifier used in the AS URL path
+     */
+    id: string;
+    /**
+     * Presentation configuration ID to use for OID4VP
+     */
+    presentationConfigId: string;
+    /**
+     * Immediately redirect the browser into the wallet OID4VP request
+     */
+    immediateWalletRedirect?: boolean;
+    /**
+     * Token configuration for this authorization server
+     */
+    token?: ChainedAsTokenConfig & {
+        lifetimeSeconds?: number;
+        signingKeyId?: string;
+        refreshTokenEnabled?: boolean;
+        refreshTokenExpiresInSeconds?: number;
+    };
+    /**
+     * Require DPoP for token requests issued by this authorization server
+     */
+    requireDPoP?: boolean;
+    label?: string;
+    enabled?: boolean;
+};
+
+export type UpstreamOidcConfig = {
+    /**
+     * The OIDC issuer URL of the upstream provider
+     */
+    issuer: string;
+    /**
+     * The client ID registered with the upstream provider
+     */
+    clientId: string;
+    /**
+     * The client secret for confidential clients
+     */
+    clientSecret?: string;
+    /**
+     * Scopes to request from the upstream provider
+     */
+    scopes?: Array<string>;
+};
+
+export type ChainedAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'chained';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
+     * Upstream OIDC provider configuration for chained mode
+     */
+    upstream: UpstreamOidcConfig & {
+        issuer?: string;
+        clientId?: string;
+        clientSecret?: string;
+        scopes?: Array<string>;
+    };
+    /**
+     * Token configuration for this authorization server
+     */
+    token?: ChainedAsTokenConfig & {
+        lifetimeSeconds?: number;
+        signingKeyId?: string;
+        refreshTokenEnabled?: boolean;
+        refreshTokenExpiresInSeconds?: number;
+    };
+    /**
+     * Require DPoP for token requests issued by this authorization server
+     */
+    requireDPoP?: boolean;
+    label?: string;
+    enabled?: boolean;
+};
+
+export type BuiltInAuthorizationServerConfig = {
+    /**
+     * Authorization server implementation type
+     */
+    type: 'built-in';
+    /**
+     * Unique identifier for this authorization server
+     */
+    id: string;
+    /**
+     * Token configuration for this authorization server
+     */
+    token?: ChainedAsTokenConfig & {
+        lifetimeSeconds?: number;
+        signingKeyId?: string;
+        refreshTokenEnabled?: boolean;
+        refreshTokenExpiresInSeconds?: number;
+    };
+    /**
+     * Require DPoP for token requests issued by this authorization server
+     */
+    requireDPoP?: boolean;
+    label?: string;
+    enabled?: boolean;
+};
+
+export type WalletProviderTrustListRefDto = {
+    url: string;
+    /**
+     * JWK used to verify the trust-list JWT signature.
+     */
+    verifierKey?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.
+     */
+    verifierX509Der?: string;
+};
+
+export type FederationTrustAnchorConfig = {
+    /**
+     * Entity identifier (sub) of the federation trust anchor.
+     */
+    entityId: string;
+    /**
+     * Federation endpoint URL for the trust anchor entity configuration.
+     */
+    entityConfigurationUri: string;
+};
+
+export type FederationConfig = {
+    /**
+     * Role this tenant plays in the OpenID Federation topology.
+     */
+    role?: 'trust_anchor' | 'intermediate' | 'leaf';
+    /**
+     * Trust decision strategy when both LoTE trust lists and OpenID Federation are configured.
+     */
+    mode?: 'federation-only' | 'hybrid';
+    /**
+     * Entity identifier of this issuer/verifier in the federation.
+     */
+    entityId?: string;
+    /**
+     * Whether federation checks are enforced for upstream metadata and signer trust decisions.
+     */
+    enforceSigningPolicy?: boolean;
+    /**
+     * Cache TTL in seconds for federation entity statements and trust chain results.
+     */
+    cacheTtlSeconds?: number;
+    /**
+     * Configured federation trust anchors.
+     */
+    trustAnchors: Array<{
+        entityId: string;
+        entityConfigurationUri: string;
+    }>;
+};
+
+export type IssuerRegistrationCertificateConfig = {
+    /**
+     * Enable inclusion of a registration certificate in credential issuer metadata.
+     */
+    enabled?: boolean;
+    /**
+     * import: use an existing JWT, generate: create via registrar using attestation data derived from configured credential configurations.
+     */
+    mode?: 'import' | 'generate';
+    /**
+     * Existing registration certificate JWT used when mode is import.
+     */
+    jwt?: string;
+    /**
+     * Privacy policy URL used when generating a registration certificate (optional if registrar defaults are configured).
+     */
+    privacyPolicy?: string;
+    /**
+     * Support URI used when generating a registration certificate (optional if registrar defaults are configured).
+     */
+    supportUri?: string;
+};
+
+export type IssuerRegistrationCertificateCache = {
+    /**
+     * Cached registration certificate JWT generated by EUDIPLO.
+     */
+    readonly jwt?: string;
+    /**
+     * Config fingerprint used to detect cache invalidation.
+     */
+    readonly fingerprint?: string;
+    /**
+     * JWT iat claim, seconds since epoch.
+     */
+    readonly issuedAt?: number;
+    /**
+     * JWT exp claim, seconds since epoch.
+     */
+    readonly expiresAt?: number;
+};
+
+export type DisplayLogo = {
+    uri: string;
+    alt_text?: string;
+};
+
+export type DisplayInfo = {
+    name?: string;
+    locale?: string;
+    logo?: DisplayLogo & {
+        uri?: string;
+        alt_text?: string;
+        [key: string]: unknown;
+    };
+};
+
+export type IssuanceConfig = {
     /**
      * Trust lists containing trusted wallet providers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
@@ -3748,6 +4276,14 @@ export type IssuanceConfigWritable = {
      */
     registrationCertificate?: IssuerRegistrationCertificateConfig;
     /**
+     * Server-managed cache for generated issuer registration certificates.
+     */
+    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
+    /**
+     * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -3755,10 +4291,6 @@ export type IssuanceConfigWritable = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Whether the issuer notification endpoint is enabled and advertised in metadata.
-     */
-    notificationEndpointEnabled?: boolean;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -3793,7 +4325,7 @@ export type IssuanceConfigWritable = {
     updatedAt: string;
 };
 
-export type UpdateIssuanceDtoWritable = {
+export type UpdateIssuanceDto = {
     /**
      * Trust lists containing trusted wallet providers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
@@ -3818,6 +4350,14 @@ export type UpdateIssuanceDtoWritable = {
      */
     registrationCertificate?: IssuerRegistrationCertificateConfig;
     /**
+     * Server-managed cache for generated issuer registration certificates.
+     */
+    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
+    /**
+     * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
      * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
      */
     credentialResponseEncryption?: boolean;
@@ -3825,10 +4365,6 @@ export type UpdateIssuanceDtoWritable = {
      * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
      */
     credentialRequestEncryption?: boolean;
-    /**
-     * Whether the issuer notification endpoint is enabled and advertised in metadata.
-     */
-    notificationEndpointEnabled?: boolean;
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
@@ -3849,6 +4385,687 @@ export type UpdateIssuanceDtoWritable = {
      */
     walletAttestationRequired?: boolean;
     display?: Array<DisplayInfo>;
+};
+
+export type SignSchemaMetaConfigDto = {
+    /**
+     * The schema metadata configuration to submit. Registrar builds and signs the final schema metadata.
+     */
+    config: SchemaMetaConfig & {
+        id?: string;
+        name?: string;
+        version?: string;
+        rulebookURI?: string;
+        attestationLoS?: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
+        bindingType?: 'claim' | 'key' | 'biometric' | 'none';
+        schemaURIs?: Array<{
+            credentialConfigId?: string;
+            format?: string;
+            uri?: string;
+            meta?: {
+                [key: string]: unknown;
+            };
+        }>;
+        trustedAuthorities?: Array<{
+            trustListId?: string;
+            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+            value?: string;
+            verificationMethod?: {
+                [key: string]: unknown;
+            } | string;
+        }>;
+    };
+    /**
+     * ID of the credential config to link back after submission. When provided, schemaMeta.id on the credential config is updated with the reserved attestation ID.
+     */
+    credentialConfigId?: string;
+    /**
+     * How to update credential config pinning after publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to a different schema id.
+     */
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
+};
+
+export type SignVersionSchemaMetaConfigDto = {
+    /**
+     * The schema metadata configuration to submit as a new version. Must include the existing id.
+     */
+    config: SchemaMetaConfig & {
+        id?: string;
+        name?: string;
+        version?: string;
+        rulebookURI?: string;
+        attestationLoS?: 'iso_18045_high' | 'iso_18045_moderate' | 'iso_18045_enhanced-basic' | 'iso_18045_basic';
+        bindingType?: 'claim' | 'key' | 'biometric' | 'none';
+        schemaURIs?: Array<{
+            credentialConfigId?: string;
+            format?: string;
+            uri?: string;
+            meta?: {
+                [key: string]: unknown;
+            };
+        }>;
+        trustedAuthorities?: Array<{
+            trustListId?: string;
+            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+            value?: string;
+            verificationMethod?: {
+                [key: string]: unknown;
+            } | string;
+        }>;
+    };
+    /**
+     * Optional credential config to update pinning for after successful version publish.
+     */
+    credentialConfigId?: string;
+    /**
+     * How to update credential config pinning after version publish. keep_current: do not change existing pin (unless empty). update_to_new_version: update pinned version under current id. replace_id: repoint pin to config.id.
+     */
+    pinMode?: 'keep_current' | 'update_to_new_version' | 'replace_id';
+};
+
+export type VocabularyEntryDto = {
+    /**
+     * Stable machine-readable value to submit in schema metadata category/tags fields.
+     */
+    code: string;
+    /**
+     * Display label for UI rendering.
+     */
+    label: string;
+    /**
+     * Vocabulary lifecycle status.
+     */
+    status: 'active' | 'deprecated';
+    /**
+     * Replacement code when status is deprecated.
+     */
+    replacedBy?: string;
+};
+
+export type SchemaMetadataVocabulariesDto = {
+    /**
+     * Vocabulary publication version for cache invalidation.
+     */
+    version: string;
+    /**
+     * Allowed category values that can be used when updating schema metadata category.
+     */
+    categories: Array<VocabularyEntryDto>;
+    /**
+     * Allowed tag values that can be used when updating schema metadata tags.
+     */
+    tags: Array<VocabularyEntryDto>;
+};
+
+export type UpdateIssuerOfferDto = {
+    /**
+     * URL where the user can receive a credential offer from this issuer.
+     */
+    credentialOfferUrl?: string;
+    /**
+     * Human-readable description to help users choose the right issuer.
+     */
+    description?: string;
+};
+
+export type UpdateSchemaMetadataDto = {
+    /**
+     * Domain category for filtering
+     */
+    category?: 'identity' | 'health' | 'finance' | 'education' | 'mobility' | 'employment' | 'other';
+    /**
+     * Predefined tags for filtering and search
+     */
+    tags?: Array<'pid' | 'eudi' | 'kyc' | 'aml' | 'age-verification' | 'residency' | 'membership' | 'education' | 'employment' | 'mobility'>;
+    /**
+     * Optional human-readable schema name for UI display and search
+     */
+    displayName?: string;
+    /**
+     * Issuer offer entries shown to users, each with credential-offer URL and description
+     */
+    issuerOffers?: Array<{
+        credentialOfferUrl?: string;
+        description?: string;
+    }>;
+};
+
+export type DeprecateSchemaMetadataDto = {
+    /**
+     * Whether to mark this version as deprecated
+     */
+    deprecated: boolean;
+    /**
+     * Deprecation message shown to consumers
+     */
+    message?: string;
+    /**
+     * The version that supersedes this one
+     */
+    supersededByVersion?: string;
+};
+
+export type CreateWebhookEndpointDto = {
+    /**
+     * Unique webhook endpoint identifier.
+     */
+    id: string;
+    /**
+     * Display name of the webhook endpoint.
+     */
+    name: string;
+    /**
+     * Optional webhook endpoint description.
+     */
+    description?: string | null;
+    /**
+     * Destination URL for webhook delivery.
+     */
+    url: string;
+    /**
+     * Authentication configuration applied to outgoing webhook requests.
+     */
+    auth: {
+        /**
+         * Disable webhook authentication.
+         */
+        type: 'none';
+    } | {
+        /**
+         * Use API key authentication for webhook requests.
+         */
+        type: 'apiKey';
+        /**
+         * API key webhook authentication settings.
+         */
+        config: {
+            /**
+             * HTTP header name for the API key.
+             */
+            headerName: string;
+            /**
+             * API key value sent with webhook requests.
+             */
+            value: string;
+        };
+    };
+};
+
+export type UpdateWebhookEndpointDto = {
+    /**
+     * Unique webhook endpoint identifier.
+     */
+    id?: string;
+    /**
+     * Display name of the webhook endpoint.
+     */
+    name?: string;
+    /**
+     * Optional webhook endpoint description.
+     */
+    description?: string | null;
+    /**
+     * Destination URL for webhook delivery.
+     */
+    url?: string;
+    /**
+     * Authentication configuration applied to outgoing webhook requests.
+     */
+    auth?: {
+        /**
+         * Disable webhook authentication.
+         */
+        type: 'none';
+    } | {
+        /**
+         * Use API key authentication for webhook requests.
+         */
+        type: 'apiKey';
+        /**
+         * API key webhook authentication settings.
+         */
+        config: {
+            /**
+             * HTTP header name for the API key.
+             */
+            headerName: string;
+            /**
+             * API key value sent with webhook requests.
+             */
+            value: string;
+        };
+    };
+};
+
+export type DeferredCredentialRequestDto = {
+    /**
+     * The transaction identifier previously returned by the Credential Endpoint
+     */
+    transaction_id: string;
+};
+
+export type NotificationRequestDto = {
+    notification_id: string;
+    event: 'credential_accepted' | 'credential_failure' | 'credential_deleted';
+};
+
+export type OfferResponse = {
+    uri: string;
+    /**
+     * URI for cross-device flows (no redirect after completion)
+     */
+    crossDeviceUri?: string;
+    session: string;
+};
+
+export type CompleteDeferredDto = {
+    /**
+     * Claims to include in the credential. The structure should match the credential configuration's expected claims.
+     */
+    claims: {
+        [key: string]: unknown;
+    };
+};
+
+export type DeferredOperationResponse = {
+    /**
+     * The transaction ID
+     */
+    transactionId: string;
+    /**
+     * The new status of the transaction
+     */
+    status: 'pending' | 'ready' | 'retrieved' | 'expired' | 'failed';
+    /**
+     * Optional message
+     */
+    message?: string;
+};
+
+export type FailDeferredDto = {
+    /**
+     * Optional error message explaining why the issuance failed
+     */
+    error?: string;
+};
+
+export type EcPublic = {
+    /**
+     * The key type, which is always 'EC' for Elliptic Curve keys.
+     */
+    kty: string;
+    /**
+     * The algorithm intended for use with the key, such as 'ES256'.
+     */
+    crv: string;
+    /**
+     * The x coordinate of the EC public key.
+     */
+    x: string;
+    /**
+     * The y coordinate of the EC public key.
+     */
+    y: string;
+};
+
+export type JwksResponseDto = {
+    /**
+     * An array of EC public keys in JWK format.
+     */
+    keys: Array<EcPublic>;
+};
+
+export type AuthorizationResponse = {
+    /**
+     * The response string containing the authorization details (JWE-encrypted VP token).
+     * Required for success responses, absent for error responses.
+     */
+    response?: string;
+    /**
+     * When set to true, the authorization response will be sent to the client.
+     */
+    sendResponse?: boolean;
+    error?: string;
+    /**
+     * Human-readable description of the error.
+     */
+    error_description?: string;
+    /**
+     * URI with additional information about the error.
+     */
+    error_uri?: string;
+    /**
+     * State value from the authorization request (for correlation).
+     */
+    state?: string;
+};
+
+export type Object = {
+    [key: string]: unknown;
+};
+
+export type ParResponseDto = {
+    /**
+     * The request URI for the Pushed Authorization Request.
+     */
+    request_uri: string;
+    /**
+     * The expiration time for the request URI in seconds.
+     */
+    expires_in: number;
+};
+
+export type InteractiveAuthorizationRequestDto = {
+    /**
+     * Response type (for initial request)
+     */
+    response_type?: string;
+    /**
+     * Client identifier (for initial request)
+     */
+    client_id?: string;
+    /**
+     * Comma-separated list of supported interaction types (for initial request)
+     */
+    interaction_types_supported?: string;
+    /**
+     * Redirect URI (for initial request)
+     */
+    redirect_uri?: string;
+    /**
+     * OAuth scope
+     */
+    scope?: string;
+    /**
+     * PKCE code challenge
+     */
+    code_challenge?: string;
+    /**
+     * PKCE code challenge method
+     */
+    code_challenge_method?: string;
+    /**
+     * Authorization details
+     */
+    authorization_details?: Array<{
+        type: string;
+        format?: string;
+        vct?: string;
+        credential_configuration_id?: string;
+    }> | string;
+    /**
+     * State parameter
+     */
+    state?: string;
+    /**
+     * Issuer state from credential offer
+     */
+    issuer_state?: string;
+    /**
+     * Auth session identifier (for follow-up request)
+     */
+    auth_session?: string;
+    /**
+     * OpenID4VP response (for follow-up request)
+     */
+    openid4vp_response?: string;
+    /**
+     * PKCE code verifier (for follow-up request)
+     */
+    code_verifier?: string;
+    /**
+     * JAR request JWT (by value)
+     */
+    request?: string;
+    /**
+     * JAR request URI (by reference)
+     */
+    request_uri?: string;
+};
+
+export type InteractiveAuthorizationCodeResponseDto = {
+    /**
+     * Response status
+     */
+    status: string;
+    /**
+     * Authorization code
+     */
+    code: string;
+};
+
+export type InteractiveAuthorizationErrorResponseDto = {
+    /**
+     * OAuth error code
+     */
+    error: string;
+    /**
+     * Human-readable error description
+     */
+    error_description?: string;
+};
+
+export type ChainedAsParResponseDto = {
+    /**
+     * The request URI to use at the authorization endpoint
+     */
+    request_uri: string;
+    /**
+     * The lifetime of the request URI in seconds
+     */
+    expires_in: number;
+};
+
+export type ChainedAsErrorResponseDto = {
+    /**
+     * Error code
+     */
+    error: string;
+    /**
+     * Human-readable error description
+     */
+    error_description?: string;
+};
+
+export type ChainedAsTokenRequestDto = {
+    /**
+     * Grant type ('authorization_code' or 'refresh_token')
+     */
+    grant_type: string;
+    /**
+     * Authorization code received in the callback (authorization_code grant)
+     */
+    code?: string;
+    /**
+     * Refresh token (refresh_token grant)
+     */
+    refresh_token?: string;
+    /**
+     * Client identifier
+     */
+    client_id?: string;
+    /**
+     * Redirect URI (must match the one used in PAR)
+     */
+    redirect_uri?: string;
+    /**
+     * PKCE code verifier
+     */
+    code_verifier?: string;
+};
+
+export type ChainedAsTokenResponseDto = {
+    /**
+     * The access token
+     */
+    access_token: string;
+    /**
+     * Token type (Bearer or DPoP)
+     */
+    token_type: string;
+    /**
+     * Token lifetime in seconds
+     */
+    expires_in: number;
+    /**
+     * Scope granted
+     */
+    scope?: string;
+    /**
+     * Authorized credential configurations
+     */
+    authorization_details?: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * C_NONCE for credential request
+     */
+    c_nonce?: string;
+    /**
+     * C_NONCE lifetime in seconds
+     */
+    c_nonce_expires_in?: number;
+    /**
+     * Refresh token (issued when refresh tokens are enabled)
+     */
+    refresh_token?: string;
+};
+
+export type ChainedAsParRequestDto = {
+    /**
+     * OAuth response type (must be 'code')
+     */
+    response_type: string;
+    /**
+     * Client identifier (wallet identifier)
+     */
+    client_id: string;
+    /**
+     * URI to redirect the wallet after authorization
+     */
+    redirect_uri: string;
+    /**
+     * PKCE code challenge
+     */
+    code_challenge?: string;
+    /**
+     * PKCE code challenge method (e.g., S256)
+     */
+    code_challenge_method?: string;
+    /**
+     * State parameter (returned in redirect)
+     */
+    state?: string;
+    /**
+     * Scope requested
+     */
+    scope?: string;
+    /**
+     * Issuer state from credential offer
+     */
+    issuer_state?: string;
+    /**
+     * Authorization details
+     */
+    authorization_details?: Array<string | Array<{
+        [key: string]: unknown;
+    }>>;
+};
+
+export type PresentationRequest = {
+    /**
+     * Webhook configuration to receive the response.
+     * If not provided, the configured webhook from the configuration will be used.
+     */
+    webhook?: WebhookConfig & {
+        url?: string;
+        auth?: {
+            type: 'none';
+        } | {
+            type: 'apiKey';
+            config: {
+                headerName: string;
+                value: string;
+            };
+        };
+        includeRawTokensFor?: Array<string>;
+    };
+    /**
+     * The type of response expected from the presentation request.
+     */
+    response_type: 'uri' | 'iso-18013-7' | 'dc-api';
+    /**
+     * Identifier of the presentation configuration
+     */
+    requestId: string;
+    /**
+     * Optional redirect URI to which the user-agent should be redirected after the presentation is completed.
+     * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
+     */
+    redirectUri?: string;
+    /**
+     * Optional expected browser origin for DC API key-binding audience.
+     * Example: "http://localhost:8080"
+     */
+    expected_origin?: string;
+    /**
+     * Optional transaction data to include in the OID4VP request.
+     * If provided, this will override the transaction_data from the presentation configuration.
+     */
+    transaction_data?: Array<{
+        [key: string]: unknown;
+    }>;
+    /**
+     * Optional clock skew tolerance for this presentation offer, in seconds.
+     * If provided, this overrides the presentation configuration for the created session.
+     */
+    skewSeconds?: number;
+};
+
+export type FileUploadDto = {
+    file: Blob | File;
+};
+
+export type StoredObjectResponseDto = {
+    /**
+     * Canonical storage key
+     */
+    key: string;
+    /**
+     * ETag for the stored object
+     */
+    etag?: string;
+    /**
+     * Stored size in bytes
+     */
+    size?: number;
+    /**
+     * Public or presigned URL
+     */
+    url?: string;
+    /**
+     * MIME type of the stored object
+     */
+    contentType?: string;
+    /**
+     * Object metadata
+     */
+    metadata?: {
+        [key: string]: string;
+    };
+};
+
+export type ConfigResourceMetadataEntity = {
+    tenantId: string;
+    kind: 'Tenant' | 'Client' | 'KmsConfig' | 'KeyChain' | 'RegistrarConfig' | 'IssuanceConfig' | 'CredentialConfig' | 'PresentationConfig' | 'AttributeProvider' | 'WebhookEndpoint' | 'TrustList' | 'StatusList';
+    resourceId: string;
+    ownership: 'unmanaged' | 'file-managed';
+    generation: number;
+    source?: string;
+    sourceHash?: string;
+    lastAppliedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type PresentationConfigWritable = {
@@ -3931,6 +5148,134 @@ export type PresentationConfigWritable = {
     readerAuth?: boolean;
 };
 
+export type IssuanceConfigWritable = {
+    /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
+    /**
+     * Key ID for signing access tokens. If unset, the default signing key is used.
+     */
+    signingKeyId?: string;
+    /**
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
+     */
+    authorizationServers: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
+    /**
+     * Optional OpenID Federation configuration used for trust evaluation.
+     * When omitted, trust checks rely on existing LoTE trust-list behavior.
+     */
+    federation?: FederationConfig;
+    /**
+     * Optional registration certificate configuration for issuer metadata (`issuer_info`).
+     * Supports importing an existing JWT or generating one via registrar.
+     */
+    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    /**
+     * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
+     * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
+     */
+    credentialResponseEncryption?: boolean;
+    /**
+     * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
+     */
+    credentialRequestEncryption?: boolean;
+    /**
+     * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
+     */
+    txCodeMaxAttempts?: number;
+    /**
+     * The tenant that owns this object.
+     */
+    tenant: TenantEntity;
+    /**
+     * Value to determine the amount of credentials that are issued in a batch.
+     * Default is 1.
+     */
+    batchSize?: number;
+    /**
+     * Indicates whether DPoP is required for the issuance process. Default value is true.
+     */
+    dPopRequired?: boolean;
+    /**
+     * Indicates whether wallet attestation is required for the token endpoint.
+     * When enabled, wallets must provide OAuth-Client-Attestation headers.
+     * Default value is false.
+     */
+    walletAttestationRequired?: boolean;
+    display: Array<DisplayInfo>;
+    /**
+     * The timestamp when the VP request was created.
+     */
+    createdAt: string;
+    /**
+     * The timestamp when the VP request was last updated.
+     */
+    updatedAt: string;
+};
+
+export type UpdateIssuanceDtoWritable = {
+    /**
+     * Trust lists containing trusted wallet providers.
+     * Each entry MUST include either `verifierKey` or `verifierX509Der`.
+     */
+    walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
+    /**
+     * Key ID for signing access tokens. If unset, the default signing key is used.
+     */
+    signingKeyId?: string;
+    /**
+     * Dedicated managed authorization servers hosted by this issuer. At least one entry is required.
+     */
+    authorizationServers?: Array<ExternalAuthorizationServerConfig | Oid4VpAuthorizationServerConfig | ChainedAuthorizationServerConfig | BuiltInAuthorizationServerConfig>;
+    /**
+     * Optional OpenID Federation configuration used for trust evaluation.
+     * When omitted, trust checks rely on existing LoTE trust-list behavior.
+     */
+    federation?: FederationConfig;
+    /**
+     * Optional registration certificate configuration for issuer metadata (`issuer_info`).
+     * Supports importing an existing JWT or generating one via registrar.
+     */
+    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    /**
+     * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
+     */
+    notificationEndpointEnabled?: boolean;
+    /**
+     * Whether `credential_response_encryption` should be advertised in the credential issuer metadata.
+     */
+    credentialResponseEncryption?: boolean;
+    /**
+     * Whether `credential_request_encryption` should be advertised in the credential issuer metadata.
+     */
+    credentialRequestEncryption?: boolean;
+    /**
+     * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
+     */
+    txCodeMaxAttempts?: number;
+    /**
+     * Value to determine the amount of credentials that are issued in a batch.
+     * Default is 1.
+     */
+    batchSize?: number;
+    /**
+     * Indicates whether DPoP is required for the issuance process. Default value is true.
+     */
+    dPopRequired?: boolean;
+    /**
+     * Indicates whether wallet attestation is required for the token endpoint.
+     * When enabled, wallets must provide OAuth-Client-Attestation headers.
+     * Default value is false.
+     */
+    walletAttestationRequired?: boolean;
+    display?: Array<DisplayInfo>;
+};
+
 export type ObjectWritable = {
     [key: string]: unknown;
 };
@@ -3946,8 +5291,10 @@ export type AppControllerGetVersionResponses = {
     /**
      * Service version info
      */
-    200: unknown;
+    200: VersionResponseDto;
 };
+
+export type AppControllerGetVersionResponse = AppControllerGetVersionResponses[keyof AppControllerGetVersionResponses];
 
 export type AppControllerGetFrontendConfigData = {
     body?: never;
@@ -3976,8 +5323,10 @@ export type AuthControllerGetOAuth2TokenErrors = {
     /**
      * Invalid client credentials
      */
-    401: unknown;
+    401: OAuthTokenErrorResponseDto;
 };
+
+export type AuthControllerGetOAuth2TokenError = AuthControllerGetOAuth2TokenErrors[keyof AuthControllerGetOAuth2TokenErrors];
 
 export type AuthControllerGetOAuth2TokenResponses = {
     /**
@@ -3996,7 +5345,7 @@ export type TenantControllerGetTenantsData = {
 };
 
 export type TenantControllerGetTenantsResponses = {
-    200: Array<TenantEntity>;
+    200: Array<TenantResponseDto>;
 };
 
 export type TenantControllerGetTenantsResponse = TenantControllerGetTenantsResponses[keyof TenantControllerGetTenantsResponses];
@@ -4009,9 +5358,7 @@ export type TenantControllerInitTenantData = {
 };
 
 export type TenantControllerInitTenantResponses = {
-    201: {
-        [key: string]: unknown;
-    };
+    201: TenantCreateResponseDto;
 };
 
 export type TenantControllerInitTenantResponse = TenantControllerInitTenantResponses[keyof TenantControllerInitTenantResponses];
@@ -4026,8 +5373,13 @@ export type TenantControllerDeleteTenantData = {
 };
 
 export type TenantControllerDeleteTenantResponses = {
-    200: unknown;
+    /**
+     * Tenant deleted
+     */
+    204: void;
 };
+
+export type TenantControllerDeleteTenantResponse = TenantControllerDeleteTenantResponses[keyof TenantControllerDeleteTenantResponses];
 
 export type TenantControllerGetTenantData = {
     body?: never;
@@ -4039,7 +5391,7 @@ export type TenantControllerGetTenantData = {
 };
 
 export type TenantControllerGetTenantResponses = {
-    200: TenantEntity;
+    200: TenantResponseDto;
 };
 
 export type TenantControllerGetTenantResponse = TenantControllerGetTenantResponses[keyof TenantControllerGetTenantResponses];
@@ -4054,7 +5406,7 @@ export type TenantControllerUpdateTenantData = {
 };
 
 export type TenantControllerUpdateTenantResponses = {
-    200: TenantEntity;
+    200: TenantResponseDto;
 };
 
 export type TenantControllerUpdateTenantResponse = TenantControllerUpdateTenantResponses[keyof TenantControllerUpdateTenantResponses];
@@ -4113,8 +5465,13 @@ export type ClientControllerDeleteClientData = {
 };
 
 export type ClientControllerDeleteClientResponses = {
-    200: unknown;
+    /**
+     * Client deleted
+     */
+    204: void;
 };
+
+export type ClientControllerDeleteClientResponse = ClientControllerDeleteClientResponses[keyof ClientControllerDeleteClientResponses];
 
 export type ClientControllerGetClientData = {
     body?: never;
@@ -4123,6 +5480,13 @@ export type ClientControllerGetClientData = {
     };
     query?: never;
     url: '/api/client/{id}';
+};
+
+export type ClientControllerGetClientErrors = {
+    /**
+     * Client not found
+     */
+    404: unknown;
 };
 
 export type ClientControllerGetClientResponses = {
@@ -4140,10 +5504,15 @@ export type ClientControllerUpdateClientData = {
     url: '/api/client/{id}';
 };
 
+export type ClientControllerUpdateClientErrors = {
+    /**
+     * Client not found
+     */
+    404: unknown;
+};
+
 export type ClientControllerUpdateClientResponses = {
-    200: {
-        [key: string]: unknown;
-    };
+    200: ClientEntity;
 };
 
 export type ClientControllerUpdateClientResponse = ClientControllerUpdateClientResponses[keyof ClientControllerUpdateClientResponses];
@@ -4177,6 +5546,760 @@ export type ClientControllerRotateClientSecretResponses = {
 };
 
 export type ClientControllerRotateClientSecretResponse = ClientControllerRotateClientSecretResponses[keyof ClientControllerRotateClientSecretResponses];
+
+export type RegistrarControllerDeleteConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/registrar/config';
+};
+
+export type RegistrarControllerDeleteConfigResponses = {
+    /**
+     * Configuration deleted successfully
+     */
+    204: void;
+};
+
+export type RegistrarControllerDeleteConfigResponse = RegistrarControllerDeleteConfigResponses[keyof RegistrarControllerDeleteConfigResponses];
+
+export type RegistrarControllerGetConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/registrar/config';
+};
+
+export type RegistrarControllerGetConfigErrors = {
+    /**
+     * No registrar configuration found
+     */
+    404: unknown;
+};
+
+export type RegistrarControllerGetConfigResponses = {
+    /**
+     * The registrar configuration
+     */
+    200: RegistrarConfigResponseDto;
+};
+
+export type RegistrarControllerGetConfigResponse = RegistrarControllerGetConfigResponses[keyof RegistrarControllerGetConfigResponses];
+
+export type RegistrarControllerUpdateConfigData = {
+    body: UpdateRegistrarConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/registrar/config';
+};
+
+export type RegistrarControllerUpdateConfigErrors = {
+    /**
+     * Invalid credentials
+     */
+    400: unknown;
+    /**
+     * No registrar configuration found
+     */
+    404: unknown;
+    /**
+     * Registrar OIDC endpoint unreachable — credentials could not be verified
+     */
+    503: unknown;
+};
+
+export type RegistrarControllerUpdateConfigResponses = {
+    /**
+     * Configuration updated successfully
+     */
+    200: RegistrarConfigResponseDto;
+};
+
+export type RegistrarControllerUpdateConfigResponse = RegistrarControllerUpdateConfigResponses[keyof RegistrarControllerUpdateConfigResponses];
+
+export type RegistrarControllerCreateConfigData = {
+    body: CreateRegistrarConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/registrar/config';
+};
+
+export type RegistrarControllerCreateConfigErrors = {
+    /**
+     * Invalid credentials
+     */
+    400: unknown;
+    /**
+     * Registrar OIDC endpoint unreachable — credentials could not be verified
+     */
+    503: unknown;
+};
+
+export type RegistrarControllerCreateConfigResponses = {
+    /**
+     * Configuration created successfully
+     */
+    201: RegistrarConfigResponseDto;
+};
+
+export type RegistrarControllerCreateConfigResponse = RegistrarControllerCreateConfigResponses[keyof RegistrarControllerCreateConfigResponses];
+
+export type RegistrarControllerCreateAccessCertificateData = {
+    body: CreateAccessCertificateDto;
+    path?: never;
+    query?: never;
+    url: '/api/registrar/access-certificate';
+};
+
+export type RegistrarControllerCreateAccessCertificateErrors = {
+    /**
+     * No relying party found at registrar or failed to create certificate
+     */
+    400: unknown;
+    /**
+     * No registrar configuration found or key not found
+     */
+    404: unknown;
+};
+
+export type RegistrarControllerCreateAccessCertificateResponses = {
+    /**
+     * Access certificate created successfully
+     */
+    201: {
+        /**
+         * The certificate ID at the registrar
+         */
+        id?: string;
+        /**
+         * The certificate in PEM format
+         */
+        crt?: string;
+    };
+};
+
+export type RegistrarControllerCreateAccessCertificateResponse = RegistrarControllerCreateAccessCertificateResponses[keyof RegistrarControllerCreateAccessCertificateResponses];
+
+export type UserControllerGetUsersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/user';
+};
+
+export type UserControllerGetUsersResponses = {
+    200: Array<ManagedUserDto>;
+};
+
+export type UserControllerGetUsersResponse = UserControllerGetUsersResponses[keyof UserControllerGetUsersResponses];
+
+export type UserControllerCreateUserData = {
+    body: CreateUserDto;
+    path?: never;
+    query?: never;
+    url: '/api/user';
+};
+
+export type UserControllerCreateUserResponses = {
+    201: ManagedUserDto;
+};
+
+export type UserControllerCreateUserResponse = UserControllerCreateUserResponses[keyof UserControllerCreateUserResponses];
+
+export type UserControllerDeleteUserData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/user/{id}';
+};
+
+export type UserControllerDeleteUserResponses = {
+    /**
+     * User deleted
+     */
+    204: void;
+};
+
+export type UserControllerDeleteUserResponse = UserControllerDeleteUserResponses[keyof UserControllerDeleteUserResponses];
+
+export type UserControllerGetUserData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/user/{id}';
+};
+
+export type UserControllerGetUserResponses = {
+    200: ManagedUserDto;
+};
+
+export type UserControllerGetUserResponse = UserControllerGetUserResponses[keyof UserControllerGetUserResponses];
+
+export type UserControllerUpdateUserData = {
+    body: UpdateUserDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/user/{id}';
+};
+
+export type UserControllerUpdateUserResponses = {
+    200: ManagedUserDto;
+};
+
+export type UserControllerUpdateUserResponse = UserControllerUpdateUserResponses[keyof UserControllerUpdateUserResponses];
+
+export type KeyChainControllerGetProvidersData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers';
+};
+
+export type KeyChainControllerGetProvidersResponses = {
+    /**
+     * List of available KMS providers with capabilities
+     */
+    200: KmsProvidersResponseDto;
+};
+
+export type KeyChainControllerGetProvidersResponse = KeyChainControllerGetProvidersResponses[keyof KeyChainControllerGetProvidersResponses];
+
+export type KeyChainControllerGetProvidersHealthData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/health';
+};
+
+export type KeyChainControllerGetProvidersHealthResponses = {
+    /**
+     * Per-provider health result (ok, latencyMs, optional error).
+     */
+    200: Array<ProviderHealthResponseDto>;
+};
+
+export type KeyChainControllerGetProvidersHealthResponse = KeyChainControllerGetProvidersHealthResponses[keyof KeyChainControllerGetProvidersHealthResponses];
+
+export type KeyChainControllerDeleteTenantKmsConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerDeleteTenantKmsConfigResponses = {
+    /**
+     * Tenant-specific KMS config removed.
+     */
+    204: void;
+};
+
+export type KeyChainControllerDeleteTenantKmsConfigResponse = KeyChainControllerDeleteTenantKmsConfigResponses[keyof KeyChainControllerDeleteTenantKmsConfigResponses];
+
+export type KeyChainControllerGetTenantKmsConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerGetTenantKmsConfigResponses = {
+    /**
+     * Tenant and effective KMS configuration.
+     */
+    200: KmsTenantConfigResponseDto;
+};
+
+export type KeyChainControllerGetTenantKmsConfigResponse = KeyChainControllerGetTenantKmsConfigResponses[keyof KeyChainControllerGetTenantKmsConfigResponses];
+
+export type KeyChainControllerUpdateTenantKmsConfigData = {
+    body: KmsConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/providers/config';
+};
+
+export type KeyChainControllerUpdateTenantKmsConfigResponses = {
+    /**
+     * Updated tenant KMS config.
+     */
+    200: KmsTenantConfigResponseDto;
+};
+
+export type KeyChainControllerUpdateTenantKmsConfigResponse = KeyChainControllerUpdateTenantKmsConfigResponses[keyof KeyChainControllerUpdateTenantKmsConfigResponses];
+
+export type KeyChainControllerGetAllData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Optional usage type filter
+         */
+        usageType?: 'access' | 'attestation' | 'trustList' | 'statusList' | 'encrypt';
+    };
+    url: '/api/key-chain';
+};
+
+export type KeyChainControllerGetAllResponses = {
+    /**
+     * List of key chains
+     */
+    200: Array<KeyChainResponseDto>;
+};
+
+export type KeyChainControllerGetAllResponse = KeyChainControllerGetAllResponses[keyof KeyChainControllerGetAllResponses];
+
+export type KeyChainControllerCreateData = {
+    body: KeyChainCreateDto;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain';
+};
+
+export type KeyChainControllerCreateResponses = {
+    /**
+     * Key chain created successfully
+     */
+    201: KeyChainIdResponseDto;
+};
+
+export type KeyChainControllerCreateResponse = KeyChainControllerCreateResponses[keyof KeyChainControllerCreateResponses];
+
+export type KeyChainControllerDeleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/key-chain/{id}';
+};
+
+export type KeyChainControllerDeleteErrors = {
+    /**
+     * Key chain not found
+     */
+    404: unknown;
+};
+
+export type KeyChainControllerDeleteResponses = {
+    /**
+     * Key chain deleted successfully
+     */
+    204: void;
+};
+
+export type KeyChainControllerDeleteResponse = KeyChainControllerDeleteResponses[keyof KeyChainControllerDeleteResponses];
+
+export type KeyChainControllerGetByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/key-chain/{id}';
+};
+
+export type KeyChainControllerGetByIdErrors = {
+    /**
+     * Key chain not found
+     */
+    404: unknown;
+};
+
+export type KeyChainControllerGetByIdResponses = {
+    /**
+     * The key chain
+     */
+    200: KeyChainResponseDto;
+};
+
+export type KeyChainControllerGetByIdResponse = KeyChainControllerGetByIdResponses[keyof KeyChainControllerGetByIdResponses];
+
+export type KeyChainControllerUpdateData = {
+    body: KeyChainUpdateDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/key-chain/{id}';
+};
+
+export type KeyChainControllerUpdateErrors = {
+    /**
+     * Key chain not found
+     */
+    404: unknown;
+};
+
+export type KeyChainControllerUpdateResponses = {
+    /**
+     * Key chain updated successfully
+     */
+    204: void;
+};
+
+export type KeyChainControllerUpdateResponse = KeyChainControllerUpdateResponses[keyof KeyChainControllerUpdateResponses];
+
+export type KeyChainControllerExportData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/key-chain/{id}/export';
+};
+
+export type KeyChainControllerExportErrors = {
+    /**
+     * Key chain not found
+     */
+    404: unknown;
+};
+
+export type KeyChainControllerExportResponses = {
+    /**
+     * Key chain export data
+     */
+    200: KeyChainExportDto;
+};
+
+export type KeyChainControllerExportResponse = KeyChainControllerExportResponses[keyof KeyChainControllerExportResponses];
+
+export type KeyChainControllerImportData = {
+    body: KeyChainImportDto;
+    path?: never;
+    query?: never;
+    url: '/api/key-chain/import';
+};
+
+export type KeyChainControllerImportResponses = {
+    /**
+     * Key chain imported successfully
+     */
+    201: KeyChainIdResponseDto;
+};
+
+export type KeyChainControllerImportResponse = KeyChainControllerImportResponses[keyof KeyChainControllerImportResponses];
+
+export type KeyChainControllerRotateData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/key-chain/{id}/rotate';
+};
+
+export type KeyChainControllerRotateErrors = {
+    /**
+     * Key chain not found
+     */
+    404: unknown;
+};
+
+export type KeyChainControllerRotateResponses = {
+    /**
+     * Key chain rotated successfully
+     */
+    204: void;
+};
+
+export type KeyChainControllerRotateResponse = KeyChainControllerRotateResponses[keyof KeyChainControllerRotateResponses];
+
+export type AttributeProviderControllerGetAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/attribute-providers';
+};
+
+export type AttributeProviderControllerGetAllResponses = {
+    /**
+     * List of attribute providers
+     */
+    200: Array<AttributeProviderEntity>;
+};
+
+export type AttributeProviderControllerGetAllResponse = AttributeProviderControllerGetAllResponses[keyof AttributeProviderControllerGetAllResponses];
+
+export type AttributeProviderControllerCreateData = {
+    body: CreateAttributeProviderDto;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/attribute-providers';
+};
+
+export type AttributeProviderControllerCreateResponses = {
+    /**
+     * Attribute provider created
+     */
+    201: AttributeProviderEntity;
+};
+
+export type AttributeProviderControllerCreateResponse = AttributeProviderControllerCreateResponses[keyof AttributeProviderControllerCreateResponses];
+
+export type AttributeProviderControllerDeleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/issuer/attribute-providers/{id}';
+};
+
+export type AttributeProviderControllerDeleteErrors = {
+    /**
+     * Attribute provider not found
+     */
+    404: unknown;
+};
+
+export type AttributeProviderControllerDeleteResponses = {
+    /**
+     * Attribute provider deleted
+     */
+    204: void;
+};
+
+export type AttributeProviderControllerDeleteResponse = AttributeProviderControllerDeleteResponses[keyof AttributeProviderControllerDeleteResponses];
+
+export type AttributeProviderControllerGetByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/issuer/attribute-providers/{id}';
+};
+
+export type AttributeProviderControllerGetByIdErrors = {
+    /**
+     * Attribute provider not found
+     */
+    404: unknown;
+};
+
+export type AttributeProviderControllerGetByIdResponses = {
+    /**
+     * The attribute provider
+     */
+    200: AttributeProviderEntity;
+};
+
+export type AttributeProviderControllerGetByIdResponse = AttributeProviderControllerGetByIdResponses[keyof AttributeProviderControllerGetByIdResponses];
+
+export type AttributeProviderControllerUpdateData = {
+    body: UpdateAttributeProviderDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/issuer/attribute-providers/{id}';
+};
+
+export type AttributeProviderControllerUpdateErrors = {
+    /**
+     * Attribute provider not found
+     */
+    404: unknown;
+};
+
+export type AttributeProviderControllerUpdateResponses = {
+    /**
+     * Attribute provider updated
+     */
+    200: AttributeProviderEntity;
+};
+
+export type AttributeProviderControllerUpdateResponse = AttributeProviderControllerUpdateResponses[keyof AttributeProviderControllerUpdateResponses];
+
+export type SessionControllerGetAllSessionsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Page number (1-based)
+         */
+        page?: number;
+        /**
+         * Number of items per page
+         */
+        pageSize?: number;
+        /**
+         * Filter by session status
+         */
+        status?: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
+        /**
+         * Filter by session type
+         */
+        type?: 'issuance' | 'presentation';
+        /**
+         * Field to sort by
+         */
+        sortBy?: 'id' | 'status' | 'createdAt' | 'requestId';
+        /**
+         * Sort direction
+         */
+        sortOrder?: 'asc' | 'desc';
+    };
+    url: '/api/session';
+};
+
+export type SessionControllerGetAllSessionsResponses = {
+    200: PaginatedSessionResponseDto;
+};
+
+export type SessionControllerGetAllSessionsResponse = SessionControllerGetAllSessionsResponses[keyof SessionControllerGetAllSessionsResponses];
+
+export type SessionControllerDeleteSessionData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/session/{id}';
+};
+
+export type SessionControllerDeleteSessionResponses = {
+    /**
+     * Session deleted
+     */
+    204: void;
+};
+
+export type SessionControllerDeleteSessionResponse = SessionControllerDeleteSessionResponses[keyof SessionControllerDeleteSessionResponses];
+
+export type SessionControllerGetSessionData = {
+    body?: never;
+    path: {
+        /**
+         * The session ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/session/{id}';
+};
+
+export type SessionControllerGetSessionResponses = {
+    200: Session;
+};
+
+export type SessionControllerGetSessionResponse = SessionControllerGetSessionResponses[keyof SessionControllerGetSessionResponses];
+
+export type SessionControllerGetSessionLogsData = {
+    body?: never;
+    path: {
+        /**
+         * The session ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/api/session/{id}/logs';
+};
+
+export type SessionControllerGetSessionLogsResponses = {
+    200: Array<SessionLogEntryResponseDto>;
+};
+
+export type SessionControllerGetSessionLogsResponse = SessionControllerGetSessionLogsResponses[keyof SessionControllerGetSessionLogsResponses];
+
+export type SessionControllerRevokeAllData = {
+    body: StatusUpdateDto;
+    path?: never;
+    query?: never;
+    url: '/api/session/revoke';
+};
+
+export type SessionControllerRevokeAllResponses = {
+    /**
+     * All sessions revoked
+     */
+    204: void;
+};
+
+export type SessionControllerRevokeAllResponse = SessionControllerRevokeAllResponses[keyof SessionControllerRevokeAllResponses];
+
+export type SessionConfigControllerResetConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/session-config';
+};
+
+export type SessionConfigControllerResetConfigResponses = {
+    /**
+     * Configuration reset successfully
+     */
+    204: void;
+};
+
+export type SessionConfigControllerResetConfigResponse = SessionConfigControllerResetConfigResponses[keyof SessionConfigControllerResetConfigResponses];
+
+export type SessionConfigControllerGetConfigData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/session-config';
+};
+
+export type SessionConfigControllerGetConfigResponses = {
+    /**
+     * The session storage configuration
+     */
+    200: SessionStorageConfig;
+};
+
+export type SessionConfigControllerGetConfigResponse = SessionConfigControllerGetConfigResponses[keyof SessionConfigControllerGetConfigResponses];
+
+export type SessionConfigControllerUpdateConfigData = {
+    body: UpdateSessionConfigDto;
+    path?: never;
+    query?: never;
+    url: '/api/session-config';
+};
+
+export type SessionConfigControllerUpdateConfigResponses = {
+    /**
+     * The updated session storage configuration
+     */
+    200: SessionStorageConfig;
+};
+
+export type SessionConfigControllerUpdateConfigResponse = SessionConfigControllerUpdateConfigResponses[keyof SessionConfigControllerUpdateConfigResponses];
+
+export type SessionEventsControllerSubscribeToSessionEventsData = {
+    body?: never;
+    path: {
+        /**
+         * Session ID to subscribe to
+         */
+        id: string;
+    };
+    query: {
+        /**
+         * JWT access token for authentication
+         */
+        token: string;
+    };
+    url: '/api/session/{id}/events';
+};
+
+export type SessionEventsControllerSubscribeToSessionEventsResponses = {
+    /**
+     * Server-Sent Events stream of session updates
+     */
+    200: string;
+};
+
+export type SessionEventsControllerSubscribeToSessionEventsResponse = SessionEventsControllerSubscribeToSessionEventsResponses[keyof SessionEventsControllerSubscribeToSessionEventsResponses];
 
 export type StatusListConfigControllerResetConfigData = {
     body?: never;
@@ -4321,291 +6444,6 @@ export type StatusListManagementControllerUpdateListResponses = {
 
 export type StatusListManagementControllerUpdateListResponse = StatusListManagementControllerUpdateListResponses[keyof StatusListManagementControllerUpdateListResponses];
 
-export type SessionControllerGetAllSessionsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Page number (1-based)
-         */
-        page?: number;
-        /**
-         * Number of items per page
-         */
-        pageSize?: number;
-        /**
-         * Filter by session status
-         */
-        status?: 'active' | 'fetched' | 'completed' | 'expired' | 'failed';
-        /**
-         * Filter by session type
-         */
-        type?: 'issuance' | 'presentation';
-        /**
-         * Field to sort by
-         */
-        sortBy?: 'id' | 'status' | 'createdAt' | 'requestId';
-        /**
-         * Sort direction
-         */
-        sortOrder?: 'asc' | 'desc';
-    };
-    url: '/api/session';
-};
-
-export type SessionControllerGetAllSessionsResponses = {
-    200: PaginatedSessionResponseDto;
-};
-
-export type SessionControllerGetAllSessionsResponse = SessionControllerGetAllSessionsResponses[keyof SessionControllerGetAllSessionsResponses];
-
-export type SessionControllerDeleteSessionData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/session/{id}';
-};
-
-export type SessionControllerDeleteSessionResponses = {
-    200: unknown;
-};
-
-export type SessionControllerGetSessionData = {
-    body?: never;
-    path: {
-        /**
-         * The session ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/session/{id}';
-};
-
-export type SessionControllerGetSessionResponses = {
-    200: Session;
-};
-
-export type SessionControllerGetSessionResponse = SessionControllerGetSessionResponses[keyof SessionControllerGetSessionResponses];
-
-export type SessionControllerGetSessionLogsData = {
-    body?: never;
-    path: {
-        /**
-         * The session ID
-         */
-        id: string;
-    };
-    query?: never;
-    url: '/api/session/{id}/logs';
-};
-
-export type SessionControllerGetSessionLogsResponses = {
-    200: Array<SessionLogEntryResponseDto>;
-};
-
-export type SessionControllerGetSessionLogsResponse = SessionControllerGetSessionLogsResponses[keyof SessionControllerGetSessionLogsResponses];
-
-export type SessionControllerRevokeAllData = {
-    body: StatusUpdateDto;
-    path?: never;
-    query?: never;
-    url: '/api/session/revoke';
-};
-
-export type SessionControllerRevokeAllResponses = {
-    201: unknown;
-};
-
-export type SessionConfigControllerResetConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/session-config';
-};
-
-export type SessionConfigControllerResetConfigResponses = {
-    /**
-     * Configuration reset successfully
-     */
-    200: unknown;
-};
-
-export type SessionConfigControllerGetConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/session-config';
-};
-
-export type SessionConfigControllerGetConfigResponses = {
-    /**
-     * The session storage configuration
-     */
-    200: SessionStorageConfig;
-};
-
-export type SessionConfigControllerGetConfigResponse = SessionConfigControllerGetConfigResponses[keyof SessionConfigControllerGetConfigResponses];
-
-export type SessionConfigControllerUpdateConfigData = {
-    body: UpdateSessionConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/session-config';
-};
-
-export type SessionConfigControllerUpdateConfigResponses = {
-    /**
-     * The updated session storage configuration
-     */
-    200: SessionStorageConfig;
-};
-
-export type SessionConfigControllerUpdateConfigResponse = SessionConfigControllerUpdateConfigResponses[keyof SessionConfigControllerUpdateConfigResponses];
-
-export type SessionEventsControllerSubscribeToSessionEventsData = {
-    body?: never;
-    path: {
-        /**
-         * Session ID to subscribe to
-         */
-        id: string;
-    };
-    query: {
-        /**
-         * JWT access token for authentication
-         */
-        token: string;
-    };
-    url: '/api/session/{id}/events';
-};
-
-export type SessionEventsControllerSubscribeToSessionEventsResponses = {
-    200: unknown;
-};
-
-export type UserControllerGetUsersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/user';
-};
-
-export type UserControllerGetUsersResponses = {
-    200: Array<ManagedUserDto>;
-};
-
-export type UserControllerGetUsersResponse = UserControllerGetUsersResponses[keyof UserControllerGetUsersResponses];
-
-export type UserControllerCreateUserData = {
-    body: CreateUserDto;
-    path?: never;
-    query?: never;
-    url: '/api/user';
-};
-
-export type UserControllerCreateUserResponses = {
-    201: ManagedUserDto;
-};
-
-export type UserControllerCreateUserResponse = UserControllerCreateUserResponses[keyof UserControllerCreateUserResponses];
-
-export type UserControllerDeleteUserData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/user/{id}';
-};
-
-export type UserControllerDeleteUserResponses = {
-    200: unknown;
-};
-
-export type UserControllerGetUserData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/user/{id}';
-};
-
-export type UserControllerGetUserResponses = {
-    200: ManagedUserDto;
-};
-
-export type UserControllerGetUserResponse = UserControllerGetUserResponses[keyof UserControllerGetUserResponses];
-
-export type UserControllerUpdateUserData = {
-    body: UpdateUserDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/user/{id}';
-};
-
-export type UserControllerUpdateUserResponses = {
-    200: ManagedUserDto;
-};
-
-export type UserControllerUpdateUserResponse = UserControllerUpdateUserResponses[keyof UserControllerUpdateUserResponses];
-
-export type IssuanceConfigControllerGetIssuanceConfigurationsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/issuer/config';
-};
-
-export type IssuanceConfigControllerGetIssuanceConfigurationsResponses = {
-    200: IssuanceConfig;
-};
-
-export type IssuanceConfigControllerGetIssuanceConfigurationsResponse = IssuanceConfigControllerGetIssuanceConfigurationsResponses[keyof IssuanceConfigControllerGetIssuanceConfigurationsResponses];
-
-export type IssuanceConfigControllerStoreIssuanceConfigurationData = {
-    body: UpdateIssuanceDtoWritable;
-    path?: never;
-    query?: never;
-    url: '/api/issuer/config';
-};
-
-export type IssuanceConfigControllerStoreIssuanceConfigurationResponses = {
-    201: {
-        [key: string]: unknown;
-    };
-};
-
-export type IssuanceConfigControllerStoreIssuanceConfigurationResponse = IssuanceConfigControllerStoreIssuanceConfigurationResponses[keyof IssuanceConfigControllerStoreIssuanceConfigurationResponses];
-
-export type IssuanceConfigControllerReissueRegistrationCertificateData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/issuer/config/registration-cert/reissue';
-};
-
-export type IssuanceConfigControllerReissueRegistrationCertificateErrors = {
-    /**
-     * Registration certificate is not enabled/generate mode or registrar is unavailable
-     */
-    400: unknown;
-};
-
-export type IssuanceConfigControllerReissueRegistrationCertificateResponses = {
-    /**
-     * Updated issuance configuration
-     */
-    201: IssuanceConfig;
-};
-
-export type IssuanceConfigControllerReissueRegistrationCertificateResponse = IssuanceConfigControllerReissueRegistrationCertificateResponses[keyof IssuanceConfigControllerReissueRegistrationCertificateResponses];
-
 export type CredentialConfigControllerGetConfigsData = {
     body?: never;
     path?: never;
@@ -4627,9 +6465,7 @@ export type CredentialConfigControllerStoreCredentialConfigurationData = {
 };
 
 export type CredentialConfigControllerStoreCredentialConfigurationResponses = {
-    201: {
-        [key: string]: unknown;
-    };
+    201: CredentialConfig;
 };
 
 export type CredentialConfigControllerStoreCredentialConfigurationResponse = CredentialConfigControllerStoreCredentialConfigurationResponses[keyof CredentialConfigControllerStoreCredentialConfigurationResponses];
@@ -4644,9 +6480,10 @@ export type CredentialConfigControllerDeleteIssuanceConfigurationData = {
 };
 
 export type CredentialConfigControllerDeleteIssuanceConfigurationResponses = {
-    200: {
-        [key: string]: unknown;
-    };
+    /**
+     * Credential configuration deleted
+     */
+    204: void;
 };
 
 export type CredentialConfigControllerDeleteIssuanceConfigurationResponse = CredentialConfigControllerDeleteIssuanceConfigurationResponses[keyof CredentialConfigControllerDeleteIssuanceConfigurationResponses];
@@ -4676,12 +6513,427 @@ export type CredentialConfigControllerUpdateCredentialConfigurationData = {
 };
 
 export type CredentialConfigControllerUpdateCredentialConfigurationResponses = {
-    200: {
-        [key: string]: unknown;
-    };
+    200: CredentialConfig;
 };
 
 export type CredentialConfigControllerUpdateCredentialConfigurationResponse = CredentialConfigControllerUpdateCredentialConfigurationResponses[keyof CredentialConfigControllerUpdateCredentialConfigurationResponses];
+
+export type PresentationManagementControllerConfigurationData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config';
+};
+
+export type PresentationManagementControllerConfigurationResponses = {
+    200: Array<PresentationConfig>;
+};
+
+export type PresentationManagementControllerConfigurationResponse = PresentationManagementControllerConfigurationResponses[keyof PresentationManagementControllerConfigurationResponses];
+
+export type PresentationManagementControllerStorePresentationConfigData = {
+    body: PresentationConfigCreateDto;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config';
+};
+
+export type PresentationManagementControllerStorePresentationConfigResponses = {
+    201: PresentationConfig;
+};
+
+export type PresentationManagementControllerStorePresentationConfigResponse = PresentationManagementControllerStorePresentationConfigResponses[keyof PresentationManagementControllerStorePresentationConfigResponses];
+
+export type PresentationManagementControllerResolveIssuerMetadataData = {
+    body: ResolveIssuerMetadataDto;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config/issuer-metadata/resolve';
+};
+
+export type PresentationManagementControllerResolveIssuerMetadataErrors = {
+    /**
+     * Invalid issuer URL or metadata could not be resolved
+     */
+    400: unknown;
+};
+
+export type PresentationManagementControllerResolveIssuerMetadataResponses = {
+    /**
+     * Resolved credential issuer metadata
+     */
+    200: CredentialIssuerMetadataDto;
+};
+
+export type PresentationManagementControllerResolveIssuerMetadataResponse = PresentationManagementControllerResolveIssuerMetadataResponses[keyof PresentationManagementControllerResolveIssuerMetadataResponses];
+
+export type PresentationManagementControllerResolveSchemaMetadataData = {
+    body: ResolveSchemaMetadataDto;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config/schema-metadata/resolve';
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataErrors = {
+    /**
+     * Invalid URL, invalid response, or invalid schema metadata JWT
+     */
+    400: unknown;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataResponses = {
+    /**
+     * Resolved schema metadata import payload
+     */
+    200: ResolvedSchemaMetadataResponseDto;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataResponse = PresentationManagementControllerResolveSchemaMetadataResponses[keyof PresentationManagementControllerResolveSchemaMetadataResponses];
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtData = {
+    body: ResolveSchemaMetadataJwtDto;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config/schema-metadata/resolve-jwt';
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtErrors = {
+    /**
+     * Invalid JWT or invalid schema metadata
+     */
+    400: unknown;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtResponses = {
+    /**
+     * Resolved schema metadata import payload
+     */
+    200: ResolvedSchemaMetadataResponseDto;
+};
+
+export type PresentationManagementControllerResolveSchemaMetadataJwtResponse = PresentationManagementControllerResolveSchemaMetadataJwtResponses[keyof PresentationManagementControllerResolveSchemaMetadataJwtResponses];
+
+export type PresentationManagementControllerListSchemaMetadataCatalogData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/verifier/config/schema-metadata/catalog';
+};
+
+export type PresentationManagementControllerListSchemaMetadataCatalogResponses = {
+    /**
+     * Catalog entries from the registrar
+     */
+    200: Array<SchemaMetadataResponseDto>;
+};
+
+export type PresentationManagementControllerListSchemaMetadataCatalogResponse = PresentationManagementControllerListSchemaMetadataCatalogResponses[keyof PresentationManagementControllerListSchemaMetadataCatalogResponses];
+
+export type PresentationManagementControllerDeleteConfigurationData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/verifier/config/{id}';
+};
+
+export type PresentationManagementControllerDeleteConfigurationResponses = {
+    /**
+     * Presentation configuration deleted
+     */
+    204: void;
+};
+
+export type PresentationManagementControllerDeleteConfigurationResponse = PresentationManagementControllerDeleteConfigurationResponses[keyof PresentationManagementControllerDeleteConfigurationResponses];
+
+export type PresentationManagementControllerGetConfigurationData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/verifier/config/{id}';
+};
+
+export type PresentationManagementControllerGetConfigurationResponses = {
+    200: PresentationConfig;
+};
+
+export type PresentationManagementControllerGetConfigurationResponse = PresentationManagementControllerGetConfigurationResponses[keyof PresentationManagementControllerGetConfigurationResponses];
+
+export type PresentationManagementControllerUpdateConfigurationData = {
+    body: PresentationConfigUpdateDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/verifier/config/{id}';
+};
+
+export type PresentationManagementControllerUpdateConfigurationResponses = {
+    200: PresentationConfig;
+};
+
+export type PresentationManagementControllerUpdateConfigurationResponse = PresentationManagementControllerUpdateConfigurationResponses[keyof PresentationManagementControllerUpdateConfigurationResponses];
+
+export type PresentationManagementControllerReissueRegistrationCertificateData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/verifier/config/{id}/registration-cert/reissue';
+};
+
+export type PresentationManagementControllerReissueRegistrationCertificateErrors = {
+    /**
+     * Config has no registrationCert spec or registrar is not enabled
+     */
+    400: unknown;
+};
+
+export type PresentationManagementControllerReissueRegistrationCertificateResponses = {
+    /**
+     * Updated presentation configuration
+     */
+    200: PresentationConfig;
+};
+
+export type PresentationManagementControllerReissueRegistrationCertificateResponse = PresentationManagementControllerReissueRegistrationCertificateResponses[keyof PresentationManagementControllerReissueRegistrationCertificateResponses];
+
+export type TrustListControllerGetAllTrustListsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/trust-list';
+};
+
+export type TrustListControllerGetAllTrustListsResponses = {
+    200: Array<TrustList>;
+};
+
+export type TrustListControllerGetAllTrustListsResponse = TrustListControllerGetAllTrustListsResponses[keyof TrustListControllerGetAllTrustListsResponses];
+
+export type TrustListControllerCreateTrustListData = {
+    body: TrustListCreateDto;
+    path?: never;
+    query?: never;
+    url: '/api/trust-list';
+};
+
+export type TrustListControllerCreateTrustListResponses = {
+    201: TrustList;
+};
+
+export type TrustListControllerCreateTrustListResponse = TrustListControllerCreateTrustListResponses[keyof TrustListControllerCreateTrustListResponses];
+
+export type TrustListControllerDeleteTrustListData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}';
+};
+
+export type TrustListControllerDeleteTrustListResponses = {
+    /**
+     * Trust list deleted
+     */
+    204: void;
+};
+
+export type TrustListControllerDeleteTrustListResponse = TrustListControllerDeleteTrustListResponses[keyof TrustListControllerDeleteTrustListResponses];
+
+export type TrustListControllerGetTrustListData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}';
+};
+
+export type TrustListControllerGetTrustListResponses = {
+    200: TrustList;
+};
+
+export type TrustListControllerGetTrustListResponse = TrustListControllerGetTrustListResponses[keyof TrustListControllerGetTrustListResponses];
+
+export type TrustListControllerUpdateTrustListData = {
+    body: TrustListCreateDto;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}';
+};
+
+export type TrustListControllerUpdateTrustListResponses = {
+    200: TrustList;
+};
+
+export type TrustListControllerUpdateTrustListResponse = TrustListControllerUpdateTrustListResponses[keyof TrustListControllerUpdateTrustListResponses];
+
+export type TrustListControllerExportTrustListData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}/export';
+};
+
+export type TrustListControllerExportTrustListResponses = {
+    200: TrustListCreateDto;
+};
+
+export type TrustListControllerExportTrustListResponse = TrustListControllerExportTrustListResponses[keyof TrustListControllerExportTrustListResponses];
+
+export type TrustListControllerGetTrustListVersionsData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}/versions';
+};
+
+export type TrustListControllerGetTrustListVersionsResponses = {
+    200: Array<TrustListVersion>;
+};
+
+export type TrustListControllerGetTrustListVersionsResponse = TrustListControllerGetTrustListVersionsResponses[keyof TrustListControllerGetTrustListVersionsResponses];
+
+export type TrustListControllerGetTrustListVersionData = {
+    body?: never;
+    path: {
+        id: string;
+        versionId: string;
+    };
+    query?: never;
+    url: '/api/trust-list/{id}/versions/{versionId}';
+};
+
+export type TrustListControllerGetTrustListVersionResponses = {
+    200: TrustListVersion;
+};
+
+export type TrustListControllerGetTrustListVersionResponse = TrustListControllerGetTrustListVersionResponses[keyof TrustListControllerGetTrustListVersionResponses];
+
+export type CacheControllerGetStatsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/cache/stats';
+};
+
+export type CacheControllerGetStatsResponses = {
+    /**
+     * Cache statistics
+     */
+    200: CacheStatsResponseDto;
+};
+
+export type CacheControllerGetStatsResponse = CacheControllerGetStatsResponses[keyof CacheControllerGetStatsResponses];
+
+export type CacheControllerClearAllCachesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/cache';
+};
+
+export type CacheControllerClearAllCachesResponses = {
+    /**
+     * All caches cleared successfully
+     */
+    204: void;
+};
+
+export type CacheControllerClearAllCachesResponse = CacheControllerClearAllCachesResponses[keyof CacheControllerClearAllCachesResponses];
+
+export type CacheControllerClearTrustListCacheData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/cache/trust-list';
+};
+
+export type CacheControllerClearTrustListCacheResponses = {
+    /**
+     * Trust list cache cleared successfully
+     */
+    204: void;
+};
+
+export type CacheControllerClearTrustListCacheResponse = CacheControllerClearTrustListCacheResponses[keyof CacheControllerClearTrustListCacheResponses];
+
+export type CacheControllerClearStatusListCacheData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/cache/status-list';
+};
+
+export type CacheControllerClearStatusListCacheResponses = {
+    /**
+     * Status list cache cleared successfully
+     */
+    204: void;
+};
+
+export type CacheControllerClearStatusListCacheResponse = CacheControllerClearStatusListCacheResponses[keyof CacheControllerClearStatusListCacheResponses];
+
+export type IssuanceConfigControllerGetIssuanceConfigurationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/config';
+};
+
+export type IssuanceConfigControllerGetIssuanceConfigurationsResponses = {
+    200: IssuanceConfig;
+};
+
+export type IssuanceConfigControllerGetIssuanceConfigurationsResponse = IssuanceConfigControllerGetIssuanceConfigurationsResponses[keyof IssuanceConfigControllerGetIssuanceConfigurationsResponses];
+
+export type IssuanceConfigControllerStoreIssuanceConfigurationData = {
+    body: UpdateIssuanceDtoWritable;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/config';
+};
+
+export type IssuanceConfigControllerStoreIssuanceConfigurationResponses = {
+    200: IssuanceConfig;
+};
+
+export type IssuanceConfigControllerStoreIssuanceConfigurationResponse = IssuanceConfigControllerStoreIssuanceConfigurationResponses[keyof IssuanceConfigControllerStoreIssuanceConfigurationResponses];
+
+export type IssuanceConfigControllerReissueRegistrationCertificateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/issuer/config/registration-cert/reissue';
+};
+
+export type IssuanceConfigControllerReissueRegistrationCertificateErrors = {
+    /**
+     * Registration certificate is not enabled/generate mode or registrar is unavailable
+     */
+    400: unknown;
+};
+
+export type IssuanceConfigControllerReissueRegistrationCertificateResponses = {
+    /**
+     * Updated issuance configuration
+     */
+    201: IssuanceConfig;
+};
+
+export type IssuanceConfigControllerReissueRegistrationCertificateResponse = IssuanceConfigControllerReissueRegistrationCertificateResponses[keyof IssuanceConfigControllerReissueRegistrationCertificateResponses];
 
 export type SchemaMetadataControllerPublishSchemaMetadataData = {
     body: SignSchemaMetaConfigDto;
@@ -4701,8 +6953,10 @@ export type SchemaMetadataControllerPublishSchemaMetadataResponses = {
     /**
      * Registrar metadata entry for the freshly submitted schema metadata.
      */
-    201: unknown;
+    201: SchemaMetadataResponseDto;
 };
+
+export type SchemaMetadataControllerPublishSchemaMetadataResponse = SchemaMetadataControllerPublishSchemaMetadataResponses[keyof SchemaMetadataControllerPublishSchemaMetadataResponses];
 
 export type SchemaMetadataControllerSignSchemaMetaConfigData = {
     body: SignSchemaMetaConfigDto;
@@ -4715,8 +6969,10 @@ export type SchemaMetadataControllerSignSchemaMetaConfigResponses = {
     /**
      * Registrar metadata entry for the freshly submitted schema metadata.
      */
-    201: unknown;
+    201: SchemaMetadataResponseDto;
 };
+
+export type SchemaMetadataControllerSignSchemaMetaConfigResponse = SchemaMetadataControllerSignSchemaMetaConfigResponses[keyof SchemaMetadataControllerSignSchemaMetaConfigResponses];
 
 export type SchemaMetadataControllerPublishSchemaMetadataVersionData = {
     body: SignVersionSchemaMetaConfigDto;
@@ -4736,8 +6992,10 @@ export type SchemaMetadataControllerPublishSchemaMetadataVersionResponses = {
     /**
      * Registrar metadata entry for the newly submitted version.
      */
-    201: unknown;
+    201: SchemaMetadataResponseDto;
 };
+
+export type SchemaMetadataControllerPublishSchemaMetadataVersionResponse = SchemaMetadataControllerPublishSchemaMetadataVersionResponses[keyof SchemaMetadataControllerPublishSchemaMetadataVersionResponses];
 
 export type SchemaMetadataControllerSignVersionSchemaMetaConfigData = {
     body: SignVersionSchemaMetaConfigDto;
@@ -4750,8 +7008,10 @@ export type SchemaMetadataControllerSignVersionSchemaMetaConfigResponses = {
     /**
      * Registrar metadata entry for the newly submitted version.
      */
-    201: unknown;
+    201: SchemaMetadataResponseDto;
 };
+
+export type SchemaMetadataControllerSignVersionSchemaMetaConfigResponse = SchemaMetadataControllerSignVersionSchemaMetaConfigResponses[keyof SchemaMetadataControllerSignVersionSchemaMetaConfigResponses];
 
 export type SchemaMetadataControllerGetVocabulariesData = {
     body?: never;
@@ -4824,8 +7084,10 @@ export type SchemaMetadataControllerRemoveResponses = {
     /**
      * Deleted
      */
-    200: unknown;
+    204: void;
 };
+
+export type SchemaMetadataControllerRemoveResponse = SchemaMetadataControllerRemoveResponses[keyof SchemaMetadataControllerRemoveResponses];
 
 export type SchemaMetadataControllerUpdateData = {
     body: UpdateSchemaMetadataDto;
@@ -4930,103 +7192,6 @@ export type SchemaMetadataControllerDeprecateVersionResponses = {
 
 export type SchemaMetadataControllerDeprecateVersionResponse = SchemaMetadataControllerDeprecateVersionResponses[keyof SchemaMetadataControllerDeprecateVersionResponses];
 
-export type AttributeProviderControllerGetAllData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/issuer/attribute-providers';
-};
-
-export type AttributeProviderControllerGetAllResponses = {
-    /**
-     * List of attribute providers
-     */
-    200: unknown;
-};
-
-export type AttributeProviderControllerCreateData = {
-    body: CreateAttributeProviderDto;
-    path?: never;
-    query?: never;
-    url: '/api/issuer/attribute-providers';
-};
-
-export type AttributeProviderControllerCreateResponses = {
-    /**
-     * Attribute provider created
-     */
-    201: unknown;
-};
-
-export type AttributeProviderControllerDeleteData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/issuer/attribute-providers/{id}';
-};
-
-export type AttributeProviderControllerDeleteErrors = {
-    /**
-     * Attribute provider not found
-     */
-    404: unknown;
-};
-
-export type AttributeProviderControllerDeleteResponses = {
-    /**
-     * Attribute provider deleted
-     */
-    200: unknown;
-};
-
-export type AttributeProviderControllerGetByIdData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/issuer/attribute-providers/{id}';
-};
-
-export type AttributeProviderControllerGetByIdErrors = {
-    /**
-     * Attribute provider not found
-     */
-    404: unknown;
-};
-
-export type AttributeProviderControllerGetByIdResponses = {
-    /**
-     * The attribute provider
-     */
-    200: unknown;
-};
-
-export type AttributeProviderControllerUpdateData = {
-    body: UpdateAttributeProviderDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/issuer/attribute-providers/{id}';
-};
-
-export type AttributeProviderControllerUpdateErrors = {
-    /**
-     * Attribute provider not found
-     */
-    404: unknown;
-};
-
-export type AttributeProviderControllerUpdateResponses = {
-    /**
-     * Attribute provider updated
-     */
-    200: unknown;
-};
-
 export type WebhookEndpointControllerGetAllData = {
     body?: never;
     path?: never;
@@ -5054,8 +7219,10 @@ export type WebhookEndpointControllerCreateResponses = {
     /**
      * Webhook endpoint created
      */
-    201: unknown;
+    201: WebhookEndpointEntity;
 };
+
+export type WebhookEndpointControllerCreateResponse = WebhookEndpointControllerCreateResponses[keyof WebhookEndpointControllerCreateResponses];
 
 export type WebhookEndpointControllerDeleteData = {
     body?: never;
@@ -5077,8 +7244,10 @@ export type WebhookEndpointControllerDeleteResponses = {
     /**
      * Webhook endpoint deleted
      */
-    200: unknown;
+    204: void;
 };
+
+export type WebhookEndpointControllerDeleteResponse = WebhookEndpointControllerDeleteResponses[keyof WebhookEndpointControllerDeleteResponses];
 
 export type WebhookEndpointControllerGetByIdData = {
     body?: never;
@@ -5100,8 +7269,10 @@ export type WebhookEndpointControllerGetByIdResponses = {
     /**
      * The webhook endpoint
      */
-    200: unknown;
+    200: WebhookEndpointEntity;
 };
+
+export type WebhookEndpointControllerGetByIdResponse = WebhookEndpointControllerGetByIdResponses[keyof WebhookEndpointControllerGetByIdResponses];
 
 export type WebhookEndpointControllerUpdateData = {
     body: UpdateWebhookEndpointDto;
@@ -5123,487 +7294,10 @@ export type WebhookEndpointControllerUpdateResponses = {
     /**
      * Webhook endpoint updated
      */
-    200: unknown;
+    200: WebhookEndpointEntity;
 };
 
-export type TrustListControllerGetAllTrustListsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/trust-list';
-};
-
-export type TrustListControllerGetAllTrustListsResponses = {
-    200: Array<TrustList>;
-};
-
-export type TrustListControllerGetAllTrustListsResponse = TrustListControllerGetAllTrustListsResponses[keyof TrustListControllerGetAllTrustListsResponses];
-
-export type TrustListControllerCreateTrustListData = {
-    body: TrustListCreateDto;
-    path?: never;
-    query?: never;
-    url: '/api/trust-list';
-};
-
-export type TrustListControllerCreateTrustListResponses = {
-    201: TrustList;
-};
-
-export type TrustListControllerCreateTrustListResponse = TrustListControllerCreateTrustListResponses[keyof TrustListControllerCreateTrustListResponses];
-
-export type TrustListControllerDeleteTrustListData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}';
-};
-
-export type TrustListControllerDeleteTrustListResponses = {
-    200: unknown;
-};
-
-export type TrustListControllerGetTrustListData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}';
-};
-
-export type TrustListControllerGetTrustListResponses = {
-    200: TrustList;
-};
-
-export type TrustListControllerGetTrustListResponse = TrustListControllerGetTrustListResponses[keyof TrustListControllerGetTrustListResponses];
-
-export type TrustListControllerUpdateTrustListData = {
-    body: TrustListCreateDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}';
-};
-
-export type TrustListControllerUpdateTrustListResponses = {
-    200: TrustList;
-};
-
-export type TrustListControllerUpdateTrustListResponse = TrustListControllerUpdateTrustListResponses[keyof TrustListControllerUpdateTrustListResponses];
-
-export type TrustListControllerExportTrustListData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}/export';
-};
-
-export type TrustListControllerExportTrustListResponses = {
-    200: TrustListCreateDto;
-};
-
-export type TrustListControllerExportTrustListResponse = TrustListControllerExportTrustListResponses[keyof TrustListControllerExportTrustListResponses];
-
-export type TrustListControllerGetTrustListVersionsData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}/versions';
-};
-
-export type TrustListControllerGetTrustListVersionsResponses = {
-    200: Array<TrustListVersion>;
-};
-
-export type TrustListControllerGetTrustListVersionsResponse = TrustListControllerGetTrustListVersionsResponses[keyof TrustListControllerGetTrustListVersionsResponses];
-
-export type TrustListControllerGetTrustListVersionData = {
-    body?: never;
-    path: {
-        id: string;
-        versionId: string;
-    };
-    query?: never;
-    url: '/api/trust-list/{id}/versions/{versionId}';
-};
-
-export type TrustListControllerGetTrustListVersionResponses = {
-    200: TrustListVersion;
-};
-
-export type TrustListControllerGetTrustListVersionResponse = TrustListControllerGetTrustListVersionResponses[keyof TrustListControllerGetTrustListVersionResponses];
-
-export type CacheControllerGetStatsData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/cache/stats';
-};
-
-export type CacheControllerGetStatsResponses = {
-    /**
-     * Cache statistics
-     */
-    200: unknown;
-};
-
-export type CacheControllerClearAllCachesData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/cache';
-};
-
-export type CacheControllerClearAllCachesResponses = {
-    /**
-     * All caches cleared successfully
-     */
-    204: void;
-};
-
-export type CacheControllerClearAllCachesResponse = CacheControllerClearAllCachesResponses[keyof CacheControllerClearAllCachesResponses];
-
-export type CacheControllerClearTrustListCacheData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/cache/trust-list';
-};
-
-export type CacheControllerClearTrustListCacheResponses = {
-    /**
-     * Trust list cache cleared successfully
-     */
-    204: void;
-};
-
-export type CacheControllerClearTrustListCacheResponse = CacheControllerClearTrustListCacheResponses[keyof CacheControllerClearTrustListCacheResponses];
-
-export type CacheControllerClearStatusListCacheData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/cache/status-list';
-};
-
-export type CacheControllerClearStatusListCacheResponses = {
-    /**
-     * Status list cache cleared successfully
-     */
-    204: void;
-};
-
-export type CacheControllerClearStatusListCacheResponse = CacheControllerClearStatusListCacheResponses[keyof CacheControllerClearStatusListCacheResponses];
-
-export type PresentationManagementControllerConfigurationData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config';
-};
-
-export type PresentationManagementControllerConfigurationResponses = {
-    200: Array<PresentationConfig>;
-};
-
-export type PresentationManagementControllerConfigurationResponse = PresentationManagementControllerConfigurationResponses[keyof PresentationManagementControllerConfigurationResponses];
-
-export type PresentationManagementControllerStorePresentationConfigData = {
-    body: PresentationConfigCreateDto;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config';
-};
-
-export type PresentationManagementControllerStorePresentationConfigResponses = {
-    201: PresentationConfig;
-};
-
-export type PresentationManagementControllerStorePresentationConfigResponse = PresentationManagementControllerStorePresentationConfigResponses[keyof PresentationManagementControllerStorePresentationConfigResponses];
-
-export type PresentationManagementControllerResolveIssuerMetadataData = {
-    body: ResolveIssuerMetadataDto;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config/issuer-metadata/resolve';
-};
-
-export type PresentationManagementControllerResolveIssuerMetadataErrors = {
-    /**
-     * Invalid issuer URL or metadata could not be resolved
-     */
-    400: unknown;
-};
-
-export type PresentationManagementControllerResolveIssuerMetadataResponses = {
-    /**
-     * Resolved credential issuer metadata
-     */
-    200: unknown;
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataData = {
-    body: ResolveSchemaMetadataDto;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config/schema-metadata/resolve';
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataErrors = {
-    /**
-     * Invalid URL, invalid response, or invalid schema metadata JWT
-     */
-    400: unknown;
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataResponses = {
-    /**
-     * Resolved schema metadata import payload
-     */
-    200: unknown;
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataJwtData = {
-    body: ResolveSchemaMetadataJwtDto;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config/schema-metadata/resolve-jwt';
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataJwtErrors = {
-    /**
-     * Invalid JWT or invalid schema metadata
-     */
-    400: unknown;
-};
-
-export type PresentationManagementControllerResolveSchemaMetadataJwtResponses = {
-    /**
-     * Resolved schema metadata import payload
-     */
-    200: unknown;
-};
-
-export type PresentationManagementControllerListSchemaMetadataCatalogData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/verifier/config/schema-metadata/catalog';
-};
-
-export type PresentationManagementControllerListSchemaMetadataCatalogResponses = {
-    /**
-     * Catalog entries from the registrar
-     */
-    200: unknown;
-};
-
-export type PresentationManagementControllerDeleteConfigurationData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/verifier/config/{id}';
-};
-
-export type PresentationManagementControllerDeleteConfigurationResponses = {
-    200: unknown;
-};
-
-export type PresentationManagementControllerGetConfigurationData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/verifier/config/{id}';
-};
-
-export type PresentationManagementControllerGetConfigurationResponses = {
-    200: PresentationConfig;
-};
-
-export type PresentationManagementControllerGetConfigurationResponse = PresentationManagementControllerGetConfigurationResponses[keyof PresentationManagementControllerGetConfigurationResponses];
-
-export type PresentationManagementControllerUpdateConfigurationData = {
-    body: PresentationConfigUpdateDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/verifier/config/{id}';
-};
-
-export type PresentationManagementControllerUpdateConfigurationResponses = {
-    200: PresentationConfig;
-};
-
-export type PresentationManagementControllerUpdateConfigurationResponse = PresentationManagementControllerUpdateConfigurationResponses[keyof PresentationManagementControllerUpdateConfigurationResponses];
-
-export type PresentationManagementControllerReissueRegistrationCertificateData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/verifier/config/{id}/registration-cert/reissue';
-};
-
-export type PresentationManagementControllerReissueRegistrationCertificateErrors = {
-    /**
-     * Config has no registrationCert spec or registrar is not enabled
-     */
-    400: unknown;
-};
-
-export type PresentationManagementControllerReissueRegistrationCertificateResponses = {
-    /**
-     * Updated presentation configuration
-     */
-    200: unknown;
-};
-
-export type RegistrarControllerDeleteConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/registrar/config';
-};
-
-export type RegistrarControllerDeleteConfigResponses = {
-    /**
-     * Configuration deleted successfully
-     */
-    204: void;
-};
-
-export type RegistrarControllerDeleteConfigResponse = RegistrarControllerDeleteConfigResponses[keyof RegistrarControllerDeleteConfigResponses];
-
-export type RegistrarControllerGetConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/registrar/config';
-};
-
-export type RegistrarControllerGetConfigErrors = {
-    /**
-     * No registrar configuration found
-     */
-    404: unknown;
-};
-
-export type RegistrarControllerGetConfigResponses = {
-    /**
-     * The registrar configuration
-     */
-    200: RegistrarConfigResponseDto;
-};
-
-export type RegistrarControllerGetConfigResponse = RegistrarControllerGetConfigResponses[keyof RegistrarControllerGetConfigResponses];
-
-export type RegistrarControllerUpdateConfigData = {
-    body: UpdateRegistrarConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/registrar/config';
-};
-
-export type RegistrarControllerUpdateConfigErrors = {
-    /**
-     * Invalid credentials
-     */
-    400: unknown;
-    /**
-     * No registrar configuration found
-     */
-    404: unknown;
-    /**
-     * Registrar OIDC endpoint unreachable — credentials could not be verified
-     */
-    503: unknown;
-};
-
-export type RegistrarControllerUpdateConfigResponses = {
-    /**
-     * Configuration updated successfully
-     */
-    200: RegistrarConfigResponseDto;
-};
-
-export type RegistrarControllerUpdateConfigResponse = RegistrarControllerUpdateConfigResponses[keyof RegistrarControllerUpdateConfigResponses];
-
-export type RegistrarControllerCreateConfigData = {
-    body: CreateRegistrarConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/registrar/config';
-};
-
-export type RegistrarControllerCreateConfigErrors = {
-    /**
-     * Invalid credentials
-     */
-    400: unknown;
-    /**
-     * Registrar OIDC endpoint unreachable — credentials could not be verified
-     */
-    503: unknown;
-};
-
-export type RegistrarControllerCreateConfigResponses = {
-    /**
-     * Configuration created successfully
-     */
-    201: RegistrarConfigResponseDto;
-};
-
-export type RegistrarControllerCreateConfigResponse = RegistrarControllerCreateConfigResponses[keyof RegistrarControllerCreateConfigResponses];
-
-export type RegistrarControllerCreateAccessCertificateData = {
-    body: CreateAccessCertificateDto;
-    path?: never;
-    query?: never;
-    url: '/api/registrar/access-certificate';
-};
-
-export type RegistrarControllerCreateAccessCertificateErrors = {
-    /**
-     * No relying party found at registrar or failed to create certificate
-     */
-    400: unknown;
-    /**
-     * No registrar configuration found or key not found
-     */
-    404: unknown;
-};
-
-export type RegistrarControllerCreateAccessCertificateResponses = {
-    /**
-     * Access certificate created successfully
-     */
-    201: {
-        /**
-         * The certificate ID at the registrar
-         */
-        id?: string;
-        /**
-         * The certificate in PEM format
-         */
-        crt?: string;
-    };
-};
-
-export type RegistrarControllerCreateAccessCertificateResponse = RegistrarControllerCreateAccessCertificateResponses[keyof RegistrarControllerCreateAccessCertificateResponses];
+export type WebhookEndpointControllerUpdateResponse = WebhookEndpointControllerUpdateResponses[keyof WebhookEndpointControllerUpdateResponses];
 
 export type CredentialOfferControllerGetOfferData = {
     body: OfferRequestDto;
@@ -5647,7 +7341,7 @@ export type DeferredControllerCompleteDeferredResponses = {
 export type DeferredControllerCompleteDeferredResponse = DeferredControllerCompleteDeferredResponses[keyof DeferredControllerCompleteDeferredResponses];
 
 export type DeferredControllerFailDeferredData = {
-    body?: FailDeferredDto;
+    body: FailDeferredDto;
     path: {
         transactionId: string;
     };
@@ -5672,7 +7366,7 @@ export type DeferredControllerFailDeferredResponses = {
 export type DeferredControllerFailDeferredResponse = DeferredControllerFailDeferredResponses[keyof DeferredControllerFailDeferredResponses];
 
 export type ChainedAsVpControllerParData = {
-    body?: never;
+    body: ChainedAsParRequestDto;
     headers?: {
         /**
          * DPoP proof JWT
@@ -5726,6 +7420,10 @@ export type ChainedAsVpControllerAuthorizeData = {
          * Request URI from PAR response
          */
         request_uri: string;
+        /**
+         * State parameter (returned in redirect)
+         */
+        state?: string;
     };
     url: '/api/issuers/{tenantId}/chained-as-vp/authorize';
 };
@@ -5789,250 +7487,6 @@ export type ChainedAsVpControllerTokenResponses = {
 
 export type ChainedAsVpControllerTokenResponse = ChainedAsVpControllerTokenResponses[keyof ChainedAsVpControllerTokenResponses];
 
-export type KeyChainControllerGetProvidersData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/providers';
-};
-
-export type KeyChainControllerGetProvidersResponses = {
-    /**
-     * List of available KMS providers with capabilities
-     */
-    200: KmsProvidersResponseDto;
-};
-
-export type KeyChainControllerGetProvidersResponse = KeyChainControllerGetProvidersResponses[keyof KeyChainControllerGetProvidersResponses];
-
-export type KeyChainControllerGetProvidersHealthData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/providers/health';
-};
-
-export type KeyChainControllerGetProvidersHealthResponses = {
-    /**
-     * Per-provider health result (ok, latencyMs, optional error).
-     */
-    200: unknown;
-};
-
-export type KeyChainControllerDeleteTenantKmsConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/providers/config';
-};
-
-export type KeyChainControllerDeleteTenantKmsConfigResponses = {
-    /**
-     * Tenant-specific KMS config removed.
-     */
-    200: unknown;
-};
-
-export type KeyChainControllerGetTenantKmsConfigData = {
-    body?: never;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/providers/config';
-};
-
-export type KeyChainControllerGetTenantKmsConfigResponses = {
-    /**
-     * Tenant and effective KMS configuration.
-     */
-    200: KmsTenantConfigResponseDto;
-};
-
-export type KeyChainControllerGetTenantKmsConfigResponse = KeyChainControllerGetTenantKmsConfigResponses[keyof KeyChainControllerGetTenantKmsConfigResponses];
-
-export type KeyChainControllerUpdateTenantKmsConfigData = {
-    body: KmsConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/providers/config';
-};
-
-export type KeyChainControllerUpdateTenantKmsConfigResponses = {
-    /**
-     * Updated tenant KMS config.
-     */
-    200: KmsTenantConfigResponseDto;
-};
-
-export type KeyChainControllerUpdateTenantKmsConfigResponse = KeyChainControllerUpdateTenantKmsConfigResponses[keyof KeyChainControllerUpdateTenantKmsConfigResponses];
-
-export type KeyChainControllerGetAllData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Optional usage type filter
-         */
-        usageType?: 'access' | 'attestation' | 'trustList' | 'statusList' | 'encrypt';
-    };
-    url: '/api/key-chain';
-};
-
-export type KeyChainControllerGetAllResponses = {
-    /**
-     * List of key chains
-     */
-    200: Array<KeyChainResponseDto>;
-};
-
-export type KeyChainControllerGetAllResponse = KeyChainControllerGetAllResponses[keyof KeyChainControllerGetAllResponses];
-
-export type KeyChainControllerCreateData = {
-    body: KeyChainCreateDto;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain';
-};
-
-export type KeyChainControllerCreateResponses = {
-    /**
-     * Key chain created successfully
-     */
-    201: unknown;
-};
-
-export type KeyChainControllerDeleteData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/key-chain/{id}';
-};
-
-export type KeyChainControllerDeleteErrors = {
-    /**
-     * Key chain not found
-     */
-    404: unknown;
-};
-
-export type KeyChainControllerDeleteResponses = {
-    /**
-     * Key chain deleted successfully
-     */
-    200: unknown;
-};
-
-export type KeyChainControllerGetByIdData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/key-chain/{id}';
-};
-
-export type KeyChainControllerGetByIdErrors = {
-    /**
-     * Key chain not found
-     */
-    404: unknown;
-};
-
-export type KeyChainControllerGetByIdResponses = {
-    /**
-     * The key chain
-     */
-    200: KeyChainResponseDto;
-};
-
-export type KeyChainControllerGetByIdResponse = KeyChainControllerGetByIdResponses[keyof KeyChainControllerGetByIdResponses];
-
-export type KeyChainControllerUpdateData = {
-    body: KeyChainUpdateDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/key-chain/{id}';
-};
-
-export type KeyChainControllerUpdateErrors = {
-    /**
-     * Key chain not found
-     */
-    404: unknown;
-};
-
-export type KeyChainControllerUpdateResponses = {
-    /**
-     * Key chain updated successfully
-     */
-    200: unknown;
-};
-
-export type KeyChainControllerExportData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/key-chain/{id}/export';
-};
-
-export type KeyChainControllerExportErrors = {
-    /**
-     * Key chain not found
-     */
-    404: unknown;
-};
-
-export type KeyChainControllerExportResponses = {
-    /**
-     * Key chain export data
-     */
-    200: KeyChainExportDto;
-};
-
-export type KeyChainControllerExportResponse = KeyChainControllerExportResponses[keyof KeyChainControllerExportResponses];
-
-export type KeyChainControllerImportData = {
-    body: KeyChainImportDto;
-    path?: never;
-    query?: never;
-    url: '/api/key-chain/import';
-};
-
-export type KeyChainControllerImportResponses = {
-    /**
-     * Key chain imported successfully
-     */
-    201: unknown;
-};
-
-export type KeyChainControllerRotateData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/key-chain/{id}/rotate';
-};
-
-export type KeyChainControllerRotateErrors = {
-    /**
-     * Key chain not found
-     */
-    404: unknown;
-};
-
-export type KeyChainControllerRotateResponses = {
-    /**
-     * Key chain rotated successfully
-     */
-    200: unknown;
-};
-
 export type VerifierOfferControllerGetOfferData = {
     body: PresentationRequest;
     path?: never;
@@ -6057,9 +7511,134 @@ export type StorageControllerUploadData = {
 };
 
 export type StorageControllerUploadResponses = {
+    200: StoredObjectResponseDto;
+};
+
+export type StorageControllerUploadResponse = StorageControllerUploadResponses[keyof StorageControllerUploadResponses];
+
+export type ConfigPortabilityControllerExportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        format?: string;
+    };
+    url: '/api/config-bundles/export';
+};
+
+export type ConfigPortabilityControllerExportResponses = {
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type ConfigPortabilityControllerExportResponse = ConfigPortabilityControllerExportResponses[keyof ConfigPortabilityControllerExportResponses];
+
+export type ConfigPortabilityControllerPlanData = {
+    body?: never;
+    path?: never;
+    query?: {
+        mode?: string;
+    };
+    url: '/api/config-bundles/plan';
+};
+
+export type ConfigPortabilityControllerPlanResponses = {
     201: {
         [key: string]: unknown;
     };
 };
 
-export type StorageControllerUploadResponse = StorageControllerUploadResponses[keyof StorageControllerUploadResponses];
+export type ConfigPortabilityControllerPlanResponse = ConfigPortabilityControllerPlanResponses[keyof ConfigPortabilityControllerPlanResponses];
+
+export type ConfigPortabilityControllerPlanArchiveData = {
+    body?: never;
+    path?: never;
+    query?: {
+        mode?: string;
+    };
+    url: '/api/config-bundles/plan/archive';
+};
+
+export type ConfigPortabilityControllerPlanArchiveResponses = {
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type ConfigPortabilityControllerPlanArchiveResponse = ConfigPortabilityControllerPlanArchiveResponses[keyof ConfigPortabilityControllerPlanArchiveResponses];
+
+export type ConfigPortabilityControllerImportData = {
+    body?: never;
+    path?: never;
+    query?: {
+        mode?: string;
+        confirmReplace?: string;
+    };
+    url: '/api/config-bundles/import';
+};
+
+export type ConfigPortabilityControllerImportResponses = {
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type ConfigPortabilityControllerImportResponse = ConfigPortabilityControllerImportResponses[keyof ConfigPortabilityControllerImportResponses];
+
+export type ConfigPortabilityControllerImportArchiveData = {
+    body?: never;
+    path?: never;
+    query?: {
+        mode?: string;
+        confirmReplace?: string;
+    };
+    url: '/api/config-bundles/import/archive';
+};
+
+export type ConfigPortabilityControllerImportArchiveResponses = {
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type ConfigPortabilityControllerImportArchiveResponse = ConfigPortabilityControllerImportArchiveResponses[keyof ConfigPortabilityControllerImportArchiveResponses];
+
+export type ConfigPortabilityControllerUpgradeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/config-bundles/documents/upgrade';
+};
+
+export type ConfigPortabilityControllerUpgradeResponses = {
+    201: unknown;
+};
+
+export type ConfigPortabilityControllerResourcesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/config-bundles/resources';
+};
+
+export type ConfigPortabilityControllerResourcesResponses = {
+    200: Array<ConfigResourceMetadataEntity>;
+};
+
+export type ConfigPortabilityControllerResourcesResponse = ConfigPortabilityControllerResourcesResponses[keyof ConfigPortabilityControllerResourcesResponses];
+
+export type ConfigPortabilityControllerDetachData = {
+    body?: never;
+    path: {
+        kind: string;
+        id: string;
+    };
+    query?: never;
+    url: '/api/config-bundles/resources/{kind}/{id}/detach';
+};
+
+export type ConfigPortabilityControllerDetachResponses = {
+    201: ConfigResourceMetadataEntity;
+};
+
+export type ConfigPortabilityControllerDetachResponse = ConfigPortabilityControllerDetachResponses[keyof ConfigPortabilityControllerDetachResponses];

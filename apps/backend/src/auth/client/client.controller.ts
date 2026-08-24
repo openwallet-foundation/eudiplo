@@ -4,9 +4,9 @@ import {
     Delete,
     ForbiddenException,
     Get,
+    HttpCode,
     HttpException,
     HttpStatus,
-    HttpCode,
     Inject,
     Param,
     Patch,
@@ -15,11 +15,11 @@ import {
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
-import { Token, TokenPayload } from "../token.decorator";
 import { requireTenantContext } from "../tenant-context.util";
+import { Token, TokenPayload } from "../token.decorator";
 import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider";
-import { CreateClientDto } from "./dto/create-client.dto";
 import { ClientSecretResponseDto } from "./dto/client-secret-response.dto";
+import { CreateClientDto } from "./dto/create-client.dto";
 import { UpdateClientDto } from "./dto/update-client.dto";
 import { ClientEntity } from "./entities/client.entity";
 
@@ -129,7 +129,8 @@ export class ClientController {
         const tenantId = requireTenantContext(user);
         // Prevent privilege escalation: only users with tenant:manage can grant tenant:manage
         if (
-            updateClientDto.roles?.includes(Role.Tenants) &&
+            (updateClientDto.roles?.includes(Role.Tenants) ||
+                updateClientDto.roles?.includes(Role.TenantAdmin)) &&
             !user.roles.includes(Role.Tenants)
         ) {
             throw new ForbiddenException(
@@ -157,7 +158,8 @@ export class ClientController {
         const tenantId = requireTenantContext(user);
         // Prevent privilege escalation: only users with tenant:manage can grant tenant:manage
         if (
-            createClientDto.roles?.includes(Role.Tenants) &&
+            (createClientDto.roles?.includes(Role.Tenants) ||
+                createClientDto.roles?.includes(Role.TenantAdmin)) &&
             !user.roles.includes(Role.Tenants)
         ) {
             throw new ForbiddenException(

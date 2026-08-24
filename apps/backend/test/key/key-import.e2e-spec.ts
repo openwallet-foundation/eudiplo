@@ -6,8 +6,8 @@ import { v4 } from "uuid";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../../src/app.module";
 import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto";
-import { getToken } from "../utils";
 import { KeyUsageType } from "../../src/crypto/key/types/key-usage-type";
+import { getToken } from "../utils";
 
 describe("Key Chain — Import (e2e)", () => {
     let app: INestApplication;

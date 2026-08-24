@@ -1,5 +1,5 @@
-import { describe, expect, test } from "vitest";
 import { ConfigService } from "@nestjs/config";
+import { describe, expect, test } from "vitest";
 import { CredentialFormat } from "../../../issuer/configuration/credentials/entities/credential.entity";
 import { CryptoImplementationService } from "./crypto-implementation.service";
 

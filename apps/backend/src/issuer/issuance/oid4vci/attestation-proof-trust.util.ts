@@ -6,9 +6,9 @@ import {
     TrustListSource,
     walletSolutionServiceTypes,
 } from "../../../trust/types";
-import { CredentialRequestException } from "./exceptions";
-import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
 import { X509ValidationService } from "../../../trust/x509-validation.service";
+import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
+import { CredentialRequestException } from "./exceptions";
 
 export interface AttestationProofTrustValidationDeps {
     trustStoreService: TrustStoreService;

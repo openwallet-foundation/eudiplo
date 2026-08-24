@@ -3,7 +3,8 @@ import { RoleDto } from '@eudiplo/sdk-core';
 import { ApiService } from '../core';
 
 // Extend RoleDto to include registrar:manage which may not be in the SDK yet
-export type Role = RoleDto['role'] | 'registrar:manage' | 'tenants:manage' | 'users:manage';
+export type Role =
+  RoleDto['role'] | 'registrar:manage' | 'tenant:admin' | 'tenants:manage' | 'users:manage';
 
 export const roles: Role[] = [
   'clients:manage',
@@ -12,6 +13,7 @@ export const roles: Role[] = [
   'presentation:manage',
   'presentation:request',
   'registrar:manage',
+  'tenant:admin',
   'tenants:manage',
   'users:manage',
 ];
@@ -23,6 +25,7 @@ export function getRole(role: Role) {
 export interface JWTPayload {
   iss?: string;
   sub?: string;
+  tenant_id?: string | null;
   aud?: string | string[];
   exp?: number;
   iat?: number;
@@ -76,16 +79,22 @@ export class JwtService {
    * @param role
    * @returns
    */
-  hasRole(role: Role): boolean {
+  hasRole(role: Role | Role[]): boolean {
     const jwt = this.decodeToken(this.apiService.accessToken);
     if (!jwt) return false;
 
+    const requiredRoles = Array.isArray(role) ? role : [role];
     if (jwt.roles) {
-      return jwt.roles.includes(role);
+      return requiredRoles.some((requiredRole) => jwt.roles.includes(requiredRole));
     } else if (jwt.realm_access?.roles) {
-      return jwt.realm_access.roles.includes(role);
+      return requiredRoles.some((requiredRole) => jwt.realm_access!.roles.includes(requiredRole));
     }
     return false;
+  }
+
+  hasTenantContext(): boolean {
+    const jwt = this.decodeToken(this.apiService.accessToken);
+    return typeof jwt?.tenant_id === 'string' && jwt.tenant_id.length > 0;
   }
 
   /**

@@ -1,6 +1,11 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import {
+  configPortabilityControllerExport,
+  configPortabilityControllerImport,
+  configPortabilityControllerImportArchive,
+  configPortabilityControllerPlan,
+  configPortabilityControllerPlanArchive,
+} from '@eudiplo/sdk-core';
 import { ApiService } from '../core';
 import {
   ConfigOwnershipService,
@@ -68,40 +73,42 @@ export interface ConfigImportPlan {
 @Injectable({ providedIn: 'root' })
 export class ConfigPortabilityService {
   constructor(
-    private readonly http: HttpClient,
     private readonly api: ApiService,
     private readonly ownership: ConfigOwnershipService
   ) {}
 
-  exportBundle(): Promise<ConfigBundle> {
-    return firstValueFrom(this.http.get<ConfigBundle>(`${this.baseUrl}/config-bundles/export`));
+  async exportBundle(): Promise<ConfigBundle> {
+    const result = await configPortabilityControllerExport<true>({ client: this.api.client });
+    return result.data as unknown as ConfigBundle;
   }
 
-  exportArchive(): Promise<Blob> {
-    return firstValueFrom(
-      this.http.get(`${this.baseUrl}/config-bundles/export`, {
-        params: { format: 'zip' },
-        responseType: 'blob',
-      })
-    );
+  async exportArchive(): Promise<Blob> {
+    const result = await configPortabilityControllerExport<true>({
+      client: this.api.client,
+      query: { format: 'zip' },
+      parseAs: 'blob',
+    });
+    return result.data as unknown as Blob;
   }
 
-  plan(bundle: ConfigBundle, mode: ConfigImportMode): Promise<ConfigImportPlan> {
-    return firstValueFrom(
-      this.http.post<ConfigImportPlan>(`${this.baseUrl}/config-bundles/plan`, bundle, {
-        params: { mode },
-      })
-    );
+  async plan(bundle: ConfigBundle, mode: ConfigImportMode): Promise<ConfigImportPlan> {
+    const result = await configPortabilityControllerPlan<true>({
+      client: this.api.client,
+      body: bundle,
+      query: { mode },
+    } as never);
+    return result.data as unknown as ConfigImportPlan;
   }
 
-  planArchive(file: File, mode: ConfigImportMode): Promise<ConfigImportPlan> {
+  async planArchive(file: File, mode: ConfigImportMode): Promise<ConfigImportPlan> {
     const body = new FormData();
     body.set('bundle', file);
-    return firstValueFrom(
-      this.http.post<ConfigImportPlan>(`${this.baseUrl}/config-bundles/plan/archive`, body, {
-        params: { mode },
-      })
-    );
+    const result = await configPortabilityControllerPlanArchive<true>({
+      client: this.api.client,
+      body,
+      query: { mode },
+    } as never);
+    return result.data as unknown as ConfigImportPlan;
   }
 
   import(
@@ -109,11 +116,11 @@ export class ConfigPortabilityService {
     mode: ConfigImportMode,
     confirmReplace: boolean
   ): Promise<ConfigImportPlan> {
-    return firstValueFrom(
-      this.http.post<ConfigImportPlan>(`${this.baseUrl}/config-bundles/import`, bundle, {
-        params: { mode, confirmReplace },
-      })
-    );
+    return configPortabilityControllerImport<true>({
+      client: this.api.client,
+      body: bundle,
+      query: { mode, confirmReplace },
+    } as never).then((result) => result.data as unknown as ConfigImportPlan);
   }
 
   importArchive(
@@ -123,11 +130,11 @@ export class ConfigPortabilityService {
   ): Promise<ConfigImportPlan> {
     const body = new FormData();
     body.set('bundle', file);
-    return firstValueFrom(
-      this.http.post<ConfigImportPlan>(`${this.baseUrl}/config-bundles/import/archive`, body, {
-        params: { mode, confirmReplace },
-      })
-    );
+    return configPortabilityControllerImportArchive<true>({
+      client: this.api.client,
+      body,
+      query: { mode, confirmReplace },
+    } as never).then((result) => result.data as unknown as ConfigImportPlan);
   }
 
   listResources(): Promise<ConfigResourceMetadata[]> {
@@ -136,9 +143,5 @@ export class ConfigPortabilityService {
 
   detach(kind: string, id: string): Promise<ConfigResourceMetadata> {
     return this.ownership.detach(kind as ConfigResourceKind, id);
-  }
-
-  private get baseUrl(): string {
-    return (this.api.getBaseUrl() ?? '').replace(/\/$/, '');
   }
 }

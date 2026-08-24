@@ -53,7 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     public apiService: ApiService,
     private breakpointObserver: BreakpointObserver,
-    private jwtService: JwtService
+    public jwtService: JwtService
   ) {}
 
   ngOnInit(): void {

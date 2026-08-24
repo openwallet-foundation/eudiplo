@@ -58,7 +58,7 @@ export class ConfigPortabilityComponent implements OnInit {
   ) {}
 
   get canApply(): boolean {
-    return this.jwt.hasRole('tenants:manage');
+    return this.jwt.hasRole('tenants:manage') || this.jwt.hasRole('tenant:admin');
   }
 
   ngOnInit(): void {

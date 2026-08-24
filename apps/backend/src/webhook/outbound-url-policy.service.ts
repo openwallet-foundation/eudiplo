@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import { lookup } from "node:dns/promises";
 import { isIP } from "node:net";
+import { BadRequestException, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class OutboundUrlPolicyService {

@@ -16,6 +16,8 @@ export enum Role {
     Users = "users:manage",
     // to manage tenant resources
     Tenants = "tenants:manage",
+    // to manage the current tenant's full configuration
+    TenantAdmin = "tenant:admin",
     // to manage registrar configuration and operations
     Registrar = "registrar:manage",
 }
@@ -32,4 +34,5 @@ export const allRoles = [
     Role.Clients,
     Role.Users,
     Role.Registrar,
+    Role.TenantAdmin,
 ];

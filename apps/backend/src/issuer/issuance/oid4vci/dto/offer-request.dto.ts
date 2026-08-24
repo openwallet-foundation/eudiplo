@@ -2,13 +2,13 @@ import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
 import {
-    WebhookConfig,
-    WebhookConfigSchema,
-} from "../../../../webhook/webhook.dto";
-import {
     ResponseType,
     type ResponseTypeValue,
 } from "../../../../verifier/oid4vp/dto/presentation-request.dto";
+import {
+    WebhookConfig,
+    WebhookConfigSchema,
+} from "../../../../webhook/webhook.dto";
 
 export const FlowType = {
     AUTH_CODE: "authorization_code",

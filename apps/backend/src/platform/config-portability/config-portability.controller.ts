@@ -21,23 +21,25 @@ import {
 } from "../../audit-log/audit-log-context.util";
 import { Role } from "../../auth/roles/role.enum";
 import { Secured } from "../../auth/secure.decorator";
+import { requireTenantContext } from "../../auth/tenant-context.util";
 import { Token, TokenPayload } from "../../auth/token.decorator";
+import { ConfigBundleService } from "./config-bundle.service";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service";
-import { ConfigBundleService } from "./config-bundle.service";
 import { ConfigMigrationService } from "./config-migration.service";
 import { ConfigOwnershipService } from "./config-ownership.service";
-import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
 import type {
     ConfigBundle,
     ConfigDocument,
     ConfigImportMode,
     ConfigResourceKind,
 } from "./config-resource.types";
+import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
 
 @ApiTags("Configuration portability")
 @Secured([
     Role.Tenants,
+    Role.TenantAdmin,
     Role.Issuances,
     Role.Presentations,
     Role.Clients,
@@ -55,7 +57,7 @@ export class ConfigPortabilityController {
     ) {}
 
     @Get("export")
-    @Secured([Role.Tenants])
+    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Export the current tenant configuration" })
     async export(
         @Token() token: TokenPayload,
@@ -63,7 +65,7 @@ export class ConfigPortabilityController {
         @Res({ passthrough: true }) response: Response,
         @Query("format") format: "json" | "zip" = "json",
     ) {
-        const tenantId = token.entity!.id;
+        const tenantId = requireTenantContext(token);
         const bundle = await this.bundleService.exportBundle(tenantId);
         await this.auditLogService.record({
             tenantId,
@@ -81,7 +83,8 @@ export class ConfigPortabilityController {
                 "Content-Disposition",
                 `attachment; filename="eudiplo-config-${tenantId}.zip"`,
             );
-            return this.archiveService.encode(bundle);
+            response.send(this.archiveService.encode(bundle));
+            return;
         }
         if (format !== "json") {
             throw new BadRequestException("Unsupported bundle format");
@@ -99,7 +102,11 @@ export class ConfigPortabilityController {
         @Query("mode") mode: ConfigImportMode = "upsert",
     ) {
         this.assertMode(mode);
-        return this.bundleService.plan(token.entity!.id, bundle, mode);
+        return this.bundleService.plan(
+            requireTenantContext(token),
+            bundle,
+            mode,
+        );
     }
 
     @Post("plan/archive")
@@ -117,14 +124,14 @@ export class ConfigPortabilityController {
         if (!file?.buffer)
             throw new BadRequestException("bundle file is required");
         return this.bundleService.plan(
-            token.entity!.id,
+            requireTenantContext(token),
             this.archiveService.decode(file.buffer),
             mode,
         );
     }
 
     @Post("import")
-    @Secured([Role.Tenants])
+    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Apply a validated tenant configuration bundle" })
     async import(
         @Token() token: TokenPayload,
@@ -137,7 +144,7 @@ export class ConfigPortabilityController {
     }
 
     @Post("import/archive")
-    @Secured([Role.Tenants])
+    @Secured([Role.Tenants, Role.TenantAdmin])
     @UseInterceptors(
         FileInterceptor("bundle", { limits: { fileSize: 50 * 1024 * 1024 } }),
     )
@@ -174,7 +181,7 @@ export class ConfigPortabilityController {
                 "replace mode requires confirmReplace=true",
             );
         }
-        const tenantId = token.entity!.id;
+        const tenantId = requireTenantContext(token);
         const plan = await this.applyService.apply(tenantId, bundle, mode);
         await this.auditLogService.record({
             tenantId,
@@ -214,11 +221,11 @@ export class ConfigPortabilityController {
     @Get("resources")
     @ApiOperation({ summary: "List configuration resource ownership" })
     resources(@Token() token: TokenPayload) {
-        return this.ownershipService.list(token.entity!.id);
+        return this.ownershipService.list(requireTenantContext(token));
     }
 
     @Post("resources/:kind/:id/detach")
-    @Secured([Role.Tenants])
+    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Detach a resource from file provisioning" })
     async detach(
         @Token() token: TokenPayload,
@@ -232,7 +239,7 @@ export class ConfigPortabilityController {
             );
         }
         const kind = rawKind as ConfigResourceKind;
-        const tenantId = token.entity!.id;
+        const tenantId = requireTenantContext(token);
         const metadata = await this.ownershipService.detach(tenantId, kind, id);
         await this.auditLogService.record({
             tenantId,

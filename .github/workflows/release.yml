@@ -396,73 +396,20 @@ jobs:
           echo "new_release=true" >> "$GITHUB_OUTPUT"
           echo "version=${EXPECTED_TAG}" >> "$GITHUB_OUTPUT"
 
-      - name: Set up Python for docs
-        if: steps.semantic_release.outputs.new_release == 'true'
-        uses: actions/setup-python@v7
-        with:
-          python-version: '3.11'
-
-      - name: Install Python dependencies for docs
-        if: steps.semantic_release.outputs.new_release == 'true'
-        run: pip install -r requirements.txt
-
-      - name: Copy env file for docs
-        if: steps.semantic_release.outputs.new_release == 'true'
-        run: cp .env.example .env
-
-      - name: Configure git for mike
+      - name: Build and deploy release docs
         if: steps.semantic_release.outputs.new_release == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Build and deploy release docs
-        if: steps.semantic_release.outputs.new_release == 'true'
-        run: |
-          export MASTER_SECRET="$(openssl rand -base64 32)"
-          export AUTH_CLIENT_ID="ci-docs-client"
-          export AUTH_CLIENT_SECRET="$(openssl rand -hex 32)"
-          export ENCRYPTION_KEY="$(openssl rand -hex 32)"
-          FULL_VERSION="${{ steps.semantic_release.outputs.version }}"
-          RELEASE_VERSION="${FULL_VERSION#v}"
-          MINOR_VERSION="v${RELEASE_VERSION%.*}"
+          pnpm --filter @eudiplo/docs run build
 
-          pnpm run doc:generate
-          pnpm run compodoc
+          test -s apps/website/install.sh
+          bash -n apps/website/install.sh
 
-          git fetch origin gh-pages:gh-pages
-
-          mike deploy \
-            --branch gh-pages \
-            --deploy-prefix docs \
-            --alias-type copy \
-            --update-aliases \
-            "$MINOR_VERSION" latest
-
-          mike set-default \
-            --branch gh-pages \
-            --deploy-prefix docs \
-            latest
-
-          git worktree add gh-pages-out gh-pages
-
-          rsync -a --delete \
-            --exclude docs \
-            --exclude .git \
-            website/. gh-pages-out/
-
-          test -s gh-pages-out/install.sh
-          bash -n gh-pages-out/install.sh
-
-          touch gh-pages-out/.nojekyll
-
-          if [ -n "$(git -C gh-pages-out status --porcelain)" ]; then
-            git -C gh-pages-out add .
-            git -C gh-pages-out commit -m "docs: sync website for $FULL_VERSION"
-          fi
-
-          git push origin gh-pages
-
-      - name: Cleanup temporary docs worktree
-        if: always()
-        run: git worktree remove gh-pages-out --force || true
+          test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured"; exit 1; }
+          test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured"; exit 1; }
+          pnpm --filter @eudiplo/docs run pages:deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

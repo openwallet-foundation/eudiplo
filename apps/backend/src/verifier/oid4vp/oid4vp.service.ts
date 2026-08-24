@@ -10,17 +10,17 @@ import { v4 } from "uuid";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { CertService } from "../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { RegistrarService } from "../../registrar/registrar.service";
 import { SessionStatus } from "../../session/entities/session.entity";
-import { SessionService } from "../../session/session.service";
-import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../trust/types";
 import { AuditLogContext } from "../../session/logging/session-audit.service";
 import { SessionLoggerService } from "../../session/logging/session-logger.service";
+import { SessionService } from "../../session/session.service";
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../trust/types";
 import { WebhookService } from "../../webhook/webhook.service";
 import {
     AuthResponse,

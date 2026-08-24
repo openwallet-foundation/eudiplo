@@ -2,8 +2,6 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { SchemaURIMeta } from "@owf/eudi-attestation-schema";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { SchemaMetadataService } from "./schema-metadata.service";
-import { type UpdateSchemaMetadataDto } from "./dto/schema-metadata.dto";
 import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service";
 import {
     SchemaMetadataPinMode,
@@ -13,6 +11,8 @@ import {
 import { buildJsonSchema } from "../../issuer/configuration/credentials/utils";
 import { TrustListService } from "../../issuer/trust-list/trustlist.service";
 import { type CreateSchemaMetadataMultipartDto } from "../generated";
+import { type UpdateSchemaMetadataDto } from "./dto/schema-metadata.dto";
+import { SchemaMetadataService } from "./schema-metadata.service";
 
 type TrustedAuthorityInput = NonNullable<
     SignSchemaMetaConfigDto["config"]["trustedAuthorities"]

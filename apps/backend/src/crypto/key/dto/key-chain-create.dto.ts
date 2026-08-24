@@ -1,10 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
-import { KeyUsageType } from "../types/key-usage-type";
 import {
     KeyChainCreateSchema,
     RotationPolicyCreateSchema,
 } from "../schemas/key-chain.schema";
+import { KeyUsageType } from "../types/key-usage-type";
 
 /**
  * DTO for rotation policy configuration.

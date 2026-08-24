@@ -56,7 +56,8 @@ export class UserController {
     ) {
         const tenantId = requireTenantContext(user);
         if (
-            createUserDto.roles?.includes(Role.Tenants) &&
+            (createUserDto.roles?.includes(Role.Tenants) ||
+                createUserDto.roles?.includes(Role.TenantAdmin)) &&
             !user.roles.includes(Role.Tenants)
         ) {
             throw new ForbiddenException(
@@ -79,7 +80,8 @@ export class UserController {
     ) {
         const tenantId = requireTenantContext(user);
         if (
-            updateUserDto.roles?.includes(Role.Tenants) &&
+            (updateUserDto.roles?.includes(Role.Tenants) ||
+                updateUserDto.roles?.includes(Role.TenantAdmin)) &&
             !user.roles.includes(Role.Tenants)
         ) {
             throw new ForbiddenException(

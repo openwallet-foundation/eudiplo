@@ -3,9 +3,9 @@ import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { IssuanceTestContext, setupIssuanceTestApp } from "../utils";
-import { CredentialFormat } from "../../src/issuer/configuration/credentials/entities/credential.entity";
 import { CredentialConfigUpdate } from "../../src/issuer/configuration/credentials/dto/credential-config-update.dto";
+import { CredentialFormat } from "../../src/issuer/configuration/credentials/entities/credential.entity";
+import { IssuanceTestContext, setupIssuanceTestApp } from "../utils";
 
 setGlobalDispatcher(
     new Agent({

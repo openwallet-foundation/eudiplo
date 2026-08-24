@@ -4,9 +4,9 @@ import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto";
+import { KeyUsageType } from "../../src/crypto/key/types/key-usage-type";
 import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
 import { PresentationTestContext, setupPresentationTestApp } from "../utils";
-import { KeyUsageType } from "../../src/crypto/key/types/key-usage-type";
 
 /**
  * Compute the x509_hash client_id from the DER bytes of a PEM certificate.

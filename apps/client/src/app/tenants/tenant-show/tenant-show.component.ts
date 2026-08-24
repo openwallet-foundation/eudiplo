@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { tenantControllerGetTenant, TenantEntity } from '@eudiplo/sdk-core';
+import { tenantControllerGetTenant, TenantResponseDto } from '@eudiplo/sdk-core';
 
 import { ClientListComponent } from '../client/client-list/client-list.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -27,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './tenant-show.component.scss',
 })
 export class TenantShowComponent implements OnInit {
-  tenant?: TenantEntity;
+  tenant?: TenantResponseDto;
 
   constructor(private readonly route: ActivatedRoute) {}
 

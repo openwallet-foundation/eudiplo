@@ -112,6 +112,89 @@ export const KeyChainImportSchema = z
     .describe("Payload for importing key chains from JSON configuration.")
     .strict();
 
+const EcPublicJwkSchema = z
+    .object({
+        kty: z.string(),
+        x: z.string(),
+        y: z.string(),
+        crv: z.string(),
+        alg: z.string().optional(),
+        kid: z.string().optional(),
+    })
+    .strict();
+
+const PortableKeySourceSchema = z.discriminatedUnion("type", [
+    z
+        .object({
+            type: z.literal("private-jwk"),
+            jwk: EcJwkSchema,
+            activeJwk: EcJwkSchema.optional(),
+        })
+        .strict(),
+    z
+        .object({
+            type: z.literal("external-reference"),
+            provider: z.string(),
+            externalKeyId: z.string(),
+            publicJwk: EcPublicJwkSchema,
+            activeExternalKeyId: z.string().optional(),
+            activePublicJwk: EcPublicJwkSchema.optional(),
+        })
+        .strict(),
+    z
+        .object({
+            type: z.literal("required"),
+            publicJwk: EcPublicJwkSchema.optional(),
+        })
+        .strict(),
+    z
+        .object({
+            type: z.literal("regenerate"),
+            keyChainType: z.enum(["standalone", "internalChain"]).optional(),
+        })
+        .strict(),
+]);
+
+const PortableRotationPolicySchema = z
+    .object({
+        enabled: z.boolean(),
+        intervalDays: z.number().min(1).max(3650).nullable().optional(),
+        certValidityDays: z.number().min(1).max(3650).nullable().optional(),
+    })
+    .strict();
+
+const PortableKeyChainSpecSchema = z
+    .object({
+        id: z.string().optional(),
+        description: z.string().optional(),
+        usageType: z.enum(KeyUsageType),
+        keySource: PortableKeySourceSchema,
+        crt: z.array(z.string()).optional(),
+        kmsProvider: z.string().optional(),
+        rotationPolicy: PortableRotationPolicySchema.optional(),
+    })
+    .strict();
+
+const ConfigDocumentMetadataSchema = z
+    .object({
+        id: z.string(),
+        generation: z.number().optional(),
+        ownership: z.enum(["unmanaged", "file-managed"]).optional(),
+    })
+    .strict();
+
+export const KeyChainConfigFileSchema = z.union([
+    KeyChainImportSchema,
+    z
+        .object({
+            apiVersion: z.literal("eudiplo.io/key-chain/v2"),
+            kind: z.literal("KeyChain"),
+            metadata: ConfigDocumentMetadataSchema,
+            spec: PortableKeyChainSpecSchema,
+        })
+        .strict(),
+]);
+
 export const RotationPolicyUpdateSchema = z
     .object({
         enabled: z

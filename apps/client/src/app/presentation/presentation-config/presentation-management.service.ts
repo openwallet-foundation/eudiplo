@@ -2,22 +2,22 @@ import { Injectable } from '@angular/core';
 import {
   keyChainControllerGetAll,
   KeyChainResponseDto,
-  PresentationConfig,
   presentationManagementControllerGetConfiguration,
   PresentationRequest,
   presentationManagementControllerConfiguration,
   presentationManagementControllerDeleteConfiguration,
   presentationManagementControllerStorePresentationConfig,
   verifierOfferControllerGetOffer,
+  PresentationConfigCreateDto,
 } from '@eudiplo/sdk-core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PresentationManagementService {
-  createConfiguration(value: PresentationConfig) {
+  createConfiguration(value: PresentationConfigCreateDto) {
     return presentationManagementControllerStorePresentationConfig({ body: value }).then(
-      (response) => response.data as PresentationConfig
+      (response) => response.data
     );
   }
   getPresentationById(presentationId: string) {

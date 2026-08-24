@@ -14,6 +14,10 @@
         <mat-icon matChipAvatar>web</mat-icon>
         Client: {{ clientVersion || '...' }}
       </mat-chip>
+      <mat-chip color="primary" highlighted matTooltip="Startup configuration import mode">
+        <mat-icon matChipAvatar>sync</mat-icon>
+        Import: {{ frontendConfigService.configImportMode || '...' }}
+      </mat-chip>
     </div>
   </div>
 

@@ -62,7 +62,7 @@ export class UserCreateComponent implements OnInit {
     });
 
     if (!this.jwtService.hasRole('tenants:manage')) {
-      this.availableRoles = roles.filter((r) => r !== 'tenants:manage');
+      this.availableRoles = roles.filter((r) => r !== 'tenants:manage' && r !== 'tenant:admin');
     }
   }
 

@@ -1,11 +1,113 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "./KeyChainConfigFile.schema.json",
-  "title": "KeyChainConfigFile",
-  "description": "A key-chain configuration file in legacy payload or versioned-envelope form.",
-  "oneOf": [
+  "anyOf": [
     {
-      "$ref": "./KeyChainImportDto.schema.json"
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Optional key chain id. If omitted, one is generated.",
+          "type": "string"
+        },
+        "key": {
+          "type": "object",
+          "properties": {
+            "kty": {
+              "type": "string",
+              "description": "Key type (for example EC)."
+            },
+            "x": {
+              "type": "string",
+              "description": "Elliptic curve public x coordinate."
+            },
+            "y": {
+              "type": "string",
+              "description": "Elliptic curve public y coordinate."
+            },
+            "crv": {
+              "type": "string",
+              "description": "Elliptic curve name."
+            },
+            "d": {
+              "type": "string",
+              "description": "Private key value."
+            },
+            "alg": {
+              "description": "Optional algorithm hint.",
+              "type": "string"
+            },
+            "kid": {
+              "description": "Optional key identifier.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kty",
+            "x",
+            "y",
+            "crv",
+            "d"
+          ],
+          "additionalProperties": false,
+          "description": "Private key material in JWK format."
+        },
+        "description": {
+          "description": "Optional key chain description.",
+          "type": "string"
+        },
+        "usageType": {
+          "type": "string",
+          "enum": [
+            "access",
+            "attestation",
+            "trustList",
+            "statusList",
+            "encrypt"
+          ],
+          "description": "Key usage category for the imported key chain."
+        },
+        "crt": {
+          "description": "Optional certificate chain values in PEM or base64 DER.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "kmsProvider": {
+          "description": "Optional KMS provider id.",
+          "type": "string"
+        },
+        "rotationPolicy": {
+          "description": "Optional rotation policy for imported key chains.",
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable automatic rotation for imported key chains."
+            },
+            "intervalDays": {
+              "description": "Rotation interval in days.",
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3650
+            },
+            "certValidityDays": {
+              "description": "Certificate validity period in days.",
+              "type": "number",
+              "minimum": 1,
+              "maximum": 3650
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "key",
+        "usageType"
+      ],
+      "additionalProperties": false
     },
     {
       "type": "object",
@@ -19,83 +121,356 @@
           "const": "KeyChain"
         },
         "metadata": {
-          "$ref": "./ConfigDocumentMetadata.schema.json"
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "generation": {
+              "type": "number"
+            },
+            "ownership": {
+              "type": "string",
+              "enum": [
+                "unmanaged",
+                "file-managed"
+              ]
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
         },
         "spec": {
-          "$ref": "#/$defs/portableSpec"
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "usageType": {
+              "type": "string",
+              "enum": [
+                "access",
+                "attestation",
+                "trustList",
+                "statusList",
+                "encrypt"
+              ]
+            },
+            "keySource": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "private-jwk"
+                    },
+                    "jwk": {
+                      "type": "object",
+                      "properties": {
+                        "kty": {
+                          "type": "string",
+                          "description": "Key type (for example EC)."
+                        },
+                        "x": {
+                          "type": "string",
+                          "description": "Elliptic curve public x coordinate."
+                        },
+                        "y": {
+                          "type": "string",
+                          "description": "Elliptic curve public y coordinate."
+                        },
+                        "crv": {
+                          "type": "string",
+                          "description": "Elliptic curve name."
+                        },
+                        "d": {
+                          "type": "string",
+                          "description": "Private key value."
+                        },
+                        "alg": {
+                          "description": "Optional algorithm hint.",
+                          "type": "string"
+                        },
+                        "kid": {
+                          "description": "Optional key identifier.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kty",
+                        "x",
+                        "y",
+                        "crv",
+                        "d"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "activeJwk": {
+                      "type": "object",
+                      "properties": {
+                        "kty": {
+                          "type": "string",
+                          "description": "Key type (for example EC)."
+                        },
+                        "x": {
+                          "type": "string",
+                          "description": "Elliptic curve public x coordinate."
+                        },
+                        "y": {
+                          "type": "string",
+                          "description": "Elliptic curve public y coordinate."
+                        },
+                        "crv": {
+                          "type": "string",
+                          "description": "Elliptic curve name."
+                        },
+                        "d": {
+                          "type": "string",
+                          "description": "Private key value."
+                        },
+                        "alg": {
+                          "description": "Optional algorithm hint.",
+                          "type": "string"
+                        },
+                        "kid": {
+                          "description": "Optional key identifier.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kty",
+                        "x",
+                        "y",
+                        "crv",
+                        "d"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "jwk"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "external-reference"
+                    },
+                    "provider": {
+                      "type": "string"
+                    },
+                    "externalKeyId": {
+                      "type": "string"
+                    },
+                    "publicJwk": {
+                      "type": "object",
+                      "properties": {
+                        "kty": {
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "string"
+                        },
+                        "y": {
+                          "type": "string"
+                        },
+                        "crv": {
+                          "type": "string"
+                        },
+                        "alg": {
+                          "type": "string"
+                        },
+                        "kid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kty",
+                        "x",
+                        "y",
+                        "crv"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "activeExternalKeyId": {
+                      "type": "string"
+                    },
+                    "activePublicJwk": {
+                      "type": "object",
+                      "properties": {
+                        "kty": {
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "string"
+                        },
+                        "y": {
+                          "type": "string"
+                        },
+                        "crv": {
+                          "type": "string"
+                        },
+                        "alg": {
+                          "type": "string"
+                        },
+                        "kid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kty",
+                        "x",
+                        "y",
+                        "crv"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "provider",
+                    "externalKeyId",
+                    "publicJwk"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "required"
+                    },
+                    "publicJwk": {
+                      "type": "object",
+                      "properties": {
+                        "kty": {
+                          "type": "string"
+                        },
+                        "x": {
+                          "type": "string"
+                        },
+                        "y": {
+                          "type": "string"
+                        },
+                        "crv": {
+                          "type": "string"
+                        },
+                        "alg": {
+                          "type": "string"
+                        },
+                        "kid": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "kty",
+                        "x",
+                        "y",
+                        "crv"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "regenerate"
+                    },
+                    "keyChainType": {
+                      "type": "string",
+                      "enum": [
+                        "standalone",
+                        "internalChain"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "crt": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "kmsProvider": {
+              "type": "string"
+            },
+            "rotationPolicy": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean"
+                },
+                "intervalDays": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 3650
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "certValidityDays": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 1,
+                      "maximum": 3650
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "usageType",
+            "keySource"
+          ],
+          "additionalProperties": false
         }
       },
-      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ],
       "additionalProperties": false
     }
   ],
-  "$defs": {
-    "ecPrivateJwk": {
-      "type": "object",
-      "properties": {
-        "kty": { "type": "string" },
-        "x": { "type": "string" },
-        "y": { "type": "string" },
-        "crv": { "type": "string" },
-        "d": { "type": "string" },
-        "alg": { "type": "string" },
-        "kid": { "type": "string" }
-      },
-      "required": ["kty", "x", "y", "crv", "d"],
-      "additionalProperties": false
-    },
-    "portableSpec": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Optional key-chain id duplicated from envelope metadata."
-        },
-        "description": { "type": "string" },
-        "usageType": {
-          "type": "string",
-          "enum": ["access", "attestation", "trustList", "statusList", "encrypt"]
-        },
-        "keySource": {
-          "type": "object",
-          "properties": {
-            "type": {
-              "type": "string",
-              "const": "private-jwk"
-            },
-            "jwk": {
-              "$ref": "#/$defs/ecPrivateJwk"
-            }
-          },
-          "required": ["type", "jwk"],
-          "additionalProperties": false
-        },
-        "crt": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "kmsProvider": { "type": "string" },
-        "rotationPolicy": {
-          "type": "object",
-          "properties": {
-            "enabled": { "type": "boolean" },
-            "intervalDays": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 3650
-            },
-            "certValidityDays": {
-              "type": "number",
-              "minimum": 1,
-              "maximum": 3650
-            }
-          },
-          "required": ["enabled"],
-          "additionalProperties": false
-        }
-      },
-      "required": ["usageType", "keySource"],
-      "additionalProperties": false
-    }
-  }
+  "$id": "./KeyChainConfigFile.schema.json",
+  "title": "KeyChainConfigFile"
 }

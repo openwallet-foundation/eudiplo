@@ -1,12 +1,12 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { CertService } from "../../../../crypto/key/cert/cert.service";
 import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../../../crypto/key/key-chain.service";
+import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type";
 import { MediaType } from "../../../../shared/utils/media-type/media-type.enum";
 import { IssuanceService } from "../../../configuration/issuance/issuance.service";
-import { AuthorizeService } from "../authorization/authorize/authorize.service";
 import { AuthorizationServersService } from "../authorization/authorization-servers/authorization-servers.service";
+import { AuthorizeService } from "../authorization/authorize/authorize.service";
 import { ChainedAsService } from "../authorization/chained-as/chained-as.service";
 import { ChainedAsVpService } from "../authorization/chained-as-vp/chained-as-vp.service";
 import { WellKnownException } from "../exceptions";

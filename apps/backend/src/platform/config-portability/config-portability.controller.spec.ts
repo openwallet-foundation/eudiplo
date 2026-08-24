@@ -5,14 +5,14 @@ import { ConfigPortabilityController } from "./config-portability.controller";
 
 describe("ConfigPortabilityController authorization", () => {
     it.each(["export", "import", "importArchive", "detach"] as const)(
-        "requires tenant-management permission for %s",
+        "requires tenant configuration-management permission for %s",
         (method) => {
             expect(
                 Reflect.getMetadata(
                     ROLES_KEY,
                     ConfigPortabilityController.prototype[method],
                 ),
-            ).toEqual([Role.Tenants]);
+            ).toEqual([Role.Tenants, Role.TenantAdmin]);
         },
     );
 });

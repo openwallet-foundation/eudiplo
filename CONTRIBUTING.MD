@@ -127,7 +127,7 @@ pnpm run lint
 pnpm run lint:fix
 ```
 
-See [Code Quality Standards](docs/development/code-quality.md) for detailed guidelines.
+See [Code Quality Standards](apps/docs/docs/contributing/code-quality.md) for detailed guidelines.
 
 ---
 
@@ -147,12 +147,9 @@ Please **create your PR against the `main` branch**.
 
 ## Documentation Contributions
 
-Documentation is in the `docs/` folder and uses [MkDocs](https://www.mkdocs.org/). To work with documentation:
+Documentation is a Docusaurus site in `apps/docs/`. To work with documentation:
 
 ```bash
-# Set up Python environment for documentation (one-time setup)
-pnpm run setup:python
-
 # Build documentation
 pnpm run doc:build
 
@@ -162,10 +159,11 @@ pnpm run doc:watch
 
 The documentation includes:
 
-- User guides in `docs/getting-started/`
-- Developer guides in `docs/development/`
-- API documentation generated from code
-- Architecture documentation
+- Getting started guides in `apps/docs/docs/getting-started/`
+- Issuance and Presentation guides in `apps/docs/docs/issuance/` and `apps/docs/docs/presentation/`
+- Contributor guides in `apps/docs/docs/contributing/`
+- API documentation generated from code (Compodoc + OpenAPI)
+- Architecture documentation in `apps/docs/docs/architecture/`
 
 ---
 

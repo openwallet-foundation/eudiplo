@@ -1,6 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
+import {
+  configPortabilityControllerDetach,
+  configPortabilityControllerResources,
+  type ConfigResourceMetadataEntity,
+} from '@eudiplo/sdk-core';
 import { ApiService } from '../core';
 
 export type ConfigResourceKind =
@@ -31,19 +34,16 @@ export interface ConfigResourceMetadata {
 export class ConfigOwnershipService {
   private resources?: Promise<ConfigResourceMetadata[]>;
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly api: ApiService
-  ) {}
+  constructor(private readonly api: ApiService) {}
 
   list(force = false): Promise<ConfigResourceMetadata[]> {
     if (force || !this.resources) {
-      this.resources = firstValueFrom(
-        this.http.get<ConfigResourceMetadata[]>(`${this.baseUrl}/config-bundles/resources`)
-      ).catch((error) => {
-        this.resources = undefined;
-        throw error;
-      });
+      this.resources = configPortabilityControllerResources<true>({ client: this.api.client })
+        .then((result) => result.data as ConfigResourceMetadata[])
+        .catch((error: unknown) => {
+          this.resources = undefined;
+          throw error;
+        });
     }
     return this.resources;
   }
@@ -62,21 +62,16 @@ export class ConfigOwnershipService {
   }
 
   async detach(kind: ConfigResourceKind, resourceId: string): Promise<ConfigResourceMetadata> {
-    const metadata = await firstValueFrom(
-      this.http.post<ConfigResourceMetadata>(
-        `${this.baseUrl}/config-bundles/resources/${encodeURIComponent(kind)}/${encodeURIComponent(resourceId)}/detach`,
-        {}
-      )
-    );
+    const result = await configPortabilityControllerDetach<true>({
+      client: this.api.client,
+      path: { kind, id: resourceId },
+    });
+    const metadata = result.data as ConfigResourceMetadataEntity as ConfigResourceMetadata;
     await this.list(true);
     return metadata;
   }
 
   invalidate(): void {
     this.resources = undefined;
-  }
-
-  private get baseUrl(): string {
-    return (this.api.getBaseUrl() ?? '').replace(/\/$/, '');
   }
 }

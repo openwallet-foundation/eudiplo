@@ -9,7 +9,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import {
   tenantControllerDeleteTenant,
   tenantControllerGetTenants,
-  TenantEntity,
+  TenantResponseDto,
 } from '@eudiplo/sdk-core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -30,14 +30,14 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
   styleUrl: './tenant-list.component.scss',
 })
 export class TenantListComponent implements OnInit {
-  displayedColumns: (keyof TenantEntity | 'actions')[] = [
+  displayedColumns: (keyof TenantResponseDto | 'actions')[] = [
     'id',
     'name',
     'description',
     'status',
     'actions',
   ];
-  tenants: TenantEntity[] = [];
+  tenants: TenantResponseDto[] = [];
 
   constructor(private snackBar: MatSnackBar) {}
 
@@ -45,7 +45,7 @@ export class TenantListComponent implements OnInit {
     this.tenants = await tenantControllerGetTenants<true>().then((res) => res.data);
   }
 
-  deleteTenant(tenant: TenantEntity): void {
+  deleteTenant(tenant: TenantResponseDto): void {
     if (
       !confirm(
         `Are you sure you want to delete tenant ${tenant.name}? This action cannot be undone.`

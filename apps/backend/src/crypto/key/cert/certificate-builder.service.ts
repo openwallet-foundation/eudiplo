@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
 import type { JWK } from "jose";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "../kms/kms-adapter";
 import {
     importPublicCryptoKey,
     makeKmsSigningKey,
 } from "../kms/kms-crypto-provider";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "../kms/kms-adapter";
 
 const ECDSA_P256_SIGNATURE_ALG = {
     name: "ECDSA",

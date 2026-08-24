@@ -1,0 +1,13 @@
+{
+    "name": "@eudiplo/website",
+    "version": "0.0.0",
+    "private": true,
+    "scripts": {
+        "build": "test -f index.html && test -f install.sh",
+        "serve": "python3 -m http.server 3000",
+        "deploy": "pnpm run build && npx wrangler pages deploy . --project-name eudiplo-website --branch main --commit-dirty=true"
+    },
+    "engines": {
+        "node": ">=20.0"
+    }
+}

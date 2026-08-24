@@ -30,7 +30,7 @@
 - **Session Management**: Real-time updates via polling in client.
 - **Environment Variables**: Each app has its own `.env` or `example.env`.
 - **Testing**: Use framework-native tools (Vitest for backend, Angular CLI for client).
-- **Docs**: Main docs in [docs/](../docs), API docs via Compodoc.
+- **Docs**: Main docs in [apps/docs](../apps/docs), with API docs via Swagger/OpenAPI.
 
 ## Code Style & Quality
 - Follow `tsconfig.base.json` strict settings. Prefer ES2022+ features (async/await, optional chaining, class fields).

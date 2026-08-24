@@ -15,29 +15,29 @@ import { Span, TraceService } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { AuditLogService } from "../../audit-log/audit-log.service";
-import { TokenPayload } from "../../auth/token.decorator";
-import {
-    ServiceTypeIdentifier,
-    TrustListService,
-} from "../../issuer/trust-list/trustlist.service";
-import { RegistrarService } from "../../registrar/registrar.service";
-import { Session } from "../../session/entities/session.entity";
-import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
-import {
-    DEFAULT_VERIFIER_SKEW_SECONDS,
-    VerifierOptions,
-} from "../../trust/types";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
 } from "../../audit-log/audit-log-context.util";
-import { loadJsonFile } from "../../shared/utils/config-file-loader.util";
+import { TokenPayload } from "../../auth/token.decorator";
+import {
+    ServiceTypeIdentifier,
+    TrustListService,
+} from "../../issuer/trust-list/trustlist.service";
 import { ConfigImportService } from "../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../platform/config-import/config-import-orchestrator.service";
+import { RegistrarService } from "../../registrar/registrar.service";
+import { Session } from "../../session/entities/session.entity";
+import { loadJsonFile } from "../../shared/utils/config-file-loader.util";
+import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
+import {
+    DEFAULT_VERIFIER_SKEW_SECONDS,
+    VerifierOptions,
+} from "../../trust/types";
 import {
     MdocSessionDataDcApi,
     MdocSessionDataOid4vp,

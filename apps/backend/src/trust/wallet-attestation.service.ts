@@ -7,6 +7,7 @@ import { decodeProtectedHeader, JWK } from "jose";
 import { Span } from "nestjs-otel";
 import { CryptoService } from "../crypto/crypto.service";
 import { CryptoImplementationService } from "../crypto/key/crypto-implementation/crypto-implementation.service";
+import { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity";
 import { StatusListVerifierService } from "./status-list-verifier.service";
 import { BuiltTrustStore, TrustStoreService } from "./trust-store.service";
 import {
@@ -19,7 +20,6 @@ import {
     MatchedTrustedEntity,
     X509ValidationService,
 } from "./x509-validation.service";
-import { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity";
 
 export interface ClientAttestation {
     clientAttestationJwt: string;

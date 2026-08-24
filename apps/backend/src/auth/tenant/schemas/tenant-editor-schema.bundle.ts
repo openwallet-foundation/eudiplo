@@ -5,6 +5,7 @@ import {
 import {
     CreateTenantSchema,
     ImportTenantSchema,
+    TenantConfigFileSchema,
     UpdateTenantSchema,
 } from "./create-tenant.schema";
 import { SessionStorageConfigSchema } from "./session-storage-config.schema";
@@ -16,6 +17,10 @@ export const tenantEditorSchemaBundle = defineEditorSchemaBundle({
         defineEditorSchema({
             name: "CreateTenantDto",
             schema: CreateTenantSchema,
+        }),
+        defineEditorSchema({
+            name: "TenantConfigFile",
+            schema: TenantConfigFileSchema,
         }),
         defineEditorSchema({
             name: "ImportTenantDto",

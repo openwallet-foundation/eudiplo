@@ -3,13 +3,13 @@ import { p256 } from "@noble/curves/nist.js";
 import { hmac } from "@noble/hashes/hmac.js";
 import { sha256 } from "@noble/hashes/sha2.js";
 import { coseKeyToJwkClaim } from "@owf/cose";
+import { hex } from "@owf/identity-common";
 import { CoseKey, type MdocContext } from "@owf/mdoc";
 import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
 import { toBuffer } from "../../shared/utils/buffer.util";
-import { hex } from "@owf/identity-common";
 
 // Use global Web Crypto API (available in Node.js 19+)
 const webCrypto = globalThis.crypto;

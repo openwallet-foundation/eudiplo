@@ -5,6 +5,7 @@ import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { Test, TestingModule } from "@nestjs/testing";
+import * as x509 from "@peculiar/x509";
 import * as axios from "axios";
 import { Logger } from "nestjs-pino";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
@@ -23,7 +24,6 @@ import {
     useOidfContainers,
 } from "./oidf-setup";
 import { OIDFSuite, TestInstance } from "./oidf-suite";
-import * as x509 from "@peculiar/x509";
 import { generateCaSignedJwk } from "./utils";
 
 // Set up the x509 crypto provider

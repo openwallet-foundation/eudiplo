@@ -2,8 +2,8 @@ import { HttpModule, HttpService } from "@nestjs/axios";
 import { Global, Logger, Module, OnModuleInit } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { ModuleRef } from "@nestjs/core";
-import { initializeEncryptionTransformer } from "./encrypted-column.transformer";
 import { DataEncryptionService } from "./data-encryption.service";
+import { initializeEncryptionTransformer } from "./encrypted-column.transformer";
 import {
     AwsSecretsManagerEncryptionKeyProvider,
     AzureKeyVaultEncryptionKeyProvider,

@@ -4,7 +4,7 @@ The EUDIPLO CLI provides deployment-neutral commands for inspecting an EUDIPLO
 instance and deployment-driver commands for local Compose demos.
 
 For installation, command reference, configuration validation, standalone
-releases, and local development, see the [CLI documentation](../../docs/getting-started/cli.md).
+releases, and local development, see the [CLI documentation](../docs/docs/deployment/cli.md).
 
 ## Quick Start
 

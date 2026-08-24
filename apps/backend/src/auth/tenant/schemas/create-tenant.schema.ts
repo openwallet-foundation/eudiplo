@@ -38,6 +38,26 @@ export const ImportTenantSchema = CreateTenantSchema.pick({
     statusListConfig: true,
 }).describe("Payload used when importing tenant metadata from config files.");
 
+const TenantConfigMetadataSchema = z
+    .object({
+        id: NonBlankStringSchema,
+        generation: z.number().optional(),
+        ownership: z.enum(["unmanaged", "file-managed"]).optional(),
+    })
+    .strict();
+
+export const TenantConfigFileSchema = z.union([
+    ImportTenantSchema,
+    z
+        .object({
+            apiVersion: z.literal("eudiplo.io/tenant/v1"),
+            kind: z.literal("Tenant"),
+            metadata: TenantConfigMetadataSchema,
+            spec: ImportTenantSchema,
+        })
+        .strict(),
+]);
+
 export const UpdateTenantSchema = z
     .strictObject({
         name: NonBlankStringSchema.optional().describe(

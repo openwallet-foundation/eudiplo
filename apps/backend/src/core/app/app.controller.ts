@@ -7,6 +7,7 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../auth/auth.guard";
+import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service";
 import { FrontendConfigResponseDto } from "./dto/frontend-config-response.dto";
 import { VersionResponseDto } from "./dto/version-response.dto";
 
@@ -16,7 +17,10 @@ import { VersionResponseDto } from "./dto/version-response.dto";
 @ApiTags("App")
 @Controller()
 export class AppController {
-    constructor(private readonly configService: ConfigService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly configImportModeService: ConfigImportModeService,
+    ) {}
 
     /**
      * Main endpoint providing service info
@@ -74,6 +78,7 @@ export class AppController {
                     "loki",
                 ),
             },
+            configImportMode: this.configImportModeService.resolve(),
         };
     }
 }

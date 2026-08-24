@@ -19,6 +19,7 @@ import { appControllerGetVersion } from '@eudiplo/sdk-core';
 import { ApiService } from '../core';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { DashboardService } from './dashboard.service';
+import { FrontendConfigService } from '../services/frontend-config.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,6 +55,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     public environmentService: EnvironmentService,
     public dashboardService: DashboardService,
     public grafanaLinkService: GrafanaLinkService,
+    public frontendConfigService: FrontendConfigService,
     public jwtService: JwtService,
     private readonly router: Router,
     private readonly snackBar: MatSnackBar
@@ -79,6 +81,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.grafanaLinkService.getConfig().then(() => {
       this.grafanaEnabled = this.grafanaLinkService.isEnabled();
     });
+    this.frontendConfigService.getConfig();
   }
 
   ngOnDestroy(): void {

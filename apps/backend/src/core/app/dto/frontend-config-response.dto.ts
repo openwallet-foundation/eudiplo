@@ -23,4 +23,11 @@ class GrafanaConfigDto {
 export class FrontendConfigResponseDto {
     @ApiProperty({ description: "Grafana observability configuration" })
     grafana!: GrafanaConfigDto;
+
+    @ApiProperty({
+        description: "Active startup configuration import mode",
+        enum: ["disabled", "create", "upsert", "replace"],
+        example: "upsert",
+    })
+    configImportMode!: "disabled" | "create" | "upsert" | "replace";
 }

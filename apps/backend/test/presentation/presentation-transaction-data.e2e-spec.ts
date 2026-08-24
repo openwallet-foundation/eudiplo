@@ -5,20 +5,20 @@ import {
     Openid4vpClient,
 } from "@openid4vc/openid4vp";
 import { digest, ES256 } from "@owf/crypto";
-import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { kbPayload } from "@sd-jwt/core";
+import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
 import { base64url, CryptoKey } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { StatusListService } from "../../src/issuer/status-list/status-list.service";
-import { AuthConfig } from "../../src/webhook/webhook.dto";
 import {
     PresentationRequest,
     ResponseType,
 } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
 import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto";
 import { TransactionData } from "../../src/verifier/presentations/entities/presentation-config.entity";
+import { AuthConfig } from "../../src/webhook/webhook.dto";
 import {
     callbacks,
     createPresentationRequest,

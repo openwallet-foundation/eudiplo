@@ -16,14 +16,14 @@ import {
     CertificateInfo,
     CertService,
 } from "../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { ConfigImportService } from "../../platform/config-import/config-import.service";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
 } from "../../platform/config-import/config-import-orchestrator.service";
+import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
 import {
     TrustListCreateDto,
     TrustListEntityInfo,

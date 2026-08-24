@@ -13,8 +13,8 @@ import {
     KmsConfigSchema,
     KmsProviderConfigSchema,
     Pkcs11KmsConfigSchema,
-    VaultKmsConfigSchema,
     parseResolvedKmsConfig,
+    VaultKmsConfigSchema,
 } from "../../src/crypto/key/schemas/kms-config.schema";
 
 function validDbProvider() {

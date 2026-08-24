@@ -4,11 +4,11 @@ import {
     Delete,
     Get,
     Header,
+    HttpCode,
     Param,
     Patch,
     Post,
     Query,
-    HttpCode,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Role } from "../../auth/roles/role.enum";
@@ -18,7 +18,6 @@ import {
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
 } from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
-import { SchemaMetadataSubmissionService } from "./schema-metadata-submission.service";
 import {
     DeprecateSchemaMetadataDto,
     SchemaMetadataResponseDto,
@@ -26,6 +25,7 @@ import {
     UpdateSchemaMetadataDto,
 } from "./dto/schema-metadata.dto";
 import { SchemaMetadataService } from "./schema-metadata.service";
+import { SchemaMetadataSubmissionService } from "./schema-metadata-submission.service";
 
 /**
  * Controller for managing TS11 schema metadata at the configured registrar /

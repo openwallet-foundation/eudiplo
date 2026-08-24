@@ -5,14 +5,14 @@ import { BitsPerStatus } from "@owf/token-status-list";
 import { Request } from "express";
 import { Repository } from "typeorm";
 import { AuditLogService } from "../../audit-log/audit-log.service";
-import { StatusListConfig } from "../../auth/tenant/entities/status-list-config";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { TokenPayload } from "../../auth/token.decorator";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
 } from "../../audit-log/audit-log-context.util";
+import { StatusListConfig } from "../../auth/tenant/entities/status-list-config";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
+import { TokenPayload } from "../../auth/token.decorator";
 import { UpdateStatusListConfigDto } from "./dto/update-status-list-config.dto";
 
 /**

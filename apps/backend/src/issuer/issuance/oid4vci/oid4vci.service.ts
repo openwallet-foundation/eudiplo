@@ -23,8 +23,8 @@ import {
     CredentialOfferAuthorizationCodeGrant,
     CredentialOfferObject,
     CredentialOfferPreAuthorizedCodeGrant,
-    type CredentialResponse,
     type CredentialRequest,
+    type CredentialResponse,
     DeferredCredentialResponse,
     type IssuerMetadataResult,
     Openid4vciIssuer,
@@ -40,35 +40,36 @@ import { v4 } from "uuid";
 import { TokenPayload } from "../../../auth/token.decorator";
 import { CryptoService } from "../../../crypto/crypto.service";
 import { EncryptionService } from "../../../crypto/encryption/encryption.service";
+import { type RegistrationCertificateCreation } from "../../../registrar/generated";
+import { RegistrarService } from "../../../registrar/registrar.service";
 import {
     Session,
     SessionStatus,
 } from "../../../session/entities/session.entity";
+import { AuditLogContext } from "../../../session/logging/session-audit.service";
+import { SessionLoggerService } from "../../../session/logging/session-logger.service";
 import { SessionService } from "../../../session/session.service";
 import { FederationTrustService } from "../../../trust/federation-trust.service";
 import { TrustStoreService } from "../../../trust/trust-store.service";
 import { FederationTrustSource } from "../../../trust/types";
 import { X509ValidationService } from "../../../trust/x509-validation.service";
-import { AuditLogContext } from "../../../session/logging/session-audit.service";
-import { SessionLoggerService } from "../../../session/logging/session-logger.service";
 import { WebhookService } from "../../../webhook/webhook.service";
 import { CredentialsService } from "../../configuration/credentials/credentials.service";
 import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity";
 import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
 import { CredentialProofType } from "../../configuration/credentials/entities/credential.entity";
+import { ManagedAuthorizationServerConfig } from "../../configuration/issuance/dto/authorization-server-config.dto";
 import {
     IssuerProvidedAttestation,
     IssuerRegistrationCertificateConfig,
     IssuerRegistrationCertificateMode,
 } from "../../configuration/issuance/dto/issuer-registration-certificate.dto";
-import { ManagedAuthorizationServerConfig } from "../../configuration/issuance/dto/authorization-server-config.dto";
 import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-config.entity";
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { type RegistrationCertificateCreation } from "../../../registrar/generated";
-import { RegistrarService } from "../../../registrar/registrar.service";
-import { AuthorizeService } from "./authorization/authorize/authorize.service";
+import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
 import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service";
+import { AuthorizeService } from "./authorization/authorize/authorize.service";
 import { ChainedAsService } from "./authorization/chained-as/chained-as.service";
 import { ChainedAsVpService } from "./authorization/chained-as-vp/chained-as-vp.service";
 import { DeferredCredentialService } from "./deferred-credential.service";
@@ -82,7 +83,6 @@ import {
 import { DeferredTransactionEntity } from "./entities/deferred-transaction.entity";
 import { CredentialRequestException } from "./exceptions";
 import { NonceService } from "./nonce.service";
-import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
 import { getHeadersFromRequest } from "./util";
 
 /**

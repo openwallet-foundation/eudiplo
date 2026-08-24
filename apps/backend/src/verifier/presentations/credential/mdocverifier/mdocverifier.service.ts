@@ -11,11 +11,11 @@ import {
 import * as x509 from "@peculiar/x509";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
-import { VerifierOptions } from "../../../../trust/types";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
 } from "../../../../trust/revocation-policy.util";
+import { VerifierOptions } from "../../../../trust/types";
 import { mdocContext } from "../../mdoc-context";
 import {
     ChainValidationResult,

@@ -4,8 +4,8 @@ import {
     GetPublicKeyCommand,
     type KMSClient,
     ListKeysCommand,
-    SignCommand,
     ScheduleKeyDeletionCommand,
+    SignCommand,
 } from "@aws-sdk/client-kms";
 import { Logger, NotImplementedException } from "@nestjs/common";
 import { exportJWK, type JWK } from "jose";

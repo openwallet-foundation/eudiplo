@@ -1,5 +1,5 @@
-import * as Joi from "joi";
 import { join } from "node:path/posix";
+import * as Joi from "joi";
 
 export const STORAGE_VALIDATION_SCHEMA = Joi.object({
     STORAGE_DRIVER: Joi.string()

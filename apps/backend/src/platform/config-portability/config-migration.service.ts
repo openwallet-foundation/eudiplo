@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
-import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
+import { ConfigResourceRegistry } from "./config-resource.registry";
 import type {
     ConfigDocument,
     ConfigMigrationIssue,
     ConfigMigrationResult,
     ConfigResourceKind,
 } from "./config-resource.types";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
 
 type Spec = Record<string, any>;
 

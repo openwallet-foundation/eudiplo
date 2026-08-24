@@ -1,12 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { JWK } from "jose";
 import { createZodDto } from "nestjs-zod";
-import { KeyUsageType } from "../types/key-usage-type";
 import {
     EcJwkSchema,
     KeyChainImportSchema,
     RotationPolicyImportSchema,
 } from "../schemas/key-chain.schema";
+import { KeyUsageType } from "../types/key-usage-type";
 
 /**
  * JWK structure for EC keys (P-256).

@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "name": {
+          "default": "EUDIPLO",
+          "description": "Display name of the tenant.",
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "description": "Optional tenant description.",
+          "type": "string",
+          "minLength": 1
+        },
+        "sessionConfig": {
+          "description": "Optional tenant-specific session storage configuration.",
+          "type": "object",
+          "properties": {
+            "ttlSeconds": {
+              "description": "Session time-to-live in seconds.",
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 9007199254740991
+            },
+            "cleanupMode": {
+              "description": "Whether to fully delete or anonymize expired sessions.",
+              "type": "string",
+              "enum": [
+                "full",
+                "anonymize"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "statusListConfig": {
+          "description": "Optional tenant-specific status list defaults.",
+          "type": "object",
+          "properties": {
+            "capacity": {
+              "description": "Default status list capacity.",
+              "type": "integer",
+              "minimum": 100,
+              "maximum": 9007199254740991
+            },
+            "bits": {
+              "description": "Bits-per-status setting (1, 2, 4, or 8).",
+              "anyOf": [
+                {
+                  "type": "number",
+                  "const": 1
+                },
+                {
+                  "type": "number",
+                  "const": 2
+                },
+                {
+                  "type": "number",
+                  "const": 4
+                },
+                {
+                  "type": "number",
+                  "const": 8
+                }
+              ]
+            },
+            "ttl": {
+              "description": "JWT TTL for status list tokens in seconds.",
+              "type": "integer",
+              "minimum": 60,
+              "maximum": 9007199254740991
+            },
+            "immediateUpdate": {
+              "description": "Regenerate status list JWTs immediately after status updates.",
+              "type": "boolean"
+            },
+            "enableAggregation": {
+              "description": "Include aggregation_uri in generated status list JWTs.",
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Payload used when importing tenant metadata from config files."
+    },
+    {
+      "type": "object",
+      "properties": {
+        "apiVersion": {
+          "type": "string",
+          "const": "eudiplo.io/tenant/v1"
+        },
+        "kind": {
+          "type": "string",
+          "const": "Tenant"
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generation": {
+              "type": "number"
+            },
+            "ownership": {
+              "type": "string",
+              "enum": [
+                "unmanaged",
+                "file-managed"
+              ]
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "default": "EUDIPLO",
+              "description": "Display name of the tenant.",
+              "type": "string",
+              "minLength": 1
+            },
+            "description": {
+              "description": "Optional tenant description.",
+              "type": "string",
+              "minLength": 1
+            },
+            "sessionConfig": {
+              "description": "Optional tenant-specific session storage configuration.",
+              "type": "object",
+              "properties": {
+                "ttlSeconds": {
+                  "description": "Session time-to-live in seconds.",
+                  "type": "integer",
+                  "minimum": 60,
+                  "maximum": 9007199254740991
+                },
+                "cleanupMode": {
+                  "description": "Whether to fully delete or anonymize expired sessions.",
+                  "type": "string",
+                  "enum": [
+                    "full",
+                    "anonymize"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            },
+            "statusListConfig": {
+              "description": "Optional tenant-specific status list defaults.",
+              "type": "object",
+              "properties": {
+                "capacity": {
+                  "description": "Default status list capacity.",
+                  "type": "integer",
+                  "minimum": 100,
+                  "maximum": 9007199254740991
+                },
+                "bits": {
+                  "description": "Bits-per-status setting (1, 2, 4, or 8).",
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "const": 1
+                    },
+                    {
+                      "type": "number",
+                      "const": 2
+                    },
+                    {
+                      "type": "number",
+                      "const": 4
+                    },
+                    {
+                      "type": "number",
+                      "const": 8
+                    }
+                  ]
+                },
+                "ttl": {
+                  "description": "JWT TTL for status list tokens in seconds.",
+                  "type": "integer",
+                  "minimum": 60,
+                  "maximum": 9007199254740991
+                },
+                "immediateUpdate": {
+                  "description": "Regenerate status list JWTs immediately after status updates.",
+                  "type": "boolean"
+                },
+                "enableAggregation": {
+                  "description": "Include aggregation_uri in generated status list JWTs.",
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "Payload used when importing tenant metadata from config files."
+        }
+      },
+      "required": [
+        "apiVersion",
+        "kind",
+        "metadata",
+        "spec"
+      ],
+      "additionalProperties": false
+    }
+  ],
+  "$id": "./TenantConfigFile.schema.json",
+  "title": "TenantConfigFile"
+}

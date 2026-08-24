@@ -8,13 +8,13 @@ import {
 import { dirname, join } from "node:path";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import {
-    parseRawKmsConfig,
-    type KmsConfig,
-} from "../schemas/kms-config.schema";
-import { KmsProviderRegistry } from "./kms-provider.registry";
-import { KmsConfigService } from "./kms-config.service";
 import { ConfigMigrationService } from "../../../platform/config-portability/config-migration.service";
+import {
+    type KmsConfig,
+    parseRawKmsConfig,
+} from "../schemas/kms-config.schema";
+import { KmsConfigService } from "./kms-config.service";
+import { KmsProviderRegistry } from "./kms-provider.registry";
 
 @Injectable()
 export class KmsTenantConfigService {

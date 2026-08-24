@@ -29,7 +29,7 @@ cryptographic plumbing.
 It supports all core flows of electronic attribute attestations—**issuing**,
 **requesting**, and even **requesting during issuance**—and is already
 compatible with multiple
-[wallets](./docs/getting-started/wallet-compatibility.md).
+[wallets](./apps/docs/docs/reference/wallet-compatibility.md).
 
 While still in early development, EUDIPLO is built for production: secure key
 management, scalable database support, and clean API boundaries.

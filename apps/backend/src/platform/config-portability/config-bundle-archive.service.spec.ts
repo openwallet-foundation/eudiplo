@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import type { ConfigBundle, ConfigDocument } from "./config-resource.types";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service";
+import type { ConfigBundle, ConfigDocument } from "./config-resource.types";
 
 const hash = (value: string | Buffer) =>
     createHash("sha256").update(value).digest("hex");

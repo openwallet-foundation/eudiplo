@@ -6,6 +6,12 @@ function mdEscapePipes(s: string) {
   return s.replace(/\|/g, "\\|");
 }
 
+// These fragments are imported as MDX components, so curly braces must be
+// escaped or they get parsed as JS expressions.
+function mdxEscapeBraces(s: string) {
+  return s.replace(/\{/g, "\\{").replace(/\}/g, "\\}");
+}
+
 function notesForItem(i: any): string {
   const presence = i.presence ? ` [${i.presence}]` : "";
   const def =
@@ -34,7 +40,7 @@ function renderGroupTable(g: ConfigGroup) {
   lines.push(`| --- | ---- | ----- |`);
 
   for (const i of g.items) {
-    const notes = mdEscapePipes(notesForItem(i));
+    const notes = mdxEscapeBraces(mdEscapePipes(notesForItem(i)));
     const type = mdEscapePipes(String(i.type ?? ""));
     lines.push(`| \`${i.key}\` | \`${type}\` | ${notes} |`);
   }
@@ -42,8 +48,14 @@ function renderGroupTable(g: ConfigGroup) {
   return lines.join("\n");
 }
 
+const GENERATED_WARNING = [
+  "> **Auto-generated.** Do not edit manually.",
+  "> Run `pnpm --filter @eudiplo/docs run prebuild` (scripts/generate-config-docs.ts).",
+  "",
+].join("\n");
+
 export function renderGroupPage(g: ConfigGroup) {
-  const lines: string[] = [];  
+  const lines: string[] = [GENERATED_WARNING];
   lines.push(renderGroupTable(g));
   return lines.join("\n");
 }

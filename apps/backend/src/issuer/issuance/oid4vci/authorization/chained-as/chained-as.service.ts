@@ -24,18 +24,18 @@ import { IssuanceService } from "../../../../configuration/issuance/issuance.ser
 import {
     assertTokenRequestSessionValid,
     buildAuthorizationServerMetadata,
-    buildWalletAttestationMetadata,
     buildJwksResponse,
+    buildWalletAttestationMetadata,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
-    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
 } from "../shared";
 
 /**

@@ -4,6 +4,7 @@ import {
     NotificationEvent,
 } from "@openid4vc/openid4vci";
 import { VerificationResult } from "@sd-jwt/sd-jwt-vc";
+import { JWK } from "jose";
 import {
     Column,
     CreateDateColumn,
@@ -16,9 +17,8 @@ import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorization/authorize/dto/authorize-request.dto";
 import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
 import { EncryptedJsonTransformer } from "../../platform/data-encryption";
-import { WebhookConfig } from "../../webhook/webhook.dto";
 import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
-import { JWK } from "jose";
+import { WebhookConfig } from "../../webhook/webhook.dto";
 
 export enum SessionStatus {
     Active = "active",

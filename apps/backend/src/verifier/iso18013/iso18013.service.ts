@@ -12,19 +12,20 @@ import {
     NotFoundException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { InjectRepository } from "@nestjs/typeorm";
 import type { ItemsRequest, ReaderAuth } from "@owf/mdoc";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK } from "jose";
-import { InjectRepository } from "@nestjs/typeorm";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { EncryptionService } from "../../crypto/encryption/encryption.service";
 import { CertService } from "../../crypto/key/cert/cert.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { KeyChainService } from "../../crypto/key/key-chain.service";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
 import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
 import { SessionStatus } from "../../session/entities/session.entity";
+import { SessionAuditService } from "../../session/logging/session-audit.service";
 import { SessionService } from "../../session/session.service";
 import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
 import {
@@ -32,7 +33,6 @@ import {
     RevocationCheckMode,
     VerifierOptions,
 } from "../../trust/types";
-import { SessionAuditService } from "../../session/logging/session-audit.service";
 import { WebhookConfig } from "../../webhook/webhook.dto";
 import { WebhookService } from "../../webhook/webhook.service";
 import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";

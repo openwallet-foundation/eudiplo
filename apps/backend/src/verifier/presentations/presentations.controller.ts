@@ -17,11 +17,11 @@ import { Token, TokenPayload } from "../../auth/token.decorator";
 import { CredentialIssuerMetadataDto } from "../../issuer/issuance/oid4vci/well-known/dto/credential-issuer-metadata.dto";
 import { SchemaMetadataResponseDto } from "../../registrar/schema-metadata/dto/schema-metadata.dto";
 import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto";
-import { ResolvedSchemaMetadataResponseDto } from "./dto/resolved-schema-metadata-response.dto";
 import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
 import { ResolveIssuerMetadataDto } from "./dto/resolve-issuer-metadata.dto";
 import { ResolveSchemaMetadataDto } from "./dto/resolve-schema-metadata.dto";
 import { ResolveSchemaMetadataJwtDto } from "./dto/resolve-schema-metadata-jwt.dto";
+import { ResolvedSchemaMetadataResponseDto } from "./dto/resolved-schema-metadata-response.dto";
 import { PresentationConfig } from "./entities/presentation-config.entity";
 import { PresentationsService } from "./presentations.service";
 

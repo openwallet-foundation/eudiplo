@@ -23,14 +23,14 @@ import { SessionService } from "../../../../../session/session.service";
 import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
 import { StatusListConfigService } from "../../../../status-list/status-list-config.service";
+import { NonceEntity } from "../../entities/nonces.entity";
+import { TokenErrorException } from "../../exceptions";
+import { getHeadersFromRequest } from "../../util";
 import {
     buildAuthorizationServerMetadata,
     buildWalletAttestationMetadata,
     DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
 } from "../shared";
-import { NonceEntity } from "../../entities/nonces.entity";
-import { TokenErrorException } from "../../exceptions";
-import { getHeadersFromRequest } from "../../util";
 import { AuthorizeQueries } from "./dto/authorize-request.dto";
 
 interface ParsedAccessTokenAuthorizationCodeRequestGrant {

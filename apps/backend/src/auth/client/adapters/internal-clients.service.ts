@@ -10,8 +10,8 @@ import { ConfigImportOrchestratorService } from "../../../platform/config-import
 import { Role } from "../../roles/role.enum";
 import { ClientsProvider } from "../client.provider";
 import { ClientEntity } from "../entities/client.entity";
-import { CreateClientSchema } from "../schemas/client.schema";
 import type { CreateClient, UpdateClient } from "../schemas/client.schema";
+import { CreateClientSchema } from "../schemas/client.schema";
 
 const BCRYPT_ROUNDS = 10;
 

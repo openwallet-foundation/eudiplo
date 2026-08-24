@@ -10,9 +10,9 @@ import { CredentialChainValidationService } from "./credential/credential-chain-
 import { MdocverifierService } from "./credential/mdocverifier/mdocverifier.service";
 import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service";
 import { PresentationConfig } from "./entities/presentation-config.entity";
+import { MetadataFetchService } from "./metadata-fetch.service";
 import { PresentationManagementController } from "./presentations.controller";
 import { PresentationsService } from "./presentations.service";
-import { MetadataFetchService } from "./metadata-fetch.service";
 
 @Module({
     imports: [

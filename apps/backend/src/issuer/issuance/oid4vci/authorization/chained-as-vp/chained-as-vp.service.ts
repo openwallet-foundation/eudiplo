@@ -14,24 +14,24 @@ import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
 import { SessionStatus } from "../../../../../session/entities/session.entity";
 import { SessionService } from "../../../../../session/session.service";
 import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
+import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
 import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
-import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
 import {
     assertTokenRequestSessionValid,
     buildAuthorizationServerMetadata,
-    buildWalletAttestationMetadata,
     buildJwksResponse,
+    buildWalletAttestationMetadata,
     ChainedAsParRequestDto,
     ChainedAsParResponseDto,
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
+    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
-    DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
 } from "../shared";
 
 @Injectable()

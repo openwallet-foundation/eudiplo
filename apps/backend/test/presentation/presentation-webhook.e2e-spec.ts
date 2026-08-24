@@ -8,11 +8,11 @@ import nock from "nock";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { StatusListService } from "../../src/issuer/status-list/status-list.service";
-import { AuthConfig } from "../../src/webhook/webhook.dto";
 import {
     PresentationRequest,
     ResponseType,
 } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
+import { AuthConfig } from "../../src/webhook/webhook.dto";
 import {
     callbacks,
     createPresentationRequest,

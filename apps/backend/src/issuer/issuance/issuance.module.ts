@@ -5,9 +5,9 @@ import { CryptoModule } from "../../crypto/crypto.module";
 import { RegistrarModule } from "../../registrar/registrar.module";
 import { SessionModule } from "../../session/session.module";
 import { TrustModule } from "../../trust/trust.module";
-import { WebhookModule } from "../../webhook/webhook.module";
 import { Oid4vpModule } from "../../verifier/oid4vp/oid4vp.module";
 import { PresentationsModule } from "../../verifier/presentations/presentations.module";
+import { WebhookModule } from "../../webhook/webhook.module";
 import { ConfigurationModule } from "../configuration/configuration.module";
 import { WebhookEndpointEntity } from "../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
 import { CredentialOfferController } from "./offer/credential-offer.controller";
@@ -17,9 +17,9 @@ import { DeferredCredentialService } from "./oid4vci/deferred-credential.service
 import { DeferredTransactionEntity } from "./oid4vci/entities/deferred-transaction.entity";
 import { NonceEntity } from "./oid4vci/entities/nonces.entity";
 import { Oid4vciMetadataController } from "./oid4vci/metadata/oid4vci-metadata.controller";
+import { NonceService } from "./oid4vci/nonce.service";
 import { Oid4vciController } from "./oid4vci/oid4vci.controller";
 import { Oid4vciService } from "./oid4vci/oid4vci.service";
-import { NonceService } from "./oid4vci/nonce.service";
 import { WellKnownController } from "./oid4vci/well-known/well-known.controller";
 import { WellKnownService } from "./oid4vci/well-known/well-known.service";
 

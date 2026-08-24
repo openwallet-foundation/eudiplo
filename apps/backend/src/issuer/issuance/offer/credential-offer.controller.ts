@@ -5,16 +5,27 @@ import {
     Post,
     Res,
 } from "@nestjs/common";
-import { ApiBody, ApiProduces, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiExtraModels,
+    ApiProduces,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { Response } from "express";
 import { Role } from "../../../auth/roles/role.enum";
 import { Secured } from "../../../auth/secure.decorator";
 import { Token, TokenPayload } from "../../../auth/token.decorator";
 import { ResponseType } from "../../../verifier/oid4vp/dto/presentation-request.dto";
-import { FlowType, OfferRequestDto } from "../oid4vci/dto/offer-request.dto";
+import {
+    FlowType,
+    OfferRequestDto,
+    OfferResponse,
+} from "../oid4vci/dto/offer-request.dto";
 import { Oid4vciService } from "../oid4vci/oid4vci.service";
 
 @ApiTags("Issuer")
+@ApiExtraModels(OfferResponse)
 @Secured([Role.IssuanceOffer])
 @Controller("issuer/offer")
 export class CredentialOfferController {

@@ -3,11 +3,11 @@ import {
     Controller,
     Delete,
     Get,
+    HttpCode,
     Param,
     Patch,
     Post,
     Req,
-    HttpCode,
 } from "@nestjs/common";
 import {
     ApiBody,
@@ -20,14 +20,14 @@ import { Request } from "express";
 import { Role } from "../roles/role.enum";
 import { Secured } from "../secure.decorator";
 import { Token, TokenPayload } from "../token.decorator";
-import { ImportTenantDto } from "./dto/import-tenant.dto";
-import { TenantService } from "./tenant.service";
 import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { UpdateTenantDto } from "./dto/update-tenant.dto";
+import { ImportTenantDto } from "./dto/import-tenant.dto";
 import {
     TenantCreateResponseDto,
     TenantResponseDto,
 } from "./dto/tenant-response.dto";
+import { UpdateTenantDto } from "./dto/update-tenant.dto";
+import { TenantService } from "./tenant.service";
 
 /**
  * Tenant management controller

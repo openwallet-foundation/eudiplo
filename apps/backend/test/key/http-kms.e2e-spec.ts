@@ -1,10 +1,10 @@
 import { webcrypto } from "node:crypto";
 import { mkdtempSync, writeFileSync } from "node:fs";
 import {
+    createServer,
     type IncomingMessage,
     type Server,
     type ServerResponse,
-    createServer,
 } from "node:http";
 import type { AddressInfo } from "node:net";
 import { tmpdir } from "node:os";

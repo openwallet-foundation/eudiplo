@@ -1,4 +1,4 @@
-import { RevocationCheckMode, VerifyPolicy, VerifierOptions } from "./types";
+import { RevocationCheckMode, VerifierOptions, VerifyPolicy } from "./types";
 
 const DEFAULT_REVOCATION_POLICY: NonNullable<VerifyPolicy["revocation"]> = {
     enabled: true,

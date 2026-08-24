@@ -2,16 +2,16 @@ import {
     cpSync,
     mkdirSync,
     mkdtempSync,
-    readFileSync,
     readdirSync,
+    readFileSync,
     rmSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import type { INestApplication } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { ConfigService } from "@nestjs/config";
 import { ConfigBundleService } from "../../src/platform/config-portability/config-bundle.service";
 import { ConfigFolderBundleService } from "../../src/platform/config-portability/config-folder-bundle.service";
 import { ConfigOwnershipService } from "../../src/platform/config-portability/config-ownership.service";

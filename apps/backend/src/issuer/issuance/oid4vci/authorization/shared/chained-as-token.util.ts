@@ -1,12 +1,12 @@
 import { randomBytes } from "node:crypto";
 import { BadRequestException, UnauthorizedException } from "@nestjs/common";
 import { Repository } from "typeorm";
-import { verifyPkceCodeChallenge } from "./pkce.util";
 import { ChainedAsTokenRequestDto } from "./dto/chained-as.dto";
 import {
     ChainedAsSessionEntity,
     ChainedAsSessionStatus,
 } from "./entities/chained-as-session.entity";
+import { verifyPkceCodeChallenge } from "./pkce.util";
 
 export interface RefreshTokenIssuanceConfig {
     refreshTokenEnabled?: boolean;

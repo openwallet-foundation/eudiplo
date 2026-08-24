@@ -3,6 +3,7 @@ import {
     defineEditorSchemaBundle,
 } from "../../../shared/common/zod/editor-schema";
 import {
+    KeyChainConfigFileSchema,
     KeyChainCreateSchema,
     KeyChainImportSchema,
     KeyChainUpdateSchema,
@@ -13,6 +14,10 @@ import {
 export const keyChainEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "key-chain",
     schemas: [
+        defineEditorSchema({
+            name: "KeyChainConfigFile",
+            schema: KeyChainConfigFileSchema,
+        }),
         defineEditorSchema({
             name: "KeyChainImportDto",
             schema: KeyChainImportSchema,
