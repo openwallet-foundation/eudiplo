@@ -224,7 +224,7 @@ jobs:
           path: apps/docs/build/
 
   deploy-docs:
-    name: Deploy Website & Documentation
+    name: Deploy Preview Website & Documentation
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build-doc]
     runs-on: ubuntu-latest
@@ -251,19 +251,21 @@ jobs:
       - name: Build generated docs content
         run: pnpm --filter @eudiplo/docs run build
 
-      - name: Deploy website to Cloudflare Pages
+      - name: Deploy website to Cloudflare Pages preview
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_BRANCH: preview
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured"; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured"; exit 1; }
           pnpm --filter @eudiplo/website run deploy
 
-      - name: Deploy documentation to Cloudflare Pages
+      - name: Deploy documentation to Cloudflare Pages preview
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_BRANCH: preview
         run: |
           test -n "$CLOUDFLARE_API_TOKEN" || { echo "CLOUDFLARE_API_TOKEN is not configured"; exit 1; }
           test -n "$CLOUDFLARE_ACCOUNT_ID" || { echo "CLOUDFLARE_ACCOUNT_ID is not configured"; exit 1; }

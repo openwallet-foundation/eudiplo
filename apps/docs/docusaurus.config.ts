@@ -39,6 +39,12 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           editUrl:
             'https://github.com/openwallet-foundation/eudiplo/edit/main/apps/docs/docs/',
+          lastVersion: 'current',
+          versions: {
+            current: {
+              label: 'Current',
+            },
+          },
         },
         blog: false,
         theme: {

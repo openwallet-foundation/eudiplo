@@ -1,9 +1,9 @@
-![Logo](./docs/eudiplo.png)
+![Logo](./apps/docs/static/img/eudiplo.png)
 
 [![Build Status](https://github.com/openwallet-foundation/eudiplo/actions/workflows/ci-and-release.yml/badge.svg)](https://github.com/openwallet-foundation/eudiplo/actions)
 ![License](https://img.shields.io/github/license/openwallet-foundation/eudiplo)
-[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://eudiplo.dev/docs/latest/)
-[![Documentation Coverage](https://eudiplo.dev/docs/latest/compodoc/images/coverage-badge-documentation.svg)](https://eudiplo.dev/docs/latest/compodoc/coverage.html)
+[![Website](https://img.shields.io/badge/website-eudiplo-blue)](https://eudiplo.dev)
+[![Docs](https://img.shields.io/badge/docs-eudiplo-blue)](https://docs.eudiplo.dev)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=alert_status)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Join our Discord](https://img.shields.io/discord/1022962884864643214?label=Join%20our%20Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.gg/58ys8XfXDu)
@@ -34,7 +34,9 @@ compatible with multiple
 While still in early development, EUDIPLO is built for production: secure key
 management, scalable database support, and clean API boundaries.
 
-## ![Overview](./docs/overview.excalidraw.svg)
+![EUDIPLO architecture overview](./apps/docs/static/img/overview.svg)
+
+> Documentation policy: the docs on `main` represent the current development state and preview builds. Stable public documentation is preserved as major-version snapshots for released versions.
 
 ## 🧩 Features
 
@@ -80,7 +82,7 @@ eudiplo demo
 
 No local Node.js installation is required.
 
-### Already using Node.js 22+?
+### Already using Node.js 22.12+?
 
 ```bash
 npx @eudiplo/cli demo
@@ -88,13 +90,13 @@ npx @eudiplo/cli demo
 
 ### Windows
 
-Use `npx @eudiplo/cli demo` with Node.js 22+, or download the Windows x64
+Use `npx @eudiplo/cli demo` with Node.js 22.12+, or download the Windows x64
 standalone executable from GitHub Releases.
 
 Both commands run the same **EUDIPLO CLI**:
 
 1. **Standalone CLI**: native executable, no Node.js required.
-2. **npm package**: `@eudiplo/cli`, requires Node.js 22+.
+2. **npm package**: `@eudiplo/cli`, requires Node.js 22.12+.
 
 `eudiplo demo` creates a **demo deployment** for local evaluation:
 
@@ -121,15 +123,15 @@ eudiplo config tenant remove acme --force
 
 See the detailed guides:
 
-- [Quick Start](https://eudiplo.dev/docs/latest/getting-started/quick-start/)
-- [EUDIPLO CLI](https://eudiplo.dev/docs/latest/getting-started/cli/)
-- [API Reference](https://eudiplo.dev/docs/latest/api/)
+- [Quick Start](https://docs.eudiplo.dev/getting-started/quick-start)
+- [EUDIPLO CLI](https://docs.eudiplo.dev/deployment/cli)
+- [API Reference](https://docs.eudiplo.dev/reference/openapi)
 
 ### Other deployment options
 
-- Docker Compose deployment: [Deployment Guide](https://eudiplo.dev/docs/latest/deployment/docker-compose/)
-- Individual container images: [Deployment Options](https://eudiplo.dev/docs/latest/deployment/)
-- Local development workflow: [Development Guide](https://eudiplo.dev/docs/latest/development/)
+- Docker Compose deployment: [Deployment Guide](https://docs.eudiplo.dev/deployment/docker-compose)
+- Individual container images: [Deployment Options](https://docs.eudiplo.dev/deployment)
+- Local development workflow: [Development Guide](https://docs.eudiplo.dev/contributing/development-setup)
 
 ### Get Started with the API
 
@@ -144,24 +146,25 @@ curl -X POST http://localhost:3000/api/oauth2/token \
   }'
 ```
 
-For production authentication setup, see [Authentication](https://eudiplo.dev/docs/latest/api/authentication/).
+For production authentication setup, see [Authentication](https://docs.eudiplo.dev/administration/authentication).
 
 ---
 
 ## 📚 Documentation
 
-Use the stable docs entry point:
+Use the current documentation:
 
-- 🚀 **Latest Stable**: [https://eudiplo.dev/docs/latest/](https://eudiplo.dev/docs/latest/)
+- 🚀 **Documentation**: [https://docs.eudiplo.dev/](https://docs.eudiplo.dev/)
+- **Legacy documentation**: [https://openwallet-foundation.github.io/eudiplo/docs/latest/](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
 
-Use the version selector in the docs UI to switch between available releases.
+The current documentation reflects the active release. For older releases,
+use the [legacy documentation archive](https://openwallet-foundation.github.io/eudiplo/docs/latest/).
 
 **Key sections:**
 
-- [Architecture](https://eudiplo.dev/docs/latest/architecture/)
-- [Supported Protocols](https://eudiplo.dev/docs/latest/architecture/supported-protocols/)
-- [API Reference](https://eudiplo.dev/docs/latest/api/)
-- [Code Documentation](https://eudiplo.dev/docs/latest/compodoc/)
+- [Architecture](https://docs.eudiplo.dev/architecture/)
+- [Supported Protocols](https://docs.eudiplo.dev/reference/protocols)
+- [API Reference](https://docs.eudiplo.dev/reference/openapi)
 
 ---
 
