@@ -119,17 +119,19 @@ jobs:
         with:
           script: |
             const { owner, repo } = context.repo;
-            const response = await github.rest.actions.listWorkflowRuns({
+            const response = await github.rest.actions.listWorkflowRunsForRepo({
               owner,
               repo,
-              workflow_id: 'ci-and-release.yml',
               event: 'push',
               status: 'completed',
               per_page: 100,
             });
 
             const successfulRun = response.data.workflow_runs.find(
-              (run) => run.head_sha === context.sha && run.conclusion === 'success',
+              (run) =>
+                run.name === 'CI / Docker' &&
+                run.head_sha === context.sha &&
+                run.conclusion === 'success'
             );
 
             if (!successfulRun) {
