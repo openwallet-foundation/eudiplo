@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from '@angular/
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -16,11 +17,11 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { KeyChainService } from '../key-chain.service';
 import { RegistrarConfig, RegistrarService } from '../../registrar/registrar.service';
-import { KeyChainCreateDto, KmsProviderInfoDto } from '@eudiplo/sdk-core';
+import { KeyChainCreateDto, KeyChainImportDto, KmsProviderInfoDto } from '@eudiplo/sdk-core';
 
 export type KeyUsageSelection = 'attestation' | 'statusList' | 'access' | 'trustList';
-export type KeyChainTypeSelection = 'internalChain' | 'standalone';
-export type AccessSourceSelection = 'selfSigned' | 'registrar';
+export type KeyChainTypeSelection = 'internalChain' | 'externalCaChain' | 'standalone';
+export type AccessSourceSelection = 'selfSigned' | 'registrar' | 'external';
 
 @Component({
   selector: 'app-key-create-wizard',
@@ -29,6 +30,7 @@ export type AccessSourceSelection = 'selfSigned' | 'registrar';
     CommonModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -113,6 +115,14 @@ export class KeyCreateWizardComponent implements OnInit {
       hint: 'For simple setups or external PKI integration.',
       features: ['Self-signed certificate', 'Manual certificate management', 'Simple setup'],
     },
+    {
+      value: 'externalCaChain' as KeyChainTypeSelection,
+      label: 'External CA Chain',
+      icon: 'verified',
+      description: 'Use an external CA certificate to sign rotating leaf certificates.',
+      hint: 'EUDIPLO manages leaf-key rotation while your CA key remains the signing anchor.',
+      features: ['External CA certificate', 'Automatic leaf rotation', 'CA key remains managed'],
+    },
   ];
 
   // Access source options (shown for access keys)
@@ -130,6 +140,13 @@ export class KeyCreateWizardComponent implements OnInit {
       icon: 'verified',
       description: 'Obtain a certificate through your registrar.',
       hint: 'Required for production. Provides a trusted certificate chain.',
+    },
+    {
+      value: 'external' as AccessSourceSelection,
+      label: 'External Certificate',
+      icon: 'upload_file',
+      description: 'Use a certificate issued by an external CA or PKI.',
+      hint: 'Provide the matching private JWK and certificate chain below.',
     },
   ];
 
@@ -166,6 +183,9 @@ export class KeyCreateWizardComponent implements OnInit {
       rotationEnabled: [true],
       rotationIntervalDays: [30, [Validators.min(1)]],
       certValidityDays: [365, [Validators.min(1)]],
+      externalPrivateKey: [''],
+      externalCertificate: [''],
+      useExternalCertificate: [false],
     });
   }
 
@@ -262,12 +282,39 @@ export class KeyCreateWizardComponent implements OnInit {
   }
 
   get isInternalChain(): boolean {
-    return this.selectedUsage === 'attestation' && this.selectedKeyChainType === 'internalChain';
+    return (
+      this.selectedUsage === 'attestation' &&
+      (this.selectedKeyChainType === 'internalChain' ||
+        this.selectedKeyChainType === 'externalCaChain')
+    );
+  }
+
+  get isExternalCaChain(): boolean {
+    return this.selectedUsage === 'attestation' && this.selectedKeyChainType === 'externalCaChain';
   }
 
   get rotationEnabled(): boolean {
     // Rotation can be enabled for internal chain keys
     return this.isInternalChain && this.configForm.value.rotationEnabled;
+  }
+
+  get isExternalCertificate(): boolean {
+    return (
+      (this.selectedUsage === 'access' && this.selectedAccessSource === 'external') ||
+      this.isExternalCaChain ||
+      (!!this.selectedUsage &&
+        this.selectedUsage !== 'access' &&
+        !this.isInternalChain &&
+        this.configForm.value.useExternalCertificate)
+    );
+  }
+
+  get externalCertificateFormValid(): boolean {
+    return (
+      !this.isExternalCertificate ||
+      (!!this.configForm.value.externalPrivateKey?.trim() &&
+        !!this.configForm.value.externalCertificate?.trim())
+    );
   }
 
   /**
@@ -321,6 +368,33 @@ export class KeyCreateWizardComponent implements OnInit {
       const usage = this.selectedUsage!;
       const description = this.configForm.value.description?.trim();
       const isRegistrarEnrollment = usage === 'access' && this.selectedAccessSource === 'registrar';
+
+      if (this.isExternalCertificate) {
+        const externalKey = this.parseExternalPrivateKey();
+        const externalCertificates = this.parseCertificateChain(
+          this.configForm.value.externalCertificate
+        );
+        const importDto: KeyChainImportDto = {
+          key: externalKey,
+          usageType: usage,
+          description: description || this.getDefaultDescription(),
+          kmsProvider: this.configForm.value.kmsProvider || this.defaultKmsProvider || 'db',
+          crt: externalCertificates,
+          rotationPolicy: this.isExternalCaChain
+            ? {
+                enabled: true,
+                intervalDays: this.configForm.value.rotationIntervalDays,
+                certValidityDays: this.configForm.value.certValidityDays,
+              }
+            : undefined,
+        };
+        const result = await this.keyChainService.import(importDto);
+        this.snackBar.open('External certificate imported successfully!', 'View Key', {
+          duration: 5000,
+        });
+        this.router.navigate(['/keys', result.id]);
+        return;
+      }
 
       // Build the KeyChainCreateDto
       const createDto: KeyChainCreateDto = {
@@ -446,9 +520,7 @@ export class KeyCreateWizardComponent implements OnInit {
     }
 
     if (this.selectedUsage === 'access') {
-      const certSource =
-        this.selectedAccessSource === 'registrar' ? 'Registrar Enrollment' : 'Self-Signed';
-      summary.push({ label: 'Certificate', value: certSource });
+      summary.push({ label: 'Certificate', value: this.getCertificateSourceLabel() });
     }
 
     if (this.configForm.value.description) {
@@ -465,7 +537,12 @@ export class KeyCreateWizardComponent implements OnInit {
     }
 
     if (this.isInternalChain) {
-      summary.push({ label: 'Type', value: 'Internal Chain (Root CA + Signing Key)' });
+      summary.push({
+        label: 'Type',
+        value: this.isExternalCaChain
+          ? 'External CA Chain (Rotating Signing Key)'
+          : 'Internal Chain (Root CA + Signing Key)',
+      });
       if (this.rotationEnabled) {
         summary.push({
           label: 'Rotation Interval',
@@ -477,9 +554,74 @@ export class KeyCreateWizardComponent implements OnInit {
         value: `${this.configForm.value.certValidityDays} days`,
       });
     } else {
-      summary.push({ label: 'Type', value: 'Standalone (Self-signed)' });
+      summary.push({
+        label: 'Type',
+        value: this.getKeyTypeLabel(),
+      });
     }
 
     return summary;
+  }
+
+  private getCertificateSourceLabel(): string {
+    if (this.selectedAccessSource === 'registrar') return 'Registrar Enrollment';
+    if (this.selectedAccessSource === 'external') return 'External Certificate';
+    return 'Self-Signed';
+  }
+
+  private getKeyTypeLabel(): string {
+    return this.isExternalCertificate
+      ? 'Standalone (External Certificate)'
+      : 'Standalone (Self-signed)';
+  }
+
+  private parseExternalPrivateKey(): KeyChainImportDto['key'] {
+    try {
+      const key = JSON.parse(this.configForm.value.externalPrivateKey);
+      if (!key || typeof key !== 'object' || !key.kty || !key.x || !key.y || !key.crv || !key.d) {
+        throw new Error('Invalid private JWK');
+      }
+      return key as KeyChainImportDto['key'];
+    } catch {
+      throw new Error('The external private key must be a valid EC private JWK.');
+    }
+  }
+
+  private parseCertificateChain(value: string): string[] {
+    const certificates = value
+      .trim()
+      .split(/(?=-----BEGIN CERTIFICATE-----)/g)
+      .map((certificate) => certificate.trim())
+      .filter(Boolean);
+    if (certificates.length === 0) {
+      throw new Error('At least one certificate is required.');
+    }
+    return certificates;
+  }
+
+  async onPrivateKeyFileSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.configForm.patchValue({ externalPrivateKey: await file.text() });
+  }
+
+  async onCertificateFilesSelected(event: Event): Promise<void> {
+    const files = Array.from((event.target as HTMLInputElement).files || []);
+    if (files.length === 0) return;
+
+    const certificates = await Promise.all(files.map((file) => this.readCertificateFile(file)));
+    this.configForm.patchValue({ externalCertificate: certificates.join('\n') });
+  }
+
+  private async readCertificateFile(file: File): Promise<string> {
+    const content = await file.arrayBuffer();
+    const text = new TextDecoder().decode(content).trim();
+    if (text.includes('-----BEGIN CERTIFICATE-----')) return text;
+
+    const bytes = new Uint8Array(content);
+    let binary = '';
+    for (const byte of bytes) binary += String.fromCodePoint(byte);
+    const base64 = btoa(binary).match(/.{1,64}/g)?.join('\n') || '';
+    return `-----BEGIN CERTIFICATE-----\n${base64}\n-----END CERTIFICATE-----`;
   }
 }

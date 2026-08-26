@@ -2,9 +2,20 @@
   <!-- Header -->
   <div fxLayout="row" fxLayoutAlign="space-between center" class="wizard-header">
     <h2>Create Key</h2>
-    <button mat-icon-button [routerLink]="['../']" matTooltip="Cancel">
-      <mat-icon>close</mat-icon>
-    </button>
+    <div fxLayout="row" fxLayoutGap="8px">
+      <a
+        mat-stroked-button
+        href="https://docs.eudiplo.dev/trust/key-chains"
+        target="_blank"
+        rel="noopener"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        Documentation
+      </a>
+      <button mat-icon-button [routerLink]="['../']" matTooltip="Cancel">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
   </div>
 
   <mat-stepper #stepper linear fxFlex>
@@ -135,7 +146,7 @@
           <div class="step-description">
             <h3>How do you want to get your access certificate?</h3>
             <p class="hint">
-              Choose self-signed for development or registrar enrollment for production.
+              Choose generated certificates, an external CA chain, or a standalone certificate.
             </p>
           </div>
 
@@ -222,9 +233,18 @@
                 This will create a key and enroll it with the registrar to obtain a trusted
                 certificate.
               </p>
+            } @else if (selectedUsage === 'access' && isExternalCertificate) {
+              <p class="hint">
+                This will import your externally issued access certificate and matching key.
+              </p>
             } @else if (selectedUsage === 'access') {
               <p class="hint">
                 This will create a self-signed access certificate for wallet communication.
+              </p>
+            } @else if (isExternalCertificate) {
+              <p class="hint">
+                This will import the external CA key and certificate, then create a rotating leaf
+                signing key.
               </p>
             } @else if (selectedUsage === 'attestation' && !isInternalChain) {
               <p class="hint">This will create a standalone self-signed key.</p>
@@ -269,6 +289,85 @@
                   <mat-hint> Selected provider stores and signs with this key chain. </mat-hint>
                 }
               </mat-form-field>
+
+              @if (!isInternalChain && selectedUsage !== 'access') {
+                <mat-checkbox formControlName="useExternalCertificate">
+                  Use an externally issued certificate and matching private key
+                </mat-checkbox>
+              }
+
+              @if (isExternalCertificate) {
+                <mat-form-field appearance="outline">
+                  <mat-label for="external-private-key">
+                    {{
+                      isExternalCaChain
+                        ? 'External CA Private Key (JWK)'
+                        : 'External Private Key (JWK)'
+                    }}
+                  </mat-label>
+                  <textarea
+                    matInput
+                    id="external-private-key"
+                    aria-label="External private key in JWK format"
+                    formControlName="externalPrivateKey"
+                    rows="6"
+                    placeholder="Paste the EC private JWK"
+                  ></textarea>
+                  <mat-hint>
+                    Must match the public key in the supplied
+                    {{ isExternalCaChain ? 'CA certificate.' : 'leaf certificate.' }}
+                  </mat-hint>
+                  <input
+                    #privateKeyFile
+                    type="file"
+                    accept=".json,.jwk,application/json"
+                    hidden
+                    (change)="onPrivateKeyFileSelected($event)"
+                  />
+                </mat-form-field>
+                <button mat-button type="button" (click)="privateKeyFile.click()">
+                  <mat-icon>upload_file</mat-icon>
+                  Load JWK File
+                </button>
+
+                <mat-form-field appearance="outline">
+                  <mat-label for="external-certificate-chain">
+                    {{
+                      isExternalCaChain
+                        ? 'External CA Certificate Chain (PEM)'
+                        : 'Certificate Chain (PEM)'
+                    }}
+                  </mat-label>
+                  <textarea
+                    matInput
+                    id="external-certificate-chain"
+                    aria-label="External certificate chain"
+                    formControlName="externalCertificate"
+                    rows="8"
+                    placeholder="-----BEGIN CERTIFICATE-----"
+                  ></textarea>
+                  <mat-hint>
+                    {{
+                      isExternalCaChain
+                        ? 'The last certificate must be the CA certificate matching the supplied key.'
+                        : 'Paste the leaf certificate first, followed by any issuing certificates.'
+                    }}
+                    Or load certificate files.
+                  </mat-hint>
+                  <input
+                    #certificateFiles
+                    type="file"
+                    accept=".pem,.crt,.cer,.der,application/x-pem-file,application/pkix-cert"
+                    multiple
+                    hidden
+                    (change)="onCertificateFilesSelected($event)"
+                  />
+                </mat-form-field>
+                <button mat-button type="button" (click)="certificateFiles.click()">
+                  <mat-icon>upload_file</mat-icon>
+                  Load Certificate Files
+                </button>
+              }
             </mat-card-content>
           </mat-card>
 
@@ -331,7 +430,15 @@
                 }
               </div>
 
-              @if (selectedUsage === 'attestation' && isInternalChain) {
+              @if (isExternalCaChain) {
+                <div class="next-steps-hint">
+                  <mat-icon>autorenew</mat-icon>
+                  <span>
+                    EUDIPLO will use the external CA to issue the active signing certificate and
+                    rotate that signing key according to the configured policy.
+                  </span>
+                </div>
+              } @else if (selectedUsage === 'attestation' && isInternalChain) {
                 <div class="next-steps-hint">
                   <mat-icon>info</mat-icon>
                   <span>
@@ -387,6 +494,8 @@
                 <mat-icon class="spinning">sync</mat-icon>
                 @if (selectedUsage === 'access' && selectedAccessSource === 'registrar') {
                   <ng-container>Enrolling...</ng-container>
+                } @else if (isExternalCertificate) {
+                  <ng-container>Importing...</ng-container>
                 } @else {
                   <ng-container>Creating...</ng-container>
                 }
@@ -396,12 +505,18 @@
                 mat-flat-button
                 type="button"
                 color="primary"
-                [disabled]="!configForm.valid"
+                [disabled]="!configForm.valid || !externalCertificateFormValid"
                 (click)="createKey()"
               >
                 <mat-icon>vpn_key</mat-icon>
                 @if (selectedUsage === 'access' && selectedAccessSource === 'registrar') {
                   <ng-container>Create & Enroll</ng-container>
+                } @else if (isExternalCertificate) {
+                  <ng-container>
+                    {{
+                      isExternalCaChain ? 'Import CA & Create Chain' : 'Import Key & Certificate'
+                    }}
+                  </ng-container>
                 } @else {
                   <ng-container>Create Key Chain</ng-container>
                 }

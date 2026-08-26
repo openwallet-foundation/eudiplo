@@ -4,6 +4,7 @@ import {
   type KmsProvidersResponseDto,
   type KmsTenantConfigResponseDto,
   type KeyChainCreateDto,
+  type KeyChainImportDto,
   type KeyChainResponseDto,
   type KeyChainUpdateDto,
   keyChainControllerCreate,
@@ -15,6 +16,7 @@ import {
   keyChainControllerGetProviders,
   keyChainControllerGetProvidersHealth,
   keyChainControllerGetTenantKmsConfig,
+  keyChainControllerImport,
   keyChainControllerRotate,
   keyChainControllerUpdate,
   keyChainControllerUpdateTenantKmsConfig,
@@ -103,6 +105,12 @@ export class KeyChainService {
    */
   async create(data: KeyChainCreateDto): Promise<{ id: string }> {
     const response = await keyChainControllerCreate({ body: data });
+    return response.data as { id: string };
+  }
+
+  /** Import key material and an externally issued certificate chain. */
+  async import(data: KeyChainImportDto): Promise<{ id: string }> {
+    const response = await keyChainControllerImport({ body: data });
     return response.data as { id: string };
   }
 

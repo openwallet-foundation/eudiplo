@@ -112,6 +112,10 @@ export class KeyChainImportService {
 
         let activeCertificate: string;
         if (normalizedCertificates && normalizedCertificates.length > 0) {
+            this.validateLeafCertificate(
+                normalizedCertificates[0],
+                activeMat.ref.publicJwk,
+            );
             activeCertificate = normalizedCertificates.join("\n");
         } else {
             const now = new Date();
@@ -334,6 +338,35 @@ export class KeyChainImportService {
         ) {
             throw new BadRequestException(
                 "Invalid rotation root certificate: certificate public key does not match the provided private key",
+            );
+        }
+    }
+
+    private validateLeafCertificate(
+        leafCertificatePem: string,
+        expectedPublicJwk: JWK,
+    ): void {
+        let certificate: X509Certificate;
+        try {
+            certificate = new X509Certificate(leafCertificatePem);
+        } catch (error) {
+            throw new BadRequestException(
+                `Invalid leaf certificate: ${String(error)}`,
+            );
+        }
+
+        const certificatePublicJwk = certificate.publicKey.export({
+            format: "jwk",
+        }) as JWK;
+
+        if (
+            !this.arePublicJwksEquivalent(
+                certificatePublicJwk,
+                expectedPublicJwk,
+            )
+        ) {
+            throw new BadRequestException(
+                "Invalid leaf certificate: certificate public key does not match the provided private key",
             );
         }
     }

@@ -39,6 +39,17 @@ Bring existing certificates from external PKI systems. Useful when:
 
 Imported certificates must include both the certificate and private key material (for database-backed keys) or reference existing keys (for Vault/AWS KMS).
 
+When importing a certificate chain, provide the leaf certificate first and any issuing
+certificates after it. For an external CA-backed rotating internal chain, provide the CA
+certificate last. The CA certificate must have `CA=true` and match the supplied private key.
+
+The web key-creation wizard supports pasted PEM values and PEM, CRT, CER, or DER certificate
+files. It validates the key/certificate relationship before the key chain is created.
+
+For an attestation internal chain backed by an external CA, EUDIPLO uses the imported CA key to
+sign newly generated active leaf keys. Leaf keys and certificates rotate according to the key
+chain's rotation policy; the external CA key remains the signing anchor.
+
 ## Access Certificates vs Attestation Certificates
 
 EUDIPLO uses certificates for different purposes:
