@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { getApiErrorMessage } from '../utils/error-message';
 import { JwtService } from '../services/jwt.service';
 import {
@@ -26,8 +29,10 @@ import {
   imports: [
     CommonModule,
     FormsModule,
+    RouterLink,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatChipsModule,
     MatFormFieldModule,
     MatIconModule,
@@ -35,6 +40,7 @@ import {
     MatSelectModule,
     MatSnackBarModule,
     MatTableModule,
+    MatTooltipModule,
   ],
   templateUrl: './config-portability.component.html',
   styleUrl: './config-portability.component.scss',
@@ -42,13 +48,14 @@ import {
 })
 export class ConfigPortabilityComponent implements OnInit {
   readonly planColumns = ['resource', 'version', 'action', 'issues'];
-  readonly resourceColumns = ['resource', 'ownership', 'generation', 'source', 'actions'];
+  readonly resourceColumns = ['select', 'resource', 'ownership', 'generation', 'source', 'actions'];
   mode: ConfigImportMode = 'upsert';
   bundle?: ConfigBundle;
   bundleArchive?: File;
   bundleFileName = '';
   plan?: ConfigImportPlan;
   resources: ConfigResourceMetadata[] = [];
+  selected = new Set<string>();
   busy = false;
 
   constructor(
@@ -159,8 +166,106 @@ export class ConfigPortabilityComponent implements OnInit {
     }
     await this.run(async () => {
       await this.portability.detach(resource.kind, resource.resourceId);
+      this.selected.delete(this.resourceKey(resource));
       await this.refreshResources();
     }, 'Could not detach resource');
+  }
+
+  resourceKey(resource: ConfigResourceMetadata): string {
+    return `${resource.kind}/${resource.resourceId}`;
+  }
+
+  /** Route to view the resource, or null when the kind has no dedicated detail page. */
+  resourceLink(resource: ConfigResourceMetadata): string[] | null {
+    const routesByKind: Partial<Record<ConfigResourceMetadata['kind'], string>> = {
+      Tenant: '/tenants',
+      Client: '/clients',
+      KeyChain: '/keys',
+      CredentialConfig: '/credential-config',
+      PresentationConfig: '/presentation-config',
+      AttributeProvider: '/attribute-providers',
+      WebhookEndpoint: '/webhook-endpoints',
+      TrustList: '/trust-list',
+      StatusList: '/status-lists',
+    };
+    const base = routesByKind[resource.kind];
+    if (base) return [base, resource.resourceId];
+
+    const singletonRoutesByKind: Partial<Record<ConfigResourceMetadata['kind'], string>> = {
+      IssuanceConfig: '/issuance-config',
+      RegistrarConfig: '/registrar',
+      KmsConfig: '/kms',
+    };
+    const singleton = singletonRoutesByKind[resource.kind];
+    return singleton ? [singleton] : null;
+  }
+
+  isSelected(resource: ConfigResourceMetadata): boolean {
+    return this.selected.has(this.resourceKey(resource));
+  }
+
+  selectResource(resource: ConfigResourceMetadata): void {
+    this.selected.add(this.resourceKey(resource));
+  }
+
+  deselectResource(resource: ConfigResourceMetadata): void {
+    this.selected.delete(this.resourceKey(resource));
+  }
+
+  get detachableResources(): ConfigResourceMetadata[] {
+    return this.resources.filter((resource) => resource.ownership === 'file-managed');
+  }
+
+  get allSelected(): boolean {
+    const detachable = this.detachableResources;
+    return detachable.length > 0 && detachable.every((resource) => this.isSelected(resource));
+  }
+
+  selectAll(): void {
+    for (const resource of this.detachableResources) {
+      this.selectResource(resource);
+    }
+  }
+
+  deselectAll(): void {
+    this.selected.clear();
+  }
+
+  async detachSelected(): Promise<void> {
+    const targets = this.resources.filter((resource) => this.isSelected(resource));
+    if (!targets.length) return;
+    if (
+      !globalThis.confirm(
+        `Detach ${targets.length} resource(s)? They will become editable through the API and UI.`
+      )
+    ) {
+      return;
+    }
+    this.busy = true;
+    try {
+      const failures: string[] = [];
+      for (const resource of targets) {
+        try {
+          await this.portability.detach(resource.kind, resource.resourceId);
+          this.selected.delete(this.resourceKey(resource));
+        } catch (error) {
+          failures.push(`${this.resourceKey(resource)}: ${getApiErrorMessage(error, 'failed')}`);
+        }
+      }
+      await this.refreshResources();
+      const succeeded = targets.length - failures.length;
+      if (failures.length) {
+        this.snackBar.open(
+          `Detached ${succeeded} of ${targets.length} resource(s). Failed: ${failures.join('; ')}`,
+          'Close',
+          { duration: 8000 }
+        );
+      } else {
+        this.snackBar.open(`Detached ${succeeded} resource(s)`, 'Close', { duration: 3000 });
+      }
+    } finally {
+      this.busy = false;
+    }
   }
 
   onModeChange(): void {
@@ -180,6 +285,10 @@ export class ConfigPortabilityComponent implements OnInit {
   private async refreshResources(): Promise<void> {
     try {
       this.resources = await this.portability.listResources();
+      const validKeys = new Set(this.resources.map((resource) => this.resourceKey(resource)));
+      for (const key of this.selected) {
+        if (!validKeys.has(key)) this.selected.delete(key);
+      }
     } catch (error) {
       this.snackBar.open(getApiErrorMessage(error, 'Could not load resource ownership'), 'Close', {
         duration: 5000,
