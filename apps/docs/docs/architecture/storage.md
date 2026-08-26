@@ -14,9 +14,9 @@ Storage is abstracted through a pluggable provider interface, allowing deploymen
 
 ## Configuration
 
-import GlobalStorageConfig from "@site/docs/generated/config-storage.md";
+import ConfigTable from "@site/src/components/ConfigTable";
 
-<GlobalStorageConfig />
+<ConfigTable group="storage" />
 
 ## Local Storage
 

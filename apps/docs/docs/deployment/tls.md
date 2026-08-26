@@ -8,22 +8,18 @@ EUDIPLO supports built-in TLS termination, allowing you to serve HTTPS directly 
 
 ## Overview
 
-| Method            | Best For                        | Complexity    | Recommendation               |
-| ----------------- | ------------------------------- | ------------- | ---------------------------- |
-| **Built-in TLS**  | Simple deployments, development | ⭐ Easy       | Small-scale, single instance |
-| **Reverse Proxy** | Production, load balancing      | ⭐⭐ Medium   | Large-scale, multi-instance  |
+| Method            | Best For                        | Complexity  | Recommendation               |
+| ----------------- | ------------------------------- | ----------- | ---------------------------- |
+| **Built-in TLS**  | Simple deployments, development | ⭐ Easy     | Small-scale, single instance |
+| **Reverse Proxy** | Production, load balancing      | ⭐⭐ Medium | Large-scale, multi-instance  |
 
 ## Built-in TLS Configuration
 
 ### Environment Variables
 
-| Variable             | Required | Description                                            |
-| -------------------- | -------- | ------------------------------------------------------ |
-| `TLS_ENABLED`        | Yes      | Set to `true` to enable TLS                            |
-| `TLS_CERT_PATH`      | Yes      | Path to the TLS certificate file (PEM format)          |
-| `TLS_KEY_PATH`       | Yes      | Path to the TLS private key file (PEM format)          |
-| `TLS_CA_PATH`        | No       | Path to CA certificate chain (for client verification) |
-| `TLS_KEY_PASSPHRASE` | No       | Passphrase for encrypted private key files             |
+import ConfigTable from "@site/src/components/ConfigTable";
+
+<ConfigTable group="tls" />
 
 ### Basic Setup
 
@@ -65,9 +61,9 @@ services:
     eudiplo:
         image: ghcr.io/openwallet-foundation/eudiplo:latest
         ports:
-            - '3000:3000'
+            - "3000:3000"
         environment:
-            TLS_ENABLED: 'true'
+            TLS_ENABLED: "true"
             TLS_CERT_PATH: /certs/cert.pem
             TLS_KEY_PATH: /certs/key.pem
             PUBLIC_URL: https://your-domain.com:3000
@@ -151,24 +147,24 @@ services:
     traefik:
         image: traefik:v3.0
         command:
-            - '--providers.docker=true'
-            - '--entrypoints.websecure.address=:443'
-            - '--certificatesresolvers.letsencrypt.acme.tlschallenge=true'
-            - '--certificatesresolvers.letsencrypt.acme.email=your-email@example.com'
-            - '--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json'
+            - "--providers.docker=true"
+            - "--entrypoints.websecure.address=:443"
+            - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+            - "--certificatesresolvers.letsencrypt.acme.email=your-email@example.com"
+            - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
         ports:
-            - '443:443'
+            - "443:443"
         volumes:
-            - '/var/run/docker.sock:/var/run/docker.sock:ro'
-            - 'letsencrypt:/letsencrypt'
+            - "/var/run/docker.sock:/var/run/docker.sock:ro"
+            - "letsencrypt:/letsencrypt"
 
     eudiplo:
         image: ghcr.io/openwallet-foundation/eudiplo:latest
         labels:
-            - 'traefik.enable=true'
-            - 'traefik.http.routers.eudiplo.rule=Host(`your-domain.com`)'
-            - 'traefik.http.routers.eudiplo.entrypoints=websecure'
-            - 'traefik.http.routers.eudiplo.tls.certresolver=letsencrypt'
+            - "traefik.enable=true"
+            - "traefik.http.routers.eudiplo.rule=Host(`your-domain.com`)"
+            - "traefik.http.routers.eudiplo.entrypoints=websecure"
+            - "traefik.http.routers.eudiplo.tls.certresolver=letsencrypt"
         environment:
             PUBLIC_URL: https://your-domain.com
 

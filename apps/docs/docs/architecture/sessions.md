@@ -10,13 +10,13 @@ EUDIPLO tracks **issuance** and **verification** sessions to correlate multi-ste
 
 Each verification session includes security fields defined by the OpenID4VP specification (§13.3):
 
-| Field         | Purpose                                                                                              |
-| ------------- | ---------------------------------------------------------------------------------------------------- |
-| `walletNonce` | Wallet-facing nonce, included in presentation requests                                               |
-| `sessionId`   | Internal correlation ID, never exposed to the wallet                                                 |
-| `nonce`       | Server-side replay prevention nonce (deprecated in favor of `walletNonce` for clarity)              |
-| `state`       | Same-device state parameter (optional, for redirect-based flows)                                     |
-| `responseCode`| One-time code for same-device redirect flow (appended to `redirect_uri` to prevent session fixation) |
+| Field          | Purpose                                                                                              |
+| -------------- | ---------------------------------------------------------------------------------------------------- |
+| `walletNonce`  | Wallet-facing nonce, included in presentation requests                                               |
+| `sessionId`    | Internal correlation ID, never exposed to the wallet                                                 |
+| `nonce`        | Server-side replay prevention nonce (deprecated in favor of `walletNonce` for clarity)               |
+| `state`        | Same-device state parameter (optional, for redirect-based flows)                                     |
+| `responseCode` | One-time code for same-device redirect flow (appended to `redirect_uri` to prevent session fixation) |
 
 **Security Rationale:**
 
@@ -54,10 +54,10 @@ Preserves the session record but removes PII and credential claims:
 
 ```typescript
 await this.sessionRepository.update(sessionId, {
-  anonymizedAt: new Date(),
-  credentialClaims: null,
-  presentedCredentials: null,
-  // ... nullify all sensitive fields
+    anonymizedAt: new Date(),
+    credentialClaims: null,
+    presentedCredentials: null,
+    // ... nullify all sensitive fields
 });
 ```
 
@@ -69,17 +69,17 @@ Session cleanup is configured per-tenant via the tenant configuration:
 
 ```json
 {
-  "sessionConfig": {
-    "cleanupMode": "anonymize",
-    "retentionDays": 90
-  }
+    "sessionConfig": {
+        "cleanupMode": "anonymize",
+        "retentionDays": 90
+    }
 }
 ```
 
-| Field           | Type                     | Default      | Description                                      |
-| --------------- | ------------------------ | ------------ | ------------------------------------------------ |
-| `cleanupMode`   | `"delete" \| "anonymize"` | `"delete"`   | Whether to fully delete or anonymize sessions    |
-| `retentionDays` | `number`                 | `30`         | Days to retain completed sessions before cleanup |
+| Field           | Type                      | Default    | Description                                      |
+| --------------- | ------------------------- | ---------- | ------------------------------------------------ |
+| `cleanupMode`   | `"delete" \| "anonymize"` | `"delete"` | Whether to fully delete or anonymize sessions    |
+| `retentionDays` | `number`                  | `30`       | Days to retain completed sessions before cleanup |
 
 **Note:** The cleanup cron runs hourly and processes sessions older than `retentionDays` since completion.
 
@@ -88,16 +88,17 @@ Session cleanup is configured per-tenant via the tenant configuration:
 Session events (authorization, token exchange, credential issuance, presentation submission) are logged using the PinoLogger:
 
 ```typescript
-this.logger.log(
-  `Credential issued for session ${sessionId}`,
-  { sessionId, credentialType, format }
-);
+this.logger.log(`Credential issued for session ${sessionId}`, {
+    sessionId,
+    credentialType,
+    format,
+});
 ```
 
 Logs include correlation IDs and are exportable to SIEM systems via OpenTelemetry or log aggregators.
 
 ## Global Configuration
 
-import GlobalSessionConfig from '@site/docs/generated/config-session.md';
+import ConfigTable from "@site/src/components/ConfigTable";
 
-<GlobalSessionConfig />
+<ConfigTable group="session" />

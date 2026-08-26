@@ -18,12 +18,12 @@ For fetching claims during issuance, see [Attribute Providers](./attribute-provi
 
 ## Supported Scenarios
 
-| Event                     | Description                                                          | Payload Includes                                       |
-| ------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------ |
-| Credential issued         | Wallet successfully received a credential                            | `sessionId`, `credentialType`, `format`, `tenantId`    |
-| Presentation completed    | Wallet submitted a verified presentation                             | `sessionId`, `presentedClaims`, `credentialTypes`      |
-| Deferred credential ready | Attribute provider completed processing, credential now available    | `transactionId`, `claims`                              |
-| Notification received     | Wallet sent a notification (acceptance/rejection/deletion)           | `notificationId`, `event`, `credentialId`, `eventTime` |
+| Event                     | Description                                                       | Payload Includes                                       |
+| ------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------ |
+| Credential issued         | Wallet successfully received a credential                         | `sessionId`, `credentialType`, `format`, `tenantId`    |
+| Presentation completed    | Wallet submitted a verified presentation                          | `sessionId`, `presentedClaims`, `credentialTypes`      |
+| Deferred credential ready | Attribute provider completed processing, credential now available | `transactionId`, `claims`                              |
+| Notification received     | Wallet sent a notification (acceptance/rejection/deletion)        | `notificationId`, `event`, `credentialId`, `eventTime` |
 
 ## Webhook Configuration
 
@@ -31,40 +31,40 @@ Webhooks are configured per tenant via the **Webhook Endpoints** resource:
 
 ```json
 {
-  "id": "issuance-webhook",
-  "url": "https://your-backend.example.com/webhooks/eudiplo",
-  "events": ["credential.issued", "presentation.completed"],
-  "auth": {
-    "type": "apiKey",
-    "config": {
-      "headerName": "x-api-key",
-      "value": "your-secret-key"
+    "id": "issuance-webhook",
+    "url": "https://your-backend.example.com/webhooks/eudiplo",
+    "events": ["credential.issued", "presentation.completed"],
+    "auth": {
+        "type": "apiKey",
+        "config": {
+            "headerName": "x-api-key",
+            "value": "your-secret-key"
+        }
     }
-  }
 }
 ```
 
-| Field    | Type     | Description                                  |
-| -------- | -------- | -------------------------------------------- |
-| `id`     | `string` | Unique identifier within the tenant          |
-| `url`    | `string` | HTTPS endpoint to receive webhook events     |
-| `events` | `array`  | List of event types to subscribe to         |
-| `auth`   | `object` | Authentication configuration (optional)      |
+| Field    | Type     | Description                              |
+| -------- | -------- | ---------------------------------------- |
+| `id`     | `string` | Unique identifier within the tenant      |
+| `url`    | `string` | HTTPS endpoint to receive webhook events |
+| `events` | `array`  | List of event types to subscribe to      |
+| `auth`   | `object` | Authentication configuration (optional)  |
 
 ### Authentication Options
 
-| Type        | Config Fields                  | Description                                     |
-| ----------- | ------------------------------ | ----------------------------------------------- |
-| `apiKey`    | `headerName`, `value`          | Send a static API key in a custom header       |
-| `bearerToken` | `token`                      | Send a Bearer token in `Authorization` header  |
-| `basic`     | `username`, `password`         | HTTP Basic authentication                       |
-| `none`      | —                              | No authentication (not recommended)             |
+| Type          | Config Fields          | Description                                   |
+| ------------- | ---------------------- | --------------------------------------------- |
+| `apiKey`      | `headerName`, `value`  | Send a static API key in a custom header      |
+| `bearerToken` | `token`                | Send a Bearer token in `Authorization` header |
+| `basic`       | `username`, `password` | HTTP Basic authentication                     |
+| `none`        | —                      | No authentication (not recommended)           |
 
 ## Outbound URL Policy
 
-import GlobalWebhookConfig from '@site/docs/generated/config-webhook.md';
+import ConfigTable from "@site/src/components/ConfigTable";
 
-<GlobalWebhookConfig />
+<ConfigTable group="webhook" />
 
 ## Notification Webhook
 
@@ -76,16 +76,16 @@ The OID4VCI notification endpoint allows wallets to signal credential acceptance
 
 ```json
 {
-  "event": "notification.received",
-  "tenantId": "example-tenant",
-  "notificationId": "ntf_abc123",
-  "notification": {
-    "notification_id": "ntf_abc123",
-    "event": "credential_accepted",
-    "event_time": 1672531200,
-    "credential_id": "cred_xyz789"
-  },
-  "sessionId": "sess_def456"
+    "event": "notification.received",
+    "tenantId": "example-tenant",
+    "notificationId": "ntf_abc123",
+    "notification": {
+        "notification_id": "ntf_abc123",
+        "event": "credential_accepted",
+        "event_time": 1672531200,
+        "credential_id": "cred_xyz789"
+    },
+    "sessionId": "sess_def456"
 }
 ```
 
@@ -105,16 +105,16 @@ When a presentation is successfully verified, EUDIPLO extracts the claims and se
 
 ```json
 {
-  "event": "presentation.completed",
-  "tenantId": "example-tenant",
-  "sessionId": "sess_abc123",
-  "presentedClaims": {
-    "given_name": "John",
-    "family_name": "Doe",
-    "birth_date": "1990-01-01"
-  },
-  "credentialTypes": ["PersonIdentificationData"],
-  "verifiedAt": "2024-01-15T10:30:00Z"
+    "event": "presentation.completed",
+    "tenantId": "example-tenant",
+    "sessionId": "sess_abc123",
+    "presentedClaims": {
+        "given_name": "John",
+        "family_name": "Doe",
+        "birth_date": "1990-01-01"
+    },
+    "credentialTypes": ["PersonIdentificationData"],
+    "verifiedAt": "2024-01-15T10:30:00Z"
 }
 ```
 

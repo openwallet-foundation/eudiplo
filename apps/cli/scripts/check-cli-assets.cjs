@@ -9,14 +9,14 @@ const { join, relative } = require("node:path");
 
 const canonicalComposePath = join(
     __dirname,
-    "../deployment/docker-compose/docker-compose.yml",
+    "../../../deployment/docker-compose/docker-compose.yml",
 );
-const cliComposePath = join(__dirname, "../apps/cli/templates/docker-compose.yml");
-const canonicalDemoDirectory = join(__dirname, "../assets/config/demo");
-const cliDemoDirectory = join(__dirname, "../apps/cli/templates/demo-config");
-const canonicalSchemasDirectory = join(__dirname, "../schemas");
-const cliSchemasDirectory = join(__dirname, "../apps/cli/templates/schemas");
-const cliSchemasManifestPath = join(__dirname, "../apps/cli/templates/schemas.manifest.json");
+const cliComposePath = join(__dirname, "../templates/docker-compose.yml");
+const canonicalDemoDirectory = join(__dirname, "../../../assets/config/demo");
+const cliDemoDirectory = join(__dirname, "../templates/demo-config");
+const canonicalSchemasDirectory = join(__dirname, "../../../schemas");
+const cliSchemasDirectory = join(__dirname, "../templates/schemas");
+const cliSchemasManifestPath = join(__dirname, "../templates/schemas.manifest.json");
 
 const canonicalCompose = readFileSync(canonicalComposePath, "utf8");
 const cliCompose = readFileSync(cliComposePath, "utf8");

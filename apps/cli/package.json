@@ -13,11 +13,11 @@
         "README.md"
     ],
     "scripts": {
-        "assets:sync": "node ../../scripts/sync-cli-assets.js",
-        "assets:check": "node ../../scripts/check-cli-assets.js",
+        "assets:sync": "node scripts/sync-cli-assets.cjs",
+        "assets:check": "node scripts/check-cli-assets.cjs",
         "build": "pnpm assets:sync && pnpm assets:check && tsc -p tsconfig.json",
         "build:sea:bundle": "pnpm assets:sync && pnpm assets:check && esbuild src/index.ts --bundle --platform=node --format=esm --target=node22.12 --alias:jsonc-parser=jsonc-parser/lib/esm/main.js --outfile=dist-sea/index.js",
-        "build:sea": "node ../../scripts/build-cli-sea.mjs",
+        "build:sea": "node scripts/build-cli-sea.mjs",
         "dev": "tsx src/index.ts",
         "test": "vitest run",
         "lint": "biome lint .",
