@@ -621,7 +621,10 @@ export class KeyCreateWizardComponent implements OnInit {
     const bytes = new Uint8Array(content);
     let binary = '';
     for (const byte of bytes) binary += String.fromCodePoint(byte);
-    const base64 = btoa(binary).match(/.{1,64}/g)?.join('\n') || '';
+    const base64 =
+      btoa(binary)
+        .match(/.{1,64}/g)
+        ?.join('\n') || '';
     return `-----BEGIN CERTIFICATE-----\n${base64}\n-----END CERTIFICATE-----`;
   }
 }
