@@ -4,9 +4,20 @@
       <h2>Configuration Portability</h2>
       <p>Export, validate, migrate, and import tenant configuration as code.</p>
     </div>
-    @if (busy) {
-      <mat-spinner diameter="32"></mat-spinner>
-    }
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="12px">
+      <a
+        mat-stroked-button
+        href="https://docs.eudiplo.dev/architecture/configuration-model"
+        target="_blank"
+        rel="noopener"
+      >
+        <mat-icon>open_in_new</mat-icon>
+        Documentation
+      </a>
+      @if (busy) {
+        <mat-spinner diameter="32"></mat-spinner>
+      }
+    </div>
   </div>
 
   <div class="card-grid">

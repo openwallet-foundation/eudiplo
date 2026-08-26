@@ -2,6 +2,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import type * as Redirects from '@docusaurus/plugin-client-redirects';
+import 'dotenv/config';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 

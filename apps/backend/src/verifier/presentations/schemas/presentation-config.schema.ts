@@ -305,6 +305,7 @@ export const PresentationConfigCreateSchema = z
         ),
         transaction_data: z
             .array(TransactionDataSchema)
+            .nullable()
             .optional()
             .describe("Optional transaction data descriptors."),
         registration_cert: RegistrationCertificateRequestSchema.nullable()
