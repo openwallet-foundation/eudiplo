@@ -59,10 +59,10 @@
   align-items: flex-start;
   gap: 12px;
   padding: 16px;
-  background-color: #ffebee;
-  border-left: 4px solid #f44336;
+  background-color: var(--mat-sys-error-container);
+  border-left: 4px solid var(--eudiplo-danger);
   border-radius: 4px;
-  color: #c62828;
+  color: var(--eudiplo-danger);
 
   mat-icon {
     flex-shrink: 0;
@@ -81,7 +81,7 @@
   justify-content: center;
   padding: 40px;
   text-align: center;
-  color: var(--text-secondary, #999);
+  color: var(--text-secondary, var(--mat-sys-on-surface-variant));
 
   mat-icon {
     font-size: 48px;
@@ -106,7 +106,7 @@
   display: flex;
   align-items: center;
   justify-content: stretch;
-  border-top: 1px solid var(--divider-color, #e0e0e0);
+  border-top: 1px solid var(--divider-color, var(--mat-sys-outline-variant));
   width: 100%;
 
   mat-paginator {
@@ -127,17 +127,17 @@
   text-transform: uppercase;
 
   &.action-tenant_created {
-    background-color: #c8e6c9;
-    color: #2e7d32;
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--eudiplo-success);
   }
 
   &.action-tenant_updated {
-    background-color: #bbdefb;
-    color: #1565c0;
+    background-color: var(--mat-sys-primary-container);
+    color: var(--eudiplo-info);
   }
 
   &.action-tenant_deleted {
-    background-color: #ffccbc;
-    color: #d84315;
+    background-color: var(--mat-sys-tertiary-container);
+    color: var(--eudiplo-warning);
   }
 }

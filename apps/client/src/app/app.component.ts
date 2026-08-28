@@ -15,6 +15,7 @@ import { FlexLayoutModule } from 'ngx-flexible-layout';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { JwtService, Role } from './services/jwt.service';
+import { ThemeService } from './services/theme.service';
 import { ApiService } from './core';
 
 @Component({
@@ -53,7 +54,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     public apiService: ApiService,
     private breakpointObserver: BreakpointObserver,
-    public jwtService: JwtService
+    public jwtService: JwtService,
+    public themeService: ThemeService
   ) {}
 
   ngOnInit(): void {

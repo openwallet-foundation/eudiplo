@@ -12,8 +12,8 @@
   flex: 1;
   width: 100%;
   background:
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.18), transparent 32%),
-    linear-gradient(145deg, #1d4e89 0%, #153b63 50%, #0d2238 100%);
+    radial-gradient(circle at top, color-mix(in srgb, white 18%, transparent), transparent 32%),
+    linear-gradient(145deg, var(--eudiplo-info) 0%, #153b63 50%, #0d2238 100%);
   padding: 24px;
 }
 
@@ -23,7 +23,7 @@
   padding: 28px 28px 20px;
   box-shadow: 0 24px 60px rgba(4, 18, 31, 0.28);
   border-radius: 24px;
-  border: 1px solid rgba(10, 39, 64, 0.08);
+  border: 1px solid var(--eudiplo-info-subtle);
 }
 
 .brand-header {
@@ -41,8 +41,8 @@
   width: 84px;
   height: 84px;
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(29, 78, 137, 0.12), rgba(29, 78, 137, 0.03));
-  border: 1px solid rgba(29, 78, 137, 0.12);
+  background: linear-gradient(180deg, var(--eudiplo-info-soft), var(--eudiplo-info-subtle));
+  border: 1px solid var(--eudiplo-info-border);
 }
 
 .brand-copy {
@@ -58,7 +58,7 @@
 }
 
 .eyebrow {
-  color: #1d4e89;
+  color: var(--eudiplo-info);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   font-size: 12px;
@@ -66,14 +66,14 @@
 }
 
 .brand-title {
-  color: #10233a;
+  color: var(--mat-sys-on-surface);
   font-size: 34px;
   line-height: 1;
   font-weight: 700;
 }
 
 .brand-subtitle {
-  color: rgba(16, 35, 58, 0.72);
+  color: var(--mat-sys-on-surface-variant);
   line-height: 1.5;
 }
 
@@ -84,8 +84,8 @@
 }
 
 .dev-indicator {
-  color: #9a6700;
-  background: rgba(255, 152, 0, 0.12);
+  color: var(--eudiplo-warning);
+  background: var(--eudiplo-warning-soft);
   border-radius: 999px;
   padding: 6px 10px;
   font-weight: 600;
@@ -119,17 +119,17 @@
 }
 
 .mode-description {
-  color: rgba(16, 35, 58, 0.76);
+  color: var(--mat-sys-on-surface-variant);
   line-height: 1.5;
 }
 
 .mode-hint {
-  color: rgba(16, 35, 58, 0.58);
+  color: var(--mat-sys-on-surface-variant);
   font-size: 14px;
 }
 
 .mode-hint-warning {
-  color: #c62828;
+  color: var(--eudiplo-danger);
 }
 
 .full-width {
@@ -159,12 +159,12 @@
 
 // Custom snackbar styles
 ::ng-deep .success-snackbar {
-  background-color: #4caf50 !important;
+  background-color: var(--eudiplo-success) !important;
   color: white !important;
 }
 
 ::ng-deep .error-snackbar {
-  background-color: #f44336 !important;
+  background-color: var(--eudiplo-danger) !important;
   color: white !important;
 }
 

@@ -38,12 +38,12 @@ mat-icon[mat-card-avatar] {
     margin: 0;
     font-size: 28px;
     font-weight: 500;
-    color: #1976d2;
+    color: var(--mat-sys-primary);
   }
 
   .subtitle {
     margin: 4px 0 0;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     font-size: 14px;
   }
 }
@@ -51,26 +51,26 @@ mat-icon[mat-card-avatar] {
 // Setup Card
 .setup-card {
   width: 100%;
-  border-left: 4px solid #e65100;
-  background: linear-gradient(135deg, #fffbf0 0%, #ffffff 100%);
+  border-left: 4px solid var(--eudiplo-warning);
+  background: var(--mat-sys-surface-container);
 
   .setup-icon {
-    color: #bf360c;
-    background: #ffccbc;
+    color: var(--mat-sys-on-tertiary-container);
+    background: var(--mat-sys-tertiary-container);
   }
 
   &.readonly-card {
-    border-left-color: #1565c0;
-    background: linear-gradient(135deg, #eef7ff 0%, #ffffff 100%);
+    border-left-color: var(--eudiplo-info);
+    background: var(--mat-sys-surface-container);
 
     .setup-icon {
-      color: #0d47a1;
-      background: #bbdefb;
+      color: var(--mat-sys-on-primary-container);
+      background: var(--mat-sys-primary-container);
     }
   }
 
   &.warnings-card {
-    border-left-color: #e65100;
+    border-left-color: var(--eudiplo-warning);
   }
 
   .setup-section {
@@ -83,10 +83,10 @@ mat-icon[mat-card-avatar] {
       margin: 0 0 4px;
       font-size: 16px;
       font-weight: 500;
-      color: #333;
+      color: var(--mat-sys-on-surface);
 
       mat-icon {
-        color: #e65100;
+        color: var(--eudiplo-warning);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -96,7 +96,7 @@ mat-icon[mat-card-avatar] {
     .section-description {
       margin: 0 0 12px;
       font-size: 13px;
-      color: #666;
+      color: var(--mat-sys-on-surface-variant);
       padding-left: 28px;
     }
   }
@@ -109,13 +109,13 @@ mat-icon[mat-card-avatar] {
     .setup-track {
       padding: 16px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px dashed #e0e0e0;
+      background: var(--mat-sys-surface-container-high);
+      border: 1px dashed var(--mat-sys-outline-variant);
       transition: all 0.2s ease;
 
       &.ready {
-        background: rgba(76, 175, 80, 0.05);
-        border: 1px solid rgba(76, 175, 80, 0.3);
+        background: var(--eudiplo-success-subtle);
+        border: 1px solid var(--eudiplo-success-border);
       }
 
       .track-title {
@@ -125,7 +125,7 @@ mat-icon[mat-card-avatar] {
         margin: 0 0 12px;
         font-size: 15px;
         font-weight: 500;
-        color: #333;
+        color: var(--mat-sys-on-surface);
 
         mat-icon {
           font-size: 20px;
@@ -138,8 +138,8 @@ mat-icon[mat-card-avatar] {
           min-height: 22px;
 
           &.reason-chip {
-            background: rgba(230, 81, 0, 0.12);
-            color: #8e3a00;
+            background: var(--eudiplo-warning-soft);
+            color: var(--eudiplo-warning);
           }
         }
       }
@@ -154,15 +154,15 @@ mat-icon[mat-card-avatar] {
     .setup-step {
       padding: 12px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.7);
+      background: var(--mat-sys-surface-container-high);
       transition: all 0.2s ease;
 
       &:hover {
-        background: rgba(255, 255, 255, 0.9);
+        background: var(--mat-sys-surface-container-highest);
       }
 
       &.completed {
-        background: rgba(76, 175, 80, 0.1);
+        background: var(--eudiplo-success-soft);
       }
 
       &.disabled {
@@ -171,20 +171,20 @@ mat-icon[mat-card-avatar] {
       }
 
       mat-icon {
-        color: #bdbdbd;
+        color: var(--mat-sys-on-surface-variant);
         font-size: 24px;
         width: 24px;
         height: 24px;
 
         &.done {
-          color: #4caf50;
+          color: var(--eudiplo-success);
         }
       }
 
       p {
         margin: 4px 0 0;
         font-size: 12px;
-        color: #666;
+        color: var(--mat-sys-on-surface-variant);
       }
 
       mat-chip {
@@ -231,7 +231,7 @@ mat-icon[mat-card-avatar] {
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border-color: #1976d2;
+    border-color: var(--eudiplo-info);
   }
 
   mat-card-content {
@@ -246,32 +246,32 @@ mat-icon[mat-card-avatar] {
     margin-bottom: 12px;
 
     &.credential {
-      color: #1976d2;
+      color: var(--eudiplo-info);
     }
 
     &.presentation {
-      color: #7b1fa2;
+      color: var(--eudiplo-accent);
     }
 
     &.keys {
-      color: #f57c00;
+      color: var(--eudiplo-warning);
     }
 
     &.sessions {
-      color: #388e3c;
+      color: var(--eudiplo-success);
     }
   }
 
   .stat-value {
     font-size: 32px;
     font-weight: 600;
-    color: #333;
+    color: var(--mat-sys-on-surface);
     line-height: 1;
   }
 
   .stat-label {
     font-size: 12px;
-    color: #666;
+    color: var(--mat-sys-on-surface-variant);
     margin-top: 8px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -283,8 +283,8 @@ mat-icon[mat-card-avatar] {
   width: 100%;
 
   mat-icon[mat-card-avatar] {
-    background: #e3f2fd;
-    color: #0d47a1;
+    background: var(--mat-sys-primary-container);
+    color: var(--mat-sys-on-primary-container);
   }
 
   .session-stats {
@@ -292,7 +292,7 @@ mat-icon[mat-card-avatar] {
 
     .session-stat {
       padding: 8px 16px;
-      background: #f5f5f5;
+      background: var(--mat-sys-surface-container-high);
       border-radius: 20px;
 
       mat-icon {
@@ -302,23 +302,23 @@ mat-icon[mat-card-avatar] {
       }
 
       .status-active {
-        color: #0d47a1;
+        color: var(--mat-sys-primary);
       }
 
       .status-fetched {
-        color: #5d4037;
+        color: var(--mat-sys-tertiary);
       }
 
       .status-completed {
-        color: #2e7d32;
+        color: var(--eudiplo-success);
       }
 
       .status-expired {
-        color: #e65100;
+        color: var(--eudiplo-warning);
       }
 
       .status-failed {
-        color: #c62828;
+        color: var(--eudiplo-danger);
       }
     }
   }
@@ -329,8 +329,8 @@ mat-icon[mat-card-avatar] {
   width: 100%;
 
   mat-icon[mat-card-avatar] {
-    background: #ffccbc;
-    color: #bf360c;
+    background: var(--mat-sys-tertiary-container);
+    color: var(--mat-sys-on-tertiary-container);
   }
 
   .quick-actions {
@@ -354,24 +354,24 @@ mat-icon[mat-card-avatar] {
     gap: 8px;
     margin-top: 16px;
     padding: 12px 16px;
-    background-color: #e3f2fd;
+    background-color: var(--mat-sys-primary-container);
     border-radius: 8px;
-    color: #1565c0;
+    color: var(--mat-sys-on-primary-container);
     font-size: 14px;
 
     mat-icon {
-      color: #1976d2;
+      color: var(--mat-sys-primary);
       flex-shrink: 0;
     }
 
     a {
-      color: #1565c0;
+      color: var(--mat-sys-primary);
       font-weight: 500;
       text-decoration: underline;
       cursor: pointer;
 
       &:hover {
-        color: #0d47a1;
+        color: var(--mat-sys-primary);
       }
     }
   }
@@ -382,8 +382,8 @@ mat-icon[mat-card-avatar] {
   width: 100%;
 
   mat-icon[mat-card-avatar] {
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: var(--mat-sys-secondary-container);
+    color: var(--mat-sys-on-secondary-container);
   }
 
   .resource-links {
@@ -407,7 +407,7 @@ mat-icon[mat-card-avatar] {
     gap: 8px;
 
     mat-icon {
-      color: #666;
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 

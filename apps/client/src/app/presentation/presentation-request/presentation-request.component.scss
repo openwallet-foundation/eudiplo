@@ -19,7 +19,7 @@
   display: block;
   font-weight: 500;
   margin-bottom: 12px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .preview-card {
@@ -39,26 +39,26 @@
 
   strong {
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 
   span {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
 .dcql-query {
   box-sizing: border-box;
   max-width: 100%;
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
+  background-color: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 4px;
   padding: 12px;
   font-size: 12px;
   overflow-x: hidden;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--mat-sys-on-surface-variant);
   margin-top: 8px;
 }
 
@@ -66,7 +66,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--mat-sys-on-surface-variant);
 
   mat-icon {
     font-size: 18px;
@@ -75,24 +75,24 @@
   }
 
   &.readiness-error {
-    color: #c62828;
+    color: var(--eudiplo-danger);
   }
 }
 
 .result-card {
-  background: linear-gradient(135deg, #e8f5e8 0%, #f0f9ff 100%);
-  border: 1px solid #4caf50;
+  background: linear-gradient(135deg, var(--mat-sys-secondary-container) 0%, #f0f9ff 100%);
+  border: 1px solid var(--eudiplo-success);
   margin-top: 24px;
 
   mat-card-header {
-    background: rgba(76, 175, 80, 0.1);
+    background: var(--eudiplo-success-soft);
     padding: 16px;
 
     mat-card-title {
-      color: #2e7d32;
+      color: var(--eudiplo-success);
 
       mat-icon {
-        color: #4caf50;
+        color: var(--eudiplo-success);
         margin-right: 8px;
       }
     }
@@ -110,7 +110,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -119,7 +119,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px;
-  background-color: #f8f9fa;
+  background-color: var(--mat-sys-surface-container);
   border: 1px solid #e9ecef;
   border-radius: 4px;
 
@@ -127,7 +127,7 @@
     flex: 1;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    color: #495057;
+    color: var(--mat-sys-on-surface-variant);
     word-break: break-all;
 
     &.uri-value {
@@ -148,7 +148,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -156,8 +156,8 @@
   display: flex;
   justify-content: center;
   padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--mat-sys-on-error);
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -175,22 +175,22 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--mat-sys-outline-variant);
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container);
   text-align: center;
 
   mat-icon {
     font-size: 48px;
     width: 48px;
     height: 48px;
-    color: #ccc;
+    color: var(--mat-sys-outline-variant);
     margin-bottom: 16px;
   }
 
   p {
     margin: 0;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -209,18 +209,18 @@
       font-size: 64px;
       width: 64px;
       height: 64px;
-      color: #ff9800;
+      color: var(--eudiplo-warning);
       margin-bottom: 16px;
     }
 
     h3 {
       margin: 16px 0 8px 0;
-      color: rgba(0, 0, 0, 0.87);
+      color: var(--mat-sys-on-surface-variant);
     }
 
     p {
       margin: 0 0 24px 0;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 }
@@ -245,13 +245,13 @@
 
   // Success snackbar styling
   .success-snackbar {
-    --mdc-snackbar-container-color: #4caf50;
+    --mdc-snackbar-container-color: var(--eudiplo-success);
     --mdc-snackbar-supporting-text-color: white;
   }
 
   // Error snackbar styling
   .error-snackbar {
-    --mdc-snackbar-container-color: #f44336;
+    --mdc-snackbar-container-color: var(--eudiplo-danger);
     --mdc-snackbar-supporting-text-color: white;
   }
 }
@@ -273,23 +273,23 @@
   min-width: 70px;
 
   &.status-active {
-    background-color: #e8f5e8;
-    color: #2e7d32;
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--eudiplo-success);
   }
 
   &.status-completed {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: var(--mat-sys-primary-container);
+    color: var(--eudiplo-info);
   }
 
   &.status-expired {
-    background-color: #fff3e0;
-    color: #f57c00;
+    background-color: var(--mat-sys-tertiary-container);
+    color: var(--eudiplo-warning);
   }
 
   &.status-failed {
-    background-color: #ffebee;
-    color: #d32f2f;
+    background-color: var(--mat-sys-error-container);
+    color: var(--eudiplo-danger);
   }
 }
 
@@ -298,7 +298,7 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-on-surface-variant);
 
   .spinning {
     font-size: 16px;

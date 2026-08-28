@@ -1,6 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
+:root {
+  --eudiplo-info: #1976d2;
+  --eudiplo-success: #2e7d32;
+  --eudiplo-warning: #e65100;
+  --eudiplo-danger: #c62828;
+  --eudiplo-accent: #7b1fa2;
+  --eudiplo-info-soft: color-mix(in srgb, var(--eudiplo-info) 8%, transparent);
+  --eudiplo-info-subtle: color-mix(in srgb, var(--eudiplo-info) 4%, transparent);
+  --eudiplo-info-border: color-mix(in srgb, var(--eudiplo-info) 18%, transparent);
+  --eudiplo-success-soft: color-mix(in srgb, var(--eudiplo-success) 10%, transparent);
+  --eudiplo-success-subtle: color-mix(in srgb, var(--eudiplo-success) 5%, transparent);
+  --eudiplo-success-border: color-mix(in srgb, var(--eudiplo-success) 30%, transparent);
+  --eudiplo-warning-soft: color-mix(in srgb, var(--eudiplo-warning) 12%, transparent);
+  --eudiplo-warning-subtle: color-mix(in srgb, var(--eudiplo-warning) 10%, transparent);
+  --eudiplo-accent-subtle: color-mix(in srgb, var(--eudiplo-accent) 4%, transparent);
+  --eudiplo-scrim-soft: color-mix(in srgb, var(--mat-sys-scrim) 15%, transparent);
+}
+
 html {
   height: 100%;
   @include mat.theme(
@@ -14,6 +32,28 @@ html {
       density: 0,
     )
   );
+
+  &.dark-theme {
+    color-scheme: dark;
+
+    --eudiplo-info: #90caf9;
+    --eudiplo-success: #81c784;
+    --eudiplo-warning: #ffb74d;
+    --eudiplo-danger: #ef9a9a;
+    --eudiplo-accent: #ce93d8;
+
+    @include mat.theme(
+      (
+        color: (
+          primary: mat.$blue-palette,
+          tertiary: mat.$orange-palette,
+          theme-type: dark,
+        ),
+        typography: Roboto,
+        density: 0,
+      )
+    );
+  }
 }
 
 body {
@@ -21,7 +61,11 @@ body {
   padding: 0;
   height: 100%;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
-  background-color: #f5f5f5; // Background for the entire app
+  background-color: var(--mat-sys-background);
+  color: var(--mat-sys-on-background);
+  transition:
+    background-color 180ms ease,
+    color 180ms ease;
 }
 
 // Ensure Angular app fills full height

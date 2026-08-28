@@ -1,5 +1,5 @@
 .delete-button {
-  color: #f44336;
+  color: var(--eudiplo-danger);
 }
 
 .spacer {
@@ -18,11 +18,11 @@
   td {
     padding: 8px 16px 8px 0;
     vertical-align: top;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid var(--mat-sys-outline-variant);
 
     &:first-child {
       width: 150px;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
     }
 
     &:last-child {
@@ -34,13 +34,13 @@
 .cert-pem-section {
   h4 {
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
 .pem-container {
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
+  background-color: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 4px;
   padding: 16px;
   max-height: 300px;
@@ -54,18 +54,18 @@
   margin: 0;
   white-space: pre-wrap;
   word-break: break-all;
-  color: #333;
+  color: var(--mat-sys-on-surface);
 }
 
 .no-cert-message {
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-on-surface-variant);
   font-style: italic;
   text-align: center;
   padding: 32px 0;
 }
 
 h4 {
-  color: #1976d2;
+  color: var(--eudiplo-info);
   margin-bottom: 16px;
   font-weight: 500;
 }
@@ -76,11 +76,11 @@ h4 {
   font-size: 18px;
 
   &.valid {
-    color: #4caf50;
+    color: var(--eudiplo-success);
   }
 
   &.expired {
-    color: #f44336;
+    color: var(--eudiplo-danger);
   }
 }
 
@@ -90,26 +90,26 @@ h4 {
   margin-left: 4px;
 
   &.valid {
-    color: #4caf50;
+    color: var(--eudiplo-success);
   }
 
   &.expired {
-    color: #f44336;
+    color: var(--eudiplo-danger);
   }
 }
 
 .expired {
-  color: #f44336;
+  color: var(--eudiplo-danger);
 }
 
 .valid {
-  color: #4caf50;
+  color: var(--eudiplo-success);
 }
 
 .key-usage-tag {
   display: inline-block;
-  background-color: #e3f2fd;
-  color: #1976d2;
+  background-color: var(--mat-sys-primary-container);
+  color: var(--eudiplo-info);
   padding: 2px 8px;
   margin: 2px 4px 2px 0;
   border-radius: 12px;
@@ -119,8 +119,8 @@ h4 {
 
 .usage-tag {
   display: inline-block;
-  background-color: #f3e5f5;
-  color: #7b1fa2;
+  background-color: var(--mat-sys-tertiary-container);
+  color: var(--eudiplo-accent);
   padding: 2px 8px;
   margin: 2px 4px 2px 0;
   border-radius: 12px;
@@ -150,7 +150,7 @@ h4 {
 
   code {
     font-size: 12px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--mat-sys-surface-container-high);
     padding: 2px 6px;
     border-radius: 4px;
   }
@@ -161,7 +161,7 @@ h4 {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--mat-sys-surface-container-high);
   }
 }
 
@@ -173,11 +173,11 @@ h4 {
     font-size: 64px;
     width: 64px;
     height: 64px;
-    color: rgba(0, 0, 0, 0.26);
+    color: var(--mat-sys-on-surface-variant);
   }
 
   p {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--mat-sys-on-surface-variant);
     margin: 0;
   }
 }
@@ -193,7 +193,7 @@ mat-chip {
 
 // Key Type Card Styles
 .key-type-card {
-  background-color: var(--mat-sys-surface-container-lowest, #fafafa);
+  background-color: var(--mat-sys-surface-container-lowest, var(--mat-sys-surface-container));
 
   .key-type-icon {
     width: 56px;
@@ -211,18 +211,18 @@ mat-chip {
     }
 
     &.root-ca {
-      background-color: var(--mat-sys-primary-container, #e3f2fd);
+      background-color: var(--mat-sys-primary-container, var(--mat-sys-primary-container));
 
       mat-icon {
-        color: var(--mat-sys-on-primary-container, #1565c0);
+        color: var(--mat-sys-on-primary-container, var(--eudiplo-info));
       }
     }
 
     &.signing {
-      background-color: var(--mat-sys-secondary-container, #e8f5e9);
+      background-color: var(--mat-sys-secondary-container, var(--mat-sys-secondary-container));
 
       mat-icon {
-        color: var(--mat-sys-on-secondary-container, #2e7d32);
+        color: var(--mat-sys-on-secondary-container, var(--eudiplo-success));
       }
     }
 
@@ -230,20 +230,20 @@ mat-chip {
       background-color: var(--mat-sys-tertiary-container, #fff3e0);
 
       mat-icon {
-        color: var(--mat-sys-on-tertiary-container, #e65100);
+        color: var(--mat-sys-on-tertiary-container, var(--eudiplo-warning));
       }
     }
 
     &.internalChain {
-      background-color: var(--mat-sys-primary-container, #e3f2fd);
+      background-color: var(--mat-sys-primary-container, var(--mat-sys-primary-container));
 
       mat-icon {
-        color: var(--mat-sys-on-primary-container, #1565c0);
+        color: var(--mat-sys-on-primary-container, var(--eudiplo-info));
       }
     }
 
     &.legacy {
-      background-color: var(--mat-sys-error-container, #ffebee);
+      background-color: var(--mat-sys-error-container, var(--mat-sys-error-container));
 
       mat-icon {
         color: var(--mat-sys-on-error-container, #b71c1c);
@@ -254,12 +254,12 @@ mat-chip {
   .key-type-label {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
+    color: var(--mat-sys-on-surface);
   }
 
   .key-type-description {
     font-size: 0.875rem;
-    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+    color: var(--mat-sys-on-surface-variant);
     margin-top: 4px;
   }
 }
@@ -268,14 +268,14 @@ mat-chip {
 .key-chain-section {
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+  border-top: 1px solid var(--mat-sys-outline-variant, var(--mat-sys-outline-variant));
 
   .chain-label {
     font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+    color: var(--mat-sys-on-surface-variant);
     margin-bottom: 12px;
   }
 }
@@ -294,18 +294,18 @@ mat-chip {
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: var(--mat-sys-surface-container, rgba(0, 0, 0, 0.04));
+    background-color: var(--mat-sys-surface-container);
   }
 
   &.current {
-    background-color: var(--mat-sys-surface-container-high, rgba(0, 0, 0, 0.08));
+    background-color: var(--mat-sys-surface-container-high);
   }
 
   .chain-connector {
     position: absolute;
     left: 36px;
     width: 2px;
-    background-color: var(--mat-sys-outline-variant, rgba(0, 0, 0, 0.12));
+    background-color: var(--mat-sys-outline-variant);
 
     &.up {
       top: -8px;
@@ -335,18 +335,18 @@ mat-chip {
   }
 
   &.parent {
-    background-color: var(--mat-sys-primary-container, #e3f2fd);
+    background-color: var(--mat-sys-primary-container, var(--mat-sys-primary-container));
 
     mat-icon {
-      color: var(--mat-sys-on-primary-container, #1565c0);
+      color: var(--mat-sys-on-primary-container, var(--eudiplo-info));
     }
   }
 
   &.current {
-    background-color: var(--mat-sys-secondary-container, #e8f5e9);
+    background-color: var(--mat-sys-secondary-container, var(--mat-sys-secondary-container));
 
     mat-icon {
-      color: var(--mat-sys-on-secondary-container, #2e7d32);
+      color: var(--mat-sys-on-secondary-container, var(--eudiplo-success));
     }
   }
 
@@ -354,13 +354,13 @@ mat-chip {
     background-color: var(--mat-sys-tertiary-container, #fff3e0);
 
     mat-icon {
-      color: var(--mat-sys-on-tertiary-container, #e65100);
+      color: var(--mat-sys-on-tertiary-container, var(--eudiplo-warning));
     }
   }
 }
 
 .chain-key-link {
-  color: var(--mat-sys-primary, #1976d2);
+  color: var(--mat-sys-primary, var(--eudiplo-info));
   text-decoration: none;
   font-weight: 500;
 
@@ -371,10 +371,10 @@ mat-chip {
 
 .chain-key-name {
   font-weight: 500;
-  color: var(--mat-sys-on-surface, rgba(0, 0, 0, 0.87));
+  color: var(--mat-sys-on-surface);
 }
 
 .chain-key-role {
   font-size: 0.8rem;
-  color: var(--mat-sys-on-surface-variant, rgba(0, 0, 0, 0.6));
+  color: var(--mat-sys-on-surface-variant);
 }

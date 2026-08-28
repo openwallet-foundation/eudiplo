@@ -8,13 +8,13 @@
 }
 
 ::ng-deep .claim-group {
-  border-left: 2px solid rgba(25, 118, 210, 0.18);
+  border-left: 2px solid var(--eudiplo-info-border);
   margin: 8px 0 12px;
   padding-left: 12px;
 }
 
 ::ng-deep .claim-group-header {
-  color: #0d47a1;
+  color: var(--eudiplo-info);
   font-size: 0.84rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -23,11 +23,11 @@
 }
 
 ::ng-deep .claim-group-header-level-2 {
-  color: #1565c0;
+  color: var(--eudiplo-info);
 }
 
 ::ng-deep .claim-group-header-level-3 {
-  color: #1976d2;
+  color: var(--eudiplo-info);
 }
 
 // Stepper styles
@@ -53,7 +53,7 @@
   }
 
   .step-description {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
     margin-bottom: 24px;
   }
 }
@@ -61,7 +61,7 @@
 .step-actions {
   margin-top: 24px;
   padding-top: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  border-top: 1px solid var(--mat-sys-outline-variant);
 }
 
 // Flow selection styles
@@ -88,7 +88,7 @@
       margin-bottom: 4px;
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -100,7 +100,7 @@
     }
 
     .flow-option-description {
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
       font-size: 0.875rem;
       margin: 0;
       padding-left: 28px;
@@ -113,9 +113,9 @@
 .iae-status-summary {
   margin-top: 24px;
   padding: 16px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container);
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   h4 {
     display: flex;
@@ -126,7 +126,7 @@
     font-weight: 500;
 
     mat-icon {
-      color: #1976d2;
+      color: var(--eudiplo-info);
     }
   }
 
@@ -139,18 +139,18 @@
     margin-bottom: 8px;
 
     &.success {
-      background-color: #e8f5e9;
+      background-color: var(--mat-sys-secondary-container);
 
       mat-icon {
-        color: #4caf50;
+        color: var(--eudiplo-success);
       }
     }
 
     &.warning {
-      background-color: #fff3e0;
+      background-color: var(--mat-sys-tertiary-container);
 
       mat-icon {
-        color: #ff9800;
+        color: var(--eudiplo-warning);
       }
     }
 
@@ -165,7 +165,7 @@
 
     .iae-hint {
       font-size: 0.75rem;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
       margin: 4px 0 0 0;
     }
   }
@@ -180,20 +180,20 @@
     font-size: 0.875rem;
 
     &.success {
-      background-color: #e8f5e9;
-      color: #2e7d32;
+      background-color: var(--mat-sys-secondary-container);
+      color: var(--eudiplo-success);
 
       mat-icon {
-        color: #4caf50;
+        color: var(--eudiplo-success);
       }
     }
 
     &.info {
-      background-color: #e3f2fd;
-      color: #1565c0;
+      background-color: var(--mat-sys-primary-container);
+      color: var(--eudiplo-info);
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
       }
     }
 
@@ -210,18 +210,18 @@
   display: flex;
   gap: 12px;
   padding: 16px;
-  background-color: #e3f2fd;
+  background-color: var(--mat-sys-primary-container);
   border-radius: 8px;
   margin-top: 16px;
 
   mat-icon {
-    color: #1976d2;
+    color: var(--eudiplo-info);
     flex-shrink: 0;
   }
 
   p {
     margin: 0;
-    color: #1565c0;
+    color: var(--eudiplo-info);
     line-height: 1.5;
   }
 }
@@ -231,13 +231,13 @@
   display: flex;
   gap: 16px;
   padding: 24px;
-  background-color: #e8f5e9;
+  background-color: var(--mat-sys-secondary-container);
   border-radius: 8px;
   border: 1px solid #a5d6a7;
   margin-bottom: 24px;
 
   .success-icon {
-    color: #4caf50;
+    color: var(--eudiplo-success);
     font-size: 48px;
     width: 48px;
     height: 48px;
@@ -246,14 +246,14 @@
 
   strong {
     font-size: 1.1rem;
-    color: #2e7d32;
+    color: var(--eudiplo-success);
     display: block;
     margin-bottom: 8px;
   }
 
   p {
     margin: 0;
-    color: #1b5e20;
+    color: var(--eudiplo-success);
     line-height: 1.5;
   }
 }
@@ -263,13 +263,13 @@
   display: flex;
   gap: 16px;
   padding: 24px;
-  background-color: #e3f2fd;
+  background-color: var(--mat-sys-primary-container);
   border-radius: 8px;
   border: 1px solid #90caf9;
   margin-bottom: 24px;
 
   .success-icon {
-    color: #1976d2;
+    color: var(--eudiplo-info);
     font-size: 48px;
     width: 48px;
     height: 48px;
@@ -278,14 +278,14 @@
 
   strong {
     font-size: 1.1rem;
-    color: #1565c0;
+    color: var(--eudiplo-info);
     display: block;
     margin-bottom: 8px;
   }
 
   p {
     margin: 0;
-    color: #0d47a1;
+    color: var(--eudiplo-info);
     line-height: 1.5;
   }
 }
@@ -316,7 +316,7 @@
       margin-bottom: 4px;
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -328,7 +328,7 @@
     }
 
     .as-type-option-description {
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
       font-size: 0.875rem;
       margin: 0;
       padding-left: 28px;
@@ -344,9 +344,9 @@
 // Selected configs summary (for IAE flow step 3)
 .selected-configs-summary {
   padding: 16px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container);
   border-radius: 8px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   h4 {
     margin: 0 0 12px 0;
@@ -364,14 +364,14 @@
       align-items: center;
       gap: 8px;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid var(--mat-sys-outline-variant);
 
       &:last-child {
         border-bottom: none;
       }
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
         font-size: 20px;
         width: 20px;
         height: 20px;
@@ -390,7 +390,7 @@
   font-weight: 500;
 
   mat-icon {
-    color: #1976d2;
+    color: var(--eudiplo-info);
   }
 }
 
@@ -410,7 +410,7 @@
       font-size: 1rem;
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
       }
     }
   }
@@ -439,19 +439,19 @@
       font-size: 1rem;
 
       mat-icon {
-        color: #1976d2;
+        color: var(--eudiplo-info);
       }
     }
   }
 }
 
 .warn-hint {
-  color: #e65100 !important;
+  color: var(--eudiplo-warning) !important;
 }
 
 .iae-badge {
   font-size: 11px;
-  color: #1976d2;
+  color: var(--eudiplo-info);
   margin-left: 4px;
   font-weight: 500;
 }
@@ -461,13 +461,13 @@
   align-items: flex-start;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #ffebee;
+  background-color: var(--mat-sys-error-container);
   border: 1px solid #ef9a9a;
   border-radius: 8px;
-  color: #c62828;
+  color: var(--eudiplo-danger);
 
   mat-icon {
-    color: #d32f2f;
+    color: var(--eudiplo-danger);
     flex-shrink: 0;
     margin-top: 2px;
   }
@@ -482,21 +482,21 @@
   align-items: center;
   gap: 8px;
   padding: 12px 16px;
-  background-color: #e3f2fd;
+  background-color: var(--mat-sys-primary-container);
   border-radius: 8px;
-  color: #1565c0;
+  color: var(--eudiplo-info);
 
   mat-icon {
-    color: #1976d2;
+    color: var(--eudiplo-info);
   }
 
   a {
-    color: #1565c0;
+    color: var(--eudiplo-info);
     font-weight: 500;
     text-decoration: underline;
 
     &:hover {
-      color: #0d47a1;
+      color: var(--eudiplo-info);
     }
   }
 }
@@ -513,7 +513,7 @@
   display: block;
   font-weight: 500;
   margin-bottom: 12px;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .radio-option {
@@ -530,7 +530,7 @@
   gap: 12px;
 
   mat-icon {
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -541,7 +541,7 @@
 
 .radio-description {
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .preview-card {
@@ -561,11 +561,11 @@
 
   strong {
     font-weight: 500;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 
   span {
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -578,27 +578,27 @@
 
 .credential-item {
   padding: 8px 12px;
-  background-color: #f5f5f5;
+  background-color: var(--mat-sys-surface-container);
   border-radius: 4px;
   font-size: 13px;
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .result-card {
-  background: linear-gradient(135deg, #e8f5e8 0%, #f0f9ff 100%);
-  border: 1px solid #4caf50;
+  background: linear-gradient(135deg, var(--mat-sys-secondary-container) 0%, #f0f9ff 100%);
+  border: 1px solid var(--eudiplo-success);
   margin-top: 24px;
 
   mat-card-header {
-    background: rgba(76, 175, 80, 0.1);
+    background: var(--eudiplo-success-soft);
     //margin: -16px -16px 16px -16px;
     padding: 16px;
 
     mat-card-title {
-      color: #2e7d32;
+      color: var(--eudiplo-success);
 
       mat-icon {
-        color: #4caf50;
+        color: var(--eudiplo-success);
         margin-right: 8px;
       }
     }
@@ -616,7 +616,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -625,7 +625,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px;
-  background-color: #f8f9fa;
+  background-color: var(--mat-sys-surface-container);
   border: 1px solid #e9ecef;
   border-radius: 4px;
 
@@ -633,7 +633,7 @@
     flex: 1;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    color: #495057;
+    color: var(--mat-sys-on-surface-variant);
     word-break: break-all;
 
     &.uri-value {
@@ -654,7 +654,7 @@
     display: block;
     font-weight: 500;
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -662,8 +662,8 @@
   display: flex;
   justify-content: center;
   padding: 20px;
-  background-color: #ffffff;
-  border: 1px solid #e0e0e0;
+  background-color: var(--mat-sys-on-error);
+  border: 1px solid var(--mat-sys-outline-variant);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
@@ -681,22 +681,22 @@
   align-items: center;
   justify-content: center;
   padding: 40px;
-  border: 2px dashed #ccc;
+  border: 2px dashed var(--mat-sys-outline-variant);
   border-radius: 8px;
-  background-color: #fafafa;
+  background-color: var(--mat-sys-surface-container);
   text-align: center;
 
   mat-icon {
     font-size: 48px;
     width: 48px;
     height: 48px;
-    color: #ccc;
+    color: var(--mat-sys-outline-variant);
     margin-bottom: 16px;
   }
 
   p {
     margin: 0;
-    color: rgba(0, 0, 0, 0.6);
+    color: var(--mat-sys-on-surface-variant);
   }
 }
 
@@ -715,18 +715,18 @@
       font-size: 64px;
       width: 64px;
       height: 64px;
-      color: #ff9800;
+      color: var(--eudiplo-warning);
       margin-bottom: 16px;
     }
 
     h3 {
       margin: 16px 0 8px 0;
-      color: rgba(0, 0, 0, 0.87);
+      color: var(--mat-sys-on-surface-variant);
     }
 
     p {
       margin: 0 0 24px 0;
-      color: rgba(0, 0, 0, 0.6);
+      color: var(--mat-sys-on-surface-variant);
     }
   }
 }
@@ -751,13 +751,13 @@
 
   // Success snackbar styling
   .success-snackbar {
-    --mdc-snackbar-container-color: #4caf50;
+    --mdc-snackbar-container-color: var(--eudiplo-success);
     --mdc-snackbar-supporting-text-color: white;
   }
 
   // Error snackbar styling
   .error-snackbar {
-    --mdc-snackbar-container-color: #f44336;
+    --mdc-snackbar-container-color: var(--eudiplo-danger);
     --mdc-snackbar-supporting-text-color: white;
   }
 }
@@ -779,23 +779,23 @@
   min-width: 70px;
 
   &.status-active {
-    background-color: #e8f5e8;
-    color: #2e7d32;
+    background-color: var(--mat-sys-secondary-container);
+    color: var(--eudiplo-success);
   }
 
   &.status-completed {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: var(--mat-sys-primary-container);
+    color: var(--eudiplo-info);
   }
 
   &.status-expired {
-    background-color: #fff3e0;
-    color: #f57c00;
+    background-color: var(--mat-sys-tertiary-container);
+    color: var(--eudiplo-warning);
   }
 
   &.status-failed {
-    background-color: #ffebee;
-    color: #d32f2f;
+    background-color: var(--mat-sys-error-container);
+    color: var(--eudiplo-danger);
   }
 }
 
@@ -804,7 +804,7 @@
   align-items: center;
   gap: 4px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
+  color: var(--mat-sys-on-surface-variant);
 
   .spinning {
     font-size: 16px;
@@ -831,10 +831,10 @@
 .credential-section {
   padding: 16px;
   border-radius: 8px;
-  background-color: rgba(0, 0, 0, 0.02);
+  background-color: var(--mat-sys-surface-container-low);
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.04);
+    background-color: var(--mat-sys-surface-container-high);
   }
 }
 
@@ -849,24 +849,24 @@
   font-size: 18px;
   font-weight: 500;
   margin: 0;
-  color: rgba(0, 0, 0, 0.87);
+  color: var(--mat-sys-on-surface-variant);
 
   mat-icon {
-    color: #1976d2;
+    color: var(--eudiplo-info);
   }
 }
 
 .claim-source-selection {
   padding: 16px;
   border-radius: 4px;
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: var(--mat-sys-on-error);
+  border: 1px solid var(--mat-sys-outline-variant);
 
   .source-label {
     display: block;
     font-weight: 500;
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--mat-sys-on-surface-variant);
   }
 
   mat-radio-group {
@@ -906,38 +906,38 @@
   }
 
   &.info {
-    background-color: #e3f2fd;
-    color: #1565c0;
-    border-left: 3px solid #1976d2;
+    background-color: var(--mat-sys-primary-container);
+    color: var(--eudiplo-info);
+    border-left: 3px solid var(--eudiplo-info);
 
     mat-icon {
-      color: #1976d2;
+      color: var(--eudiplo-info);
     }
   }
 
   &.warning {
-    background-color: #fff3e0;
-    color: #e65100;
-    border-left: 3px solid #ff9800;
+    background-color: var(--mat-sys-tertiary-container);
+    color: var(--eudiplo-warning);
+    border-left: 3px solid var(--eudiplo-warning);
 
     mat-icon {
-      color: #ff9800;
+      color: var(--eudiplo-warning);
     }
   }
 }
 
 .webhook-info {
   padding: 16px;
-  background-color: #fff;
+  background-color: var(--mat-sys-on-error);
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--mat-sys-outline-variant);
 }
 
 .form-input {
   padding: 16px;
-  background-color: #fff;
+  background-color: var(--mat-sys-on-error);
   border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--mat-sys-outline-variant);
 }
 
 .pre-config-button {

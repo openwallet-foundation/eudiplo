@@ -47,7 +47,13 @@
   padding: 20px;
   overflow-y: auto; // Allow scrolling if content overflows
   height: calc(100vh - 104px); // Account for toolbar height
-  background-color: #f6f6f6;
+  background-color: var(--mat-sys-background);
+}
+
+:host-context(html.dark-theme) {
+  .warning-icon {
+    color: var(--eudiplo-warning);
+  }
 }
 
 .active-link {
@@ -75,7 +81,7 @@
 }
 
 .warning-icon {
-  color: #ff9800;
+  color: var(--eudiplo-warning);
 }
 
 // Mobile specific adjustments

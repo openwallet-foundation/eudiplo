@@ -14,6 +14,7 @@ import {
   Component,
   forwardRef,
   OnChanges,
+  OnDestroy,
   Input,
   SimpleChanges,
   ChangeDetectionStrategy,
@@ -22,6 +23,8 @@ import { MatInputModule } from '@angular/material/input';
 import { SchemaValidation } from '../schemas';
 import schemas from '../schemas.json';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
+import { Subscription } from 'rxjs';
+import { ThemeService } from '../../services/theme.service';
 
 let editorInstanceCounter = 0;
 
@@ -37,7 +40,6 @@ export function extractSchema(obj: any) {
   }
   return element;
 }
-
 @Component({
   selector: 'app-editor',
   standalone: true,
@@ -50,11 +52,12 @@ export function extractSchema(obj: any) {
     { provide: NG_VALIDATORS, useExisting: forwardRef(() => EditorComponent), multi: true },
   ],
 })
-export class EditorComponent implements ControlValueAccessor, Validator, OnChanges {
+export class EditorComponent implements ControlValueAccessor, Validator, OnChanges, OnDestroy {
   @Input() schema?: SchemaValidation;
   @Input() editorOptions: any = { language: 'json', automaticLayout: true };
   @Input() errors?: ValidationErrors | null = null;
 
+  themedEditorOptions: any;
   model?: NgxEditorModel;
 
   value = '';
@@ -66,8 +69,14 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   private readonly instanceId = ++editorInstanceCounter;
   private modelVersion = 0;
   private editorInitialized = false;
+  private themeSubscription: Subscription;
 
-  constructor() {
+  constructor(private readonly themeService: ThemeService) {
+    this.themedEditorOptions = this.withTheme(this.editorOptions);
+    this.themeSubscription = this.themeService.themeChanges.subscribe(() => {
+      this.themedEditorOptions = this.withTheme(this.editorOptions);
+    });
+
     addFormats(this.ajv);
     for (const schema of schemas) {
       const key = (schema.schema as any)['$id'].split('/').pop() || '';
@@ -155,6 +164,10 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if ('editorOptions' in changes) {
+      this.themedEditorOptions = this.withTheme(this.editorOptions);
+    }
+
     if ('editorOptions' in changes || 'schema' in changes) {
       this.rebuildModel();
     }
@@ -176,6 +189,10 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     }
   }
 
+  ngOnDestroy(): void {
+    this.themeSubscription.unsubscribe();
+  }
+
   private _onChange: (v: any) => void = () => {};
   private _onTouched: () => void = () => {};
   private _validatorChange?: () => void;
@@ -190,6 +207,13 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
       language: this.editorOptions?.language ?? 'json',
       // URI-based schema matching is required for Monaco JSON autocomplete.
       uri,
+    };
+  }
+
+  private withTheme(options: any): any {
+    return {
+      ...options,
+      theme: this.themeService.isDarkMode ? 'vs-dark' : 'vs-light',
     };
   }
 

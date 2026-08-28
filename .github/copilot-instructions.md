@@ -58,6 +58,7 @@
   - Smart components: orchestrate data and logic
   - Dumb components: only receive `@Input` / emit `@Output` (UI only)
 - Store shared state in services with `BehaviorSubject` for state and `Observable` for consumption.
+- Use Angular Material theme tokens or shared semantic CSS variables for UI colors instead of hard-coded color values, and define light/dark variants so both themes remain readable. Literal colors are appropriate for user-configured or data-driven branding values.
 
 ## Protocol Flow Rules (OID4VCI / OID4VP)
 - **Credential Issuance**: Always validate Access Tokens and DPoP (if enabled) before issuing. Never hardcode client metadata; use resolved metadata from configuration.

@@ -9,6 +9,24 @@
     <!-- Spacer -->
     <span fxFlex></span>
 
+    <a
+      matIconButton
+      href="https://docs.eudiplo.dev/"
+      target="_blank"
+      rel="noopener"
+      aria-label="Open documentation"
+      matTooltip="Documentation"
+    >
+      <mat-icon>help</mat-icon>
+    </a>
+    <button
+      matIconButton
+      (click)="themeService.toggle()"
+      [attr.aria-label]="themeService.isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+      [matTooltip]="themeService.isDarkMode ? 'Light mode' : 'Dark mode'"
+    >
+      <mat-icon>{{ themeService.isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
+    </button>
     <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
       <mat-icon>more_vert</mat-icon>
     </button>
@@ -21,10 +39,6 @@
         <mat-icon>business</mat-icon>
         <span>Instance: {{ apiService.getBaseUrl() }}</span>
       </button>
-      <a mat-menu-item href="https://docs.eudiplo.dev/" target="_blank" rel="noopener">
-        <mat-icon>help</mat-icon>
-        Documentation
-      </a>
 
       <button mat-menu-item (click)="logout()" matTooltip="Logout">
         <mat-icon>logout</mat-icon>
