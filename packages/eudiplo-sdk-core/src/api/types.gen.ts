@@ -3432,7 +3432,7 @@ export type PresentationConfigCreateDto = {
          */
         credential_ids: Array<string>;
         [key: string]: unknown;
-    }>;
+    }> | null;
     /**
      * Optional registration certificate request settings.
      */
@@ -3712,7 +3712,7 @@ export type PresentationConfigUpdateDto = {
          */
         credential_ids: Array<string>;
         [key: string]: unknown;
-    }>;
+    }> | null;
     /**
      * Optional registration certificate request settings.
      */
