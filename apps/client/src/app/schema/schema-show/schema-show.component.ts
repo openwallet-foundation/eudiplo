@@ -21,14 +21,14 @@ import type {
   VocabularyEntryDto,
 } from '@eudiplo/sdk-core';
 import { CredentialConfigService } from '../../issuance/credential-config/credential-config.service';
-import { SchemaMetadata, SchemaMetadataService } from '../schema-metadata.service';
+import { SchemaMetadata, SchemaService } from '../schema.service';
 import { getApiErrorMessage } from '../../utils/error-message';
 
 const SEMVER_REGEX =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 
 @Component({
-  selector: 'app-schema-metadata-show',
+  selector: 'app-schema-show',
   imports: [
     CommonModule,
     DatePipe,
@@ -45,15 +45,15 @@ const SEMVER_REGEX =
     ReactiveFormsModule,
     RouterModule,
   ],
-  templateUrl: './schema-metadata-show.component.html',
+  templateUrl: './schema-show.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './schema-metadata-show.component.scss',
+  styleUrl: './schema-show.component.scss',
 })
-export class SchemaMetadataShowComponent implements OnInit {
+export class SchemaShowComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
-  private readonly schemaMetadataService = inject(SchemaMetadataService);
+  private readonly schemaService = inject(SchemaService);
   private readonly credentialConfigService = inject(CredentialConfigService);
   private readonly snackBar = inject(MatSnackBar);
 
@@ -114,9 +114,9 @@ export class SchemaMetadataShowComponent implements OnInit {
     this.loading = true;
     try {
       const [latestItem, versions, vocabularies] = await Promise.all([
-        this.schemaMetadataService.getById(this.id),
-        this.schemaMetadataService.getVersions(this.id),
-        this.schemaMetadataService.getVocabularies(),
+        this.schemaService.getById(this.id),
+        this.schemaService.getVersions(this.id),
+        this.schemaService.getVocabularies(),
       ]);
 
       this.categoryVocabularies = Array.isArray(vocabularies?.categories)
@@ -130,7 +130,7 @@ export class SchemaMetadataShowComponent implements OnInit {
 
       const selectedVersion = version?.trim();
       if (selectedVersion) {
-        const selectedItems = await this.schemaMetadataService.list({
+        const selectedItems = await this.schemaService.list({
           attestationId: this.id,
           version: selectedVersion,
         });
@@ -178,8 +178,8 @@ export class SchemaMetadataShowComponent implements OnInit {
       });
     } catch (error) {
       console.error('Failed to load schema metadata:', error);
-      this.snackBar.open('Failed to load schema metadata', 'Close', { duration: 3000 });
-      this.router.navigate(['/schema-metadata']);
+      this.snackBar.open('Failed to load schema', 'Close', { duration: 3000 });
+      this.router.navigate(['/schema']);
     } finally {
       this.loading = false;
     }
@@ -200,19 +200,14 @@ export class SchemaMetadataShowComponent implements OnInit {
     try {
       const tags = (this.metadataForm.get('tags')?.value ?? []) as UpdateSchemaMetadataDto['tags'];
 
-      this.item = await this.schemaMetadataService.updateMetadata(
-        this.id,
-        this.item?.version ?? '',
-        {
-          displayName:
-            (this.metadataForm.get('displayName')?.value as string | undefined)?.trim() ||
-            undefined,
-          category:
-            (this.metadataForm.get('category')?.value as
-              UpdateSchemaMetadataDto['category'] | undefined) || undefined,
-          tags,
-        }
-      );
+      this.item = await this.schemaService.updateMetadata(this.id, this.item?.version ?? '', {
+        displayName:
+          (this.metadataForm.get('displayName')?.value as string | undefined)?.trim() || undefined,
+        category:
+          (this.metadataForm.get('category')?.value as
+            UpdateSchemaMetadataDto['category'] | undefined) || undefined,
+        tags,
+      });
 
       this.snackBar.open('Metadata updated', 'Close', { duration: 3000 });
     } catch (error) {
@@ -224,7 +219,7 @@ export class SchemaMetadataShowComponent implements OnInit {
   async copyJwt(): Promise<void> {
     if (!this.id) return;
     try {
-      const jwt = await this.schemaMetadataService.getSignedJwt(this.id, this.item?.version ?? '');
+      const jwt = await this.schemaService.getSignedJwt(this.id, this.item?.version ?? '');
       await navigator.clipboard.writeText(jwt);
       this.snackBar.open('Signed JWT copied to clipboard', 'Close', { duration: 3000 });
     } catch (error) {
@@ -280,7 +275,7 @@ export class SchemaMetadataShowComponent implements OnInit {
   async downloadExport(): Promise<void> {
     if (!this.id) return;
     try {
-      const jwt = await this.schemaMetadataService.getSignedJwt(this.id, this.item?.version ?? '');
+      const jwt = await this.schemaService.getSignedJwt(this.id, this.item?.version ?? '');
       const blob = new Blob([jwt], { type: 'text/plain' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -425,10 +420,10 @@ export class SchemaMetadataShowComponent implements OnInit {
 
     this.publishing = true;
     try {
-      const newEntry = await this.schemaMetadataService.publishSchemaMetadataVersion(config);
+      const newEntry = await this.schemaService.publishSchemaMetadataVersion(config);
 
       if (deprecateCurrent) {
-        await this.schemaMetadataService.deprecateVersion(this.item.id, this.item.version, {
+        await this.schemaService.deprecateVersion(this.item.id, this.item.version, {
           deprecated: true,
           message: `Superseded by version ${newVersion}`,
           supersededByVersion: newVersion,
@@ -439,7 +434,7 @@ export class SchemaMetadataShowComponent implements OnInit {
         duration: 4000,
       });
       this.showPublishForm = false;
-      this.router.navigate(['/schema-metadata', newEntry.id], {
+      this.router.navigate(['/schema', newEntry.id], {
         queryParams: { version: newEntry.version },
       });
     } catch (error) {
@@ -454,19 +449,19 @@ export class SchemaMetadataShowComponent implements OnInit {
 
   async delete(): Promise<void> {
     try {
-      await this.schemaMetadataService.delete(this.id, this.item?.version ?? '');
-      this.snackBar.open('Schema metadata deleted', 'Close', { duration: 3000 });
-      this.router.navigate(['/schema-metadata']);
+      await this.schemaService.delete(this.id, this.item?.version ?? '');
+      this.snackBar.open('Schema deleted', 'Close', { duration: 3000 });
+      this.router.navigate(['/schema']);
     } catch (error) {
       console.error('Failed to delete schema metadata:', error);
-      this.snackBar.open('Failed to delete schema metadata', 'Close', { duration: 3000 });
+      this.snackBar.open('Failed to delete schema', 'Close', { duration: 3000 });
     }
   }
 
   async showVersion(version: string): Promise<void> {
     if (!version || this.item?.version === version) return;
 
-    await this.router.navigate(['/schema-metadata', this.id], {
+    await this.router.navigate(['/schema', this.id], {
       queryParams: { version },
     });
   }

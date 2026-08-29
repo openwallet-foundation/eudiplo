@@ -28,7 +28,7 @@ export type SchemaMetadataVocabularies = SchemaMetadataVocabulariesDto;
 @Injectable({
   providedIn: 'root',
 })
-export class SchemaMetadataService {
+export class SchemaService {
   async getVocabularies(): Promise<SchemaMetadataVocabularies> {
     const response = await schemaMetadataControllerGetVocabularies();
 

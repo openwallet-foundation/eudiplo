@@ -1,26 +1,26 @@
 <div fxLayout="row" fxLayoutAlign="space-between center">
   <div fxLayout="column" fxLayoutGap="4px">
-    <h2>Schema Metadata</h2>
+    <h2>Schema</h2>
     @if (!loading) {
       <p>
         {{ schemaMetadataCount }}
-        {{ schemaMetadataCount === 1 ? 'schema metadata entry' : 'schema metadata entries' }}
+        {{ schemaMetadataCount === 1 ? 'schema entry' : 'schema entries' }}
         ({{ schemaMetadataVersionCount }}
         {{ schemaMetadataVersionCount === 1 ? 'version' : 'versions' }})
       </p>
     }
   </div>
   <div fxLayout="row" fxLayoutGap="8px">
-    <button matIconButton [routerLink]="['create']" matTooltip="Submit signed schema metadata">
+    <button matIconButton [routerLink]="['create']" matTooltip="Submit signed schema">
       <mat-icon>add</mat-icon>
     </button>
   </div>
 </div>
 
 @if (loading) {
-  <p>Loading schema metadata...</p>
+  <p>Loading schema...</p>
 } @else if (groupedItems.length === 0) {
-  <p>No schema metadata found.</p>
+  <p>No schema found.</p>
 } @else {
   <table mat-table [dataSource]="groupedItems" class="mat-elevation-z8">
     <ng-container matColumnDef="id">

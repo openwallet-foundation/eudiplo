@@ -7,7 +7,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from 'ngx-flexible-layout';
-import { SchemaMetadata, SchemaMetadataService } from '../schema-metadata.service';
+import { SchemaMetadata, SchemaService } from '../schema.service';
 
 interface GroupedSchemaMetadata {
   id: string;
@@ -17,7 +17,7 @@ interface GroupedSchemaMetadata {
 }
 
 @Component({
-  selector: 'app-schema-metadata-list',
+  selector: 'app-schema-list',
   imports: [
     CommonModule,
     DatePipe,
@@ -29,11 +29,11 @@ interface GroupedSchemaMetadata {
     RouterModule,
     FlexLayoutModule,
   ],
-  templateUrl: './schema-metadata-list.component.html',
+  templateUrl: './schema-list.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './schema-metadata-list.component.scss',
+  styleUrl: './schema-list.component.scss',
 })
-export class SchemaMetadataListComponent implements OnInit {
+export class SchemaListComponent implements OnInit {
   items: SchemaMetadata[] = [];
   groupedItems: GroupedSchemaMetadata[] = [];
   loading = false;
@@ -55,7 +55,7 @@ export class SchemaMetadataListComponent implements OnInit {
   ];
 
   constructor(
-    private readonly schemaMetadataService: SchemaMetadataService,
+    private readonly schemaService: SchemaService,
     private readonly snackBar: MatSnackBar
   ) {}
 
@@ -66,11 +66,11 @@ export class SchemaMetadataListComponent implements OnInit {
   async loadItems(): Promise<void> {
     this.loading = true;
     try {
-      this.items = await this.schemaMetadataService.listMine();
+      this.items = await this.schemaService.listMine();
       this.groupedItems = this.groupById(this.items);
     } catch (error) {
       console.error('Failed to load schema metadata:', error);
-      this.snackBar.open('Failed to load schema metadata', 'Close', { duration: 3000 });
+      this.snackBar.open('Failed to load schema', 'Close', { duration: 3000 });
     } finally {
       this.loading = false;
     }
