@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { ClientEntity } from "../../auth/client/entities/client.entity";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
 import { StatusListEntity } from "./entities/status-list.entity";
 import { StatusMapping } from "./entities/status-mapping.entity";
 import { StatusListService } from "./status-list.service";
@@ -21,6 +22,7 @@ describe("StatusListService SQLite concurrency", () => {
                 TenantEntity,
                 StatusListEntity,
                 StatusMapping,
+                ActiveCredentialSlot,
             ],
             synchronize: true,
         });
@@ -47,6 +49,8 @@ describe("StatusListService SQLite concurrency", () => {
             {} as never,
             {} as never,
             orchestrator as never,
+            dataSource.getRepository(ActiveCredentialSlot),
+            {} as never,
         );
 
         await dataSource.getRepository(TenantEntity).save({

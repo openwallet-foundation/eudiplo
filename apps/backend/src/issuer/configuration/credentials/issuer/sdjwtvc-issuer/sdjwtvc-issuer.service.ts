@@ -75,6 +75,7 @@ export class SdjwtvcIssuerService {
             status = await this.statusListService.createEntry(
                 session,
                 credentialConfiguration.id,
+                credentialConfiguration,
             );
         }
 

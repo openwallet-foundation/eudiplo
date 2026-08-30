@@ -31,12 +31,21 @@ import {
     ImportPhase,
 } from "../../platform/config-import/config-import-orchestrator.service";
 import { Session } from "../../session/entities/session.entity";
+import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity";
 import { StatusListImportSchema } from "./dto/status-list.schema";
 import { StatusListImportDto } from "./dto/status-list-import.dto";
 import { StatusUpdateDto } from "./dto/status-update.dto";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
 import { StatusListEntity } from "./entities/status-list.entity";
 import { StatusMapping } from "./entities/status-mapping.entity";
 import { StatusListConfigService } from "./status-list-config.service";
+import { SubjectKeyService } from "./subject-key.service";
+
+/**
+ * Status list value meaning "revoked", per the convention documented on
+ * {@link StatusUpdateDto}: 0 = valid, 1 = revoked, 2 = suspended.
+ */
+const STATUS_REVOKED = 1;
 
 @Injectable()
 export class StatusListService {
@@ -58,6 +67,9 @@ export class StatusListService {
         private readonly configImportService: ConfigImportService,
         private readonly statusListConfigService: StatusListConfigService,
         readonly configImportOrchestrator: ConfigImportOrchestratorService,
+        @InjectRepository(ActiveCredentialSlot)
+        private readonly activeCredentialSlotRepository: Repository<ActiveCredentialSlot>,
+        private readonly subjectKeyService: SubjectKeyService,
     ) {
         configImportOrchestrator.register(
             "status-lists",
@@ -527,7 +539,18 @@ export class StatusListService {
     async createEntry(
         session: Session,
         credentialConfigurationId: string,
+        credentialConfiguration?: CredentialConfig,
     ): Promise<JWTwithStatusListPayload> {
+        // Resolve the pseudonymous subject key when the active-credential-limit
+        // policy applies to this issuance; undefined means "policy off" and the
+        // behaviour below is unchanged from before.
+        const subjectScopedKey = await this.resolveSubjectScopedKey(
+            session,
+            credentialConfigurationId,
+            credentialConfiguration,
+        );
+        const issuanceSetId = subjectScopedKey ? v4() : undefined;
+
         for (let attempt = 0; attempt < this.maxRetries; attempt++) {
             try {
                 const result = await this.allocateEntries({
@@ -535,12 +558,25 @@ export class StatusListService {
                     sessionId: session.id,
                     credentialConfigurationId,
                     count: 1,
+                    issuanceSetId,
                 });
 
                 if (result.length === 0) {
                     throw new ConflictException(
                         "Failed to allocate status entry after retries",
                     );
+                }
+
+                // The new entry now exists. Only after that do we claim the
+                // subject's slot and revoke whatever it pointed at before, so a
+                // failure above can never leave the subject with nothing valid.
+                if (subjectScopedKey && issuanceSetId) {
+                    await this.replaceActiveIssuance({
+                        tenantId: session.tenantId,
+                        credentialConfigurationId,
+                        subjectScopedKey,
+                        issuanceSetId,
+                    });
                 }
 
                 const entry = result[0];
@@ -572,6 +608,183 @@ export class StatusListService {
     }
 
     /**
+     * Resolve the pseudonymous subject key for the active-credential-limit
+     * policy, or `undefined` when the policy does not apply to this issuance.
+     *
+     * Returns undefined when the configuration is absent, the policy is
+     * disabled, status management is off (revocation needs status entries), or
+     * no durable subject identity is available on the session.
+     */
+    private async resolveSubjectScopedKey(
+        session: Session,
+        credentialConfigurationId: string,
+        credentialConfiguration?: CredentialConfig,
+    ): Promise<string | undefined> {
+        const policy = credentialConfiguration?.activeCredentials;
+        if (!policy?.enabled) {
+            return undefined;
+        }
+
+        if (!credentialConfiguration?.statusManagement) {
+            this.logger.warn(
+                `activeCredentials is enabled for '${credentialConfigurationId}' but statusManagement is disabled; skipping enforcement.`,
+            );
+            return undefined;
+        }
+
+        const iss = session.externalIssuer;
+        const sub = session.externalSubject;
+        if (!iss || !sub) {
+            // No durable per-user subject for this flow (for example the
+            // built-in authorization server, whose `sub` is session-scoped).
+            // Enforcing on a session-scoped subject would treat every issuance
+            // as a new subject, so the policy is skipped instead.
+            this.logger.debug(
+                `No durable subject identity for session ${session.id}; skipping active-credential enforcement.`,
+            );
+            return undefined;
+        }
+
+        return this.subjectKeyService.deriveSubjectKey({
+            tenantId: session.tenantId,
+            credentialConfigurationId,
+            iss,
+            sub,
+        });
+    }
+
+    /**
+     * Point the subject's slot at the newly issued set and revoke whatever it
+     * pointed at before.
+     *
+     * Concurrency rests on the unique constraint over
+     * (tenantId, credentialConfigurationId, subjectScopedKey) rather than on
+     * locking: two simultaneous first issuances both try to insert, exactly one
+     * succeeds, and the loser falls through to the update path. Updates use the
+     * slot's version as a compare-and-swap so a concurrent writer cannot be
+     * silently overwritten. Whichever issuance commits last owns the slot, and
+     * the set it displaced is revoked — so the subject converges on a single
+     * active set either way.
+     */
+    private async replaceActiveIssuance(params: {
+        tenantId: string;
+        credentialConfigurationId: string;
+        subjectScopedKey: string;
+        issuanceSetId: string;
+    }): Promise<void> {
+        let previousIssuanceSetId: string | null = null;
+
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            const existing = await this.activeCredentialSlotRepository.findOne({
+                where: {
+                    tenantId: params.tenantId,
+                    credentialConfigurationId: params.credentialConfigurationId,
+                    subjectScopedKey: params.subjectScopedKey,
+                },
+            });
+
+            if (!existing) {
+                try {
+                    await this.activeCredentialSlotRepository.insert({
+                        tenantId: params.tenantId,
+                        credentialConfigurationId:
+                            params.credentialConfigurationId,
+                        subjectScopedKey: params.subjectScopedKey,
+                        issuanceSetId: params.issuanceSetId,
+                    });
+                    // First issuance for this subject: nothing to revoke.
+                    return;
+                } catch (error) {
+                    if (this.isUniqueViolation(error)) {
+                        // Another issuance created the slot first; re-read and
+                        // take the update path.
+                        continue;
+                    }
+                    throw error;
+                }
+            }
+
+            const updateResult =
+                await this.activeCredentialSlotRepository.update(
+                    {
+                        id: existing.id,
+                        version: existing.version,
+                    },
+                    {
+                        issuanceSetId: params.issuanceSetId,
+                        version: () => "version + 1",
+                    },
+                );
+
+            if (updateResult.affected === 0) {
+                // Someone else advanced the slot between our read and write.
+                await this.delay(this.retryDelayMs * Math.pow(2, attempt));
+                continue;
+            }
+
+            previousIssuanceSetId = existing.issuanceSetId ?? null;
+            break;
+        }
+
+        if (!previousIssuanceSetId) {
+            return;
+        }
+
+        await this.revokeIssuanceSet(
+            params.tenantId,
+            params.credentialConfigurationId,
+            previousIssuanceSetId,
+        );
+    }
+
+    /**
+     * Revoke every status entry belonging to one issuance set.
+     *
+     * Failures here leave the newly issued credential valid and the displaced
+     * entries untouched, which is the safe direction: a stale credential that
+     * outlives its replacement is recoverable, revoking a credential the holder
+     * never replaced is not.
+     */
+    private async revokeIssuanceSet(
+        tenantId: string,
+        credentialConfigurationId: string,
+        issuanceSetId: string,
+    ): Promise<void> {
+        const entries = await this.statusMappingRepository.findBy({
+            tenantId,
+            credentialConfigurationId,
+            issuanceSetId,
+        });
+
+        for (const entry of entries) {
+            await this.setEntry(
+                entry.statusListId,
+                entry.index,
+                STATUS_REVOKED,
+                tenantId,
+            );
+        }
+    }
+
+    /**
+     * Whether an error is a database unique-constraint violation.
+     * Matched by driver error code where available, falling back to the
+     * constraint name for drivers that only surface a message.
+     */
+    private isUniqueViolation(error: unknown): boolean {
+        if (!(error instanceof Error)) {
+            return false;
+        }
+        const code = (error as { code?: string }).code;
+        return (
+            code === "23505" || // PostgreSQL unique_violation
+            code === "SQLITE_CONSTRAINT_UNIQUE" ||
+            code === "SQLITE_CONSTRAINT" ||
+            error.message.includes("UQ_active_credential_slot_subject")
+        );
+    }
+
+    /**
      * Allocate one or more status list entries atomically.
      * All entries for a single credential are allocated in one transaction,
      * ensuring consistency and preventing partial allocations.
@@ -584,6 +797,12 @@ export class StatusListService {
         sessionId: string;
         credentialConfigurationId: string;
         count: number;
+        /**
+         * Opaque grouping id stamped on every mapping created by this call, so
+         * the whole issuance can later be revoked as a set. Only set when the
+         * active-credential-limit policy applies.
+         */
+        issuanceSetId?: string;
     }): Promise<Array<{ statusListId: string; index: number; uri: string }>> {
         const queryRunner = this.dataSource.createQueryRunner();
         let shouldCreateList = false;
@@ -671,6 +890,7 @@ export class StatusListService {
                     list: uri,
                     credentialConfigurationId:
                         options.credentialConfigurationId,
+                    issuanceSetId: options.issuanceSetId ?? null,
                 }));
 
                 await manager.insert(StatusMapping, mappings);

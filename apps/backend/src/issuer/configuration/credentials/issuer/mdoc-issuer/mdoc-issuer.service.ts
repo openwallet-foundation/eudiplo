@@ -136,6 +136,7 @@ export class MdocIssuerService {
             const statusPayload = await this.statusListService.createEntry(
                 session,
                 credentialConfiguration.id,
+                credentialConfiguration,
             );
             const statusList = statusPayload.status?.status_list;
             if (statusList) {

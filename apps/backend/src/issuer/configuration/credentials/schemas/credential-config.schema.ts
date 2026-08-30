@@ -382,6 +382,33 @@ export const CredentialReusePolicySchema = z
         }
     });
 
+export const ActiveCredentialPolicySchema = z
+    .object({
+        enabled: z
+            .boolean()
+            .describe(
+                "Enable limiting how many credentials of this configuration a subject may hold active at once.",
+            ),
+        tracking: z
+            .enum(["internal"])
+            .optional()
+            .describe(
+                "How the subject's active credential set is tracked. Only 'internal' (pseudonymous, issuer-side) is currently supported.",
+            ),
+        maxActive: z
+            .number()
+            .int()
+            .min(1)
+            .optional()
+            .describe(
+                "Maximum number of simultaneously active credentials per subject. Defaults to 1.",
+            ),
+    })
+    .strict()
+    .describe(
+        "Issuer-side policy limiting the number of simultaneously active credentials per subject.",
+    );
+
 const IssuerMetadataCredentialConfigSchema = z
     .object({
         format: z
@@ -473,6 +500,9 @@ export const CredentialConfigCreateSchema = z
             .boolean()
             .optional()
             .describe("Enable status management for issued credentials."),
+        activeCredentials: ActiveCredentialPolicySchema.optional().describe(
+            "Optional issuer-side policy limiting simultaneously active credentials per subject. Requires statusManagement.",
+        ),
         iaeActions: z
             .array(IaeActionSchema)
             .nullable()
