@@ -1,5 +1,5 @@
 <h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between center">
-  <span>Import from Schema Metadata</span>
+  <span>Import from Schema</span>
   <button mat-icon-button (click)="close()" matTooltip="Close">
     <mat-icon>close</mat-icon>
   </button>
@@ -12,14 +12,16 @@
       <div fxLayout="column" fxLayoutGap="16px" class="tab-pane-padding">
         <div fxLayout="column" fxLayoutGap="8px">
           <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Schema Metadata URL</mat-label>
+            <mat-label>Schema URL</mat-label>
             <input
+              id="schema-url"
               matInput
               [formControl]="urlControl"
+              aria-label="Schema URL"
               placeholder="https://registrar.example.com/schema-metadata/{id}"
               (keyup.enter)="fetchSchemaMetadata()"
             />
-            <mat-hint>Enter a URL that returns a schema metadata object with signedJwt</mat-hint>
+            <mat-hint>Enter a URL that returns a schema object with signedJwt</mat-hint>
             @if (urlControl.hasError('required')) {
               <mat-error>URL is required</mat-error>
             }
@@ -39,7 +41,7 @@
             } @else {
               <ng-container>
                 <mat-icon>search</mat-icon>
-                Fetch Schema Metadata
+                Fetch Schema
               </ng-container>
             }
           </button>
@@ -119,53 +121,130 @@
             <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
               <mat-icon>info</mat-icon>
               <span
-                >No schema metadata found in the catalog. Make sure a registrar is configured for
-                this tenant.</span
+                >No schema found in the catalog. Make sure a registrar is configured for this
+                tenant.</span
               >
             </mat-card-content>
           </mat-card>
         }
 
         @if (catalogLoaded && catalogEntries.length > 0) {
-          <mat-form-field appearance="outline" fxFlex>
-            <mat-label>Filter</mat-label>
-            <mat-icon matPrefix>search</mat-icon>
-            <input matInput [(ngModel)]="catalogFilter" placeholder="Name, ID, category or tag" />
-          </mat-form-field>
+          <div class="catalog-toolbar" fxLayout="row" fxLayoutGap="8px" fxLayout.lt-md="column">
+            <mat-form-field appearance="outline" fxFlex>
+              <mat-label>Filter</mat-label>
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                id="schema-catalog-filter"
+                matInput
+                [(ngModel)]="catalogFilter"
+                aria-label="Filter catalog"
+                placeholder="Name, ID, issuer or tag"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="catalog-filter-field">
+              <mat-label>Category</mat-label>
+              <mat-select [(ngModel)]="catalogCategoryFilter">
+                <mat-option value="">All</mat-option>
+                @for (category of catalogCategories; track category) {
+                  <mat-option [value]="category">{{ category }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="catalog-filter-field">
+              <mat-label>Format</mat-label>
+              <mat-select [(ngModel)]="catalogFormatFilter">
+                <mat-option value="">All</mat-option>
+                @for (format of catalogFormats; track format) {
+                  <mat-option [value]="format">{{ format }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+
+            <button
+              mat-icon-button
+              type="button"
+              (click)="refreshCatalog()"
+              [disabled]="catalogLoading"
+              matTooltip="Refresh catalog"
+              aria-label="Refresh catalog"
+            >
+              <mat-icon>refresh</mat-icon>
+            </button>
+          </div>
+
+          <mat-checkbox [(ngModel)]="catalogIncludeDeprecated"
+            >Show deprecated versions</mat-checkbox
+          >
+
+          @if (filteredCatalogGroups.length === 0) {
+            <mat-card>
+              <mat-card-content fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                <mat-icon>filter_alt</mat-icon>
+                <span>No schema entries match the current filters.</span>
+              </mat-card-content>
+            </mat-card>
+          }
 
           <mat-list>
-            @for (entry of filteredCatalogEntries; track entry.id + entry.version) {
+            @for (group of filteredCatalogGroups; track group.id) {
               <mat-list-item class="catalog-list-item">
                 <div fxLayout="column" fxLayoutGap="4px" class="full-width">
                   <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <strong>{{ entry.name || entry.id }}</strong>
+                    <div fxLayout="column" fxLayoutGap="2px">
+                      <strong>{{ catalogTitle(group.selectedEntry) }}</strong>
+                      <div class="catalog-meta">{{ catalogMeta(group.selectedEntry) }}</div>
+                    </div>
                     <button
                       mat-stroked-button
                       color="primary"
-                      (click)="selectFromCatalog(entry)"
-                      matTooltip="Use this schema"
+                      (click)="selectFromCatalog(group.selectedEntry)"
+                      matTooltip="Preview this schema"
                     >
-                      <mat-icon>add</mat-icon>
-                      Use
+                      <mat-icon>visibility</mat-icon>
+                      Preview
                     </button>
                   </div>
-                  <div class="catalog-meta">
-                    <code>{{ entry.id }}</code>
-                    @if (entry.version) {
-                      &nbsp;· v{{ entry.version }}
+
+                  <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center" fxLayoutWrap>
+                    <code>{{ group.selectedEntry.id }}</code>
+                    <mat-form-field appearance="outline" class="version-select">
+                      <mat-label>Version</mat-label>
+                      <mat-select
+                        [ngModel]="group.selectedEntry.version"
+                        (ngModelChange)="selectCatalogVersion(group, $event)"
+                      >
+                        @for (entry of group.entries; track entry.version) {
+                          <mat-option [value]="entry.version">
+                            v{{ entry.version }}{{ entry.deprecated ? ' · deprecated' : '' }}
+                          </mat-option>
+                        }
+                      </mat-select>
+                    </mat-form-field>
+                    @if (group.selectedEntry.deprecated) {
+                      <mat-chip class="chip-small" color="warn">Deprecated</mat-chip>
                     }
-                    @if (entry.category) {
-                      &nbsp;· {{ entry.category }}
+                    @if (group.selectedEntry.supersededByVersion) {
+                      <mat-chip class="chip-small"
+                        >Superseded by v{{ group.selectedEntry.supersededByVersion }}</mat-chip
+                      >
                     }
                   </div>
-                  @if (entry.description) {
-                    <div class="catalog-description">{{ entry.description }}</div>
+
+                  @if (catalogDescription(group.selectedEntry); as description) {
+                    <div class="catalog-description">{{ description }}</div>
+                  }
+                  @if (group.selectedEntry.deprecated && group.selectedEntry.deprecationMessage) {
+                    <div class="catalog-deprecation">
+                      {{ group.selectedEntry.deprecationMessage }}
+                    </div>
                   }
                   <div fxLayout="row" fxLayoutGap="4px" class="chip-row">
-                    @for (format of entry.supportedFormats; track format) {
+                    @for (format of group.selectedEntry.supportedFormats; track format) {
                       <mat-chip class="chip-small">{{ format }}</mat-chip>
                     }
-                    @for (tag of entry.tags ?? []; track tag) {
+                    @for (tag of group.selectedEntry.tags ?? []; track tag) {
                       <mat-chip class="chip-small" color="accent">{{ tag }}</mat-chip>
                     }
                   </div>

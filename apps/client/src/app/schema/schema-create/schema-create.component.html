@@ -1,17 +1,17 @@
 <div fxLayout="row" fxLayoutAlign="space-between center">
-  <h2>Create Schema Metadata</h2>
+  <h2>Create Schema</h2>
   <button matIconButton [routerLink]="['../']" matTooltip="Back to list">
     <mat-icon>arrow_back</mat-icon>
   </button>
 </div>
 
-<!-- Step 1: Compose Schema Metadata -->
+<!-- Step 1: Compose Schema -->
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Compose Schema Metadata</mat-card-title>
+    <mat-card-title>Compose Schema</mat-card-title>
     <mat-card-subtitle>
-      Fill in the TS11 schema metadata fields. You can import schema URIs from existing credential
-      configs and add trusted authorities from your trust lists.
+      Fill in the TS11 schema fields. You can import schema URIs from existing credential configs
+      and add trusted authorities from your trust lists.
     </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
@@ -73,10 +73,10 @@
         <mat-form-field fxFlex appearance="outline">
           <mat-label>Name</mat-label>
           <input
-            id="schema-metadata-name"
+            id="schema-name"
             matInput
             formControlName="name"
-            aria-label="Schema metadata name"
+            aria-label="Schema name"
             placeholder="Gym Membership Card"
           />
           @if (composeForm.get('name')?.hasError('required') && composeForm.get('name')?.touched) {
@@ -139,8 +139,8 @@
         </mat-form-field>
 
         <p class="mat-body-small">
-          When exactly one credential config is selected here, the created schema metadata is linked
-          back to that credential config automatically.
+          When exactly one credential config is selected here, the created schema is linked back to
+          that credential config automatically.
         </p>
 
         @if (
@@ -149,12 +149,12 @@
           <p class="mat-body-small">
             The selected credential config
             <strong>{{ configLabel(linkedCredentialConfig) }}</strong>
-            is already linked to schema metadata
-            <a [routerLink]="['/schema-metadata', linkedSchemaMetadataRouteId]">
+            is already linked to schema
+            <a [routerLink]="['/schema', linkedSchemaMetadataRouteId]">
               {{ linkedSchemaMetadataId }}
             </a>
-            . Open the existing schema metadata to publish a new version, or unlink it from the
-            credential config first.
+            . Open the existing schema to publish a new version, or unlink it from the credential
+            config first.
           </p>
         }
       </div>

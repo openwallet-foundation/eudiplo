@@ -184,19 +184,19 @@ export const ImportTenantDtoSchema = {
     type: 'object',
     properties: {
         name: {
-            type: 'string',
             default: 'EUDIPLO',
             description: 'Display name of the tenant.',
+            type: 'string',
             minLength: 1
         },
         description: {
-            type: 'string',
             description: 'Optional tenant description.',
+            type: 'string',
             minLength: 1
         },
         sessionConfig: {
-            type: 'object',
             description: 'Optional tenant-specific session storage configuration.',
+            type: 'object',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -216,8 +216,8 @@ export const ImportTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            type: 'object',
             description: 'Optional tenant-specific status list defaults.',
+            type: 'object',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -457,19 +457,19 @@ export const CreateTenantDtoSchema = {
             description: 'Unique tenant identifier.'
         },
         name: {
-            type: 'string',
             default: 'EUDIPLO',
             description: 'Display name of the tenant.',
+            type: 'string',
             minLength: 1
         },
         description: {
-            type: 'string',
             description: 'Optional tenant description.',
+            type: 'string',
             minLength: 1
         },
         roles: {
-            type: 'array',
             description: 'Optional default role assignments for the tenant.',
+            type: 'array',
             items: {
                 type: 'string',
                 enum: [
@@ -486,8 +486,8 @@ export const CreateTenantDtoSchema = {
             }
         },
         sessionConfig: {
-            type: 'object',
             description: 'Optional tenant-specific session storage configuration.',
+            type: 'object',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -507,8 +507,8 @@ export const CreateTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            type: 'object',
             description: 'Optional tenant-specific status list defaults.',
+            type: 'object',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -641,8 +641,8 @@ export const UpdateTenantDtoSchema = {
     type: 'object',
     properties: {
         name: {
-            type: 'string',
             description: 'Display name of the tenant.',
+            type: 'string',
             minLength: 1
         },
         description: {
@@ -658,8 +658,8 @@ export const UpdateTenantDtoSchema = {
             ]
         },
         sessionConfig: {
-            type: 'object',
             description: 'Optional tenant-specific session storage configuration.',
+            type: 'object',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -679,8 +679,8 @@ export const UpdateTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            type: 'object',
             description: 'Optional tenant-specific status list defaults.',
+            type: 'object',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -829,14 +829,14 @@ export const UpdateClientDtoSchema = {
     type: 'object',
     properties: {
         description: {
-            type: 'string',
             description: 'Optional updated description.',
+            type: 'string',
             minLength: 1
         },
         roles: {
-            type: 'array',
             description: 'Optional replacement roles for the client.',
             minItems: 1,
+            type: 'array',
             items: {
                 type: 'string',
                 enum: [
@@ -896,18 +896,18 @@ export const CreateClientDtoSchema = {
             description: 'Unique client identifier.'
         },
         secret: {
-            type: 'string',
             description: 'Optional client secret for confidential clients.',
+            type: 'string',
             minLength: 1
         },
         description: {
-            type: 'string',
             description: 'Optional human-readable client description.',
+            type: 'string',
             minLength: 1
         },
         roles: {
-            type: 'array',
             minItems: 1,
+            type: 'array',
             items: {
                 type: 'string',
                 enum: [
@@ -1050,8 +1050,8 @@ export const CreateRegistrarConfigDtoSchema = {
             description: 'OAuth client ID used against the registrar.'
         },
         clientSecret: {
-            type: 'string',
             description: 'Optional OAuth client secret for registrar authentication.',
+            type: 'string',
             minLength: 1
         },
         username: {
@@ -1109,8 +1109,8 @@ export const UpdateRegistrarConfigDtoSchema = {
             description: 'OAuth client ID used against the registrar.'
         },
         clientSecret: {
-            type: 'string',
             description: 'Optional OAuth client secret for registrar authentication.',
+            type: 'string',
             minLength: 1
         },
         username: {
@@ -4054,8 +4054,8 @@ export const StatusUpdateDtoSchema = {
             description: 'Session identifier used to locate credentials for status updates.'
         },
         credentialConfigurationId: {
-            type: 'string',
             description: 'Optional credential configuration id. If omitted, all credentials linked to the session are updated.',
+            type: 'string',
             minLength: 1
         },
         status: {
@@ -5094,11 +5094,11 @@ export const IssuerMetadataCredentialConfigSchema = {
             $ref: '#/components/schemas/CredentialReusePolicy'
         },
         format: {
-            type: 'string',
             enum: [
                 'mso_mdoc',
                 'dc+sd-jwt'
-            ]
+            ],
+            type: 'string'
         },
         display: {
             type: 'array',
@@ -5287,7 +5287,6 @@ export const KeyChainEntitySchema = {
             description: 'Human-readable description of the key chain.'
         },
         usageType: {
-            type: 'string',
             description: 'The purpose/role of this key chain in the system.',
             enum: [
                 'access',
@@ -5295,15 +5294,16 @@ export const KeyChainEntitySchema = {
                 'trustList',
                 'statusList',
                 'encrypt'
-            ]
+            ],
+            type: 'string'
         },
         usage: {
-            type: 'string',
             description: 'The usage type of the keys (sign or encrypt).',
             enum: [
                 'sign',
                 'encrypt'
-            ]
+            ],
+            type: 'string'
         },
         kmsProvider: {
             type: 'string',
@@ -6938,20 +6938,20 @@ export const PresentationConfigCreateDtoSchema = {
             ]
         },
         lifeTime: {
-            type: 'integer',
             description: 'Presentation request lifetime in seconds.',
+            type: 'integer',
             minimum: 1,
             maximum: 9007199254740991
         },
         skewSeconds: {
-            type: 'integer',
             description: 'Clock skew tolerance in seconds.',
+            type: 'integer',
             minimum: 0,
             maximum: 9007199254740991
         },
         statusCheckMode: {
-            type: 'string',
             description: 'Revocation/status check mode.',
+            type: 'string',
             enum: [
                 'strict',
                 'best_effort',
@@ -7358,29 +7358,36 @@ export const PresentationConfigCreateDtoSchema = {
             description: 'DCQL query defining requested credentials and claims.'
         },
         transaction_data: {
-            type: 'array',
             description: 'Optional transaction data descriptors.',
-            items: {
-                type: 'object',
-                properties: {
-                    type: {
-                        type: 'string',
-                        description: 'Transaction data type identifier.'
-                    },
-                    credential_ids: {
-                        type: 'array',
-                        items: {
-                            type: 'string'
+            anyOf: [
+                {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            type: {
+                                type: 'string',
+                                description: 'Transaction data type identifier.'
+                            },
+                            credential_ids: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                },
+                                description: 'Credential query ids this transaction data applies to.'
+                            }
                         },
-                        description: 'Credential query ids this transaction data applies to.'
+                        required: [
+                            'type',
+                            'credential_ids'
+                        ],
+                        additionalProperties: {}
                     }
                 },
-                required: [
-                    'type',
-                    'credential_ids'
-                ],
-                additionalProperties: {}
-            }
+                {
+                    type: 'null'
+                }
+            ]
         },
         registration_cert: {
             description: 'Optional registration certificate request settings.',
@@ -7563,20 +7570,20 @@ export const PresentationConfigUpdateDtoSchema = {
             ]
         },
         lifeTime: {
-            type: 'integer',
             description: 'Presentation request lifetime in seconds.',
+            type: 'integer',
             minimum: 1,
             maximum: 9007199254740991
         },
         skewSeconds: {
-            type: 'integer',
             description: 'Clock skew tolerance in seconds.',
+            type: 'integer',
             minimum: 0,
             maximum: 9007199254740991
         },
         statusCheckMode: {
-            type: 'string',
             description: 'Revocation/status check mode.',
+            type: 'string',
             enum: [
                 'strict',
                 'best_effort',
@@ -7983,29 +7990,36 @@ export const PresentationConfigUpdateDtoSchema = {
             description: 'DCQL query defining requested credentials and claims.'
         },
         transaction_data: {
-            type: 'array',
             description: 'Optional transaction data descriptors.',
-            items: {
-                type: 'object',
-                properties: {
-                    type: {
-                        type: 'string',
-                        description: 'Transaction data type identifier.'
-                    },
-                    credential_ids: {
-                        type: 'array',
-                        items: {
-                            type: 'string'
+            anyOf: [
+                {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            type: {
+                                type: 'string',
+                                description: 'Transaction data type identifier.'
+                            },
+                            credential_ids: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                },
+                                description: 'Credential query ids this transaction data applies to.'
+                            }
                         },
-                        description: 'Credential query ids this transaction data applies to.'
+                        required: [
+                            'type',
+                            'credential_ids'
+                        ],
+                        additionalProperties: {}
                     }
                 },
-                required: [
-                    'type',
-                    'credential_ids'
-                ],
-                additionalProperties: {}
-            }
+                {
+                    type: 'null'
+                }
+            ]
         },
         registration_cert: {
             description: 'Optional registration certificate request settings.',

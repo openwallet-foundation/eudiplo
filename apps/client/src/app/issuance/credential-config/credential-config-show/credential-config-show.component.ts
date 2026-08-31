@@ -243,11 +243,7 @@ export class CredentialConfigShowComponent implements OnInit {
       return;
     }
 
-    if (
-      !confirm(
-        `Unlink schema metadata '${this.schemaMetadataId}' from this credential configuration?`
-      )
-    ) {
+    if (!confirm(`Unlink schema '${this.schemaMetadataId}' from this credential configuration?`)) {
       return;
     }
 
@@ -261,15 +257,15 @@ export class CredentialConfigShowComponent implements OnInit {
           };
         }
 
-        this.snackBar.open('Schema metadata link removed', 'Close', {
+        this.snackBar.open('Schema link removed', 'Close', {
           duration: 3000,
         });
       })
       .catch((error) => {
-        this.snackBar.open('Failed to remove schema metadata link', 'Close', {
+        this.snackBar.open('Failed to remove schema link', 'Close', {
           duration: 3000,
         });
-        console.error('Unlink schema metadata error:', error);
+        console.error('Unlink schema error:', error);
       });
   }
 

@@ -26,13 +26,13 @@ import {
   trustListControllerGetAllTrustLists,
 } from '@eudiplo/sdk-core';
 import { CredentialConfigService } from '../../issuance/credential-config/credential-config.service';
-import { SchemaMetadataService } from '../schema-metadata.service';
+import { SchemaService } from '../schema.service';
 
 const SEMVER_REGEX =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
 
 @Component({
-  selector: 'app-schema-metadata-create',
+  selector: 'app-schema-create',
   standalone: true,
   imports: [
     CommonModule,
@@ -49,11 +49,11 @@ const SEMVER_REGEX =
     ReactiveFormsModule,
     RouterModule,
   ],
-  templateUrl: './schema-metadata-create.component.html',
+  templateUrl: './schema-create.component.html',
   changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './schema-metadata-create.component.scss',
+  styleUrl: './schema-create.component.scss',
 })
-export class SchemaMetadataCreateComponent implements OnInit {
+export class SchemaCreateComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -115,7 +115,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
 
   constructor(
     private readonly fb: FormBuilder,
-    private readonly schemaMetadataService: SchemaMetadataService,
+    private readonly schemaService: SchemaService,
     private readonly credentialConfigService: CredentialConfigService,
     private readonly snackBar: MatSnackBar
   ) {}
@@ -264,7 +264,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
       const [configs, tlResponse, vocabularies] = await Promise.all([
         this.credentialConfigService.loadConfigurations(),
         trustListControllerGetAllTrustLists(),
-        this.schemaMetadataService.getVocabularies(),
+        this.schemaService.getVocabularies(),
       ]);
       this.credentialConfigs = configs;
       this.trustLists = Array.isArray(tlResponse.data) ? tlResponse.data : [];
@@ -366,7 +366,7 @@ export class SchemaMetadataCreateComponent implements OnInit {
 
     if (this.hasLinkedSchemaMetadataConflict) {
       this.snackBar.open(
-        'The selected credential config already has linked schema metadata. Open the existing schema metadata or unlink it first.',
+        'The selected credential config already has a linked schema. Open the existing schema or unlink it first.',
         'Close',
         { duration: 5000 }
       );
@@ -378,17 +378,17 @@ export class SchemaMetadataCreateComponent implements OnInit {
       // The backend reserves the attestation id, signs the config and submits
       // it to the registrar in a single call — we just receive the resulting
       // metadata entry.
-      const created = await this.schemaMetadataService.publishSchemaMetadata(
+      const created = await this.schemaService.publishSchemaMetadata(
         this.buildConfigFromForm(),
         undefined,
         this.resolveLinkedCredentialConfigId()
       );
 
-      this.snackBar.open('Schema metadata submitted', 'Close', { duration: 3000 });
-      this.router.navigate(['/schema-metadata', created.id]);
+      this.snackBar.open('Schema submitted', 'Close', { duration: 3000 });
+      this.router.navigate(['/schema', created.id]);
     } catch (error) {
       console.error('Failed to submit schema metadata:', error);
-      const msg = error instanceof Error ? error.message : 'Failed to submit schema metadata';
+      const msg = error instanceof Error ? error.message : 'Failed to submit schema';
       this.snackBar.open(msg, 'Close', { duration: 5000 });
     } finally {
       this.loading = false;
