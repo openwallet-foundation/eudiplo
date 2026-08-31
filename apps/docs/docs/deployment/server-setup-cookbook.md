@@ -130,7 +130,10 @@ https://eudiplo.example.com
 
 The value is written to `PUBLIC_URL` and is used for OAuth, OpenID, and wallet
 redirects. Configure your reverse proxy and TLS before using an HTTPS public URL
-in production.
+in production. The backend uses `http://127.0.0.1:3000` by default for its own
+JWKS verification, so it does not require access to `PUBLIC_URL`. Set
+`INTERNAL_URL` only when the backend listens at another internal address, such
+as a sidecar proxy or a different port.
 
 ## 3. Initialize the EUDIPLO Project
 

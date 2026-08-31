@@ -88,6 +88,10 @@ Edit `.env`:
 # Public URL (for OAuth redirects and OIDC)
 PUBLIC_URL=http://eudiplo.localtest.me
 
+# Internal backend URL for self-JWKS verification (default shown)
+# Change only when the backend is not listening on port 3000 in this pod.
+INTERNAL_URL=http://127.0.0.1:3000
+
 # PostgreSQL Configuration
 DB_USERNAME=eudiplo
 DB_PASSWORD=changeme123

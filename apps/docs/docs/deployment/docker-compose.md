@@ -46,6 +46,10 @@ Essential configuration for all presets:
 # Public URL (for OAuth redirects)
 PUBLIC_URL=http://localhost:3000
 
+# Internal backend URL for self-JWKS verification (default shown)
+# Change only when the backend is not listening on port 3000 in this container.
+INTERNAL_URL=http://127.0.0.1:3000
+
 # Environment
 NODE_ENV=production
 
