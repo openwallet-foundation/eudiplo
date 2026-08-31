@@ -1180,7 +1180,11 @@ export class Oid4vciService {
         }
 
         const { tokenPayload } = await resourceServer.verifyResourceRequest({
-            authorizationServers: issuerMetadata.authorizationServers,
+            authorizationServers:
+                this.getAuthorizationServersForResourceVerification(
+                    tenantId,
+                    issuerMetadata.authorizationServers,
+                ),
             request: {
                 url: `${this.configService.getOrThrow<string>("PUBLIC_URL")}${req.url}`,
                 method: req.method as HttpMethod,
@@ -1191,6 +1195,25 @@ export class Oid4vciService {
         });
 
         return tokenPayload as OAuth2TokenPayload;
+    }
+
+    private getAuthorizationServersForResourceVerification(
+        tenantId: string,
+        authorizationServers: AuthorizationServerMetadata[],
+    ): AuthorizationServerMetadata[] {
+        const internalUrl = this.configService.get<string>("INTERNAL_URL");
+        if (!internalUrl) {
+            return authorizationServers;
+        }
+
+        const builtInIssuer = this.authzService.getAuthzIssuer(tenantId);
+        const jwksUri = `${internalUrl.replace(/\/$/, "")}/.well-known/jwks.json/issuers/${tenantId}`;
+
+        return authorizationServers.map((authorizationServer) =>
+            authorizationServer.issuer === builtInIssuer
+                ? { ...authorizationServer, jwks_uri: jwksUri }
+                : authorizationServer,
+        );
     }
 
     /**
