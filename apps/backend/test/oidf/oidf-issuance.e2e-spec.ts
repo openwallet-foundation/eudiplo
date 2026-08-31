@@ -445,6 +445,7 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
         configService.set("FOLDER", tmpFolder);
         configService.set("CONFIG_FOLDER", configFolder);
         configService.set("PUBLIC_URL", `https://${PUBLIC_DOMAIN}`);
+        configService.set("INTERNAL_URL", "https://localhost:3000");
         configService.set("CONFIG_IMPORT_MODE", "create");
         configService.set("LOG_LEVEL", "debug");
 

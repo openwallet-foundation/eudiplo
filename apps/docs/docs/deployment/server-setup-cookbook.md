@@ -166,7 +166,7 @@ eudiplo init . --preset standard --public-url https://eudiplo.example.com
 Recommended wizard choices:
 
 | Prompt                     | Recommended value                                                 |
-| -------------------------- | ------------------------------------------------------------------ |
+| -------------------------- | ----------------------------------------------------------------- |
 | Preset                     | `minimal` for fewer services, `standard` for PostgreSQL and MinIO |
 | Database                   | SQLite for `minimal`, PostgreSQL for `standard`                   |
 | Storage                    | Local filesystem for `minimal`, S3 via MinIO for `standard`       |
@@ -360,12 +360,12 @@ eudiplo doctor
 Useful files and directories:
 
 | Path                               | Purpose                                                         |
-| ----------------------------------- | ---------------------------------------------------------------- |
+| ---------------------------------- | --------------------------------------------------------------- |
 | `.eudiplo.env`                     | Runtime environment for the generated Compose stack             |
 | `eudiplo.compose.yaml`             | Generated Compose file used by `eudiplo up`, `down`, and `logs` |
 | `config/kms.json`                  | Global key-management provider configuration                    |
 | `config/<tenant-id>/info.json`     | Tenant metadata imported on startup                             |
-| `config/<tenant-id>/clients/`      | Tenant clients imported on startup                               |
+| `config/<tenant-id>/clients/`      | Tenant clients imported on startup                              |
 | `config/<tenant-id>/issuance/`     | Issuance and credential configuration files                     |
 | `config/<tenant-id>/presentation/` | Presentation request configuration files                        |
 
@@ -439,7 +439,7 @@ Keep the same local workflow while you go deeper: edit files under
 ## Common Problems
 
 | Symptom                                | What to check                                                                                                                                            |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Docker or Podman was not found`       | Install Docker/Podman, verify it is on `PATH`, or set `EUDIPLO_CONTAINER_RUNTIME` to the runtime you want.                                               |
 | Wallet cannot scan or complete a flow  | Ensure `PUBLIC_URL` is reachable from the wallet device. For local development, use a tunnel or reverse proxy and reinitialize or update `.eudiplo.env`. |
 | Tenant does not appear after restart   | Run `eudiplo config validate tenants ~/eudiplo/config`, then check `eudiplo logs` for config-import messages.                                            |

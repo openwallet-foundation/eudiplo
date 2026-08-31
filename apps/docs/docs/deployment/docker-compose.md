@@ -32,11 +32,11 @@ For the complete Docker Compose deployment guide including minimal, standard, an
 
 EUDIPLO offers three Docker Compose deployment options:
 
-| Preset      | Database   | Storage            | Key Management  | Production Ready |
-| ----------- | ---------- | ------------------ | --------------- | ---------------- |
-| **Minimal** | SQLite     | Local filesystem   | Database-backed | ⚠️ Limited       |
+| Preset       | Database   | Storage            | Key Management  | Production Ready |
+| ------------ | ---------- | ------------------ | --------------- | ---------------- |
+| **Minimal**  | SQLite     | Local filesystem   | Database-backed | ⚠️ Limited       |
 | **Standard** | PostgreSQL | S3 via local MinIO | Database-backed | ✅ Yes (small)   |
-| **Full**    | PostgreSQL | S3 via local MinIO | Vault           | ✅ Yes           |
+| **Full**     | PostgreSQL | S3 via local MinIO | Vault           | ✅ Yes           |
 
 ## Environment Variables
 
