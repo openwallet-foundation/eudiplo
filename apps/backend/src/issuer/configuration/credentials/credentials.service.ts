@@ -525,7 +525,7 @@ export class CredentialsService {
      * @param holderCnf
      * @param session
      * @param preloadedClaims Optional claims fetched from webhook (to avoid redundant calls in batch)
-    * @param issuanceSetId Opaque identifier grouping credentials issued with one access token
+     * @param issuanceSetId Opaque identifier grouping credentials issued with one access token
      * @returns
      */
     async getCredential(

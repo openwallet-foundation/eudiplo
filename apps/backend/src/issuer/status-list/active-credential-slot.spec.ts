@@ -187,13 +187,17 @@ describe("StatusListService active-credential limit", () => {
         );
 
         expect(await statusAt(first.status.status_list.idx)).toBe(STATUS_VALID);
-        expect(await statusAt(second.status.status_list.idx)).toBe(STATUS_VALID);
+        expect(await statusAt(second.status.status_list.idx)).toBe(
+            STATUS_VALID,
+        );
         expect(
-            await dataSource.getRepository(ActiveCredentialSlot).findOneByOrFail({
-                tenantId: TENANT,
-                credentialConfigurationId: CONFIG_ID,
-                subjectScopedKey: `sk:${TENANT}:${CONFIG_ID}:https://as.example.com:user-123`,
-            }),
+            await dataSource
+                .getRepository(ActiveCredentialSlot)
+                .findOneByOrFail({
+                    tenantId: TENANT,
+                    credentialConfigurationId: CONFIG_ID,
+                    subjectScopedKey: `sk:${TENANT}:${CONFIG_ID}:https://as.example.com:user-123`,
+                }),
         ).toMatchObject({ issuanceSetId: TOKEN_A });
     });
 
