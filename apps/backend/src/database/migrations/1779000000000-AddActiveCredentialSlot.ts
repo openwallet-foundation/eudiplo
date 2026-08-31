@@ -30,8 +30,8 @@ export class AddActiveCredentialSlot1779000000000
     private readonly issuanceSetIndex = "IDX_status_mapping_issuance_set";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        const dbType = queryRunner.connection.driver.options.type;
-        const isSqlite = dbType === "better-sqlite3" || dbType === "sqlite";
+        const dbType = queryRunner.dataSource.options.type;
+        const isSqlite = dbType === "better-sqlite3";
 
         if (!(await queryRunner.hasTable(this.slotTable))) {
             await queryRunner.createTable(

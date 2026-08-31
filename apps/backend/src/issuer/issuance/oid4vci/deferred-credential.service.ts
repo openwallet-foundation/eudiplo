@@ -57,6 +57,8 @@ export interface CreateDeferredTransactionParams {
     interval?: number;
     /** The issuer metadata */
     issuerMetadata: IssuerMetadataResult;
+    /** Opaque access-token fingerprint for active-credential batch grouping */
+    issuanceSetId?: string;
 }
 
 /**
@@ -157,6 +159,7 @@ export class DeferredCredentialService {
             tenantId,
             interval = 5,
             issuerMetadata,
+            issuanceSetId,
         } = params;
 
         // Add session context to span for trace correlation
@@ -267,6 +270,7 @@ export class DeferredCredentialService {
             sessionId: session.id,
             credentialConfigurationId:
                 parsedCredentialRequest.credentialConfigurationId,
+            issuanceSetId,
             holderCnf: holderCnf as Record<string, unknown>,
             status: DeferredTransactionStatus.Pending,
             interval,
@@ -461,6 +465,7 @@ export class DeferredCredentialService {
             transaction.holderCnf as Jwk,
             session,
             claims,
+            transaction.issuanceSetId ?? undefined,
         );
 
         await this.deferredTransactionRepository.update(

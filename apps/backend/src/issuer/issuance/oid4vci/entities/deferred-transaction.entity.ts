@@ -76,6 +76,14 @@ export class DeferredTransactionEntity {
     credentialConfigurationId!: string;
 
     /**
+     * Opaque HMAC fingerprint of the access token that authorized this
+     * transaction. Preserves active-credential batch grouping when deferred
+     * issuance is completed after the original request has ended.
+     */
+    @Column("varchar", { nullable: true })
+    issuanceSetId?: string | null;
+
+    /**
      * The holder's public key (CNF) for key binding.
      * Stored as JSON.
      */

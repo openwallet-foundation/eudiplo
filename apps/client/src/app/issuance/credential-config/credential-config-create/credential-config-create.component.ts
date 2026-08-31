@@ -183,6 +183,7 @@ export class CredentialConfigCreateComponent implements OnInit {
       lifeTime: new FormControl(3600, [Validators.min(1)]),
       keyBinding: new FormControl(true, [Validators.required]),
       statusManagement: new FormControl(true, [Validators.required]),
+      activeCredentialsEnabled: new FormControl(false),
       // SD-JWT specific fields
       vct: new FormControl(''),
       vctString: new FormControl(''),
@@ -517,6 +518,7 @@ export class CredentialConfigCreateComponent implements OnInit {
       lifeTime: normalizedConfig.lifeTime || 3600,
       keyBinding: normalizedConfig.keyBinding ?? true,
       statusManagement: normalizedConfig.statusManagement ?? true,
+      activeCredentialsEnabled: normalizedConfig.activeCredentials?.enabled ?? false,
       attributeProviderId: normalizedConfig.attributeProviderId || '',
       webhookEndpointId: normalizedConfig.webhookEndpointId || '',
       // SD-JWT specific
@@ -936,6 +938,11 @@ export class CredentialConfigCreateComponent implements OnInit {
       }),
     };
 
+    formValue.activeCredentials = {
+      enabled: formValue.activeCredentialsEnabled,
+      tracking: 'internal',
+    };
+
     formValue.fields = this.buildFieldsPayload(formValue.fields || []);
 
     // Convert empty strings to null to clear optional fields (for PATCH semantics)
@@ -1005,6 +1012,7 @@ export class CredentialConfigCreateComponent implements OnInit {
     delete formValue.credentialReusePolicyBatchSize;
     delete formValue.credentialReusePolicyReissueTriggerUnused;
     delete formValue.credentialReusePolicyReissueTriggerLifetimeLeft;
+    delete formValue.activeCredentialsEnabled;
 
     return formValue;
   }

@@ -2451,6 +2451,20 @@ export type KeyChainEntity = {
     updatedAt: string;
 };
 
+/**
+ * Issuer-side policy limiting the number of simultaneously active credentials per subject.
+ */
+export type ActiveCredentialPolicy = {
+    /**
+     * Ensure a subject has at most one active credential of this configuration.
+     */
+    enabled: boolean;
+    /**
+     * How the subject's active credential set is tracked. Only 'internal' (pseudonymous, issuer-side) is currently supported.
+     */
+    tracking?: 'internal';
+};
+
 export type CredentialConfig = {
     /**
      * VCT as a URI string (e.g., urn:eudi:pid:de:1) or as an object for EUDIPLO-hosted VCT
@@ -2502,6 +2516,18 @@ export type CredentialConfig = {
     keyChainId?: string;
     keyChain?: KeyChainEntity;
     statusManagement?: boolean;
+    /**
+     * Optional issuer-side policy limiting how many credentials of this
+     * configuration a subject may hold active at once. When enabled, issuing a
+     * new credential to a subject revokes that subject's previously issued
+     * credentials for this configuration.
+     *
+     * Requires `statusManagement`, since revocation relies on status entries.
+     *
+     * Distinct from `credentialReusePolicy` (issuer metadata published to
+     * wallets); this one is enforced by the issuer at issuance time.
+     */
+    activeCredentials?: ActiveCredentialPolicy;
     /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).
@@ -2556,6 +2582,18 @@ export type CredentialConfigCreate = {
     keyChainId?: string;
     statusManagement?: boolean;
     /**
+     * Optional issuer-side policy limiting how many credentials of this
+     * configuration a subject may hold active at once. When enabled, issuing a
+     * new credential to a subject revokes that subject's previously issued
+     * credentials for this configuration.
+     *
+     * Requires `statusManagement`, since revocation relies on status entries.
+     *
+     * Distinct from `credentialReusePolicy` (issuer metadata published to
+     * wallets); this one is enforced by the issuer at issuance time.
+     */
+    activeCredentials?: ActiveCredentialPolicy;
+    /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
@@ -2608,6 +2646,18 @@ export type CredentialConfigUpdate = {
      */
     keyChainId?: string;
     statusManagement?: boolean;
+    /**
+     * Optional issuer-side policy limiting how many credentials of this
+     * configuration a subject may hold active at once. When enabled, issuing a
+     * new credential to a subject revokes that subject's previously issued
+     * credentials for this configuration.
+     *
+     * Requires `statusManagement`, since revocation relies on status entries.
+     *
+     * Distinct from `credentialReusePolicy` (issuer metadata published to
+     * wallets); this one is enforced by the issuer at issuance time.
+     */
+    activeCredentials?: ActiveCredentialPolicy;
     /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).

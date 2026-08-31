@@ -19,7 +19,7 @@ import {
 } from "@owf/token-status-list";
 import { X509Certificate } from "@peculiar/x509";
 import { JwtPayload } from "@sd-jwt/core";
-import { DataSource, IsNull, Repository } from "typeorm";
+import { DataSource, EntityManager, IsNull, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { CertService } from "../../crypto/key/cert/cert.service";
@@ -46,6 +46,20 @@ import { SubjectKeyService } from "./subject-key.service";
  * {@link StatusUpdateDto}: 0 = valid, 1 = revoked, 2 = suspended.
  */
 const STATUS_REVOKED = 1;
+
+interface EntryAllocationOptions {
+    tenantId: string;
+    sessionId: string;
+    credentialConfigurationId: string;
+    count: number;
+    issuanceSetId?: string;
+}
+
+interface AllocatedStatusEntry {
+    statusListId: string;
+    index: number;
+    uri: string;
+}
 
 @Injectable()
 export class StatusListService {
@@ -540,6 +554,7 @@ export class StatusListService {
         session: Session,
         credentialConfigurationId: string,
         credentialConfiguration?: CredentialConfig,
+        issuanceSetId?: string,
     ): Promise<JWTwithStatusListPayload> {
         // Resolve the pseudonymous subject key when the active-credential-limit
         // policy applies to this issuance; undefined means "policy off" and the
@@ -549,62 +564,62 @@ export class StatusListService {
             credentialConfigurationId,
             credentialConfiguration,
         );
-        const issuanceSetId = subjectScopedKey ? v4() : undefined;
+        const activeIssuanceSetId = subjectScopedKey
+            ? issuanceSetId
+            : undefined;
+        if (subjectScopedKey && !activeIssuanceSetId) {
+            throw new ConflictException(
+                "Active credential issuance requires an access token grouping identifier",
+            );
+        }
 
-        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
-            try {
-                const result = await this.allocateEntries({
+        const entry = await this.retryOnConcurrency(
+            () =>
+                this.allocateAndClaimEntry({
                     tenantId: session.tenantId,
                     sessionId: session.id,
                     credentialConfigurationId,
-                    count: 1,
-                    issuanceSetId,
-                });
-
-                if (result.length === 0) {
-                    throw new ConflictException(
-                        "Failed to allocate status entry after retries",
-                    );
-                }
-
-                // The new entry now exists. Only after that do we claim the
-                // subject's slot and revoke whatever it pointed at before, so a
-                // failure above can never leave the subject with nothing valid.
-                if (subjectScopedKey && issuanceSetId) {
-                    await this.replaceActiveIssuance({
-                        tenantId: session.tenantId,
-                        credentialConfigurationId,
-                        subjectScopedKey,
-                        issuanceSetId,
-                    });
-                }
-
-                const entry = result[0];
-                return {
-                    status: {
-                        status_list: {
-                            idx: entry.index,
-                            uri: entry.uri,
-                        },
-                    },
-                };
-            } catch (error) {
-                if (this.isRetryableConcurrencyError(error)) {
-                    if (attempt < this.maxRetries - 1) {
-                        await this.delay(
-                            this.retryDelayMs * Math.pow(2, attempt),
-                        );
-                        continue;
-                    }
-                    break;
-                }
-                throw error;
-            }
-        }
-
-        throw new ServiceUnavailableException(
+                    issuanceSetId: activeIssuanceSetId,
+                    subjectScopedKey,
+                }),
             "Could not allocate status entry after maximum retries",
         );
+
+        return {
+            status: {
+                status_list: {
+                    idx: entry.index,
+                    uri: entry.uri,
+                },
+            },
+        };
+    }
+
+    private async allocateAndClaimEntry(params: {
+        tenantId: string;
+        sessionId: string;
+        credentialConfigurationId: string;
+        issuanceSetId?: string;
+        subjectScopedKey?: string;
+    }): Promise<AllocatedStatusEntry> {
+        const entries = await this.allocateEntries({ ...params, count: 1 });
+        const entry = entries[0];
+        if (!entry) {
+            throw new ConflictException(
+                "Failed to allocate status entry after retries",
+            );
+        }
+
+        if (params.subjectScopedKey && params.issuanceSetId) {
+            await this.replaceActiveIssuance({
+                tenantId: params.tenantId,
+                credentialConfigurationId: params.credentialConfigurationId,
+                subjectScopedKey: params.subjectScopedKey,
+                issuanceSetId: params.issuanceSetId,
+            });
+        }
+
+        return entry;
     }
 
     /**
@@ -704,6 +719,13 @@ export class StatusListService {
                 }
             }
 
+            // More than one credential can be issued with the same access token
+            // (for example, successive batch requests). They are one issuance
+            // set, not replacements for one another.
+            if (existing.issuanceSetId === params.issuanceSetId) {
+                return;
+            }
+
             const updateResult =
                 await this.activeCredentialSlotRepository.update(
                     {
@@ -792,18 +814,9 @@ export class StatusListService {
      * @param options Allocation request parameters
      * @returns Array of allocated entries
      */
-    private async allocateEntries(options: {
-        tenantId: string;
-        sessionId: string;
-        credentialConfigurationId: string;
-        count: number;
-        /**
-         * Opaque grouping id stamped on every mapping created by this call, so
-         * the whole issuance can later be revoked as a set. Only set when the
-         * active-credential-limit policy applies.
-         */
-        issuanceSetId?: string;
-    }): Promise<Array<{ statusListId: string; index: number; uri: string }>> {
+    private async allocateEntries(
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
         const queryRunner = this.dataSource.createQueryRunner();
         let shouldCreateList = false;
 
@@ -811,96 +824,23 @@ export class StatusListService {
             await queryRunner.connect();
             await queryRunner.startTransaction();
 
-            // Find an available status list
             const manager = queryRunner.manager;
-            const dedicatedLists = await manager.find(StatusListEntity, {
-                where: {
-                    tenantId: options.tenantId,
-                    credentialConfigurationId:
-                        options.credentialConfigurationId,
-                },
-                order: { createdAt: "ASC" },
-            });
-            let list = dedicatedLists.find(
-                (candidate) => candidate.stack.length >= options.count,
+            const list = await this.findAvailableListForAllocation(
+                manager,
+                options,
             );
 
             if (!list) {
-                // Try to find a shared list
-                const sharedLists = await manager.find(StatusListEntity, {
-                    where: {
-                        tenantId: options.tenantId,
-                        credentialConfigurationId: IsNull(),
-                    },
-                    order: { createdAt: "ASC" },
-                });
-
-                for (const candidateList of sharedLists) {
-                    if (candidateList.stack.length >= options.count) {
-                        list = candidateList;
-                        break;
-                    }
-                }
-            }
-
-            // If still no list found, create a new one
-            if (!list || list.stack.length < options.count) {
                 await queryRunner.commitTransaction();
                 shouldCreateList = true;
             } else {
-                // Allocate indices from the stack
-                const allocatedIndices: number[] = [];
-                for (let i = 0; i < options.count; i++) {
-                    const idx = list.stack.pop();
-                    if (idx === undefined) {
-                        throw new ConflictException(
-                            "Stack underflow during allocation",
-                        );
-                    }
-                    allocatedIndices.push(idx);
-                }
-
-                // The version predicate makes this update portable across
-                // PostgreSQL and SQLite without relying on driver-specific locks.
-                const updateResult = await manager.update(
-                    StatusListEntity,
-                    {
-                        id: list.id,
-                        tenantId: options.tenantId,
-                        version: list.version,
-                    },
-                    {
-                        stack: list.stack,
-                        version: () => "version + 1",
-                    },
+                const entries = await this.allocateFromList(
+                    manager,
+                    list,
+                    options,
                 );
-
-                if (updateResult.affected === 0) {
-                    throw new ConflictException(
-                        "Status list was modified concurrently",
-                    );
-                }
-
-                const uri = this.buildStatusListUri(options.tenantId, list.id);
-                const mappings = allocatedIndices.map((index) => ({
-                    tenantId: options.tenantId,
-                    sessionId: options.sessionId,
-                    statusListId: list.id,
-                    index,
-                    list: uri,
-                    credentialConfigurationId:
-                        options.credentialConfigurationId,
-                    issuanceSetId: options.issuanceSetId ?? null,
-                }));
-
-                await manager.insert(StatusMapping, mappings);
                 await queryRunner.commitTransaction();
-
-                return allocatedIndices.map((index) => ({
-                    statusListId: list.id,
-                    index,
-                    uri,
-                }));
+                return entries;
             }
         } catch (error) {
             if (queryRunner.isTransactionActive) {
@@ -919,16 +859,122 @@ export class StatusListService {
         }
 
         if (shouldCreateList) {
-            const newList = await this.createNewList(options.tenantId);
-            if (newList.stack.length < options.count) {
-                throw new ConflictException(
-                    "Status list capacity is smaller than the requested allocation",
-                );
-            }
-            return this.allocateEntries(options);
+            return this.createListAndAllocateEntries(options);
         }
 
         throw new ConflictException("No status list available for allocation");
+    }
+
+    private async findAvailableListForAllocation(
+        manager: EntityManager,
+        options: EntryAllocationOptions,
+    ): Promise<StatusListEntity | undefined> {
+        const findFirstAvailable = (lists: StatusListEntity[]) =>
+            lists.find((list) => list.stack.length >= options.count);
+        const dedicatedLists = await manager.find(StatusListEntity, {
+            where: {
+                tenantId: options.tenantId,
+                credentialConfigurationId: options.credentialConfigurationId,
+            },
+            order: { createdAt: "ASC" },
+        });
+        const dedicatedList = findFirstAvailable(dedicatedLists);
+        if (dedicatedList) {
+            return dedicatedList;
+        }
+
+        const sharedLists = await manager.find(StatusListEntity, {
+            where: {
+                tenantId: options.tenantId,
+                credentialConfigurationId: IsNull(),
+            },
+            order: { createdAt: "ASC" },
+        });
+        return findFirstAvailable(sharedLists);
+    }
+
+    private async allocateFromList(
+        manager: EntityManager,
+        list: StatusListEntity,
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
+        const allocatedIndices = Array.from({ length: options.count }, () => {
+            const index = list.stack.pop();
+            if (index === undefined) {
+                throw new ConflictException(
+                    "Stack underflow during allocation",
+                );
+            }
+            return index;
+        });
+        const updateResult = await manager.update(
+            StatusListEntity,
+            {
+                id: list.id,
+                tenantId: options.tenantId,
+                version: list.version,
+            },
+            {
+                stack: list.stack,
+                version: () => "version + 1",
+            },
+        );
+        if (updateResult.affected === 0) {
+            throw new ConflictException(
+                "Status list was modified concurrently",
+            );
+        }
+
+        const uri = this.buildStatusListUri(options.tenantId, list.id);
+        await manager.insert(
+            StatusMapping,
+            allocatedIndices.map((index) => ({
+                tenantId: options.tenantId,
+                sessionId: options.sessionId,
+                statusListId: list.id,
+                index,
+                list: uri,
+                credentialConfigurationId: options.credentialConfigurationId,
+                issuanceSetId: options.issuanceSetId ?? null,
+            })),
+        );
+        return allocatedIndices.map((index) => ({
+            statusListId: list.id,
+            index,
+            uri,
+        }));
+    }
+
+    private async createListAndAllocateEntries(
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
+        const newList = await this.createNewList(options.tenantId);
+        if (newList.stack.length < options.count) {
+            throw new ConflictException(
+                "Status list capacity is smaller than the requested allocation",
+            );
+        }
+        return this.allocateEntries(options);
+    }
+
+    private async retryOnConcurrency<T>(
+        operation: () => Promise<T>,
+        unavailableMessage: string,
+    ): Promise<T> {
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            try {
+                return await operation();
+            } catch (error) {
+                if (!this.isRetryableConcurrencyError(error)) {
+                    throw error;
+                }
+                if (attempt < this.maxRetries - 1) {
+                    await this.delay(this.retryDelayMs * Math.pow(2, attempt));
+                }
+            }
+        }
+
+        throw new ServiceUnavailableException(unavailableMessage);
     }
 
     /**

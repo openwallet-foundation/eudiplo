@@ -184,19 +184,19 @@ export const ImportTenantDtoSchema = {
     type: 'object',
     properties: {
         name: {
+            type: 'string',
             default: 'EUDIPLO',
             description: 'Display name of the tenant.',
-            type: 'string',
             minLength: 1
         },
         description: {
-            description: 'Optional tenant description.',
             type: 'string',
+            description: 'Optional tenant description.',
             minLength: 1
         },
         sessionConfig: {
-            description: 'Optional tenant-specific session storage configuration.',
             type: 'object',
+            description: 'Optional tenant-specific session storage configuration.',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -216,8 +216,8 @@ export const ImportTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            description: 'Optional tenant-specific status list defaults.',
             type: 'object',
+            description: 'Optional tenant-specific status list defaults.',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -457,19 +457,19 @@ export const CreateTenantDtoSchema = {
             description: 'Unique tenant identifier.'
         },
         name: {
+            type: 'string',
             default: 'EUDIPLO',
             description: 'Display name of the tenant.',
-            type: 'string',
             minLength: 1
         },
         description: {
-            description: 'Optional tenant description.',
             type: 'string',
+            description: 'Optional tenant description.',
             minLength: 1
         },
         roles: {
-            description: 'Optional default role assignments for the tenant.',
             type: 'array',
+            description: 'Optional default role assignments for the tenant.',
             items: {
                 type: 'string',
                 enum: [
@@ -486,8 +486,8 @@ export const CreateTenantDtoSchema = {
             }
         },
         sessionConfig: {
-            description: 'Optional tenant-specific session storage configuration.',
             type: 'object',
+            description: 'Optional tenant-specific session storage configuration.',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -507,8 +507,8 @@ export const CreateTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            description: 'Optional tenant-specific status list defaults.',
             type: 'object',
+            description: 'Optional tenant-specific status list defaults.',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -641,8 +641,8 @@ export const UpdateTenantDtoSchema = {
     type: 'object',
     properties: {
         name: {
-            description: 'Display name of the tenant.',
             type: 'string',
+            description: 'Display name of the tenant.',
             minLength: 1
         },
         description: {
@@ -658,8 +658,8 @@ export const UpdateTenantDtoSchema = {
             ]
         },
         sessionConfig: {
-            description: 'Optional tenant-specific session storage configuration.',
             type: 'object',
+            description: 'Optional tenant-specific session storage configuration.',
             properties: {
                 ttlSeconds: {
                     description: 'Session time-to-live in seconds.',
@@ -679,8 +679,8 @@ export const UpdateTenantDtoSchema = {
             additionalProperties: false
         },
         statusListConfig: {
-            description: 'Optional tenant-specific status list defaults.',
             type: 'object',
+            description: 'Optional tenant-specific status list defaults.',
             properties: {
                 capacity: {
                     description: 'Default status list capacity.',
@@ -829,14 +829,14 @@ export const UpdateClientDtoSchema = {
     type: 'object',
     properties: {
         description: {
-            description: 'Optional updated description.',
             type: 'string',
+            description: 'Optional updated description.',
             minLength: 1
         },
         roles: {
+            type: 'array',
             description: 'Optional replacement roles for the client.',
             minItems: 1,
-            type: 'array',
             items: {
                 type: 'string',
                 enum: [
@@ -896,18 +896,18 @@ export const CreateClientDtoSchema = {
             description: 'Unique client identifier.'
         },
         secret: {
-            description: 'Optional client secret for confidential clients.',
             type: 'string',
+            description: 'Optional client secret for confidential clients.',
             minLength: 1
         },
         description: {
-            description: 'Optional human-readable client description.',
             type: 'string',
+            description: 'Optional human-readable client description.',
             minLength: 1
         },
         roles: {
-            minItems: 1,
             type: 'array',
+            minItems: 1,
             items: {
                 type: 'string',
                 enum: [
@@ -1050,8 +1050,8 @@ export const CreateRegistrarConfigDtoSchema = {
             description: 'OAuth client ID used against the registrar.'
         },
         clientSecret: {
-            description: 'Optional OAuth client secret for registrar authentication.',
             type: 'string',
+            description: 'Optional OAuth client secret for registrar authentication.',
             minLength: 1
         },
         username: {
@@ -1109,8 +1109,8 @@ export const UpdateRegistrarConfigDtoSchema = {
             description: 'OAuth client ID used against the registrar.'
         },
         clientSecret: {
-            description: 'Optional OAuth client secret for registrar authentication.',
             type: 'string',
+            description: 'Optional OAuth client secret for registrar authentication.',
             minLength: 1
         },
         username: {
@@ -4054,8 +4054,8 @@ export const StatusUpdateDtoSchema = {
             description: 'Session identifier used to locate credentials for status updates.'
         },
         credentialConfigurationId: {
-            description: 'Optional credential configuration id. If omitted, all credentials linked to the session are updated.',
             type: 'string',
+            description: 'Optional credential configuration id. If omitted, all credentials linked to the session are updated.',
             minLength: 1
         },
         status: {
@@ -5094,11 +5094,11 @@ export const IssuerMetadataCredentialConfigSchema = {
             $ref: '#/components/schemas/CredentialReusePolicy'
         },
         format: {
+            type: 'string',
             enum: [
                 'mso_mdoc',
                 'dc+sd-jwt'
-            ],
-            type: 'string'
+            ]
         },
         display: {
             type: 'array',
@@ -5287,6 +5287,7 @@ export const KeyChainEntitySchema = {
             description: 'Human-readable description of the key chain.'
         },
         usageType: {
+            type: 'string',
             description: 'The purpose/role of this key chain in the system.',
             enum: [
                 'access',
@@ -5294,16 +5295,15 @@ export const KeyChainEntitySchema = {
                 'trustList',
                 'statusList',
                 'encrypt'
-            ],
-            type: 'string'
+            ]
         },
         usage: {
+            type: 'string',
             description: 'The usage type of the keys (sign or encrypt).',
             enum: [
                 'sign',
                 'encrypt'
-            ],
-            type: 'string'
+            ]
         },
         kmsProvider: {
             type: 'string',
@@ -5382,6 +5382,28 @@ export const KeyChainEntitySchema = {
         'createdAt',
         'updatedAt'
     ]
+} as const;
+
+export const ActiveCredentialPolicySchema = {
+    type: 'object',
+    properties: {
+        enabled: {
+            type: 'boolean',
+            description: 'Ensure a subject has at most one active credential of this configuration.'
+        },
+        tracking: {
+            type: 'string',
+            description: 'How the subject\'s active credential set is tracked. Only \'internal\' (pseudonymous, issuer-side) is currently supported.',
+            enum: [
+                'internal'
+            ]
+        }
+    },
+    required: [
+        'enabled'
+    ],
+    description: 'Issuer-side policy limiting the number of simultaneously active credentials per subject.',
+    additionalProperties: false
 } as const;
 
 export const CredentialConfigSchema = {
@@ -5503,6 +5525,16 @@ export const CredentialConfigSchema = {
         },
         statusManagement: {
             type: 'boolean'
+        },
+        activeCredentials: {
+            nullable: true,
+            description: 'Optional issuer-side policy limiting how many credentials of this\nconfiguration a subject may hold active at once. When enabled, issuing a\nnew credential to a subject revokes that subject\'s previously issued\ncredentials for this configuration.\n\nRequires `statusManagement`, since revocation relies on status entries.\n\nDistinct from `credentialReusePolicy` (issuer metadata published to\nwallets); this one is enforced by the issuer at issuance time.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ActiveCredentialPolicy'
+                }
+            ]
         },
         sdJwtTrustFormat: {
             nullable: true,
@@ -5628,6 +5660,16 @@ export const CredentialConfigCreateSchema = {
         statusManagement: {
             type: 'boolean'
         },
+        activeCredentials: {
+            nullable: true,
+            description: 'Optional issuer-side policy limiting how many credentials of this\nconfiguration a subject may hold active at once. When enabled, issuing a\nnew credential to a subject revokes that subject\'s previously issued\ncredentials for this configuration.\n\nRequires `statusManagement`, since revocation relies on status entries.\n\nDistinct from `credentialReusePolicy` (issuer metadata published to\nwallets); this one is enforced by the issuer at issuance time.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ActiveCredentialPolicy'
+                }
+            ]
+        },
         sdJwtTrustFormat: {
             nullable: true,
             description: 'For SD-JWT credentials: determines whether to include certificate chain (x5c)\nor use federation-based trust (iss claim).\nDefault: "x5c" (federation must be explicitly selected)',
@@ -5750,6 +5792,16 @@ export const CredentialConfigUpdateSchema = {
         },
         statusManagement: {
             type: 'boolean'
+        },
+        activeCredentials: {
+            nullable: true,
+            description: 'Optional issuer-side policy limiting how many credentials of this\nconfiguration a subject may hold active at once. When enabled, issuing a\nnew credential to a subject revokes that subject\'s previously issued\ncredentials for this configuration.\n\nRequires `statusManagement`, since revocation relies on status entries.\n\nDistinct from `credentialReusePolicy` (issuer metadata published to\nwallets); this one is enforced by the issuer at issuance time.',
+            type: 'object',
+            allOf: [
+                {
+                    $ref: '#/components/schemas/ActiveCredentialPolicy'
+                }
+            ]
         },
         sdJwtTrustFormat: {
             nullable: true,
@@ -6938,20 +6990,20 @@ export const PresentationConfigCreateDtoSchema = {
             ]
         },
         lifeTime: {
-            description: 'Presentation request lifetime in seconds.',
             type: 'integer',
+            description: 'Presentation request lifetime in seconds.',
             minimum: 1,
             maximum: 9007199254740991
         },
         skewSeconds: {
-            description: 'Clock skew tolerance in seconds.',
             type: 'integer',
+            description: 'Clock skew tolerance in seconds.',
             minimum: 0,
             maximum: 9007199254740991
         },
         statusCheckMode: {
-            description: 'Revocation/status check mode.',
             type: 'string',
+            description: 'Revocation/status check mode.',
             enum: [
                 'strict',
                 'best_effort',
@@ -7570,20 +7622,20 @@ export const PresentationConfigUpdateDtoSchema = {
             ]
         },
         lifeTime: {
-            description: 'Presentation request lifetime in seconds.',
             type: 'integer',
+            description: 'Presentation request lifetime in seconds.',
             minimum: 1,
             maximum: 9007199254740991
         },
         skewSeconds: {
-            description: 'Clock skew tolerance in seconds.',
             type: 'integer',
+            description: 'Clock skew tolerance in seconds.',
             minimum: 0,
             maximum: 9007199254740991
         },
         statusCheckMode: {
-            description: 'Revocation/status check mode.',
             type: 'string',
+            description: 'Revocation/status check mode.',
             enum: [
                 'strict',
                 'best_effort',

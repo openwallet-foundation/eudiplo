@@ -387,21 +387,13 @@ export const ActiveCredentialPolicySchema = z
         enabled: z
             .boolean()
             .describe(
-                "Enable limiting how many credentials of this configuration a subject may hold active at once.",
+                "Ensure a subject has at most one active credential of this configuration.",
             ),
         tracking: z
             .enum(["internal"])
             .optional()
             .describe(
                 "How the subject's active credential set is tracked. Only 'internal' (pseudonymous, issuer-side) is currently supported.",
-            ),
-        maxActive: z
-            .number()
-            .int()
-            .min(1)
-            .optional()
-            .describe(
-                "Maximum number of simultaneously active credentials per subject. Defaults to 1.",
             ),
     })
     .strict()
@@ -500,9 +492,11 @@ export const CredentialConfigCreateSchema = z
             .boolean()
             .optional()
             .describe("Enable status management for issued credentials."),
-        activeCredentials: ActiveCredentialPolicySchema.optional().describe(
-            "Optional issuer-side policy limiting simultaneously active credentials per subject. Requires statusManagement.",
-        ),
+        activeCredentials: ActiveCredentialPolicySchema.nullable()
+            .optional()
+            .describe(
+                "Optional issuer-side policy limiting simultaneously active credentials per subject. Requires statusManagement.",
+            ),
         iaeActions: z
             .array(IaeActionSchema)
             .nullable()
@@ -526,5 +520,15 @@ export const CredentialConfigCreateSchema = z
             .optional()
             .describe("Optional embedded disclosure policy."),
     })
-    .describe("Payload for creating credential issuance configuration.")
-    .strict();
+    .strict()
+    .superRefine((value, context) => {
+        if (value.activeCredentials?.enabled && !value.statusManagement) {
+            context.addIssue({
+                code: "custom",
+                path: ["statusManagement"],
+                message:
+                    "statusManagement must be enabled when activeCredentials is enabled.",
+            });
+        }
+    })
+    .describe("Payload for creating credential issuance configuration.");

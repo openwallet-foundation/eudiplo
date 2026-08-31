@@ -23,6 +23,8 @@ const TENANT = "tenant-1";
 const CONFIG_ID = "pid";
 const STATUS_VALID = 0;
 const STATUS_REVOKED = 1;
+const TOKEN_A = "token-a";
+const TOKEN_B = "token-b";
 
 function makeSession(overrides: Record<string, unknown> = {}) {
     return {
@@ -127,6 +129,7 @@ describe("StatusListService active-credential limit", () => {
             makeSession(),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
 
         const slots = await dataSource
@@ -146,11 +149,13 @@ describe("StatusListService active-credential limit", () => {
             makeSession(),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
         const second = await service.createEntry(
             makeSession(),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_B,
         );
 
         expect(await statusAt(first.status.status_list.idx)).toBe(
@@ -166,16 +171,44 @@ describe("StatusListService active-credential limit", () => {
         ).toBe(1);
     });
 
+    test("repeated credential endpoint calls with one token keep the batch active", async () => {
+        const session = makeSession({ id: "session-batch" });
+        const first = await service.createEntry(
+            session,
+            CONFIG_ID,
+            makeConfig(),
+            TOKEN_A,
+        );
+        const second = await service.createEntry(
+            session,
+            CONFIG_ID,
+            makeConfig(),
+            TOKEN_A,
+        );
+
+        expect(await statusAt(first.status.status_list.idx)).toBe(STATUS_VALID);
+        expect(await statusAt(second.status.status_list.idx)).toBe(STATUS_VALID);
+        expect(
+            await dataSource.getRepository(ActiveCredentialSlot).findOneByOrFail({
+                tenantId: TENANT,
+                credentialConfigurationId: CONFIG_ID,
+                subjectScopedKey: `sk:${TENANT}:${CONFIG_ID}:https://as.example.com:user-123`,
+            }),
+        ).toMatchObject({ issuanceSetId: TOKEN_A });
+    });
+
     test("a different subject is unaffected", async () => {
         const userA = await service.createEntry(
             makeSession({ externalSubject: "user-A" }),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
         const userB = await service.createEntry(
             makeSession({ externalSubject: "user-B" }),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
 
         expect(await statusAt(userA.status.status_list.idx)).toBe(STATUS_VALID);
@@ -228,6 +261,7 @@ describe("StatusListService active-credential limit", () => {
             session,
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
 
         expect(
@@ -269,6 +303,7 @@ describe("StatusListService active-credential limit", () => {
             makeSession(),
             CONFIG_ID,
             makeConfig(),
+            TOKEN_A,
         );
 
         // Exhaust the list so the next allocation cannot succeed.

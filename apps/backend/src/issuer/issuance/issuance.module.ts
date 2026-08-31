@@ -10,6 +10,7 @@ import { PresentationsModule } from "../../verifier/presentations/presentations.
 import { WebhookModule } from "../../webhook/webhook.module";
 import { ConfigurationModule } from "../configuration/configuration.module";
 import { WebhookEndpointEntity } from "../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
+import { StatusListModule } from "../status-list/status-list.module";
 import { CredentialOfferController } from "./offer/credential-offer.controller";
 import { AuthorizationModule } from "./oid4vci/authorization/authorization.module";
 import { DeferredController } from "./oid4vci/deferred.controller";
@@ -42,6 +43,7 @@ import { WellKnownService } from "./oid4vci/well-known/well-known.service";
         HttpModule,
         TrustModule,
         WebhookModule,
+        StatusListModule,
         AuthorizationModule,
         RegistrarModule,
         TypeOrmModule.forFeature([

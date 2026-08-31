@@ -31,10 +31,14 @@ import {
 @Injectable()
 export class SubjectKeyService {
     private static readonly HKDF_INFO = "eudiplo-active-credential-subject-key";
+    private static readonly ISSUANCE_SET_HKDF_INFO =
+        "eudiplo-active-credential-issuance-set";
     private static readonly HKDF_KEY_LENGTH = 32;
 
     private hmacKey: Buffer | null = null;
     private hmacKeyPromise: Promise<Buffer> | null = null;
+    private issuanceSetHmacKey: Buffer | null = null;
+    private issuanceSetHmacKeyPromise: Promise<Buffer> | null = null;
     private readonly logger = new Logger(SubjectKeyService.name);
 
     constructor(
@@ -72,6 +76,17 @@ export class SubjectKeyService {
     }
 
     /**
+     * Derive an opaque identifier for all credential requests authorized by the
+     * same access token. This is separate from the subject key so a stored
+     * issuance set cannot be used to test candidate tokens with the subject-key
+     * HMAC secret.
+     */
+    async deriveIssuanceSetId(accessToken: string): Promise<string> {
+        const key = await this.getIssuanceSetHmacKey();
+        return createHmac("sha256", key).update(accessToken).digest("hex");
+    }
+
+    /**
      * Lazily derive and cache the HMAC key for this process.
      */
     private async getHmacKey(): Promise<Buffer> {
@@ -79,15 +94,30 @@ export class SubjectKeyService {
             return this.hmacKey;
         }
 
-        if (!this.hmacKeyPromise) {
-            this.hmacKeyPromise = this.deriveHmacKey();
-        }
+        this.hmacKeyPromise ??= this.deriveHmacKey();
 
         this.hmacKey = await this.hmacKeyPromise;
         return this.hmacKey;
     }
 
     private async deriveHmacKey(): Promise<Buffer> {
+        return this.deriveKey(SubjectKeyService.HKDF_INFO);
+    }
+
+    private async getIssuanceSetHmacKey(): Promise<Buffer> {
+        if (this.issuanceSetHmacKey) {
+            return this.issuanceSetHmacKey;
+        }
+
+        this.issuanceSetHmacKeyPromise ??= this.deriveKey(
+            SubjectKeyService.ISSUANCE_SET_HKDF_INFO,
+        );
+
+        this.issuanceSetHmacKey = await this.issuanceSetHmacKeyPromise;
+        return this.issuanceSetHmacKey;
+    }
+
+    private async deriveKey(info: string): Promise<Buffer> {
         this.logger.log(
             `Deriving subject-key HMAC secret via provider: ${this.keyProvider.name}`,
         );
@@ -99,7 +129,7 @@ export class SubjectKeyService {
                 "sha256",
                 rootKey,
                 "",
-                SubjectKeyService.HKDF_INFO,
+                info,
                 SubjectKeyService.HKDF_KEY_LENGTH,
             ),
         );
