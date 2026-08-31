@@ -327,7 +327,7 @@ const CredentialReusePolicyOptionSchema = z
             option.batch_size === undefined
         ) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["batch_size"],
                 message: "batch_size is required for this reuse policy",
             });
@@ -335,7 +335,7 @@ const CredentialReusePolicyOptionSchema = z
         if (details.has("once_only")) {
             if (option.reissue_trigger_unused === undefined) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["reissue_trigger_unused"],
                     message: "reissue_trigger_unused is required for once_only",
                 });
@@ -344,7 +344,7 @@ const CredentialReusePolicyOptionSchema = z
                 option.reissue_trigger_unused >= option.batch_size
             ) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["reissue_trigger_unused"],
                     message: "must be lower than batch_size",
                 });
@@ -358,7 +358,7 @@ const CredentialReusePolicyOptionSchema = z
             option.reissue_trigger_lifetime_left === undefined
         ) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["reissue_trigger_lifetime_left"],
                 message:
                     "reissue_trigger_lifetime_left is required for this reuse policy",
@@ -375,7 +375,7 @@ export const CredentialReusePolicySchema = z
     .superRefine((policy, context) => {
         if (policy.id === "arf_annex_ii" && !policy.options) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["options"],
                 message: "options is required for arf_annex_ii",
             });
