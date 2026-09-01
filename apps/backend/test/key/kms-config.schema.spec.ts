@@ -357,7 +357,8 @@ describe("KMS Zod schemas", () => {
             true,
         );
 
-        const ajv = new Ajv({ strict: true });
+        // allowUnionTypes: zod emits `type: [..]` arrays for unions of primitives.
+        const ajv = new Ajv({ strict: true, allowUnionTypes: true });
         ajv.addFormat("uri", {
             type: "string",
             validate: (value: string) => {

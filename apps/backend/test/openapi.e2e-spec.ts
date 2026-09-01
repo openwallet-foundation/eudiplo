@@ -73,9 +73,10 @@ describe("OpenAPI contract", () => {
         expect(updateTenantSchema.properties.name.default).toBeUndefined();
         expect(updateTenantSchema.properties.roles).toBeUndefined();
         expect(updateTenantSchema.properties.id).toBeUndefined();
-        expect(tenantResponseSchema.properties.description).toMatchObject({
-            nullable: true,
-        });
+        // OpenAPI 3.1 encodes nullability in the type array, not `nullable: true`.
+        expect(tenantResponseSchema.properties.description.type).toEqual(
+            expect.arrayContaining(["null"]),
+        );
     });
 
     test("documents key JSON, form, binary, SSE, and no-content responses", () => {

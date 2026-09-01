@@ -50,7 +50,7 @@ const otelSDK = new NodeSDK({
     ],
 });
 
-export default otelSDK;
+export { otelSDK };
 
 process.on("SIGTERM", () => {
     otelSDK

@@ -1,6 +1,10 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        // Emit stays CommonJS (no "type": "module" in package.json); nodenext is
+        // required to resolve the ESM-only NestJS 12 packages via require(esm).
+        "module": "nodenext",
+        "moduleResolution": "nodenext",
+        "resolvePackageJsonExports": true,
         "rootDir": "src",
         "declaration": true,
         "removeComments": true,
