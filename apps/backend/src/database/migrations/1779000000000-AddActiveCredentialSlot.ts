@@ -33,6 +33,15 @@ export class AddActiveCredentialSlot1779000000000
         const dbType = queryRunner.dataSource.options.type;
         const isSqlite = dbType === "better-sqlite3";
 
+        // Fresh install: tenant_entity doesn't exist yet, so the FK target is
+        // missing. Skip entirely and let TypeORM synchronize create the schema.
+        if (!(await queryRunner.hasTable("tenant_entity"))) {
+            console.log(
+                `[Migration] Fresh database detected. Skipping ${this.slotTable} creation.`,
+            );
+            return;
+        }
+
         if (!(await queryRunner.hasTable(this.slotTable))) {
             await queryRunner.createTable(
                 new Table({
