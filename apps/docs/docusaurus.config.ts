@@ -125,13 +125,13 @@ const config: Config = {
 
   themeConfig: {
     image: 'img/eudiplo.png',
-    algolia: {
+    // Consumed client-side by src/theme/Root.tsx and src/theme/SearchBar
+    // to configure the DocSearch + Ask AI widgets (@docsearch/* v5).
+    docSearchAskAi: {
       appId: process.env.ALGOLIA_APP_ID || 'YOUR_APP_ID',
       apiKey: process.env.ALGOLIA_SEARCH_API_KEY || 'YOUR_SEARCH_API_KEY',
-      indexName: process.env.ALGOLIA_INDEX_NAME || 'eudiplo',
-      contextualSearch: true,
-      searchParameters: {},
-      insights: false,
+      indices: [process.env.ALGOLIA_INDEX_NAME || 'Docs'],
+      agentId: process.env.DOCSEARCH_AGENT_ID || 'YOUR_AGENT_ID',
     },
     colorMode: {
       respectPrefersColorScheme: true,
