@@ -315,17 +315,13 @@
                 ]
               },
               "slot": {
-                "anyOf": [
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "string"
-                  }
-                ],
                 "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
                 "examples": [
                   "${PKCS11_SLOT}"
+                ],
+                "type": [
+                  "number",
+                  "string"
                 ]
               },
               "pin": {

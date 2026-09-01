@@ -9,13 +9,9 @@
     },
     "description": {
       "description": "Optional presentation configuration description.",
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "lifeTime": {
@@ -189,13 +185,9 @@
                         "path": {
                           "type": "array",
                           "items": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              }
+                            "type": [
+                              "string",
+                              "number"
                             ]
                           },
                           "description": "Path to the claim value in presented credentials."
@@ -361,13 +353,9 @@
                         "path": {
                           "type": "array",
                           "items": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              }
+                            "type": [
+                              "string",
+                              "number"
                             ]
                           },
                           "description": "Path to the claim value in presented credentials."
@@ -546,13 +534,9 @@
     },
     "webhookEndpointId": {
       "description": "Optional webhook endpoint id for presentation callbacks.",
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "attached": {
@@ -592,35 +576,23 @@
     },
     "redirectUri": {
       "description": "Optional redirect URI after presentation completion.",
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "accessKeyChainId": {
       "description": "Optional key chain id for access token/auth operations.",
-      "anyOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "string",
+        "null"
       ]
     },
     "readerAuth": {
       "description": "Whether reader authentication is required for mDoc requests.",
-      "anyOf": [
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "null"
-        }
+      "type": [
+        "boolean",
+        "null"
       ]
     }
   },
