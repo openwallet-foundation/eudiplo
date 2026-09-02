@@ -6930,14 +6930,7 @@
         },
         "description": {
           "description": "Optional description for operators and tooling.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "config": {
           "type": "object",
@@ -7108,25 +7101,11 @@
         },
         "attributeProviderId": {
           "description": "Optional attribute provider id used to resolve claim values.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "webhookEndpointId": {
           "description": "Optional webhook endpoint id notified during issuance events.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "vct": {
           "description": "Optional VCT value or structured VCT metadata.",
@@ -7519,17 +7498,7 @@
             "path": {
               "type": "array",
               "items": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "number"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": ["string", "number", "null"]
               },
               "description": "Path to this claim inside the credential payload."
             },
@@ -7748,14 +7717,7 @@
                         "path": {
                           "type": "array",
                           "items": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              }
-                            ]
+                            "type": ["string", "number"]
                           },
                           "description": "Path to the claim value in presented credentials."
                         },
@@ -7906,14 +7868,7 @@
                         "path": {
                           "type": "array",
                           "items": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "number"
-                              }
-                            ]
+                            "type": ["string", "number"]
                           },
                           "description": "Path to the claim value in presented credentials."
                         },
@@ -9511,16 +9466,9 @@
                     "examples": ["${PKCS11_LIBRARY}"]
                   },
                   "slot": {
-                    "anyOf": [
-                      {
-                        "type": "number"
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ],
                     "description": "Slot selection. Either the numeric slot index (as a string for ENV interpolation, or a number) or the token label. Supports ${ENV_VAR} placeholders.",
-                    "examples": ["${PKCS11_SLOT}"]
+                    "examples": ["${PKCS11_SLOT}"],
+                    "type": ["number", "string"]
                   },
                   "pin": {
                     "anyOf": [
@@ -10087,14 +10035,7 @@
         },
         "description": {
           "description": "Optional presentation configuration description.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "lifeTime": {
           "description": "Presentation request lifetime in seconds.",
@@ -10255,14 +10196,7 @@
                             "path": {
                               "type": "array",
                               "items": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
+                                "type": ["string", "number"]
                               },
                               "description": "Path to the claim value in presented credentials."
                             },
@@ -10413,14 +10347,7 @@
                             "path": {
                               "type": "array",
                               "items": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "number"
-                                  }
-                                ]
+                                "type": ["string", "number"]
                               },
                               "description": "Path to the claim value in presented credentials."
                             },
@@ -10660,14 +10587,7 @@
         },
         "webhookEndpointId": {
           "description": "Optional webhook endpoint id for presentation callbacks.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "attached": {
           "description": "Optional attachments included with presentation requests.",
@@ -10703,36 +10623,15 @@
         },
         "redirectUri": {
           "description": "Optional redirect URI after presentation completion.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "accessKeyChainId": {
           "description": "Optional key chain id for access token/auth operations.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "readerAuth": {
           "description": "Whether reader authentication is required for mDoc requests.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["boolean", "null"]
         }
       },
       "required": ["id", "dcql_query"],
@@ -11580,25 +11479,11 @@
         },
         "immediateUpdate": {
           "description": "Immediate regeneration toggle. Set null to reset.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["boolean", "null"]
         },
         "enableAggregation": {
           "description": "Aggregation URI toggle. Set null to reset.",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["boolean", "null"]
         }
       },
       "additionalProperties": false,

@@ -93,7 +93,7 @@ async function bootstrap() {
     // instrumentations must be registered before any framework code runs.
     // During DOC_GENERATE we skip OTel bootstrap entirely.
     if (!process.env.DOC_GENERATE) {
-        const { default: otelSDK } = await import("./tracing");
+        const { otelSDK } = await import("./tracing.js");
         await otelSDK.start();
     }
 

@@ -5,6 +5,15 @@ packages:
 publicHoistPattern:
   - '*'
 
+# The @nestjs/swagger CLI plugin imports the TypeScript compiler API, but does not
+# declare typescript itself. Without this it resolves the hoisted typescript 7 (the
+# native port, which exposes no compiler API) and the CLI reports the plugin as
+# incompatible. Pin it to the TypeScript 6 the backend and @nestjs/cli use.
+packageExtensions:
+  '@nestjs/swagger':
+    peerDependencies:
+      typescript: '^6.0.0'
+
 allowBuilds:
   '@compodoc/compodoc': true
   '@nestjs/core': true
