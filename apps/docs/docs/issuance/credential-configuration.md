@@ -34,6 +34,7 @@ The data object for the import can be found in the [API Documentation](../refere
 - `keyChainId`: **OPTIONAL** - Unique identifier for the key chain used to sign the credential. If not provided, the key chain with `attestation` usage type will be used. See [Signing Key Chain](#signing-key-chain) for details.
 - `lifeTime`: **OPTIONAL** - Credential expiration time in seconds. If specified, credentials will include an `exp` claim calculated as `iat + lifeTime`. See [Credential Expiration](#credential-expiration) for details.
 - `statusManagement`: **OPTIONAL** - Enable OAuth Token Status Lists for credential revocation. When `true`, credentials include a `status` claim with revocation information. See [Status Management](status-management.md) for details.
+- `activeCredentials`: **OPTIONAL** - Enforce one active credential of this configuration per subject. Requires `statusManagement: true`; issuing a replacement revokes the subject's previous credential. See [Single Active Credential](#single-active-credential) for details.
 - `keyBinding`: **OPTIONAL** - Enable cryptographic key binding. When `true`, credentials include a `cnf` claim with the holder's public key and require proof of possession. See [Cryptographic Key Binding](#cryptographic-key-binding) for details.
 - `fields`: **REQUIRED** - Field definitions (`ClaimFieldDefinition[]`) that describe claim paths, data types, defaults, disclosure behavior, and optional display labels.
 - `attributeProviderId`: **OPTIONAL** - Reference to an Attribute Provider that fetches claims dynamically. See [Attribute Providers](attribute-provider.md) for details.
@@ -225,6 +226,61 @@ When `keyBinding` is enabled, EUDIPLO:
 ## Credential Reuse Policy
 
 The `credentialReusePolicy` field publishes policy information in the credential metadata about whether and how the credential can be reused.
+
+## Single Active Credential
+
+Use `activeCredentials` when a credential should behave as a replaceable current record rather than a collection of independently valid copies. Typical uses include a current employee badge, a credential reissued after changed claims, or a replacement for a lost or compromised credential.
+
+The policy permits one active credential issuance per subject and credential configuration. When the same subject starts a new issuance, EUDIPLO creates the replacement first and then revokes every credential from the previously active issuance. Credentials under other configurations are unaffected.
+
+All credential responses authorized by the same access token remain active together. This includes multiple proofs in one credential request and multiple credential-endpoint requests made by a wallet to collect a batch. For example, if a wallet retrieves 40 credentials in four requests of 10, EUDIPLO revokes neither the earlier requests nor individual credentials in that batch. Revocation occurs when a different access token for the same subject and credential configuration successfully issues its first credential.
+
+```json
+{
+    "statusManagement": true,
+    "activeCredentials": {
+        "enabled": true,
+        "tracking": "internal"
+    }
+}
+```
+
+### Requirements and Limitations
+
+- The policy requires `statusManagement: true`; EUDIPLO rejects a configuration that enables the policy without it.
+- The issuing authorization server must provide a durable, stable `iss` and `sub` for each person. The policy is not enforced when the flow has no durable external subject, such as a session-scoped subject from the built-in authorization server.
+- The same person authenticating through a different authorization server, or with a changed subject identifier, is treated as a different subject and can receive another active credential.
+- This is a one-active-credential policy. Configurations cannot set a higher active-credential limit.
+- A refreshed, renewed, or otherwise replaced access token starts a new issuance set. The first credential issued with it revokes the credentials issued with the prior token for this configuration.
+- The encryption root key must remain available and stable while active credentials exist. Replacing it changes the derived fingerprints and prevents EUDIPLO from locating previous active slots.
+
+EUDIPLO stores a pseudonymous, configuration-scoped HMAC derived from the external subject instead of the raw subject identifier. This prevents the stored value from being reused to correlate the same person across credential configurations, but it still lets EUDIPLO recognize a returning subject for this policy.
+
+### Fingerprints and Revocation Procedure
+
+EUDIPLO derives two independent, opaque identifiers from the root key used for at-rest encryption. It derives separate 32-byte HMAC keys with HKDF-SHA-256 and distinct purpose strings, then stores only the hexadecimal HMAC digest. Neither the raw subject nor the raw access token is written to the database.
+
+- **Subject key:** `HMAC-SHA-256(subject-key, tenantId + "|" + credentialConfigurationId + "|" + iss + "|" + sub)`. This identifies the same subject for one credential configuration without allowing correlation across configurations.
+- **Issuance-set key:** `HMAC-SHA-256(issuance-set-key, accessToken)`. This identifies credential requests authorized by the same access token. It uses a different HKDF-derived key from the subject key.
+
+For each credential request, EUDIPLO performs the following procedure:
+
+1. It validates the access token and obtains the external authorization identity (`iss` and `sub`).
+2. It derives the subject key and access-token issuance-set key in memory.
+3. It allocates and records the new credential's status-list entry with the issuance-set key.
+4. If no active slot exists for the subject key, EUDIPLO creates one pointing to this issuance set.
+5. If the slot already points to the same issuance-set key, the request belongs to the existing batch and no revocation occurs.
+6. If the slot points to a different issuance-set key, EUDIPLO moves the slot to the new set and revokes every status-list entry associated with the previous set.
+
+The slot update is protected by a unique constraint and optimistic version check so concurrent first requests converge on one active issuance set. The new status entry is allocated before the prior set is revoked, so an allocation failure does not revoke the holder's currently active credential.
+
+For deferred issuance, EUDIPLO persists only the opaque issuance-set key with the deferred transaction. When the credential is completed later, it uses that same key so deferred credentials remain part of the access token's original batch.
+
+### Operational Considerations
+
+Enable this policy only when invalidating the prior credential is the desired business outcome. A new access token that issues a credential immediately makes credentials issued with the previous token revoked, which can interrupt a holder who is still using them. An access token must remain bound to one holder; sharing a token causes the issuances it authorizes to be treated as one batch.
+
+Revocation takes effect for relying parties that check the credential's OAuth Token Status List. A verifier operating offline, using cached status information, or not checking status at all can continue accepting a replaced credential until it refreshes the status list or changes its verification policy. See [Status Management](status-management.md) for cache and update behavior.
 
 ## Embedded Disclosure Policy
 

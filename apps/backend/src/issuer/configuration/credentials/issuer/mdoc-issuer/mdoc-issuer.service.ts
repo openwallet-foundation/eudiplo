@@ -23,6 +23,7 @@ export interface MdocIssueOptions {
     deviceKey: Jwk;
     session: Session;
     claims: Record<string, any>;
+    issuanceSetId?: string;
 }
 
 /**
@@ -44,7 +45,13 @@ export class MdocIssuerService {
      * @returns The issued mDOC credential as base64url encoded string for OID4VCI
      */
     async issue(options: MdocIssueOptions): Promise<string> {
-        const { credentialConfiguration, deviceKey, session, claims } = options;
+        const {
+            credentialConfiguration,
+            deviceKey,
+            session,
+            claims,
+            issuanceSetId,
+        } = options;
 
         // Get the docType from the credential configuration
         // Support both docType (camelCase) and doctype (lowercase per OID4VCI spec)
@@ -136,6 +143,8 @@ export class MdocIssuerService {
             const statusPayload = await this.statusListService.createEntry(
                 session,
                 credentialConfiguration.id,
+                credentialConfiguration,
+                issuanceSetId,
             );
             const statusList = statusPayload.status?.status_list;
             if (statusList) {

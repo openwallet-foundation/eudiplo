@@ -67,6 +67,7 @@ import {
 import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-config.entity";
 import { IssuanceService } from "../../configuration/issuance/issuance.service";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
+import { SubjectKeyService } from "../../status-list/subject-key.service";
 import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
 import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service";
 import { AuthorizeService } from "./authorization/authorize/authorize.service";
@@ -169,6 +170,7 @@ export class Oid4vciService {
         private readonly webhookEndpointRepo: Repository<WebhookEndpointEntity>,
         private readonly encryptionService: EncryptionService,
         private readonly nonceService: NonceService,
+        private readonly subjectKeyService: SubjectKeyService,
     ) {}
 
     /**
@@ -1451,6 +1453,7 @@ export class Oid4vciService {
         claimsResult: ClaimsWebhookResult | undefined,
         logContext: AuditLogContext,
         issuanceConfig: IssuanceConfig,
+        issuanceSetId: string,
     ): Promise<{ credential: string }[]> {
         const credentials: { credential: string }[] = [];
 
@@ -1474,6 +1477,7 @@ export class Oid4vciService {
                     cnf,
                     session,
                     claimsResult?.claims,
+                    issuanceSetId,
                 );
 
                 credentials.push({ credential: cred });
@@ -1526,6 +1530,7 @@ export class Oid4vciService {
                 cnf,
                 session,
                 claimsResult?.claims,
+                issuanceSetId,
             );
 
             credentials.push({ credential: cred });
@@ -1541,6 +1546,21 @@ export class Oid4vciService {
         }
 
         return credentials;
+    }
+
+    private async deriveIssuanceSetId(req: Request): Promise<string> {
+        const authorization = req.headers.authorization;
+        const header = Array.isArray(authorization)
+            ? authorization[0]
+            : authorization;
+        const accessToken = header?.trim().split(/\s+/, 2)[1];
+        if (!accessToken) {
+            throw new CredentialRequestException(
+                "invalid_credential_request",
+                "Credential request is missing an access token",
+            );
+        }
+        return this.subjectKeyService.deriveIssuanceSetId(accessToken);
     }
 
     /**
@@ -1810,6 +1830,7 @@ export class Oid4vciService {
             issuerMetadata,
             issuanceConfig,
         );
+        const issuanceSetId = await this.deriveIssuanceSetId(req);
 
         // Resolve credentialConfigurationId from either:
         //  - credential_identifier (OID4VCI Final Section 8.2): look it up in the
@@ -1916,6 +1937,7 @@ export class Oid4vciService {
                         tenantId,
                         interval: claimsResult.interval,
                         issuerMetadata,
+                        issuanceSetId,
                     },
                 );
             }
@@ -1939,6 +1961,7 @@ export class Oid4vciService {
                 claimsResult,
                 logContext,
                 issuanceConfig,
+                issuanceSetId,
             );
 
             // Update session with notification

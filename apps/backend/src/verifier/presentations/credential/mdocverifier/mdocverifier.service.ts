@@ -11,6 +11,7 @@ import {
 import * as x509 from "@peculiar/x509";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
+import { VerificationProvenance } from "../../../../session/entities/session-outcome";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
@@ -25,6 +26,7 @@ import {
     mapChainErrorToFailureType,
     type VerificationFailureType,
 } from "../verification-failure";
+import { toProvenance } from "../verification-provenance";
 
 /**
  * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).
@@ -74,6 +76,8 @@ export type MdocVerificationResult = {
     docType?: string;
     failureType?: VerificationFailureType;
     failureReason?: string;
+    /** Trust provenance for a successful verification. */
+    provenance?: VerificationProvenance;
 };
 
 /**
@@ -346,6 +350,7 @@ export class MdocverifierService {
                 claims,
                 payload: vp,
                 docType,
+                provenance: toProvenance(chainResult.matchedEntity),
             };
         } catch (error: any) {
             return this.handleVerificationError(vp, error, options);

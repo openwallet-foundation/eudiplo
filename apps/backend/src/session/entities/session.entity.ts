@@ -19,6 +19,7 @@ import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request
 import { EncryptedJsonTransformer } from "../../platform/data-encryption";
 import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
 import { WebhookConfig } from "../../webhook/webhook.dto";
+import { SessionOutcome } from "./session-outcome";
 
 export enum SessionStatus {
     Active = "active",
@@ -303,6 +304,22 @@ export class Session {
      */
     @Column("text", { nullable: true })
     errorReason?: string;
+
+    /**
+     * Machine-readable failure code when status is 'failed' (e.g.
+     * `trust_chain_not_trusted`). Stable across credential and trust-list
+     * formats; consumers branch on this rather than parsing {@link errorReason}.
+     */
+    @Column("varchar", { nullable: true })
+    failureCode?: string;
+
+    /**
+     * Structured verification outcome (success or failure, provenance and
+     * diagnostics, per credential). Additive to {@link status} /
+     * {@link errorReason}; verbose detail stays in the session log only.
+     */
+    @Column("json", { nullable: true })
+    outcome?: SessionOutcome | null;
 
     /**
      * Number of failed tx_code (transaction code) validation attempts.

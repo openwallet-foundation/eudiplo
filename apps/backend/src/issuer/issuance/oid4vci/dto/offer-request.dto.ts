@@ -84,7 +84,7 @@ const OfferRequestSchema = z
 
         if (invalidKeys.length > 0) {
             ctx.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["credentialClaims"],
                 message: `credentialClaims contains keys [${invalidKeys.join(", ")}] that are not in credentialConfigurationIds [${data.credentialConfigurationIds.join(", ")}]`,
             });

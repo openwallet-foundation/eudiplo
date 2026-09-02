@@ -327,7 +327,7 @@ const CredentialReusePolicyOptionSchema = z
             option.batch_size === undefined
         ) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["batch_size"],
                 message: "batch_size is required for this reuse policy",
             });
@@ -335,7 +335,7 @@ const CredentialReusePolicyOptionSchema = z
         if (details.has("once_only")) {
             if (option.reissue_trigger_unused === undefined) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["reissue_trigger_unused"],
                     message: "reissue_trigger_unused is required for once_only",
                 });
@@ -344,7 +344,7 @@ const CredentialReusePolicyOptionSchema = z
                 option.reissue_trigger_unused >= option.batch_size
             ) {
                 context.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["reissue_trigger_unused"],
                     message: "must be lower than batch_size",
                 });
@@ -358,7 +358,7 @@ const CredentialReusePolicyOptionSchema = z
             option.reissue_trigger_lifetime_left === undefined
         ) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["reissue_trigger_lifetime_left"],
                 message:
                     "reissue_trigger_lifetime_left is required for this reuse policy",
@@ -375,12 +375,31 @@ export const CredentialReusePolicySchema = z
     .superRefine((policy, context) => {
         if (policy.id === "arf_annex_ii" && !policy.options) {
             context.addIssue({
-                code: z.ZodIssueCode.custom,
+                code: "custom",
                 path: ["options"],
                 message: "options is required for arf_annex_ii",
             });
         }
     });
+
+export const ActiveCredentialPolicySchema = z
+    .object({
+        enabled: z
+            .boolean()
+            .describe(
+                "Ensure a subject has at most one active credential of this configuration.",
+            ),
+        tracking: z
+            .enum(["internal"])
+            .optional()
+            .describe(
+                "How the subject's active credential set is tracked. Only 'internal' (pseudonymous, issuer-side) is currently supported.",
+            ),
+    })
+    .strict()
+    .describe(
+        "Issuer-side policy limiting the number of simultaneously active credentials per subject.",
+    );
 
 const IssuerMetadataCredentialConfigSchema = z
     .object({
@@ -473,6 +492,11 @@ export const CredentialConfigCreateSchema = z
             .boolean()
             .optional()
             .describe("Enable status management for issued credentials."),
+        activeCredentials: ActiveCredentialPolicySchema.nullable()
+            .optional()
+            .describe(
+                "Optional issuer-side policy limiting simultaneously active credentials per subject. Requires statusManagement.",
+            ),
         iaeActions: z
             .array(IaeActionSchema)
             .nullable()
@@ -496,5 +520,15 @@ export const CredentialConfigCreateSchema = z
             .optional()
             .describe("Optional embedded disclosure policy."),
     })
-    .describe("Payload for creating credential issuance configuration.")
-    .strict();
+    .strict()
+    .superRefine((value, context) => {
+        if (value.activeCredentials?.enabled && !value.statusManagement) {
+            context.addIssue({
+                code: "custom",
+                path: ["statusManagement"],
+                message:
+                    "statusManagement must be enabled when activeCredentials is enabled.",
+            });
+        }
+    })
+    .describe("Payload for creating credential issuance configuration.");

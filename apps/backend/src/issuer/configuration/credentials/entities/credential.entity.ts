@@ -12,6 +12,7 @@ import { VCT } from "../../../issuance/oid4vci/metadata/dto/vct.dto";
 import { AttributeProviderEntity } from "../../attribute-provider/entities/attribute-provider.entity";
 import { KeyAttestationsRequired } from "../../issuance/dto/key-attestations-required.dto";
 import { WebhookEndpointEntity } from "../../webhook-endpoint/entities/webhook-endpoint.entity";
+import { ActiveCredentialPolicy } from "../dto/active-credential-policy.dto";
 import { ClaimFieldDefinitionDto } from "../dto/claim-field-definition.dto";
 import { CredentialReusePolicy } from "../dto/credential-reuse-policy.dto";
 import { SchemaMetaConfig } from "../dto/schema-meta-config.dto";
@@ -197,6 +198,20 @@ export class CredentialConfig {
 
     @Column("boolean", { default: false })
     statusManagement?: boolean;
+
+    /**
+     * Optional issuer-side policy limiting how many credentials of this
+     * configuration a subject may hold active at once. When enabled, issuing a
+     * new credential to a subject revokes that subject's previously issued
+     * credentials for this configuration.
+     *
+     * Requires `statusManagement`, since revocation relies on status entries.
+     *
+     * Distinct from `credentialReusePolicy` (issuer metadata published to
+     * wallets); this one is enforced by the issuer at issuance time.
+     */
+    @Column("json", { nullable: true })
+    activeCredentials?: ActiveCredentialPolicy | null;
 
     /**
      * List of Interactive Authorization Endpoint (IAE) actions to execute

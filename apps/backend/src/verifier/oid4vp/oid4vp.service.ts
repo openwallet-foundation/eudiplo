@@ -690,6 +690,16 @@ export class Oid4vpService {
                 responseCode,
                 consumed: true,
                 consumedAt: new Date(),
+                // Per-credential provenance for the OID4VP path is threaded in a
+                // follow-up (see finding 2026-07-21-structured-session-outcome,
+                // Phase 2); record the success result for now.
+                outcome: {
+                    result: "success",
+                    credentials: (credentials ?? []).map((c: any) => ({
+                        id: typeof c?.id === "string" ? c.id : undefined,
+                        verified: true,
+                    })),
+                },
             });
             // if there a a webhook passed in the session, use it
             if (webhook) {
@@ -786,6 +796,21 @@ export class Oid4vpService {
             await this.sessionService.add(session.id, {
                 status: SessionStatus.Failed,
                 errorReason: errorMessage,
+                ...(structured?.code
+                    ? {
+                          failureCode: structured.code,
+                          outcome: {
+                              result: "failed" as const,
+                              error: structured.code,
+                              message: errorMessage,
+                          },
+                      }
+                    : {
+                          outcome: {
+                              result: "failed" as const,
+                              message: errorMessage,
+                          },
+                      }),
             });
 
             // If redirect_uri is configured, return it with error parameter,

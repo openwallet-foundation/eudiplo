@@ -525,6 +525,7 @@ export class CredentialsService {
      * @param holderCnf
      * @param session
      * @param preloadedClaims Optional claims fetched from webhook (to avoid redundant calls in batch)
+     * @param issuanceSetId Opaque identifier grouping credentials issued with one access token
      * @returns
      */
     async getCredential(
@@ -532,6 +533,7 @@ export class CredentialsService {
         holderCnf: Jwk,
         session: Session,
         preloadedClaims?: Record<string, any>,
+        issuanceSetId?: string,
     ) {
         const credentialConfiguration =
             await this.credentialConfigRepo.findOneByOrFail({
@@ -630,6 +632,7 @@ export class CredentialsService {
                 deviceKey: holderCnf,
                 session,
                 claims: usedClaims,
+                issuanceSetId,
             });
         } else {
             // Default to SD-JWT VC (handles "dc+sd-jwt" and "vc+sd-jwt" formats)
@@ -639,6 +642,7 @@ export class CredentialsService {
                 session,
                 claims: usedClaims,
                 federationEntityId,
+                issuanceSetId,
             });
         }
     }

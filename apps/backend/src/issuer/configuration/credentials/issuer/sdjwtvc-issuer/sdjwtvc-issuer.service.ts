@@ -22,6 +22,7 @@ export interface SdJwtVcIssueOptions {
     session: Session;
     claims: Record<string, any>;
     federationEntityId?: string;
+    issuanceSetId?: string;
 }
 
 /**
@@ -49,6 +50,7 @@ export class SdjwtvcIssuerService {
             session,
             claims,
             federationEntityId,
+            issuanceSetId,
         } = options;
 
         const certificate = await this.certService.find({
@@ -75,6 +77,8 @@ export class SdjwtvcIssuerService {
             status = await this.statusListService.createEntry(
                 session,
                 credentialConfiguration.id,
+                credentialConfiguration,
+                issuanceSetId,
             );
         }
 

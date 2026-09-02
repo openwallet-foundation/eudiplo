@@ -44,3 +44,6 @@ export { AddNotificationEndpointEnabledToIssuanceConfig1775000000000 } from "./1
 export { AddStatusListVersionAndUniqueConstraint1776000000000 } from "./1776000000000-AddStatusListVersionAndUniqueConstraint";
 export { AddConfigResourceMetadata1777000000000 } from "./1777000000000-AddConfigResourceMetadata";
 export { AddMissingSessionColumns1778000000000 } from "./1778000000000-AddMissingSessionColumns";
+export { AddActiveCredentialSlot1779000000000 } from "./1779000000000-AddActiveCredentialSlot";
+export { AddIssuanceSetIdToDeferredTransaction1780000000000 } from "./1780000000000-AddIssuanceSetIdToDeferredTransaction";
+export { AddOutcomeToSession1779000000000 } from "./1779000000000-AddOutcomeToSession";

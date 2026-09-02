@@ -238,7 +238,7 @@ export const DCQLSchema = z
             const firstIndex = seen.get(credential.id);
             if (firstIndex !== undefined) {
                 ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
+                    code: "custom",
                     path: ["credentials", index, "id"],
                     message: `Duplicate credential id '${credential.id}' already used at credentials[${firstIndex}]`,
                 });

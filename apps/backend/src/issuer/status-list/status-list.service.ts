@@ -19,7 +19,7 @@ import {
 } from "@owf/token-status-list";
 import { X509Certificate } from "@peculiar/x509";
 import { JwtPayload } from "@sd-jwt/core";
-import { DataSource, IsNull, Repository } from "typeorm";
+import { DataSource, EntityManager, IsNull, Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { CertService } from "../../crypto/key/cert/cert.service";
@@ -31,12 +31,35 @@ import {
     ImportPhase,
 } from "../../platform/config-import/config-import-orchestrator.service";
 import { Session } from "../../session/entities/session.entity";
+import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity";
 import { StatusListImportSchema } from "./dto/status-list.schema";
 import { StatusListImportDto } from "./dto/status-list-import.dto";
 import { StatusUpdateDto } from "./dto/status-update.dto";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
 import { StatusListEntity } from "./entities/status-list.entity";
 import { StatusMapping } from "./entities/status-mapping.entity";
 import { StatusListConfigService } from "./status-list-config.service";
+import { SubjectKeyService } from "./subject-key.service";
+
+/**
+ * Status list value meaning "revoked", per the convention documented on
+ * {@link StatusUpdateDto}: 0 = valid, 1 = revoked, 2 = suspended.
+ */
+const STATUS_REVOKED = 1;
+
+interface EntryAllocationOptions {
+    tenantId: string;
+    sessionId: string;
+    credentialConfigurationId: string;
+    count: number;
+    issuanceSetId?: string;
+}
+
+interface AllocatedStatusEntry {
+    statusListId: string;
+    index: number;
+    uri: string;
+}
 
 @Injectable()
 export class StatusListService {
@@ -58,6 +81,9 @@ export class StatusListService {
         private readonly configImportService: ConfigImportService,
         private readonly statusListConfigService: StatusListConfigService,
         readonly configImportOrchestrator: ConfigImportOrchestratorService,
+        @InjectRepository(ActiveCredentialSlot)
+        private readonly activeCredentialSlotRepository: Repository<ActiveCredentialSlot>,
+        private readonly subjectKeyService: SubjectKeyService,
     ) {
         configImportOrchestrator.register(
             "status-lists",
@@ -527,47 +553,256 @@ export class StatusListService {
     async createEntry(
         session: Session,
         credentialConfigurationId: string,
+        credentialConfiguration?: CredentialConfig,
+        issuanceSetId?: string,
     ): Promise<JWTwithStatusListPayload> {
-        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
-            try {
-                const result = await this.allocateEntries({
+        // Resolve the pseudonymous subject key when the active-credential-limit
+        // policy applies to this issuance; undefined means "policy off" and the
+        // behaviour below is unchanged from before.
+        const subjectScopedKey = await this.resolveSubjectScopedKey(
+            session,
+            credentialConfigurationId,
+            credentialConfiguration,
+        );
+        const activeIssuanceSetId = subjectScopedKey
+            ? issuanceSetId
+            : undefined;
+        if (subjectScopedKey && !activeIssuanceSetId) {
+            throw new ConflictException(
+                "Active credential issuance requires an access token grouping identifier",
+            );
+        }
+
+        const entry = await this.retryOnConcurrency(
+            () =>
+                this.allocateAndClaimEntry({
                     tenantId: session.tenantId,
                     sessionId: session.id,
                     credentialConfigurationId,
-                    count: 1,
-                });
+                    issuanceSetId: activeIssuanceSetId,
+                    subjectScopedKey,
+                }),
+            "Could not allocate status entry after maximum retries",
+        );
 
-                if (result.length === 0) {
-                    throw new ConflictException(
-                        "Failed to allocate status entry after retries",
-                    );
-                }
+        return {
+            status: {
+                status_list: {
+                    idx: entry.index,
+                    uri: entry.uri,
+                },
+            },
+        };
+    }
 
-                const entry = result[0];
-                return {
-                    status: {
-                        status_list: {
-                            idx: entry.index,
-                            uri: entry.uri,
-                        },
-                    },
-                };
-            } catch (error) {
-                if (this.isRetryableConcurrencyError(error)) {
-                    if (attempt < this.maxRetries - 1) {
-                        await this.delay(
-                            this.retryDelayMs * Math.pow(2, attempt),
-                        );
-                        continue;
-                    }
-                    break;
-                }
-                throw error;
-            }
+    private async allocateAndClaimEntry(params: {
+        tenantId: string;
+        sessionId: string;
+        credentialConfigurationId: string;
+        issuanceSetId?: string;
+        subjectScopedKey?: string;
+    }): Promise<AllocatedStatusEntry> {
+        const entries = await this.allocateEntries({ ...params, count: 1 });
+        const entry = entries[0];
+        if (!entry) {
+            throw new ConflictException(
+                "Failed to allocate status entry after retries",
+            );
         }
 
-        throw new ServiceUnavailableException(
-            "Could not allocate status entry after maximum retries",
+        if (params.subjectScopedKey && params.issuanceSetId) {
+            await this.replaceActiveIssuance({
+                tenantId: params.tenantId,
+                credentialConfigurationId: params.credentialConfigurationId,
+                subjectScopedKey: params.subjectScopedKey,
+                issuanceSetId: params.issuanceSetId,
+            });
+        }
+
+        return entry;
+    }
+
+    /**
+     * Resolve the pseudonymous subject key for the active-credential-limit
+     * policy, or `undefined` when the policy does not apply to this issuance.
+     *
+     * Returns undefined when the configuration is absent, the policy is
+     * disabled, status management is off (revocation needs status entries), or
+     * no durable subject identity is available on the session.
+     */
+    private async resolveSubjectScopedKey(
+        session: Session,
+        credentialConfigurationId: string,
+        credentialConfiguration?: CredentialConfig,
+    ): Promise<string | undefined> {
+        const policy = credentialConfiguration?.activeCredentials;
+        if (!policy?.enabled) {
+            return undefined;
+        }
+
+        if (!credentialConfiguration?.statusManagement) {
+            this.logger.warn(
+                `activeCredentials is enabled for '${credentialConfigurationId}' but statusManagement is disabled; skipping enforcement.`,
+            );
+            return undefined;
+        }
+
+        const iss = session.externalIssuer;
+        const sub = session.externalSubject;
+        if (!iss || !sub) {
+            // No durable per-user subject for this flow (for example the
+            // built-in authorization server, whose `sub` is session-scoped).
+            // Enforcing on a session-scoped subject would treat every issuance
+            // as a new subject, so the policy is skipped instead.
+            this.logger.debug(
+                `No durable subject identity for session ${session.id}; skipping active-credential enforcement.`,
+            );
+            return undefined;
+        }
+
+        return this.subjectKeyService.deriveSubjectKey({
+            tenantId: session.tenantId,
+            credentialConfigurationId,
+            iss,
+            sub,
+        });
+    }
+
+    /**
+     * Point the subject's slot at the newly issued set and revoke whatever it
+     * pointed at before.
+     *
+     * Concurrency rests on the unique constraint over
+     * (tenantId, credentialConfigurationId, subjectScopedKey) rather than on
+     * locking: two simultaneous first issuances both try to insert, exactly one
+     * succeeds, and the loser falls through to the update path. Updates use the
+     * slot's version as a compare-and-swap so a concurrent writer cannot be
+     * silently overwritten. Whichever issuance commits last owns the slot, and
+     * the set it displaced is revoked — so the subject converges on a single
+     * active set either way.
+     */
+    private async replaceActiveIssuance(params: {
+        tenantId: string;
+        credentialConfigurationId: string;
+        subjectScopedKey: string;
+        issuanceSetId: string;
+    }): Promise<void> {
+        let previousIssuanceSetId: string | null = null;
+
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            const existing = await this.activeCredentialSlotRepository.findOne({
+                where: {
+                    tenantId: params.tenantId,
+                    credentialConfigurationId: params.credentialConfigurationId,
+                    subjectScopedKey: params.subjectScopedKey,
+                },
+            });
+
+            if (!existing) {
+                try {
+                    await this.activeCredentialSlotRepository.insert({
+                        tenantId: params.tenantId,
+                        credentialConfigurationId:
+                            params.credentialConfigurationId,
+                        subjectScopedKey: params.subjectScopedKey,
+                        issuanceSetId: params.issuanceSetId,
+                    });
+                    // First issuance for this subject: nothing to revoke.
+                    return;
+                } catch (error) {
+                    if (this.isUniqueViolation(error)) {
+                        // Another issuance created the slot first; re-read and
+                        // take the update path.
+                        continue;
+                    }
+                    throw error;
+                }
+            }
+
+            // More than one credential can be issued with the same access token
+            // (for example, successive batch requests). They are one issuance
+            // set, not replacements for one another.
+            if (existing.issuanceSetId === params.issuanceSetId) {
+                return;
+            }
+
+            const updateResult =
+                await this.activeCredentialSlotRepository.update(
+                    {
+                        id: existing.id,
+                        version: existing.version,
+                    },
+                    {
+                        issuanceSetId: params.issuanceSetId,
+                        version: () => "version + 1",
+                    },
+                );
+
+            if (updateResult.affected === 0) {
+                // Someone else advanced the slot between our read and write.
+                await this.delay(this.retryDelayMs * Math.pow(2, attempt));
+                continue;
+            }
+
+            previousIssuanceSetId = existing.issuanceSetId ?? null;
+            break;
+        }
+
+        if (!previousIssuanceSetId) {
+            return;
+        }
+
+        await this.revokeIssuanceSet(
+            params.tenantId,
+            params.credentialConfigurationId,
+            previousIssuanceSetId,
+        );
+    }
+
+    /**
+     * Revoke every status entry belonging to one issuance set.
+     *
+     * Failures here leave the newly issued credential valid and the displaced
+     * entries untouched, which is the safe direction: a stale credential that
+     * outlives its replacement is recoverable, revoking a credential the holder
+     * never replaced is not.
+     */
+    private async revokeIssuanceSet(
+        tenantId: string,
+        credentialConfigurationId: string,
+        issuanceSetId: string,
+    ): Promise<void> {
+        const entries = await this.statusMappingRepository.findBy({
+            tenantId,
+            credentialConfigurationId,
+            issuanceSetId,
+        });
+
+        for (const entry of entries) {
+            await this.setEntry(
+                entry.statusListId,
+                entry.index,
+                STATUS_REVOKED,
+                tenantId,
+            );
+        }
+    }
+
+    /**
+     * Whether an error is a database unique-constraint violation.
+     * Matched by driver error code where available, falling back to the
+     * constraint name for drivers that only surface a message.
+     */
+    private isUniqueViolation(error: unknown): boolean {
+        if (!(error instanceof Error)) {
+            return false;
+        }
+        const code = (error as { code?: string }).code;
+        return (
+            code === "23505" || // PostgreSQL unique_violation
+            code === "SQLITE_CONSTRAINT_UNIQUE" ||
+            code === "SQLITE_CONSTRAINT" ||
+            error.message.includes("UQ_active_credential_slot_subject")
         );
     }
 
@@ -579,12 +814,9 @@ export class StatusListService {
      * @param options Allocation request parameters
      * @returns Array of allocated entries
      */
-    private async allocateEntries(options: {
-        tenantId: string;
-        sessionId: string;
-        credentialConfigurationId: string;
-        count: number;
-    }): Promise<Array<{ statusListId: string; index: number; uri: string }>> {
+    private async allocateEntries(
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
         const queryRunner = this.dataSource.createQueryRunner();
         let shouldCreateList = false;
 
@@ -592,95 +824,23 @@ export class StatusListService {
             await queryRunner.connect();
             await queryRunner.startTransaction();
 
-            // Find an available status list
             const manager = queryRunner.manager;
-            const dedicatedLists = await manager.find(StatusListEntity, {
-                where: {
-                    tenantId: options.tenantId,
-                    credentialConfigurationId:
-                        options.credentialConfigurationId,
-                },
-                order: { createdAt: "ASC" },
-            });
-            let list = dedicatedLists.find(
-                (candidate) => candidate.stack.length >= options.count,
+            const list = await this.findAvailableListForAllocation(
+                manager,
+                options,
             );
 
             if (!list) {
-                // Try to find a shared list
-                const sharedLists = await manager.find(StatusListEntity, {
-                    where: {
-                        tenantId: options.tenantId,
-                        credentialConfigurationId: IsNull(),
-                    },
-                    order: { createdAt: "ASC" },
-                });
-
-                for (const candidateList of sharedLists) {
-                    if (candidateList.stack.length >= options.count) {
-                        list = candidateList;
-                        break;
-                    }
-                }
-            }
-
-            // If still no list found, create a new one
-            if (!list || list.stack.length < options.count) {
                 await queryRunner.commitTransaction();
                 shouldCreateList = true;
             } else {
-                // Allocate indices from the stack
-                const allocatedIndices: number[] = [];
-                for (let i = 0; i < options.count; i++) {
-                    const idx = list.stack.pop();
-                    if (idx === undefined) {
-                        throw new ConflictException(
-                            "Stack underflow during allocation",
-                        );
-                    }
-                    allocatedIndices.push(idx);
-                }
-
-                // The version predicate makes this update portable across
-                // PostgreSQL and SQLite without relying on driver-specific locks.
-                const updateResult = await manager.update(
-                    StatusListEntity,
-                    {
-                        id: list.id,
-                        tenantId: options.tenantId,
-                        version: list.version,
-                    },
-                    {
-                        stack: list.stack,
-                        version: () => "version + 1",
-                    },
+                const entries = await this.allocateFromList(
+                    manager,
+                    list,
+                    options,
                 );
-
-                if (updateResult.affected === 0) {
-                    throw new ConflictException(
-                        "Status list was modified concurrently",
-                    );
-                }
-
-                const uri = this.buildStatusListUri(options.tenantId, list.id);
-                const mappings = allocatedIndices.map((index) => ({
-                    tenantId: options.tenantId,
-                    sessionId: options.sessionId,
-                    statusListId: list.id,
-                    index,
-                    list: uri,
-                    credentialConfigurationId:
-                        options.credentialConfigurationId,
-                }));
-
-                await manager.insert(StatusMapping, mappings);
                 await queryRunner.commitTransaction();
-
-                return allocatedIndices.map((index) => ({
-                    statusListId: list.id,
-                    index,
-                    uri,
-                }));
+                return entries;
             }
         } catch (error) {
             if (queryRunner.isTransactionActive) {
@@ -699,16 +859,122 @@ export class StatusListService {
         }
 
         if (shouldCreateList) {
-            const newList = await this.createNewList(options.tenantId);
-            if (newList.stack.length < options.count) {
-                throw new ConflictException(
-                    "Status list capacity is smaller than the requested allocation",
-                );
-            }
-            return this.allocateEntries(options);
+            return this.createListAndAllocateEntries(options);
         }
 
         throw new ConflictException("No status list available for allocation");
+    }
+
+    private async findAvailableListForAllocation(
+        manager: EntityManager,
+        options: EntryAllocationOptions,
+    ): Promise<StatusListEntity | undefined> {
+        const findFirstAvailable = (lists: StatusListEntity[]) =>
+            lists.find((list) => list.stack.length >= options.count);
+        const dedicatedLists = await manager.find(StatusListEntity, {
+            where: {
+                tenantId: options.tenantId,
+                credentialConfigurationId: options.credentialConfigurationId,
+            },
+            order: { createdAt: "ASC" },
+        });
+        const dedicatedList = findFirstAvailable(dedicatedLists);
+        if (dedicatedList) {
+            return dedicatedList;
+        }
+
+        const sharedLists = await manager.find(StatusListEntity, {
+            where: {
+                tenantId: options.tenantId,
+                credentialConfigurationId: IsNull(),
+            },
+            order: { createdAt: "ASC" },
+        });
+        return findFirstAvailable(sharedLists);
+    }
+
+    private async allocateFromList(
+        manager: EntityManager,
+        list: StatusListEntity,
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
+        const allocatedIndices = Array.from({ length: options.count }, () => {
+            const index = list.stack.pop();
+            if (index === undefined) {
+                throw new ConflictException(
+                    "Stack underflow during allocation",
+                );
+            }
+            return index;
+        });
+        const updateResult = await manager.update(
+            StatusListEntity,
+            {
+                id: list.id,
+                tenantId: options.tenantId,
+                version: list.version,
+            },
+            {
+                stack: list.stack,
+                version: () => "version + 1",
+            },
+        );
+        if (updateResult.affected === 0) {
+            throw new ConflictException(
+                "Status list was modified concurrently",
+            );
+        }
+
+        const uri = this.buildStatusListUri(options.tenantId, list.id);
+        await manager.insert(
+            StatusMapping,
+            allocatedIndices.map((index) => ({
+                tenantId: options.tenantId,
+                sessionId: options.sessionId,
+                statusListId: list.id,
+                index,
+                list: uri,
+                credentialConfigurationId: options.credentialConfigurationId,
+                issuanceSetId: options.issuanceSetId ?? null,
+            })),
+        );
+        return allocatedIndices.map((index) => ({
+            statusListId: list.id,
+            index,
+            uri,
+        }));
+    }
+
+    private async createListAndAllocateEntries(
+        options: EntryAllocationOptions,
+    ): Promise<AllocatedStatusEntry[]> {
+        const newList = await this.createNewList(options.tenantId);
+        if (newList.stack.length < options.count) {
+            throw new ConflictException(
+                "Status list capacity is smaller than the requested allocation",
+            );
+        }
+        return this.allocateEntries(options);
+    }
+
+    private async retryOnConcurrency<T>(
+        operation: () => Promise<T>,
+        unavailableMessage: string,
+    ): Promise<T> {
+        for (let attempt = 0; attempt < this.maxRetries; attempt++) {
+            try {
+                return await operation();
+            } catch (error) {
+                if (!this.isRetryableConcurrencyError(error)) {
+                    throw error;
+                }
+                if (attempt < this.maxRetries - 1) {
+                    await this.delay(this.retryDelayMs * Math.pow(2, attempt));
+                }
+            }
+        }
+
+        throw new ServiceUnavailableException(unavailableMessage);
     }
 
     /**
