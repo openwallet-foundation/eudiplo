@@ -10507,6 +10507,84 @@
             }
           ]
         },
+        "registrationCertImportJwt": {
+          "description": "Optional imported registration certificate JWT.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registrationCertImportId": {
+          "description": "Optional registrar-side registration certificate id.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registrationCertBodyPrivacyPolicy": {
+          "description": "Optional registration certificate privacy policy URI.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registrationCertBodySupportUri": {
+          "description": "Optional registration certificate support URI.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registrationCertBodyIntermediary": {
+          "description": "Optional registration certificate intermediary.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "registrationCertBodyPurpose": {
+          "description": "Optional registration certificate purpose entries.",
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "lang": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
         "webhookEndpointId": {
           "description": "Optional webhook endpoint id for presentation callbacks.",
           "type": ["string", "null"]

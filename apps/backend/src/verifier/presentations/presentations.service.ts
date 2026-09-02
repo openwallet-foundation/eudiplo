@@ -48,6 +48,7 @@ import type { VerificationFailureType } from "./credential/verification-failure"
 import { AuthResponse } from "./dto/auth-response.dto";
 import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto";
 import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
+import type { RegistrationCertificateRequest } from "./dto/vp-request.dto";
 import {
     ClaimsQuery,
     CredentialQueryValue,
@@ -62,6 +63,27 @@ import { IncompletePresentationException } from "./exceptions/incomplete-present
 import { MetadataFetchService } from "./metadata-fetch.service";
 
 type CredentialType = "dc+sd-jwt" | "mso_mdoc";
+
+type RegistrationCertificateFormFields = {
+    registrationCertImportJwt?: string | null;
+    registrationCertImportId?: string | null;
+    registrationCertBodyPrivacyPolicy?: string | null;
+    registrationCertBodySupportUri?: string | null;
+    registrationCertBodyIntermediary?: string | null;
+    registrationCertBodyPurpose?: Array<{
+        lang?: string | null;
+        content?: string | null;
+    }> | null;
+};
+
+const registrationCertificateFormFieldKeys = [
+    "registrationCertImportJwt",
+    "registrationCertImportId",
+    "registrationCertBodyPrivacyPolicy",
+    "registrationCertBodySupportUri",
+    "registrationCertBodyIntermediary",
+    "registrationCertBodyPurpose",
+] as const;
 
 type ResolvedSchemaMetadataPayload = {
     id: string;
@@ -445,8 +467,10 @@ export class PresentationsService {
         actorToken?: TokenPayload,
         req?: Request,
     ) {
+        const normalizedRequest =
+            this.normalizeRegistrationCertFormFields(vprequest);
         const merged = {
-            ...vprequest,
+            ...normalizedRequest,
             tenantId,
         } as PresentationConfig;
 
@@ -491,12 +515,14 @@ export class PresentationsService {
     ) {
         // Verify the config exists
         const existing = await this.getPresentationConfig(id, tenantId);
+        const normalizedRequest =
+            this.normalizeRegistrationCertFormFields(vprequest);
 
         // Merge existing with updates - client must explicitly set fields to null to clear them
         // Omitted fields keep their existing values
         const merged: PresentationConfig = {
             ...existing,
-            ...vprequest,
+            ...normalizedRequest,
             id,
             tenantId,
         } as PresentationConfig;
@@ -504,8 +530,8 @@ export class PresentationsService {
         // Return quickly; resolve registration-certificate cache asynchronously.
         const cacheRelevantChanged =
             Object.prototype.hasOwnProperty.call(
-                vprequest,
-                "registrationCert",
+                normalizedRequest,
+                "registration_cert",
             ) || Object.prototype.hasOwnProperty.call(vprequest, "dcql_query");
 
         if (!merged.registration_cert) {
@@ -537,6 +563,87 @@ export class PresentationsService {
         }
 
         return saved;
+    }
+
+    private normalizeRegistrationCertFormFields<
+        T extends PresentationConfigCreateDto | PresentationConfigUpdateDto,
+    >(vprequest: T): T {
+        const normalized = { ...vprequest } as T &
+            RegistrationCertificateFormFields & {
+                registration_cert?: RegistrationCertificateRequest | null;
+            };
+
+        if (
+            !Object.prototype.hasOwnProperty.call(
+                normalized,
+                "registration_cert",
+            )
+        ) {
+            const registrationCert =
+                this.buildRegistrationCertFromFormFields(normalized);
+            if (registrationCert !== undefined) {
+                normalized.registration_cert = registrationCert;
+            }
+        }
+
+        for (const key of registrationCertificateFormFieldKeys) {
+            delete normalized[key];
+        }
+
+        return normalized;
+    }
+
+    private buildRegistrationCertFromFormFields(
+        fields: RegistrationCertificateFormFields,
+    ): RegistrationCertificateRequest | null | undefined {
+        const jwt = this.trimOptionalString(fields.registrationCertImportJwt);
+        if (jwt) {
+            return { jwt };
+        }
+
+        const id = this.trimOptionalString(fields.registrationCertImportId);
+        if (id) {
+            return { id };
+        }
+
+        const purpose = (fields.registrationCertBodyPurpose ?? [])
+            .map((entry) => ({
+                lang: this.trimOptionalString(entry.lang),
+                content: this.trimOptionalString(entry.content),
+            }))
+            .filter((entry): entry is { lang: string; content: string } =>
+                Boolean(entry.lang && entry.content),
+            );
+
+        const body: NonNullable<RegistrationCertificateRequest["body"]> = {};
+        const privacyPolicy = this.trimOptionalString(
+            fields.registrationCertBodyPrivacyPolicy,
+        );
+        const supportUri = this.trimOptionalString(
+            fields.registrationCertBodySupportUri,
+        );
+        const intermediary = this.trimOptionalString(
+            fields.registrationCertBodyIntermediary,
+        );
+
+        if (privacyPolicy) {
+            body.privacy_policy = privacyPolicy;
+        }
+        if (supportUri) {
+            body.support_uri = supportUri;
+        }
+        if (intermediary) {
+            body.intermediary = intermediary;
+        }
+        if (purpose.length > 0) {
+            body.purpose = purpose;
+        }
+
+        return Object.keys(body).length > 0 ? { body } : undefined;
+    }
+
+    private trimOptionalString(value: string | null | undefined): string {
+        return typeof value === "string" ? value.trim() : "";
     }
 
     /**
