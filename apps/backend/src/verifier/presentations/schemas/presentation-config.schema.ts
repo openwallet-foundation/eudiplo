@@ -273,6 +273,14 @@ const PresentationAttachmentSchema = z
     .describe("Additional presentation attachment.")
     .strict();
 
+const RegistrationCertificateFormPurposeSchema = z
+    .object({
+        lang: z.string().optional(),
+        content: z.string().optional(),
+    })
+    .describe("Registration certificate purpose entry from the management UI.")
+    .strict();
+
 export const PresentationConfigCreateSchema = z
     .object({
         id: z
@@ -311,6 +319,36 @@ export const PresentationConfigCreateSchema = z
         registration_cert: RegistrationCertificateRequestSchema.nullable()
             .optional()
             .describe("Optional registration certificate request settings."),
+        registrationCertImportJwt: z
+            .string()
+            .nullable()
+            .optional()
+            .describe("Optional imported registration certificate JWT."),
+        registrationCertImportId: z
+            .string()
+            .nullable()
+            .optional()
+            .describe("Optional registrar-side registration certificate id."),
+        registrationCertBodyPrivacyPolicy: z
+            .string()
+            .nullable()
+            .optional()
+            .describe("Optional registration certificate privacy policy URI."),
+        registrationCertBodySupportUri: z
+            .string()
+            .nullable()
+            .optional()
+            .describe("Optional registration certificate support URI."),
+        registrationCertBodyIntermediary: z
+            .string()
+            .nullable()
+            .optional()
+            .describe("Optional registration certificate intermediary."),
+        registrationCertBodyPurpose: z
+            .array(RegistrationCertificateFormPurposeSchema)
+            .nullable()
+            .optional()
+            .describe("Optional registration certificate purpose entries."),
         webhookEndpointId: z
             .string()
             .nullable()

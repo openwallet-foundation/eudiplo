@@ -440,28 +440,35 @@
     },
     "transaction_data": {
       "description": "Optional transaction data descriptors.",
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "Transaction data type identifier."
-          },
-          "credential_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Transaction data type identifier."
+              },
+              "credential_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Credential query ids this transaction data applies to."
+              }
             },
-            "description": "Credential query ids this transaction data applies to."
+            "required": [
+              "type",
+              "credential_ids"
+            ],
+            "additionalProperties": {}
           }
         },
-        "required": [
-          "type",
-          "credential_ids"
-        ],
-        "additionalProperties": {}
-      }
+        {
+          "type": "null"
+        }
+      ]
     },
     "registration_cert": {
       "description": "Optional registration certificate request settings.",
@@ -531,6 +538,84 @@
             }
           },
           "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertImportJwt": {
+      "description": "Optional imported registration certificate JWT.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertImportId": {
+      "description": "Optional registrar-side registration certificate id.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertBodyPrivacyPolicy": {
+      "description": "Optional registration certificate privacy policy URI.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertBodySupportUri": {
+      "description": "Optional registration certificate support URI.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertBodyIntermediary": {
+      "description": "Optional registration certificate intermediary.",
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "registrationCertBodyPurpose": {
+      "description": "Optional registration certificate purpose entries.",
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "lang": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
         },
         {
           "type": "null"
