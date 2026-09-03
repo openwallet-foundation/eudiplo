@@ -8,6 +8,7 @@ import { MetricService } from "nestjs-otel";
 import {
     DeepPartial,
     FindOptionsWhere,
+    In,
     IsNull,
     LessThan,
     Not,
@@ -294,6 +295,8 @@ export class SessionService implements OnApplicationBootstrap {
      * - 'anonymize' mode: Keeps session metadata but removes personal data
      */
     async tidyUpSessions() {
+        await this.expirePresentationSessions();
+
         const defaultTtlSeconds =
             this.configService.getOrThrow<number>("SESSION_TTL");
         const defaultCleanupMode = this.configService.getOrThrow<string>(
@@ -305,51 +308,11 @@ export class SessionService implements OnApplicationBootstrap {
 
         // Process each tenant with their specific config
         for (const tenant of tenants) {
-            const ttlSeconds =
-                tenant.sessionConfig?.ttlSeconds ?? defaultTtlSeconds;
-            const cutoffDate = new Date(Date.now() - ttlSeconds * 1000);
-            const cleanupMode =
-                tenant.sessionConfig?.cleanupMode ?? defaultCleanupMode;
-
-            if (cleanupMode === SessionCleanupMode.Anonymize) {
-                // Anonymize: Keep session metadata (including original status) but remove personal data
-                // We use a raw query to only target sessions that still have personal data
-                const result = await this.sessionRepository
-                    .createQueryBuilder()
-                    .update()
-                    .set({
-                        // Clear personal data fields
-                        credentials: undefined,
-                        credentialPayload: undefined,
-                        auth_queries: undefined,
-                        offer: undefined,
-                        requestObject: undefined,
-                        responseEncryptionPrivateJwk: undefined,
-                    })
-                    .where("tenantId = :tenantId", { tenantId: tenant.id })
-                    .andWhere("createdAt < :cutoffDate", { cutoffDate })
-                    // Only anonymize sessions that still have personal data
-                    .andWhere(
-                        "(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL OR responseEncryptionPrivateJwk IS NOT NULL)",
-                    )
-                    .execute();
-                if (result.affected && result.affected > 0) {
-                    this.logger.log(
-                        `Anonymized ${result.affected} sessions for tenant ${tenant.id}`,
-                    );
-                }
-            } else {
-                // Full delete (default behavior)
-                const result = await this.sessionRepository.delete({
-                    tenantId: tenant.id,
-                    createdAt: LessThan(cutoffDate),
-                });
-                if (result.affected && result.affected > 0) {
-                    this.logger.log(
-                        `Deleted ${result.affected} sessions for tenant ${tenant.id}`,
-                    );
-                }
-            }
+            await this.tidyUpTenantSessions(
+                tenant,
+                defaultTtlSeconds,
+                defaultCleanupMode,
+            );
         }
 
         // Also clean up sessions for tenants that no longer exist (orphaned sessions)
@@ -368,6 +331,66 @@ export class SessionService implements OnApplicationBootstrap {
                     `Deleted ${orphanedResult.affected} orphaned sessions`,
                 );
             }
+        }
+    }
+
+    private async tidyUpTenantSessions(
+        tenant: TenantEntity,
+        defaultTtlSeconds: number,
+        defaultCleanupMode: string,
+    ) {
+        const ttlSeconds =
+            tenant.sessionConfig?.ttlSeconds ?? defaultTtlSeconds;
+        const cutoffDate = new Date(Date.now() - ttlSeconds * 1000);
+        const cleanupMode =
+            tenant.sessionConfig?.cleanupMode ?? defaultCleanupMode;
+
+        if (cleanupMode === SessionCleanupMode.Anonymize) {
+            const result = await this.sessionRepository
+                .createQueryBuilder()
+                .update()
+                .set({
+                    credentials: undefined,
+                    credentialPayload: undefined,
+                    auth_queries: undefined,
+                    offer: undefined,
+                    requestObject: undefined,
+                    responseEncryptionPrivateJwk: undefined,
+                })
+                .where("tenantId = :tenantId", { tenantId: tenant.id })
+                .andWhere("createdAt < :cutoffDate", { cutoffDate })
+                .andWhere(
+                    "(credentials IS NOT NULL OR credentialPayload IS NOT NULL OR auth_queries IS NOT NULL OR offer IS NOT NULL OR requestObject IS NOT NULL OR responseEncryptionPrivateJwk IS NOT NULL)",
+                )
+                .execute();
+            if (result.affected && result.affected > 0) {
+                this.logger.log(
+                    `Anonymized ${result.affected} sessions for tenant ${tenant.id}`,
+                );
+            }
+            return;
+        }
+
+        const result = await this.sessionRepository.delete({
+            tenantId: tenant.id,
+            createdAt: LessThan(cutoffDate),
+        });
+        if (result.affected && result.affected > 0) {
+            this.logger.log(
+                `Deleted ${result.affected} sessions for tenant ${tenant.id}`,
+            );
+        }
+    }
+
+    private async expirePresentationSessions() {
+        const expiredSessions = await this.sessionRepository.findBy({
+            expiresAt: LessThan(new Date()),
+            requestId: Not(IsNull()),
+            status: In([SessionStatus.Active, SessionStatus.Fetched]),
+        });
+
+        for (const session of expiredSessions) {
+            await this.setState(session, SessionStatus.Expired);
         }
     }
 
