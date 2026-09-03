@@ -19,7 +19,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: eudiplo
-          image: ghcr.io/openwallet-foundation/eudiplo:latest
+          image: ghcr.io/openwallet-foundation/eudiplo:v7.4.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
@@ -31,6 +31,9 @@ spec:
             readOnlyRootFilesystem: false
             runAsNonRoot: true
           envFrom:
+            - configMapRef:
+                name: eudiplo-config
+                optional: true
             - secretRef:
                 name: eudiplo-env
           readinessProbe:
@@ -58,9 +61,11 @@ spec:
             requests:
               cpu: "100m"
               memory: "256Mi"
+              ephemeral-storage: "1Gi"
             limits:
               cpu: "500m"
               memory: "512Mi"
+              ephemeral-storage: "2Gi"
           volumeMounts:
             - name: uploads
               mountPath: /app/uploads
