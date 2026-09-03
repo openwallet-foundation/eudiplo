@@ -29,11 +29,11 @@ All components include:
 
 ## Deployment Profiles
 
-| Profile | Components | Intended use |
-| --- | --- | --- |
-| `minimal` | EUDIPLO, SQLite, local storage | Local development and quick testing |
-| `standard` | EUDIPLO, PostgreSQL, MinIO | Staging and small deployments |
-| `full` | Standard profile plus Vault | Local testing of Vault integration |
+| Profile    | Components                     | Intended use                        |
+| ---------- | ------------------------------ | ----------------------------------- |
+| `minimal`  | EUDIPLO, SQLite, local storage | Local development and quick testing |
+| `standard` | EUDIPLO, PostgreSQL, MinIO     | Staging and small deployments       |
+| `full`     | Standard profile plus Vault    | Local testing of Vault integration  |
 
 Use an external managed database, object store, and Vault for production. The bundled PostgreSQL, MinIO, and Vault workloads are single-replica development deployments.
 
