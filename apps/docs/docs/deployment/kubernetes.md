@@ -7,7 +7,7 @@ import TabItem from "@theme/TabItem";
 
 # Kubernetes Deployment
 
-Deploy EUDIPLO on Kubernetes with PostgreSQL and MinIO for production use.
+Deploy EUDIPLO on Kubernetes with Kustomize deployment profiles for local, staging, and production-oriented environments.
 
 ## Architecture
 
@@ -15,16 +15,27 @@ The Kubernetes deployment includes:
 
 - **EUDIPLO Backend** — Main application service (Node.js)
 - **EUDIPLO Client** — Web UI served by nginx
-- **PostgreSQL** — Relational database with persistent storage
-- **MinIO** — S3-compatible object storage
-- **Ingress** — HTTP routing with domain-based access
+- **PostgreSQL** — Optional relational database with persistent storage
+- **MinIO** — Optional S3-compatible object storage
+- **Vault** — Optional development-only key and encryption-key store
+- **Ingress** — nginx HTTP routing with domain-based access
 
 All components include:
 
 - ✅ Security contexts (non-root users)
 - ✅ Health probes (readiness, liveness, startup)
-- ✅ Resource limits (CPU/memory)
+- ✅ Resource limits (CPU/memory/ephemeral storage)
 - ✅ Persistent storage (StatefulSets with PVCs)
+
+## Deployment Profiles
+
+| Profile | Components | Intended use |
+| --- | --- | --- |
+| `minimal` | EUDIPLO, SQLite, local storage | Local development and quick testing |
+| `standard` | EUDIPLO, PostgreSQL, MinIO | Staging and small deployments |
+| `full` | Standard profile plus Vault | Local testing of Vault integration |
+
+Use an external managed database, object store, and Vault for production. The bundled PostgreSQL, MinIO, and Vault workloads are single-replica development deployments.
 
 ## Prerequisites
 
@@ -62,7 +73,7 @@ Ensure you have:
 
 ### Install ingress-nginx Controller
 
-Required for accessing services via domain names:
+The manifests set `ingressClassName: nginx`; install ingress-nginx to access services through the configured domain names:
 
 ```bash
 # Install ingress-nginx
@@ -77,9 +88,11 @@ kubectl wait --namespace ingress-nginx \
 
 ### Configure Environment
 
+Choose a profile and copy its environment example. This example uses the standard profile:
+
 ```bash
 cd deployment/k8s
-cp .env.example .env
+cp overlays/standard/.env.example overlays/standard/.env
 ```
 
 Edit `.env`:
@@ -88,11 +101,8 @@ Edit `.env`:
 # Public URL (for OAuth redirects and OIDC)
 PUBLIC_URL=http://eudiplo.localtest.me
 
-# Internal backend URL for self-JWKS verification (default shown)
-# Change only when the backend is not listening on port 3000 in this pod.
-INTERNAL_URL=http://127.0.0.1:3000
-
 # PostgreSQL Configuration
+DB_TYPE=postgres
 DB_USERNAME=eudiplo
 DB_PASSWORD=changeme123
 DB_DATABASE=eudiplo
@@ -101,6 +111,10 @@ DB_DATABASE=eudiplo
 MINIO_ROOT_USER=minioadmin
 MINIO_ROOT_PASSWORD=minioadmin123
 MINIO_BUCKET=uploads
+S3_REGION=us-east-1
+S3_ACCESS_KEY_ID=minioadmin
+S3_SECRET_ACCESS_KEY=minioadmin123
+S3_BUCKET=uploads
 
 # Application Secrets
 MASTER_SECRET=your-secret-jwt-key-change-in-production
@@ -124,18 +138,35 @@ The demo credentials will trigger security warnings in the application logs. **A
 kubectl create namespace eudiplo
 
 # Create Kubernetes secret from .env file
-kubectl -n eudiplo create secret generic eudiplo-env --from-env-file=.env
+kubectl -n eudiplo create secret generic eudiplo-env --from-env-file=overlays/standard/.env
 ```
 
 ### 2. Deploy All Resources
 
-Using Kustomize (recommended):
+Using Kustomize profiles (recommended):
 
 ```bash
-kubectl apply -k .
+# Standard profile: PostgreSQL and MinIO
+kubectl apply -k overlays/standard
 ```
 
-Or apply individual manifests:
+For a minimal local deployment:
+
+```bash
+cp overlays/minimal/.env.example overlays/minimal/.env
+kubectl -n eudiplo create secret generic eudiplo-env \
+    --from-env-file=overlays/minimal/.env \
+    --dry-run=client -o yaml | kubectl apply -f -
+kubectl apply -k overlays/minimal
+```
+
+The full profile also requires `VAULT_TOKEN` from `overlays/full/.env.example` and creates a development Vault encryption key automatically:
+
+```bash
+kubectl apply -k overlays/full
+```
+
+Legacy flat manifests remain available for backwards compatibility:
 
 ```bash
 kubectl apply -f namespace.yaml
@@ -280,6 +311,8 @@ kubectl -n ingress-nginx get pods
 kubectl -n eudiplo describe ingress eudiplo-ingress
 ```
 
+The bundled ingress requires the `nginx` ingress class. For a different controller, change `spec.ingressClassName` in the ingress manifest or apply an overlay patch.
+
 Fallback to port-forward (see above).
 
 ### Database Connection Errors
@@ -294,6 +327,14 @@ Restart backend if credentials were updated:
 
 ```bash
 kubectl -n eudiplo rollout restart deployment/eudiplo
+```
+
+### Docker Desktop Kubernetes Certificate Expired
+
+If `kubectl` reports an expired certificate for `https://127.0.0.1:6443`, the Docker Desktop Kubernetes API server certificate has expired. This is local cluster state, not an EUDIPLO certificate. Reset or update Kubernetes from Docker Desktop settings, then verify it with:
+
+```bash
+kubectl cluster-info
 ```
 
 ## Related Topics

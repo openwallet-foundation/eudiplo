@@ -44,7 +44,7 @@ k8s/
 # Navigate to the k8s directory
 cd deployment/k8s
 
-# Choose your overlay and copy the example env
+# Choose your overlay and copy its example env
 cp overlays/standard/.env.example overlays/standard/.env
 # Edit with your configuration
 nano overlays/standard/.env
@@ -147,5 +147,10 @@ kubectl -n eudiplo port-forward svc/eudiplo 3000:3000
 3. **Enable TLS** via cert-manager
 4. **Configure resource limits**
 5. **Set up monitoring** (Prometheus, Grafana)
+6. **Pin application images** to a tested release or digest before upgrading
+
+The full overlay deploys Vault in development mode and creates its encryption key
+automatically. Use an externally managed, initialized Vault instance with a
+restricted token for production.
 
 👉 **[Read the full documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/)**

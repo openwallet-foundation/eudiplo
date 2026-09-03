@@ -7,6 +7,7 @@ kind: Component
 resources:
   - vault-deployment.yaml
   - vault-service.yaml
+  - vault-bootstrap-job.yaml
 
 # Patch EUDIPLO deployment to use Vault for key management
 patches:
@@ -25,12 +26,18 @@ patches:
               drop:
                 - ALL
             readOnlyRootFilesystem: true
+          env:
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: eudiplo-env
+                  key: VAULT_TOKEN
           command:
             - sh
             - -c
             - |
-              until wget -qO- http://vault:8200/v1/sys/health >/dev/null 2>&1; do
-                echo "waiting for vault..."; sleep 3;
+              until wget -qO- --header="X-Vault-Token: $VAULT_TOKEN" http://vault:8200/v1/secret/data/eudiplo/encryption-key >/dev/null 2>&1; do
+                echo "waiting for Vault encryption key..."; sleep 3;
               done
       - op: add
         path: /spec/template/spec/containers/0/env/-

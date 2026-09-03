@@ -1,0 +1,47 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-bootstrap
+spec:
+  backoffLimit: 6
+  template:
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: OnFailure
+      securityContext:
+        runAsUser: 100
+        runAsNonRoot: true
+        fsGroup: 1000
+      containers:
+        - name: bootstrap
+          image: hashicorp/vault:1.18.3
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          env:
+            - name: VAULT_ADDR
+              value: http://vault:8200
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: eudiplo-env
+                  key: VAULT_TOKEN
+          command:
+            - sh
+            - -c
+            - |
+              until vault status >/dev/null 2>&1; do
+                echo "waiting for Vault..."; sleep 3;
+              done
+              vault kv put secret/eudiplo/encryption-key key="$(head -c 32 /dev/urandom | base64)"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
