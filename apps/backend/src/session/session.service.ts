@@ -137,9 +137,7 @@ export class SessionService implements OnApplicationBootstrap {
             { id: session.id },
             {
                 status,
-                ...(isTerminal
-                    ? { responseEncryptionPrivateJwk: null }
-                    : {}),
+                ...(isTerminal ? { responseEncryptionPrivateJwk: null } : {}),
             },
         );
 
@@ -151,9 +149,7 @@ export class SessionService implements OnApplicationBootstrap {
             session: {
                 ...session,
                 status,
-                ...(isTerminal
-                    ? { responseEncryptionPrivateJwk: null }
-                    : {}),
+                ...(isTerminal ? { responseEncryptionPrivateJwk: null } : {}),
             },
         };
         this.eventEmitter.emit(SESSION_STATUS_CHANGED, event);
