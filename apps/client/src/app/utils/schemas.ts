@@ -20,6 +20,10 @@ const transactionDataArraySchemaObj = {
 export class SchemaValidation {
   constructor(private schema: any) {}
 
+  getSchema() {
+    return this.schema;
+  }
+
   getSchemaUrl() {
     return this.schema['$id'];
   }

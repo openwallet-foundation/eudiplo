@@ -21,7 +21,7 @@ RUN pnpm --filter @eudiplo/client build
 FROM base AS eudiplo
 # Copy production dependencies for backend and built dist
 COPY --from=build-backend /prod/backend /app
-COPY --from=build-backend /usr/src/app/dist/backend /app/dist
+COPY --from=build-backend /usr/src/app/apps/backend/dist /app/dist
 
 # Accept VERSION as build argument and set as environment variable
 ARG VERSION=latest

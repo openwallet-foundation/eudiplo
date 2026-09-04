@@ -255,9 +255,117 @@ export const TransactionDataSchema = z
         credential_ids: z
             .array(z.string())
             .describe("Credential query ids this transaction data applies to."),
+        payload: z
+            .unknown()
+            .optional()
+            .describe(
+                "Transaction details. Required for TS12 SCA transaction data.",
+            ),
     })
     .describe("Transaction data request descriptor.")
-    .catchall(z.unknown());
+    .catchall(z.unknown())
+    .superRefine((transactionData, ctx) => {
+        if (!transactionData.type.startsWith("urn:eudi:sca:")) {
+            return;
+        }
+
+        if (!isTs12TransactionDataType(transactionData.type)) {
+            ctx.addIssue({
+                code: "custom",
+                path: ["type"],
+                message: "Unsupported TS12 transaction data type.",
+            });
+        }
+
+        validateTs12TransactionPayload(transactionData, ctx);
+    });
+
+function validateTs12TransactionPayload(
+    transactionData: Record<string, unknown>,
+    ctx: z.RefinementCtx,
+): void {
+    if (
+        !transactionData.payload ||
+        typeof transactionData.payload !== "object" ||
+        Array.isArray(transactionData.payload)
+    ) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["payload"],
+            message: "TS12 transaction data requires an object payload.",
+        });
+        return;
+    }
+
+    const payload = transactionData.payload as Record<string, unknown>;
+    const requireString = (field: string) => {
+        if (typeof payload[field] !== "string" || !payload[field]) {
+            ctx.addIssue({
+                code: "custom",
+                path: ["payload", field],
+                message: `TS12 ${transactionData.type} requires payload.${field}.`,
+            });
+        }
+    };
+
+    requireString("transaction_id");
+
+    if (transactionData.type === "urn:eudi:sca:payment:1") {
+        validateTs12PaymentPayload(payload, ctx);
+    }
+
+    if (transactionData.type === "urn:eudi:sca:login_risk_transaction:1") {
+        requireString("action");
+    }
+}
+
+function validateTs12PaymentPayload(
+    payload: Record<string, unknown>,
+    ctx: z.RefinementCtx,
+): void {
+    const payee = payload.payee;
+    if (!payee || typeof payee !== "object" || Array.isArray(payee)) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["payload", "payee"],
+            message: "TS12 payment requires a payee object.",
+        });
+    } else {
+        const payeeRecord = payee as Record<string, unknown>;
+        for (const field of ["name", "id"]) {
+            if (typeof payeeRecord[field] !== "string" || !payeeRecord[field]) {
+                ctx.addIssue({
+                    code: "custom",
+                    path: ["payload", "payee", field],
+                    message: `TS12 payment requires payee.${field}.`,
+                });
+            }
+        }
+    }
+    if (!/^[A-Z]{3}$/.test(String(payload.currency ?? ""))) {
+        ctx.addIssue({
+            code: "custom",
+            path: ["payload", "currency"],
+            message: "TS12 payment requires a three-letter uppercase currency.",
+        });
+    }
+    if (typeof payload.amount !== "number") {
+        ctx.addIssue({
+            code: "custom",
+            path: ["payload", "amount"],
+            message: "TS12 payment requires a numeric amount.",
+        });
+    }
+}
+
+function isTs12TransactionDataType(type: string): boolean {
+    return [
+        "urn:eudi:sca:payment:1",
+        "urn:eudi:sca:login_risk_transaction:1",
+        "urn:eudi:sca:account_access:1",
+        "urn:eudi:sca:emandate:1",
+    ].includes(type);
+}
 
 const PresentationAttachmentSchema = z
     .object({

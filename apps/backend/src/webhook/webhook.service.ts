@@ -120,6 +120,7 @@ export class WebhookService {
                 {
                     credentials: payloadCredentials,
                     session: values.session.id,
+                    transaction_data: values.session.transaction_data,
                 },
                 {
                     headers,

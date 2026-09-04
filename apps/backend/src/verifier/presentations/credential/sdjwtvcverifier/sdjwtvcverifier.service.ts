@@ -180,6 +180,10 @@ export class SdjwtvcverifierService {
             this.validateTransactionDataHashes(result, options.transactionData);
         }
 
+        if (options.ts12TransactionData) {
+            this.validateTs12KeyBinding(result, options.keyBindingResponseMode);
+        }
+
         return result;
     }
 
@@ -266,6 +270,60 @@ export class SdjwtvcverifierService {
         this.logger.debug(
             `Transaction data hashes validated successfully (${transactionData.length} entries)`,
         );
+    }
+
+    private validateTs12KeyBinding(
+        result: VerificationResult,
+        expectedResponseMode: string | undefined,
+    ): void {
+        const kbPayload = result.kb?.payload as
+            | {
+                  amr?: unknown;
+                  jti?: unknown;
+                  response_mode?: unknown;
+                  transaction_data_hashes_alg?: unknown;
+              }
+            | undefined;
+
+        if (!kbPayload || typeof kbPayload.jti !== "string" || !kbPayload.jti) {
+            throw new BadRequestException(
+                "TS12 KB-JWT requires a non-empty jti",
+            );
+        }
+        if (kbPayload.response_mode !== expectedResponseMode) {
+            throw new BadRequestException(
+                "TS12 KB-JWT response_mode does not match the request",
+            );
+        }
+        if (kbPayload.transaction_data_hashes_alg !== "sha-256") {
+            throw new BadRequestException(
+                "TS12 KB-JWT requires transaction_data_hashes_alg sha-256",
+            );
+        }
+        if (!Array.isArray(kbPayload.amr)) {
+            throw new BadRequestException("TS12 KB-JWT requires an amr array");
+        }
+
+        const categories = new Set(
+            kbPayload.amr.flatMap((entry) => {
+                if (
+                    !entry ||
+                    typeof entry !== "object" ||
+                    Array.isArray(entry)
+                ) {
+                    return [];
+                }
+                return Object.keys(entry as Record<string, unknown>).filter(
+                    (key) =>
+                        ["knowledge", "possession", "inherence"].includes(key),
+                );
+            }),
+        );
+        if (categories.size < 2) {
+            throw new BadRequestException(
+                "TS12 KB-JWT amr requires at least two distinct SCA factor categories",
+            );
+        }
     }
 
     /**

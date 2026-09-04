@@ -1619,6 +1619,26 @@ export class PresentationsService {
                         DEFAULT_VERIFIER_SKEW_SECONDS,
                     // Pass transaction data for hash validation (only for credentials that have it)
                     transactionData: relevantTransactionData,
+                    ts12TransactionData: relevantTransactionData?.some(
+                        (tdStr) => {
+                            try {
+                                const transactionData = JSON.parse(
+                                    Buffer.from(
+                                        base64url.decode(tdStr),
+                                    ).toString(),
+                                ) as { type?: string };
+                                return (
+                                    transactionData.type?.startsWith(
+                                        "urn:eudi:sca:",
+                                    ) ?? false
+                                );
+                            } catch {
+                                return false;
+                            }
+                        },
+                    ),
+                    keyBindingResponseMode:
+                        requestObjectSessionData?.response_mode,
                 };
 
                 const type = this.getType(session.requestObject!, attId);

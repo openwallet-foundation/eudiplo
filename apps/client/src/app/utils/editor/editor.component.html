@@ -5,11 +5,14 @@
         [options]="themedEditorOptions"
         [(ngModel)]="value"
         [model]="model"
-        (onInit)="onEditorInit()"
+        (onInit)="onEditorInit($event)"
         (ngModelChange)="handleChange($event)"
         (blur)="onBlur()"
       ></ngx-monaco-editor>
     </div>
+    @if (monacoSchemaError) {
+      <mat-error>{{ monacoSchemaError }}</mat-error>
+    }
     @if (errors?.['invalidSchema']) {
       <mat-error>
         {{ errors['invalidSchema'] }}

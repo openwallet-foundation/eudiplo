@@ -45,4 +45,39 @@ describe("PresentationConfigCreateSchema", () => {
 
         expect(result.success).toBe(false);
     });
+
+    it("accepts a valid TS12 payment transaction payload", () => {
+        const result = PresentationConfigCreateSchema.safeParse({
+            ...basePresentationConfig,
+            transaction_data: [
+                {
+                    type: "urn:eudi:sca:payment:1",
+                    credential_ids: ["age_credential"],
+                    payload: {
+                        transaction_id: "payment-1",
+                        payee: { name: "Example Merchant", id: "merchant-1" },
+                        currency: "EUR",
+                        amount: 100,
+                    },
+                },
+            ],
+        });
+
+        expect(result.success).toBe(true);
+    });
+
+    it("rejects an incomplete TS12 payment transaction payload", () => {
+        const result = PresentationConfigCreateSchema.safeParse({
+            ...basePresentationConfig,
+            transaction_data: [
+                {
+                    type: "urn:eudi:sca:payment:1",
+                    credential_ids: ["age_credential"],
+                    payload: { transaction_id: "payment-1" },
+                },
+            ],
+        });
+
+        expect(result.success).toBe(false);
+    });
 });

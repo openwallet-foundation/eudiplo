@@ -70,6 +70,8 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   private modelVersion = 0;
   private editorInitialized = false;
   private themeSubscription: Subscription;
+  private markerListener?: { dispose(): void };
+  monacoSchemaError?: string;
 
   constructor(private readonly themeService: ThemeService) {
     this.themedEditorOptions = this.withTheme(this.editorOptions);
@@ -92,11 +94,10 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   writeValue(obj: any): void {
     this.value = obj == null ? '' : typeof obj === 'string' ? obj : JSON.stringify(obj, null, 2);
 
-    // Avoid tearing down/recreating Monaco models on every form value write.
     if (!this.model) {
       this.rebuildModel();
     } else {
-      this.model.value = this.value;
+      this.model = { ...this.model, value: this.value };
     }
   }
   registerOnChange = (fn: any) => (this._onChange = fn);
@@ -153,8 +154,13 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     this._onTouched();
   }
 
-  onEditorInit(): void {
+  onEditorInit(editor: any): void {
     this.editorInitialized = true;
+    this.markerListener?.dispose();
+    this.markerListener = editor.onDidChangeModelDecorations(() => {
+      this.updateMonacoSchemaError(editor);
+    });
+    this.updateMonacoSchemaError(editor);
 
     // If URI could not be created before Monaco finished loading,
     // rebuild once so schema fileMatch can attach for autocomplete.
@@ -176,6 +182,9 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
       this.schemaValidationError = undefined;
       try {
         const schemaUrl = this.schema?.getSchemaUrl();
+        if (this.schema && schemaUrl && !this.ajv.getSchema(schemaUrl)) {
+          this.ajv.addSchema(this.schema.getSchema());
+        }
         this.validateFn = schemaUrl ? this.ajv.getSchema(schemaUrl) : undefined;
         if (this.schema && !this.validateFn) {
           this.schemaValidationError = `Schema ${schemaUrl || 'unknown'} could not be compiled`;
@@ -191,6 +200,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
 
   ngOnDestroy(): void {
     this.themeSubscription.unsubscribe();
+    this.markerListener?.dispose();
   }
 
   private _onChange: (v: any) => void = () => {};
@@ -233,5 +243,18 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     }
 
     return undefined;
+  }
+
+  private updateMonacoSchemaError(editor: any): void {
+    const monacoGlobal = (globalThis as any).__eudiploMonaco ?? (globalThis as any).monaco;
+    const model = editor.getModel?.();
+    if (!monacoGlobal?.editor?.getModelMarkers || !model?.uri) {
+      return;
+    }
+
+    const marker = monacoGlobal.editor
+      .getModelMarkers({ resource: model.uri })
+      .find((candidate: any) => candidate.severity === monacoGlobal.MarkerSeverity.Error);
+    this.monacoSchemaError = marker?.message;
   }
 }
