@@ -40,6 +40,7 @@ export class DashboardService {
   lastSuccessfulIssuanceAt: string | null = null;
   lastSuccessfulPresentationAt: string | null = null;
   hasIssuanceConfig = false;
+  recentSessions: Session[] = [];
   isLoading = true;
 
   constructor(private readonly jwtService: JwtService) {}
@@ -67,6 +68,7 @@ export class DashboardService {
     this.credentialConfigs = 0;
     this.presentationConfigs = 0;
     this.hasIssuanceConfig = false;
+    this.recentSessions = [];
 
     try {
       // Build list of promises based on user roles
@@ -128,6 +130,12 @@ export class DashboardService {
               this.presentationConfigs = result.value.data.length;
               break;
             case 'sessions':
+              this.recentSessions = [...result.value.data.items]
+                .sort(
+                  (left: Session, right: Session) =>
+                    new Date(right.updatedAt).getTime() - new Date(left.updatedAt).getTime()
+                )
+                .slice(0, 5);
               result.value.data.items.forEach((session: Session) => {
                 switch (session.status) {
                   case 'active':
@@ -211,6 +219,16 @@ export class DashboardService {
   get canViewSessions(): boolean {
     return (
       this.jwtService.hasRole('issuance:offer') || this.jwtService.hasRole('presentation:request')
+    );
+  }
+
+  get totalSessions(): number {
+    return (
+      this.sessionActive +
+      this.sessionCompleted +
+      this.sessionFetched +
+      this.sessionFailed +
+      this.sessionExpired
     );
   }
 

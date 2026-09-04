@@ -1,25 +1,126 @@
 <div fxLayout="column" fxLayoutAlign="start center" fxFill class="dashboard-container">
-  <!-- Welcome Header -->
+  <!-- Dashboard Header -->
   <div class="welcome-header" fxLayout="row" fxLayoutAlign="space-between center" fxFill>
-    <div>
-      <h1>Welcome to EUDIPLO</h1>
-      <p class="subtitle">Your Diplomatic Layer for EUDI Wallet Integration</p>
+    <div class="dashboard-heading">
+      <div class="heading-row">
+        <h1>Dashboard</h1>
+        <span class="focus-badge">{{ focusLabel }}</span>
+      </div>
+      <p class="subtitle" [class.needs-attention]="dashboardService.hasWarnings">
+        {{ readinessTitle }}
+      </p>
     </div>
-    <div class="version-chips" fxLayout="row" fxLayoutGap="8px">
-      <mat-chip color="primary" highlighted matTooltip="Backend version">
-        <mat-icon matChipAvatar>dns</mat-icon>
-        Backend: {{ backendVersion || '...' }}
-      </mat-chip>
-      <mat-chip color="accent" highlighted matTooltip="Client version">
-        <mat-icon matChipAvatar>web</mat-icon>
-        Client: {{ clientVersion || '...' }}
-      </mat-chip>
-      <mat-chip color="primary" highlighted matTooltip="Startup configuration import mode">
-        <mat-icon matChipAvatar>sync</mat-icon>
-        Import: {{ frontendConfigService.configImportMode || '...' }}
-      </mat-chip>
+    <div class="header-actions">
+      <div class="version-chips" fxLayout="row" fxLayoutGap="8px">
+        <mat-chip matTooltip="Backend version">
+          <mat-icon matChipAvatar>dns</mat-icon>
+          Backend: {{ backendVersion || '...' }}
+        </mat-chip>
+        <mat-chip matTooltip="Client version">
+          <mat-icon matChipAvatar>web</mat-icon>
+          Client: {{ clientVersion || '...' }}
+        </mat-chip>
+        <mat-chip matTooltip="Startup configuration import mode">
+          <mat-icon matChipAvatar>sync</mat-icon>
+          Import: {{ frontendConfigService.configImportMode || '...' }}
+        </mat-chip>
+      </div>
+      <button
+        mat-stroked-button
+        type="button"
+        class="customize-button"
+        (click)="customizePanelOpen = !customizePanelOpen"
+        [attr.aria-expanded]="customizePanelOpen"
+        aria-controls="dashboard-customization"
+      >
+        <mat-icon>tune</mat-icon>
+        Customize
+      </button>
     </div>
   </div>
+
+  @if (customizePanelOpen) {
+    <mat-card id="dashboard-customization" class="customization-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>tune</mat-icon>
+        <mat-card-title>Customize dashboard</mat-card-title>
+        <mat-card-subtitle>Choose a focus, then fine-tune the visible sections</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="customization-grid">
+          <section aria-labelledby="dashboard-focus-heading">
+            <h3 id="dashboard-focus-heading">Dashboard focus</h3>
+            <div class="focus-options">
+              @for (option of focusOptions; track option.value) {
+                <button
+                  type="button"
+                  class="focus-option"
+                  [class.selected]="preferences.focus === option.value"
+                  [disabled]="!option.available"
+                  [attr.aria-pressed]="preferences.focus === option.value"
+                  (click)="setFocus(option.value)"
+                >
+                  <mat-icon>{{ option.icon }}</mat-icon>
+                  <span>
+                    <strong>{{ option.label }}</strong>
+                    <small>{{ option.description }}</small>
+                  </span>
+                  @if (preferences.focus === option.value) {
+                    <mat-icon class="selected-icon">check_circle</mat-icon>
+                  }
+                </button>
+              }
+            </div>
+          </section>
+
+          <section aria-labelledby="visible-sections-heading">
+            <h3 id="visible-sections-heading">Visible sections</h3>
+            <div class="section-toggles">
+              <mat-checkbox
+                [checked]="isSectionVisible('recentActivity')"
+                [disabled]="!dashboardService.canViewSessions"
+                (change)="setSectionVisibility('recentActivity', $event.checked)"
+              >
+                Recent activity
+              </mat-checkbox>
+              <mat-checkbox
+                [checked]="isSectionVisible('sessionOverview')"
+                [disabled]="!dashboardService.canViewSessions"
+                (change)="setSectionVisibility('sessionOverview', $event.checked)"
+              >
+                Session overview
+              </mat-checkbox>
+              <mat-checkbox
+                [checked]="isSectionVisible('quickActions')"
+                (change)="setSectionVisibility('quickActions', $event.checked)"
+              >
+                Quick actions
+              </mat-checkbox>
+              <mat-checkbox
+                [checked]="isSectionVisible('resources')"
+                (change)="setSectionVisibility('resources', $event.checked)"
+              >
+                Documentation & resources
+              </mat-checkbox>
+            </div>
+            <p class="fixed-sections-note">
+              <mat-icon>lock</mat-icon>
+              System health and warnings always remain visible.
+            </p>
+          </section>
+        </div>
+      </mat-card-content>
+      <mat-card-actions align="end">
+        <button mat-button type="button" (click)="resetDashboard()">
+          <mat-icon>restart_alt</mat-icon>
+          Reset to default
+        </button>
+        <button mat-flat-button type="button" color="primary" (click)="customizePanelOpen = false">
+          Done
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  }
 
   @if (dashboardService.isReadOnly && !dashboardService.isLoading) {
     <mat-card class="setup-card readonly-card">
@@ -327,11 +428,7 @@
         <mat-card class="stat-card">
           <mat-card-content fxLayout="column" fxLayoutAlign="center center">
             <mat-icon class="stat-icon sessions">sync</mat-icon>
-            <span class="stat-value">{{
-              dashboardService.sessionActive +
-                dashboardService.sessionCompleted +
-                dashboardService.sessionFetched
-            }}</span>
+            <span class="stat-value">{{ dashboardService.totalSessions }}</span>
             <span class="stat-label">Total Sessions</span>
           </mat-card-content>
         </mat-card>
@@ -434,9 +531,55 @@
     </mat-card>
   }
 
+  <!-- Recent session activity -->
+  @if (dashboardService.canViewSessions && isSectionVisible('recentActivity')) {
+    <mat-card class="recent-activity-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>history</mat-icon>
+        <mat-card-title>Recent Activity</mat-card-title>
+        <mat-card-subtitle>Latest issuance and presentation session updates</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        @if (dashboardService.recentSessions.length > 0) {
+          <div class="activity-list">
+            @for (session of dashboardService.recentSessions; track session.id) {
+              <a class="activity-row" routerLink="/session-management">
+                <mat-icon [class]="'activity-status status-' + session.status">
+                  {{ sessionStatusIcon(session.status) }}
+                </mat-icon>
+                <span class="activity-copy">
+                  <strong>Session {{ session.status }}</strong>
+                  <small>{{ session.id }}</small>
+                </span>
+                <time [attr.datetime]="session.updatedAt">
+                  {{ session.updatedAt | date: 'MMM d, HH:mm' }}
+                </time>
+                <mat-icon class="activity-arrow">chevron_right</mat-icon>
+              </a>
+            }
+          </div>
+        } @else if (!dashboardService.isLoading) {
+          <div class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <div>
+              <strong>No session activity yet</strong>
+              <p>Run an issuance or presentation flow to see recent updates here.</p>
+            </div>
+          </div>
+        }
+      </mat-card-content>
+      @if (dashboardService.recentSessions.length > 0) {
+        <mat-card-actions>
+          <a mat-button color="primary" routerLink="/session-management">View all sessions</a>
+        </mat-card-actions>
+      }
+    </mat-card>
+  }
+
   <!-- Session Status Breakdown -->
   @if (
     dashboardService.canViewSessions &&
+    isSectionVisible('sessionOverview') &&
     dashboardService.sessionActive +
       dashboardService.sessionCompleted +
       dashboardService.sessionFetched +
@@ -498,111 +641,124 @@
   }
 
   <!-- Quick Actions -->
-  <mat-card class="quick-actions-card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>flash_on</mat-icon>
-      <mat-card-title>Quick Actions</mat-card-title>
-      <mat-card-subtitle>Common tasks to get you started</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="quick-actions" fxLayout="row wrap" fxLayoutGap="12px">
-        @if (jwtService.hasRole('issuance:offer')) {
-          <a
-            mat-raised-button
-            color="primary"
-            routerLink="/offer/issuance"
-            [class.disabled]="!dashboardService.isReadyToIssue"
-            [attr.tabindex]="!dashboardService.isReadyToIssue ? -1 : 0"
-            [matTooltip]="
-              !dashboardService.isReadyToIssue
-                ? dashboardService.issueReadinessReason || 'Issuance is not ready'
-                : 'Create an issuance offer'
-            "
-          >
-            <mat-icon>card_giftcard</mat-icon> Issue Credential
-          </a>
-        }
-        @if (jwtService.hasRole('presentation:request')) {
-          <a
-            mat-raised-button
-            color="accent"
-            routerLink="/offer/presentation"
-            [class.disabled]="!dashboardService.isReadyToVerify"
-            [attr.tabindex]="!dashboardService.isReadyToVerify ? -1 : 0"
-            [matTooltip]="
-              !dashboardService.isReadyToVerify
-                ? dashboardService.verifyReadinessReason || 'Presentation is not ready'
-                : 'Request a presentation'
-            "
-          >
-            <mat-icon>fact_check</mat-icon> Request Presentation
-          </a>
-        }
-        @if (dashboardService.canManageIssuance) {
-          <a mat-stroked-button routerLink="/credential-config/create">
-            <mat-icon>add_circle</mat-icon> New Credential Config
-          </a>
-        }
-        @if (dashboardService.canManagePresentation) {
-          <a mat-stroked-button routerLink="/presentation-config/create">
-            <mat-icon>playlist_add</mat-icon> New Presentation Config
-          </a>
-        }
-      </div>
-      @if (
-        (dashboardService.canManageIssuance && !dashboardService.isReadyToIssue) ||
-        (dashboardService.canManagePresentation && !dashboardService.isReadyToVerify)
-      ) {
-        <div class="actions-hint">
-          <mat-icon>info</mat-icon>
-          <span>
-            @if (dashboardService.canManageIssuance && dashboardService.issueReadinessReason) {
-              Issuance is blocked: <strong>{{ dashboardService.issueReadinessReason }}</strong
-              >.
-            }
-            @if (dashboardService.canManagePresentation && dashboardService.verifyReadinessReason) {
-              Presentation is blocked:
-              <strong>{{ dashboardService.verifyReadinessReason }}</strong
-              >.
-            }
-          </span>
+  @if (isSectionVisible('quickActions')) {
+    <mat-card class="quick-actions-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>flash_on</mat-icon>
+        <mat-card-title>Quick Actions</mat-card-title>
+        <mat-card-subtitle>Common tasks to get you started</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="quick-actions" fxLayout="row wrap" fxLayoutGap="12px">
+          @if (jwtService.hasRole('issuance:offer')) {
+            <a
+              mat-raised-button
+              color="primary"
+              [class.focus-first]="preferences.focus === 'issuance'"
+              routerLink="/offer/issuance"
+              [class.disabled]="!dashboardService.isReadyToIssue"
+              [attr.tabindex]="!dashboardService.isReadyToIssue ? -1 : 0"
+              [matTooltip]="
+                !dashboardService.isReadyToIssue
+                  ? dashboardService.issueReadinessReason || 'Issuance is not ready'
+                  : 'Create an issuance offer'
+              "
+            >
+              <mat-icon>card_giftcard</mat-icon> Issue Credential
+            </a>
+          }
+          @if (jwtService.hasRole('presentation:request')) {
+            <a
+              mat-raised-button
+              color="accent"
+              [class.focus-first]="preferences.focus === 'verification'"
+              routerLink="/offer/presentation"
+              [class.disabled]="!dashboardService.isReadyToVerify"
+              [attr.tabindex]="!dashboardService.isReadyToVerify ? -1 : 0"
+              [matTooltip]="
+                !dashboardService.isReadyToVerify
+                  ? dashboardService.verifyReadinessReason || 'Presentation is not ready'
+                  : 'Request a presentation'
+              "
+            >
+              <mat-icon>fact_check</mat-icon> Request Presentation
+            </a>
+          }
+          @if (dashboardService.canManageIssuance) {
+            <a mat-stroked-button routerLink="/credential-config/create">
+              <mat-icon>add_circle</mat-icon> New Credential Config
+            </a>
+          }
+          @if (dashboardService.canManagePresentation) {
+            <a mat-stroked-button routerLink="/presentation-config/create">
+              <mat-icon>playlist_add</mat-icon> New Presentation Config
+            </a>
+          }
         </div>
-      }
-    </mat-card-content>
-  </mat-card>
+        @if (
+          (dashboardService.canManageIssuance && !dashboardService.isReadyToIssue) ||
+          (dashboardService.canManagePresentation && !dashboardService.isReadyToVerify)
+        ) {
+          <div class="actions-hint">
+            <mat-icon>info</mat-icon>
+            <span>
+              @if (dashboardService.canManageIssuance && dashboardService.issueReadinessReason) {
+                Issuance is blocked: <strong>{{ dashboardService.issueReadinessReason }}</strong
+                >.
+              }
+              @if (
+                dashboardService.canManagePresentation && dashboardService.verifyReadinessReason
+              ) {
+                Presentation is blocked:
+                <strong>{{ dashboardService.verifyReadinessReason }}</strong
+                >.
+              }
+            </span>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+  }
 
   <!-- Resources & Documentation -->
-  <mat-card class="resources-card">
-    <mat-card-header>
-      <mat-icon mat-card-avatar>menu_book</mat-icon>
-      <mat-card-title>Documentation & Resources</mat-card-title>
-      <mat-card-subtitle>Learn more about EUDIPLO</mat-card-subtitle>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="resource-links" fxLayout="row wrap" fxLayoutGap="16px">
-        <a mat-stroked-button href="https://docs.eudiplo.dev/" target="_blank" rel="noopener">
-          <mat-icon>description</mat-icon> Documentation
-        </a>
-        <a mat-stroked-button [href]="currentBaseUrl + '/api-docs'" target="_blank" rel="noopener">
-          <mat-icon>api</mat-icon> API Reference
-        </a>
-        <a
-          mat-stroked-button
-          href="https://github.com/openwallet-foundation/eudiplo"
-          target="_blank"
-          rel="noopener"
-        >
-          <mat-icon>code</mat-icon> GitHub
-        </a>
-        <a mat-stroked-button href="https://discord.gg/58ys8XfXDu" target="_blank" rel="noopener">
-          <mat-icon>forum</mat-icon> Discord Community
-        </a>
-        @if (grafanaEnabled) {
-          <button mat-stroked-button (click)="openGrafana()">
-            <mat-icon>monitoring</mat-icon> Grafana Dashboard
-          </button>
-        }
-      </div>
-    </mat-card-content>
-  </mat-card>
+  @if (isSectionVisible('resources')) {
+    <mat-card class="resources-card">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>menu_book</mat-icon>
+        <mat-card-title>Documentation & Resources</mat-card-title>
+        <mat-card-subtitle>Learn more about EUDIPLO</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="resource-links" fxLayout="row wrap" fxLayoutGap="16px">
+          <a mat-stroked-button href="https://docs.eudiplo.dev/" target="_blank" rel="noopener">
+            <mat-icon>description</mat-icon> Documentation
+          </a>
+          <a
+            mat-stroked-button
+            [href]="currentBaseUrl + '/api-docs'"
+            target="_blank"
+            rel="noopener"
+          >
+            <mat-icon>api</mat-icon> API Reference
+          </a>
+          <a
+            mat-stroked-button
+            href="https://github.com/openwallet-foundation/eudiplo"
+            target="_blank"
+            rel="noopener"
+          >
+            <mat-icon>code</mat-icon> GitHub
+          </a>
+          <a mat-stroked-button href="https://discord.gg/58ys8XfXDu" target="_blank" rel="noopener">
+            <mat-icon>forum</mat-icon> Discord Community
+          </a>
+          @if (grafanaEnabled) {
+            <button mat-stroked-button (click)="openGrafana()">
+              <mat-icon>monitoring</mat-icon> Grafana Dashboard
+            </button>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+  }
 </div>
