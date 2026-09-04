@@ -153,6 +153,10 @@ function onMonacoLoad() {
 
   const editorSchemas = schemas.map((entry) => ({
     ...entry,
+    fileMatch:
+      entry.uri === './TransactionData.schema.json'
+        ? ['a://b/TransactionData-*.schema.json']
+        : entry.fileMatch,
     schema: toEditorFriendlySchema(entry.schema),
   }));
 
