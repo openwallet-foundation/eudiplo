@@ -139,7 +139,7 @@ describe("Presentation - SD-JWT Credential", () => {
     });
 
     test("present sd jwt credential", async () => {
-        const { submitRes } = await submitPresentation({
+        const { res, submitRes } = await submitPresentation({
             requestId: "pid-no-hook",
             credentialId: "pid",
             privateKey: privateIssuerKey,
@@ -148,6 +148,13 @@ describe("Presentation - SD-JWT Credential", () => {
 
         expect(submitRes).toBeDefined();
         expect(submitRes.response.status).toBe(200);
+
+        const sessionResponse = await request(app.getHttpServer())
+            .get(`/session/${res.body.session}`)
+            .trustLocalhost()
+            .set("Authorization", `Bearer ${authToken}`)
+            .expect(200);
+        expect(sessionResponse.body.responseEncryptionPrivateJwk).toBeNull();
     });
 
     test("present sd jwt credential using claim_sets preference order", async () => {
