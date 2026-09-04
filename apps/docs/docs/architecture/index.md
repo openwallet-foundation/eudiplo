@@ -4,7 +4,7 @@ title: Architecture Overview
 
 # Architecture Overview
 
-**EUDIPLO** is a lightweight middleware designed to bridge the gap between existing systems and the emerging ecosystem of **EUDI Wallets**. Instead of implementing complex protocols such as OpenID4VP, SD-JWT, or DIDComm themselves, developers can run EUDIPLO as a standalone Docker container and interact with it via simple APIs or configuration files.
+**EUDIPLO** is a lightweight middleware designed to bridge the gap between existing systems and the emerging ecosystem of **EUDI Wallets**. Instead of implementing complex protocols such as OpenID4VP or SD-JWT themselves, developers can run EUDIPLO as a standalone Docker container and interact with it via simple APIs or configuration files.
 
 It acts as an **adapter** between trusted infrastructure and local applications or web services. EUDIPLO handles the complexities of the EUDI Wallet ecosystem, allowing you to focus on your core business logic without worrying about the underlying protocols.
 
