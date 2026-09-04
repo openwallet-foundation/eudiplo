@@ -160,6 +160,10 @@ export type VerifierOptions = {
      * See OID4VP spec Appendix B.3.3.1 for details.
      */
     transactionData?: string[];
+    /** Enforce TS12 SCA key-binding claims for this credential. */
+    ts12TransactionData?: boolean;
+    /** OID4VP response_mode from the signed authorization request. */
+    keyBindingResponseMode?: string;
     /**
      * Expected KB-JWT audience for SD-JWT VC key binding validation.
      * Usually the verifier client_id from the presentation request.

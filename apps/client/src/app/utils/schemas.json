@@ -10425,6 +10425,9 @@
                       "type": "string"
                     },
                     "description": "Credential query ids this transaction data applies to."
+                  },
+                  "payload": {
+                    "description": "Transaction details. Required for TS12 SCA transaction data."
                   }
                 },
                 "required": ["type", "credential_ids"],
@@ -10509,58 +10512,23 @@
         },
         "registrationCertImportJwt": {
           "description": "Optional imported registration certificate JWT.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "registrationCertImportId": {
           "description": "Optional registrar-side registration certificate id.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "registrationCertBodyPrivacyPolicy": {
           "description": "Optional registration certificate privacy policy URI.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "registrationCertBodySupportUri": {
           "description": "Optional registration certificate support URI.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "registrationCertBodyIntermediary": {
           "description": "Optional registration certificate intermediary.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "null"
-            }
-          ]
+          "type": ["string", "null"]
         },
         "registrationCertBodyPurpose": {
           "description": "Optional registration certificate purpose entries.",
@@ -11073,6 +11041,9 @@
             "type": "string"
           },
           "description": "Credential query ids this transaction data applies to."
+        },
+        "payload": {
+          "description": "Transaction details. Required for TS12 SCA transaction data."
         }
       },
       "required": ["type", "credential_ids"],

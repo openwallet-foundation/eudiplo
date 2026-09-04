@@ -5,6 +5,7 @@ import {
     WebhookConfig,
     WebhookConfigSchema,
 } from "../../../webhook/webhook.dto";
+import { TransactionDataSchema } from "../../presentations/schemas/presentation-config.schema";
 
 /**
  * Values for the type of response expected from the presentation request.
@@ -32,7 +33,7 @@ const PresentationRequestSchema = z
         webhook: WebhookConfigSchema.optional(),
         redirectUri: z.string().optional(),
         expected_origin: z.string().optional(),
-        transaction_data: z.array(z.record(z.string(), z.unknown())).optional(),
+        transaction_data: z.array(TransactionDataSchema).optional(),
         skewSeconds: z.number().min(0).optional(),
     })
     .strict();
@@ -49,7 +50,7 @@ interface PresentationRequestData {
     webhook?: WebhookConfig;
     redirectUri?: string;
     expected_origin?: string;
-    transaction_data?: Record<string, unknown>[];
+    transaction_data?: z.infer<typeof TransactionDataSchema>[];
     skewSeconds?: number;
 }
 
@@ -92,7 +93,7 @@ export class PresentationRequest
      * Optional transaction data to include in the OID4VP request.
      * If provided, this will override the transaction_data from the presentation configuration.
      */
-    transaction_data?: Record<string, unknown>[];
+    transaction_data?: z.infer<typeof TransactionDataSchema>[];
 
     /**
      * Optional clock skew tolerance for this presentation offer, in seconds.
