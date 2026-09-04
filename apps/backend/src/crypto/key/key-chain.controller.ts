@@ -145,10 +145,12 @@ export class KeyChainController {
     }
 
     /**
-     * List all key chains for the tenant.
+     * List user-manageable signing key chains for the tenant.
      */
     @Get()
-    @ApiOperation({ summary: "List all key chains for the tenant" })
+    @ApiOperation({
+        summary: "List user-manageable signing key chains for the tenant",
+    })
     @ApiResponse({
         status: 200,
         description: "List of key chains",

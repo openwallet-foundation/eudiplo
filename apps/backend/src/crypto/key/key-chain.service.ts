@@ -267,7 +267,14 @@ export class KeyChainService {
         usageType?: KeyUsageType,
     ): Promise<KeyChainResponseDto[]> {
         const keyChains = await this.keyChainRepository.find({
-            where: { tenantId, ...(usageType ? { usageType } : {}) },
+            // Only signing key chains are user-manageable. Tenant-wide
+            // encryption material is system-owned and must not be exposed in
+            // the key-management list.
+            where: {
+                tenantId,
+                usage: KeyUsage.Sign,
+                ...(usageType ? { usageType } : {}),
+            },
         });
 
         return keyChains.map((kc) => this.toResponseDto(kc));

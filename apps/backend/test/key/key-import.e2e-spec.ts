@@ -67,5 +67,10 @@ describe("Key Chain — Import (e2e)", () => {
             (keyChain) => keyChain.id === keyId,
         );
         expect(foundKeyChain).toBeDefined();
+        expect(
+            getResponse.body.some(
+                (keyChain) => keyChain.usageType === KeyUsageType.Encrypt,
+            ),
+        ).toBe(false);
     });
 });

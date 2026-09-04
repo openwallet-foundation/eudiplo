@@ -572,6 +572,7 @@ export class Oid4vpService {
             await this.sessionService.add(session.id, {
                 status: SessionStatus.Failed,
                 errorReason: `Wallet error: ${errorMessage}`,
+                responseEncryptionPrivateJwk: null,
             });
 
             // Return redirect_uri with error if configured
@@ -690,6 +691,9 @@ export class Oid4vpService {
                 responseCode,
                 consumed: true,
                 consumedAt: new Date(),
+                // The response key is unique to this authorization request and
+                // is no longer needed after the response has been processed.
+                responseEncryptionPrivateJwk: null,
                 // Per-credential provenance for the OID4VP path is threaded in a
                 // follow-up (see finding 2026-07-21-structured-session-outcome,
                 // Phase 2); record the success result for now.
@@ -796,6 +800,7 @@ export class Oid4vpService {
             await this.sessionService.add(session.id, {
                 status: SessionStatus.Failed,
                 errorReason: errorMessage,
+                responseEncryptionPrivateJwk: null,
                 ...(structured?.code
                     ? {
                           failureCode: structured.code,

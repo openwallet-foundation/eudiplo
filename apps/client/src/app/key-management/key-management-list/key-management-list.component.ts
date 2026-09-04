@@ -14,7 +14,7 @@ import { KeyChainResponseDto } from '@eudiplo/sdk-core';
 import { KeyChainService } from '../key-chain.service';
 import { ConfigOwnershipDirective } from '../../config-portability/config-ownership.directive';
 
-type KeyUsageType = 'attestation' | 'statusList' | 'access' | 'trustList' | 'encrypt';
+type KeyUsageType = 'attestation' | 'statusList' | 'access' | 'trustList';
 
 /**
  * Display item for key chains.
@@ -92,11 +92,6 @@ export class KeyManagementListComponent implements OnInit {
       label: 'Trust List Keys',
       icon: 'shield',
       description: 'Keys for signing trust list entries.',
-    },
-    encrypt: {
-      label: 'Encryption Keys',
-      icon: 'lock',
-      description: 'Keys for encryption use cases.',
     },
   };
 
