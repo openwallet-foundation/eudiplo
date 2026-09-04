@@ -206,7 +206,7 @@ export class Session {
      * wallet responses. Encrypted at rest.
      */
     @Column("text", { nullable: true, transformer: EncryptedJsonTransformer })
-    responseEncryptionPrivateJwk?: JWK;
+    responseEncryptionPrivateJwk?: JWK | null;
 
     /**
      * Verified credentials from the presentation process.

@@ -128,15 +128,33 @@ export class SessionService implements OnApplicationBootstrap {
      */
     async setState(session: Session, status: SessionStatus) {
         const sessionType = session.requestId ? "verification" : "issuance";
+        const isTerminal =
+            status === SessionStatus.Completed ||
+            status === SessionStatus.Failed ||
+            status === SessionStatus.Expired;
 
-        await this.sessionRepository.update({ id: session.id }, { status });
+        await this.sessionRepository.update(
+            { id: session.id },
+            {
+                status,
+                ...(isTerminal
+                    ? { responseEncryptionPrivateJwk: null }
+                    : {}),
+            },
+        );
 
         // Emit status change event for SSE subscribers
         const event: SessionStatusChangedEvent = {
             sessionId: session.id,
             status,
             updatedAt: new Date(),
-            session: { ...session, status },
+            session: {
+                ...session,
+                status,
+                ...(isTerminal
+                    ? { responseEncryptionPrivateJwk: null }
+                    : {}),
+            },
         };
         this.eventEmitter.emit(SESSION_STATUS_CHANGED, event);
 
@@ -350,12 +368,12 @@ export class SessionService implements OnApplicationBootstrap {
                 .createQueryBuilder()
                 .update()
                 .set({
-                    credentials: undefined,
-                    credentialPayload: undefined,
-                    auth_queries: undefined,
-                    offer: undefined,
-                    requestObject: undefined,
-                    responseEncryptionPrivateJwk: undefined,
+                    credentials: () => "NULL",
+                    credentialPayload: () => "NULL",
+                    auth_queries: () => "NULL",
+                    offer: () => "NULL",
+                    requestObject: () => "NULL",
+                    responseEncryptionPrivateJwk: () => "NULL",
                 })
                 .where("tenantId = :tenantId", { tenantId: tenant.id })
                 .andWhere("createdAt < :cutoffDate", { cutoffDate })
