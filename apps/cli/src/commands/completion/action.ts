@@ -1,6 +1,6 @@
+import type { Command, Option } from "commander";
 import type { CommandContext } from "../../types.js";
 import { loadCliState } from "../shared.js";
-import type { Command, Option } from "commander";
 
 export type CompletionShell = "bash" | "zsh" | "fish" | "powershell";
 

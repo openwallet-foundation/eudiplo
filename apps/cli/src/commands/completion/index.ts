@@ -2,9 +2,9 @@ import { Argument, Command, type OptionValues } from "commander";
 import type { CommandContext } from "../../types.js";
 import type { SetExitCode } from "../shared.js";
 import {
+    type CompletionShell,
     runCompletion,
     runCompletionCandidates,
-    type CompletionShell,
 } from "./action.js";
 
 const supportedShells: CompletionShell[] = ["bash", "zsh", "fish", "powershell"];
