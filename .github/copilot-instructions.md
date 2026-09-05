@@ -89,7 +89,12 @@
 - Use **conventional commits** (`feat:`, `fix:`, `docs:`, etc.). Semantic-release uses these to determine version bumps.
 - **Breaking changes**: Add a `BREAKING CHANGE:` footer in the commit message body **and** fill in the "Breaking Changes" section of the PR description. The PR description is the primary source for generating migration guides — describe _what_ changed and _how to migrate_.
 - When creating a PR that contains breaking changes, add the `breaking-change` label.
-- **All commits must be signed** to pass GitHub's verification checks. Configure GPG signing locally (`git config --global user.signingkey <key>`) and use `-S` flag when committing (`git commit -S`) or enable auto-signing (`git config --global commit.gpgsign true`).
+- Every commit must be cryptographically signed and include a DCO sign-off.
+- Use `git commit -S -s` when creating commits, including amended commits.
+- Use the existing Git signing configuration and configured user identity.
+  Do not change the signing key, signing format, or signing program.
+- If signing fails or requires 1Password authorization, report the error
+  and let the user authorize it. Never bypass signing.
 
 ## Deployment Conventions
 - Docker Compose files: root `docker-compose.yml` and `deployment/docker-compose/docker-compose.yml`.
