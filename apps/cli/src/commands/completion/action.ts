@@ -1,5 +1,6 @@
-import type { Command, Option } from "commander";
 import type { CommandContext } from "../../types.js";
+import { loadCliState } from "../shared.js";
+import type { Command, Option } from "commander";
 
 export type CompletionShell = "bash" | "zsh" | "fish" | "powershell";
 
@@ -11,12 +12,12 @@ export function runCompletion(
     return 0;
 }
 
-export function runCompletionCandidates(
+export async function runCompletionCandidates(
     root: Command,
     words: string[],
     context: CommandContext,
-): number {
-    for (const candidate of completionCandidates(root, words)) {
+): Promise<number> {
+    for (const candidate of await completionCandidates(root, words, context)) {
         context.stdout.write(`${candidate}\n`);
     }
     return 0;
@@ -35,7 +36,27 @@ function completionScript(shell: CompletionShell): string {
     }
 }
 
-function completionCandidates(root: Command, words: string[]): string[] {
+async function completionCandidates(
+    root: Command,
+    words: string[],
+    context: CommandContext,
+): Promise<string[]> {
+    const current = resolveCommand(root, words);
+    const lastOption = findOption(current, words.at(-1));
+    if (lastOption) {
+        if (lastOption.long === "--instance") {
+            return instanceCandidates(context);
+        }
+        const choices = optionChoices(lastOption);
+        if (choices.length > 0) {
+            return choices;
+        }
+    }
+
+    return staticCandidates(current, words.at(-1));
+}
+
+function resolveCommand(root: Command, words: string[]): Command {
     let current = root;
     let skipOptionValue = false;
     for (const word of words) {
@@ -58,15 +79,10 @@ function completionCandidates(root: Command, words: string[]): string[] {
             current = child;
         }
     }
+    return current;
+}
 
-    const lastOption = findOption(current, words.at(-1));
-    if (lastOption) {
-        const choices = optionChoices(lastOption);
-        if (choices.length > 0) {
-            return choices;
-        }
-    }
-
+function staticCandidates(current: Command, lastWord: string | undefined): string[] {
     const candidates = ["-h", "--help"];
     for (const command of current.commands) {
         if (command.name() !== "_complete") {
@@ -82,10 +98,19 @@ function completionCandidates(root: Command, words: string[]): string[] {
         }
     }
 
-    if (current.commands.length === 0 && words.at(-1) === current.name()) {
+    if (current.commands.length === 0 && lastWord === current.name()) {
         candidates.push(...(current.registeredArguments[0]?.argChoices ?? []));
     }
     return [...new Set(candidates)];
+}
+
+async function instanceCandidates(context: CommandContext): Promise<string[]> {
+    try {
+        const { config } = await loadCliState(context);
+        return Object.keys(config.instances);
+    } catch {
+        return [];
+    }
 }
 
 function findOption(command: Command, word: string | undefined): Option | undefined {
@@ -102,7 +127,7 @@ function optionChoices(option: Option): string[] {
     if (option.argChoices) {
         return option.argChoices;
     }
-    const placeholder = option.flags.match(/[<[]([^>\]]+)[>\]]/u)?.[1];
+    const placeholder = /[<[]([^>\]]+)[>\]]/u.exec(option.flags)?.[1];
     return placeholder?.includes("|") ? placeholder.split("|") : [];
 }
 

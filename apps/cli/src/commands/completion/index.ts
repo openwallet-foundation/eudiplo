@@ -32,10 +32,12 @@ export function createCompletionCandidatesCommand(
     return new Command("_complete")
         .argument("[words...]")
         .allowUnknownOption(true)
-        .action((words: string[], _options: OptionValues, command: Command) => {
+        .action(async (words: string[], _options: OptionValues, command: Command) => {
             if (!command.parent) {
                 throw new Error("Completion command is not attached to the CLI root.");
             }
-            setExitCode(runCompletionCandidates(command.parent, words, context));
+            setExitCode(
+                await runCompletionCandidates(command.parent, words, context),
+            );
         });
 }
