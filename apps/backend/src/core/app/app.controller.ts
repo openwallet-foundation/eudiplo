@@ -9,6 +9,7 @@ import {
 import { JwtAuthGuard } from "../../auth/auth.guard";
 import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service";
 import { FrontendConfigResponseDto } from "./dto/frontend-config-response.dto";
+import { ServiceInfoResponseDto } from "./dto/service-info-response.dto";
 import { VersionResponseDto } from "./dto/version-response.dto";
 
 /**
@@ -26,11 +27,16 @@ export class AppController {
      * Main endpoint providing service info
      */
     @Get()
-    main() {
+    @ApiOperation({ summary: "Get service info" })
+    @ApiResponse({
+        status: 200,
+        description: "Service info",
+        type: ServiceInfoResponseDto,
+    })
+    main(): ServiceInfoResponseDto {
         return {
             service: "EUDIPLO",
-            documentation:
-                "https://openwallet-foundation.github.io/eudiplo/docs/latest/",
+            documentation: "https://docs.eudiplo.dev",
         };
     }
 
