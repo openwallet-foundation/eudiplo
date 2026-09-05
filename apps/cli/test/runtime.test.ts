@@ -286,7 +286,22 @@ describe("EUDIPLO CLI", () => {
     });
 
     it("provides dynamic command, option, and choice completion candidates", async () => {
-        const { context, output } = await createContext();
+        const { context, output, configPath } = await createContext();
+        await writeFile(
+            configPath,
+            JSON.stringify({
+                instances: {
+                    development: {
+                        target: "compose",
+                        url: "http://localhost:3000",
+                    },
+                    production: {
+                        target: "external",
+                        url: "https://eudiplo.example.com",
+                    },
+                },
+            }),
+        );
 
         expect(await runCli(["_complete"], context)).toBe(0);
         expect(output.stdout).toContain("instance\n");
@@ -314,6 +329,13 @@ describe("EUDIPLO CLI", () => {
         );
         expect(output.stdout).toContain("compose\n");
         expect(output.stdout).toContain("external\n");
+
+        output.stdout = "";
+        expect(await runCli(["_complete", "up", "--instance"], context)).toBe(
+            0,
+        );
+        expect(output.stdout).toContain("development\n");
+        expect(output.stdout).toContain("production\n");
     });
 
     it("registers an external instance without storing secrets", async () => {
