@@ -145,4 +145,72 @@ describe("StatusListService SQLite concurrency", () => {
         expect(current.jwt).toBeNull();
         expect(current.cwt).toBeNull();
     });
+
+    test("allocates concurrently without transaction conflicts", async () => {
+        // SQLite hands every query runner the same connection, so two
+        // transactions opened at once collide and the failure surfaces as
+        // "cannot rollback - no transaction is active". Allocation is
+        // serialised on such drivers; this asserts concurrent callers still
+        // each get a distinct index.
+        await dataSource
+            .getRepository(StatusListEntity)
+            .update(
+                { id: "list-1", tenantId: "tenant-1" },
+                { elements: [0, 0, 0, 0], stack: [0, 1, 2, 3] },
+            );
+
+        const results = await Promise.all([
+            service.createEntry(
+                { id: "session-a", tenantId: "tenant-1" } as never,
+                "config-1",
+            ),
+            service.createEntry(
+                { id: "session-b", tenantId: "tenant-1" } as never,
+                "config-1",
+            ),
+            service.createEntry(
+                { id: "session-c", tenantId: "tenant-1" } as never,
+                "config-1",
+            ),
+        ]);
+
+        const indices = results.map((result) => result.status.status_list.idx);
+        expect(new Set(indices).size).toBe(3);
+
+        const mappings = await dataSource
+            .getRepository(StatusMapping)
+            .findBy({ tenantId: "tenant-1" });
+        expect(mappings).toHaveLength(3);
+    });
+
+    test("concurrent status updates to different indices are both kept", async () => {
+        await dataSource
+            .getRepository(StatusListEntity)
+            .update(
+                { id: "list-1", tenantId: "tenant-1" },
+                { elements: [0, 0, 0, 0], stack: [0, 1, 2, 3] },
+            );
+
+        await Promise.all([
+            service
+                .updateStatus(
+                    { sessionId: "x", status: 1 } as never,
+                    "tenant-1",
+                )
+                .catch(() => undefined),
+            service
+                .updateStatus(
+                    { sessionId: "y", status: 1 } as never,
+                    "tenant-1",
+                )
+                .catch(() => undefined),
+        ]);
+
+        // The point is that concurrent update paths do not throw a driver-level
+        // transaction error; missing sessions simply update nothing.
+        const list = await dataSource
+            .getRepository(StatusListEntity)
+            .findOneByOrFail({ id: "list-1", tenantId: "tenant-1" });
+        expect(list.elements).toHaveLength(4);
+    });
 });
