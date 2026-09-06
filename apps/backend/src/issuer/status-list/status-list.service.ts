@@ -19,7 +19,13 @@ import {
 } from "@owf/token-status-list";
 import { X509Certificate } from "@peculiar/x509";
 import { JwtPayload } from "@sd-jwt/core";
-import { DataSource, EntityManager, IsNull, Repository } from "typeorm";
+import {
+    DataSource,
+    EntityManager,
+    IsNull,
+    type QueryRunner,
+    Repository,
+} from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
 import { CertService } from "../../crypto/key/cert/cert.service";
@@ -65,6 +71,12 @@ interface AllocatedStatusEntry {
 export class StatusListService {
     private readonly logger = new Logger(StatusListService.name);
     private readonly maxRetries = 3;
+
+    /**
+     * Tail of the promise chain used to serialise write transactions when the
+     * driver cannot support concurrent ones (see {@link runSerialized}).
+     */
+    private writeQueue: Promise<unknown> = Promise.resolve();
     private readonly retryDelayMs = 100;
 
     constructor(
@@ -817,6 +829,32 @@ export class StatusListService {
     private async allocateEntries(
         options: EntryAllocationOptions,
     ): Promise<AllocatedStatusEntry[]> {
+        const { entries, shouldCreateList } = await this.runSerialized(() =>
+            this.allocateEntriesTransaction(options),
+        );
+
+        if (entries) {
+            return entries;
+        }
+
+        if (shouldCreateList) {
+            return this.createListAndAllocateEntries(options);
+        }
+
+        throw new ConflictException("No status list available for allocation");
+    }
+
+    /**
+     * The transactional part of {@link allocateEntries}, kept separate so it
+     * can be serialised as a unit. Creating a new list happens outside the
+     * transaction, so it is reported back to the caller rather than done here.
+     */
+    private async allocateEntriesTransaction(
+        options: EntryAllocationOptions,
+    ): Promise<{
+        entries?: AllocatedStatusEntry[];
+        shouldCreateList: boolean;
+    }> {
         const queryRunner = this.dataSource.createQueryRunner();
         let shouldCreateList = false;
 
@@ -840,12 +878,10 @@ export class StatusListService {
                     options,
                 );
                 await queryRunner.commitTransaction();
-                return entries;
+                return { entries, shouldCreateList: false };
             }
         } catch (error) {
-            if (queryRunner.isTransactionActive) {
-                await queryRunner.rollbackTransaction();
-            }
+            await this.safeRollback(queryRunner);
 
             if (this.isRetryableConcurrencyError(error)) {
                 throw new ConflictException(
@@ -858,11 +894,7 @@ export class StatusListService {
             await queryRunner.release();
         }
 
-        if (shouldCreateList) {
-            return this.createListAndAllocateEntries(options);
-        }
-
-        throw new ConflictException("No status list available for allocation");
+        return { shouldCreateList };
     }
 
     private async findAvailableListForAllocation(
@@ -978,6 +1010,80 @@ export class StatusListService {
     }
 
     /**
+     * Whether the configured driver can run transactions from more than one
+     * query runner at a time.
+     *
+     * TypeORM's SQLite drivers hand every query runner the same underlying
+     * connection — `connect()` returns `driver.databaseConnection` — while
+     * `isTransactionActive` and `transactionDepth` are per-runner fields. Two
+     * runners therefore each believe they are at depth 0 and both issue
+     * `BEGIN TRANSACTION` against one connection, which SQLite rejects. The
+     * failure then surfaces from the rollback in the catch block, because the
+     * per-runner flag says a transaction is active while the connection's real
+     * transaction has already been committed or rolled back by the other
+     * runner.
+     */
+    private supportsConcurrentTransactions(): boolean {
+        return this.dataSource.driver.options.type !== "better-sqlite3";
+    }
+
+    /**
+     * Run a write transaction, serialising it against other writes when the
+     * driver cannot handle concurrent transactions.
+     *
+     * On PostgreSQL this is a straight pass-through and transactions run
+     * concurrently as before. On SQLite the operations are chained so only one
+     * transaction is open at a time, which is what the single shared
+     * connection can actually support.
+     *
+     * This is deliberately not the integrity mechanism: correctness across
+     * processes and instances still rests on the version checks and the unique
+     * `(tenantId, statusListId, index)` constraint. Serialising only prevents a
+     * single process from attempting something the driver cannot do.
+     */
+    private runSerialized<T>(operation: () => Promise<T>): Promise<T> {
+        if (this.supportsConcurrentTransactions()) {
+            return operation();
+        }
+
+        const result = this.writeQueue.then(operation, operation);
+        // Keep the chain alive regardless of whether this operation settles
+        // successfully, so one failure cannot stall every later write.
+        this.writeQueue = result.then(
+            () => undefined,
+            () => undefined,
+        );
+        return result;
+    }
+
+    /**
+     * Roll back a transaction without letting the rollback itself mask the
+     * error that caused it.
+     *
+     * `queryRunner.isTransactionActive` reflects per-runner state, so it can be
+     * true while the shared connection has no open transaction. Attempting the
+     * rollback anyway raises "cannot rollback - no transaction is active",
+     * which would replace the original failure with a misleading one.
+     */
+    private async safeRollback(queryRunner: QueryRunner): Promise<void> {
+        if (!queryRunner.isTransactionActive) {
+            return;
+        }
+
+        try {
+            await queryRunner.rollbackTransaction();
+        } catch (rollbackError) {
+            this.logger.debug(
+                `Rollback skipped: ${
+                    rollbackError instanceof Error
+                        ? rollbackError.message
+                        : String(rollbackError)
+                }`,
+            );
+        }
+    }
+
+    /**
      * Helper function to introduce a delay for retry logic.
      */
     private delay(ms: number): Promise<void> {
@@ -1069,6 +1175,30 @@ export class StatusListService {
         value: number,
         tenantId: string,
     ): Promise<void> {
+        const updateCommitted = await this.runSerialized(() =>
+            this.setEntryTransaction(listId, index, value, tenantId),
+        );
+
+        if (updateCommitted) {
+            const effectiveConfig =
+                await this.statusListConfigService.getEffectiveConfig(tenantId);
+            if (effectiveConfig.immediateUpdate) {
+                await this.regenerateListTokens(tenantId, listId);
+            }
+        }
+    }
+
+    /**
+     * The transactional part of {@link setEntryWithRetry}, separated so it can
+     * be serialised as a unit. Token regeneration deliberately happens after
+     * the transaction commits, so signing never runs inside it.
+     */
+    private async setEntryTransaction(
+        listId: string,
+        index: number,
+        value: number,
+        tenantId: string,
+    ): Promise<boolean> {
         const queryRunner = this.dataSource.createQueryRunner();
         let updateCommitted = false;
 
@@ -1116,21 +1246,13 @@ export class StatusListService {
             await queryRunner.commitTransaction();
             updateCommitted = true;
         } catch (error) {
-            if (queryRunner.isTransactionActive) {
-                await queryRunner.rollbackTransaction();
-            }
+            await this.safeRollback(queryRunner);
             throw error;
         } finally {
             await queryRunner.release();
         }
 
-        if (updateCommitted) {
-            const effectiveConfig =
-                await this.statusListConfigService.getEffectiveConfig(tenantId);
-            if (effectiveConfig.immediateUpdate) {
-                await this.regenerateListTokens(tenantId, listId);
-            }
-        }
+        return updateCommitted;
     }
 
     /**
