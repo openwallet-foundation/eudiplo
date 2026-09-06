@@ -5,11 +5,12 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    Optional,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { decodeJwt } from "jose";
-import { TraceService } from "nestjs-otel";
+import { MetricService, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { LessThan, Repository } from "typeorm";
 import { v4 } from "uuid";
@@ -70,8 +71,22 @@ export class ChainedAsService {
     /** Cache for upstream OIDC discovery documents */
     private readonly discoveryCache = new Map<
         string,
-        { doc: OidcDiscoveryDocument; expiresAt: number }
+        { doc: OidcDiscoveryDocument; fetchedAt: number; expiresAt: number }
     >();
+    private readonly inFlightDiscoveryRequests = new Map<
+        string,
+        Promise<OidcDiscoveryDocument>
+    >();
+
+    private readonly discoveryHitsCounter;
+    private readonly discoveryMissesCounter;
+    private readonly discoveryStaleCounter;
+    private readonly discoveryFetchesCounter;
+
+    clearDiscoveryCache(): void {
+        this.discoveryCache.clear();
+        this.inFlightDiscoveryRequests.clear();
+    }
 
     /** Request URI prefix for PAR responses */
     private readonly REQUEST_URI_PREFIX = "urn:ietf:params:oauth:request_uri:";
@@ -93,7 +108,25 @@ export class ChainedAsService {
         private readonly traceService: TraceService,
         @InjectRepository(ChainedAsSessionEntity)
         private readonly sessionRepository: Repository<ChainedAsSessionEntity>,
-    ) {}
+        @Optional() private readonly metricService?: MetricService,
+    ) {
+        this.discoveryHitsCounter = this.metricService?.getCounter(
+            "chained_as_discovery_cache_hits_total",
+            { description: "Total hits on Chained AS upstream discovery cache" },
+        );
+        this.discoveryMissesCounter = this.metricService?.getCounter(
+            "chained_as_discovery_cache_misses_total",
+            { description: "Total misses on Chained AS upstream discovery cache" },
+        );
+        this.discoveryStaleCounter = this.metricService?.getCounter(
+            "chained_as_discovery_cache_stale_total",
+            { description: "Total stale hits on Chained AS upstream discovery cache" },
+        );
+        this.discoveryFetchesCounter = this.metricService?.getCounter(
+            "chained_as_discovery_fetches_total",
+            { description: "Total outbound Chained AS upstream discovery fetches" },
+        );
+    }
 
     /**
      * Get the base URL for this tenant's Chained AS.
@@ -176,34 +209,66 @@ export class ChainedAsService {
             federationTrustSource,
         );
 
+        const now = Date.now();
         const cached = this.discoveryCache.get(issuer);
-        if (cached && cached.expiresAt > Date.now()) {
+        if (cached && cached.expiresAt > now) {
+            this.discoveryHitsCounter?.add(1, { issuer });
+            this.logger.debug(`OIDC discovery cache hit for ${issuer}`);
             return cached.doc;
         }
 
-        const wellKnownUrl = `${issuer.replace(/\/$/, "")}/.well-known/openid-configuration`;
+        const inFlight = this.inFlightDiscoveryRequests.get(issuer);
+        if (inFlight) {
+            this.logger.debug(
+                `Deduplicating in-flight OIDC discovery fetch for ${issuer}`,
+            );
+            return inFlight;
+        }
+
+        this.discoveryMissesCounter?.add(1, { issuer });
+
+        const fetchPromise = (async (): Promise<OidcDiscoveryDocument> => {
+            const wellKnownUrl = `${issuer.replace(/\/$/, "")}/.well-known/openid-configuration`;
+            this.discoveryFetchesCounter?.add(1, { issuer });
+
+            try {
+                const response = await firstValueFrom(
+                    this.httpService.get<OidcDiscoveryDocument>(wellKnownUrl),
+                );
+
+                const doc = response.data;
+                // Cache for 5 minutes
+                this.discoveryCache.set(issuer, {
+                    doc,
+                    fetchedAt: Date.now(),
+                    expiresAt: Date.now() + 5 * 60 * 1000,
+                });
+
+                return doc;
+            } catch (error) {
+                if (cached && now - cached.fetchedAt <= 60 * 60 * 1000) {
+                    this.discoveryStaleCounter?.add(1, { issuer });
+                    this.logger.warn(
+                        `Failed to fetch OIDC discovery from ${wellKnownUrl}, returning stale discovery document: ${String(error)}`,
+                    );
+                    return cached.doc;
+                }
+                this.logger.error(
+                    `Failed to fetch OIDC discovery from ${wellKnownUrl}`,
+                    error,
+                );
+                throw new BadRequestException(
+                    "Failed to fetch upstream OIDC configuration",
+                );
+            }
+        })();
+
+        this.inFlightDiscoveryRequests.set(issuer, fetchPromise);
 
         try {
-            const response = await firstValueFrom(
-                this.httpService.get<OidcDiscoveryDocument>(wellKnownUrl),
-            );
-
-            const doc = response.data;
-            // Cache for 5 minutes
-            this.discoveryCache.set(issuer, {
-                doc,
-                expiresAt: Date.now() + 5 * 60 * 1000,
-            });
-
-            return doc;
-        } catch (error) {
-            this.logger.error(
-                `Failed to fetch OIDC discovery from ${wellKnownUrl}`,
-                error,
-            );
-            throw new BadRequestException(
-                "Failed to fetch upstream OIDC configuration",
-            );
+            return await fetchPromise;
+        } finally {
+            this.inFlightDiscoveryRequests.delete(issuer);
         }
     }
 
