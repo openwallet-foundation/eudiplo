@@ -6,6 +6,7 @@ import {
     Injectable,
     Logger,
     NotFoundException,
+    Optional,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -33,7 +34,7 @@ import {
 } from "@openid4vc/openid4vci";
 import type { Request } from "express";
 import { decodeJwt } from "jose";
-import { Span, TraceService } from "nestjs-otel";
+import { MetricService, Span, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
@@ -140,12 +141,36 @@ interface ParsedCredentialProofs {
     values: string[];
 }
 
+type CachedAsMetadata = {
+    metadata: AuthorizationServerMetadata;
+    fetchedAt: number;
+    expiresAt: number;
+};
+
+const AS_METADATA_CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+const AS_METADATA_STALE_TTL_MS = 60 * 60 * 1000; // 1 hour stale grace window
+
 /**
  * Service for handling OID4VCI (OpenID 4 Verifiable Credential Issuance) operations.
  */
 @Injectable()
 export class Oid4vciService {
     private readonly logger = new Logger(Oid4vciService.name);
+    private readonly asMetadataCache = new Map<string, CachedAsMetadata>();
+    private readonly inFlightAsMetadataRequests = new Map<
+        string,
+        Promise<AuthorizationServerMetadata>
+    >();
+
+    private readonly asMetadataHitsCounter;
+    private readonly asMetadataMissesCounter;
+    private readonly asMetadataStaleCounter;
+    private readonly asMetadataFetchesCounter;
+
+    clearAsMetadataCache(): void {
+        this.asMetadataCache.clear();
+        this.inFlightAsMetadataRequests.clear();
+    }
 
     constructor(
         private readonly authzService: AuthorizeService,
@@ -171,7 +196,25 @@ export class Oid4vciService {
         private readonly encryptionService: EncryptionService,
         private readonly nonceService: NonceService,
         private readonly subjectKeyService: SubjectKeyService,
-    ) {}
+        @Optional() private readonly metricService?: MetricService,
+    ) {
+        this.asMetadataHitsCounter = this.metricService?.getCounter(
+            "oid4vci_as_metadata_cache_hits_total",
+            { description: "Total hits on OID4VCI AS metadata cache" },
+        );
+        this.asMetadataMissesCounter = this.metricService?.getCounter(
+            "oid4vci_as_metadata_cache_misses_total",
+            { description: "Total misses on OID4VCI AS metadata cache" },
+        );
+        this.asMetadataStaleCounter = this.metricService?.getCounter(
+            "oid4vci_as_metadata_cache_stale_total",
+            { description: "Total stale hits on OID4VCI AS metadata cache" },
+        );
+        this.asMetadataFetchesCounter = this.metricService?.getCounter(
+            "oid4vci_as_metadata_fetches_total",
+            { description: "Total outbound AS metadata fetches" },
+        );
+    }
 
     /**
      * Get the authorization server URL for credential offers.
@@ -418,28 +461,77 @@ export class Oid4vciService {
     private async fetchAuthorizationServerMetadata(
         authServerUrl: string,
     ): Promise<AuthorizationServerMetadata> {
-        return firstValueFrom(
-            this.httpService.get(
-                `${authServerUrl}/.well-known/oauth-authorization-server`,
-            ),
-        ).then(
-            (response) => response.data,
-            async () => {
-                // Retry fetching from OIDC metadata endpoint.
-                return await firstValueFrom(
+        const now = Date.now();
+        const cached = this.asMetadataCache.get(authServerUrl);
+
+        if (cached && cached.expiresAt > now) {
+            this.asMetadataHitsCounter?.add(1, { auth_server: authServerUrl });
+            this.logger.debug(`AS metadata cache hit for ${authServerUrl}`);
+            return cached.metadata;
+        }
+
+        const inFlight = this.inFlightAsMetadataRequests.get(authServerUrl);
+        if (inFlight) {
+            this.logger.debug(
+                `Deduplicating in-flight AS metadata fetch for ${authServerUrl}`,
+            );
+            return inFlight;
+        }
+
+        this.asMetadataMissesCounter?.add(1, { auth_server: authServerUrl });
+
+        const fetchPromise = (async () => {
+            this.asMetadataFetchesCounter?.add(1, { auth_server: authServerUrl });
+            try {
+                const metadata = await firstValueFrom(
                     this.httpService.get(
-                        `${authServerUrl}/.well-known/openid-configuration`,
+                        `${authServerUrl}/.well-known/oauth-authorization-server`,
                     ),
                 ).then(
                     (response) => response.data,
-                    () => {
-                        throw new BadRequestException(
-                            "Failed to fetch authorization server metadata",
+                    async () => {
+                        // Retry fetching from OIDC metadata endpoint.
+                        return await firstValueFrom(
+                            this.httpService.get(
+                                `${authServerUrl}/.well-known/openid-configuration`,
+                            ),
+                        ).then(
+                            (response) => response.data,
+                            () => {
+                                throw new BadRequestException(
+                                    "Failed to fetch authorization server metadata",
+                                );
+                            },
                         );
                     },
                 );
-            },
-        );
+
+                this.asMetadataCache.set(authServerUrl, {
+                    metadata,
+                    fetchedAt: Date.now(),
+                    expiresAt: Date.now() + AS_METADATA_CACHE_TTL_MS,
+                });
+
+                return metadata;
+            } catch (error) {
+                if (cached && now - cached.fetchedAt <= AS_METADATA_STALE_TTL_MS) {
+                    this.asMetadataStaleCounter?.add(1, { auth_server: authServerUrl });
+                    this.logger.warn(
+                        `Failed to fetch authorization server metadata for ${authServerUrl}, returning stale cached metadata: ${String(error)}`,
+                    );
+                    return cached.metadata;
+                }
+                throw error;
+            }
+        })();
+
+        this.inFlightAsMetadataRequests.set(authServerUrl, fetchPromise);
+
+        try {
+            return await fetchPromise;
+        } finally {
+            this.inFlightAsMetadataRequests.delete(authServerUrl);
+        }
     }
 
     private async appendConfiguredAuthorizationServersInOrder(
