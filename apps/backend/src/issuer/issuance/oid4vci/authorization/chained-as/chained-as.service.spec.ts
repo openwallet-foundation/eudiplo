@@ -33,7 +33,9 @@ describe("ChainedAsService upstream discovery caching & deduplication", () => {
                 issuanceService: {
                     getIssuanceConfiguration: vi.fn().mockResolvedValue({}),
                 },
-                assertFederationTrustForUpstreamIssuer: vi.fn().mockResolvedValue(undefined),
+                assertFederationTrustForUpstreamIssuer: vi
+                    .fn()
+                    .mockResolvedValue(undefined),
                 discoveryHitsCounter: metricService.getCounter(),
                 discoveryMissesCounter: metricService.getCounter(),
                 discoveryStaleCounter: metricService.getCounter(),
@@ -81,9 +83,18 @@ describe("ChainedAsService upstream discovery caching & deduplication", () => {
         );
 
         const [d1, d2, d3] = await Promise.all([
-            service.getUpstreamDiscovery("tenant-1", "https://upstream.example.org"),
-            service.getUpstreamDiscovery("tenant-1", "https://upstream.example.org"),
-            service.getUpstreamDiscovery("tenant-1", "https://upstream.example.org"),
+            service.getUpstreamDiscovery(
+                "tenant-1",
+                "https://upstream.example.org",
+            ),
+            service.getUpstreamDiscovery(
+                "tenant-1",
+                "https://upstream.example.org",
+            ),
+            service.getUpstreamDiscovery(
+                "tenant-1",
+                "https://upstream.example.org",
+            ),
         ]);
 
         expect(d1.issuer).toBe("https://upstream.example.org");
@@ -98,7 +109,8 @@ describe("ChainedAsService upstream discovery caching & deduplication", () => {
                 of({
                     data: {
                         issuer: "https://upstream.example.org",
-                        authorization_endpoint: "https://upstream.example.org/auth",
+                        authorization_endpoint:
+                            "https://upstream.example.org/auth",
                     },
                 } as any),
             )
@@ -107,10 +119,15 @@ describe("ChainedAsService upstream discovery caching & deduplication", () => {
             );
 
         // First fetch -> populates cache
-        await service.getUpstreamDiscovery("tenant-1", "https://upstream.example.org");
+        await service.getUpstreamDiscovery(
+            "tenant-1",
+            "https://upstream.example.org",
+        );
 
         // Expire the item
-        const cached = (service as any).discoveryCache.get("https://upstream.example.org");
+        const cached = (service as any).discoveryCache.get(
+            "https://upstream.example.org",
+        );
         cached.expiresAt = Date.now() - 1000;
 
         // Second fetch -> fresh fetch fails, return stale doc

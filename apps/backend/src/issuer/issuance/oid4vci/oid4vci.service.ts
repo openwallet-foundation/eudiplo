@@ -481,7 +481,9 @@ export class Oid4vciService {
         this.asMetadataMissesCounter?.add(1, { auth_server: authServerUrl });
 
         const fetchPromise = (async () => {
-            this.asMetadataFetchesCounter?.add(1, { auth_server: authServerUrl });
+            this.asMetadataFetchesCounter?.add(1, {
+                auth_server: authServerUrl,
+            });
             try {
                 const metadata = await firstValueFrom(
                     this.httpService.get(
@@ -514,8 +516,13 @@ export class Oid4vciService {
 
                 return metadata;
             } catch (error) {
-                if (cached && now - cached.fetchedAt <= AS_METADATA_STALE_TTL_MS) {
-                    this.asMetadataStaleCounter?.add(1, { auth_server: authServerUrl });
+                if (
+                    cached &&
+                    now - cached.fetchedAt <= AS_METADATA_STALE_TTL_MS
+                ) {
+                    this.asMetadataStaleCounter?.add(1, {
+                        auth_server: authServerUrl,
+                    });
                     this.logger.warn(
                         `Failed to fetch authorization server metadata for ${authServerUrl}, returning stale cached metadata: ${String(error)}`,
                     );

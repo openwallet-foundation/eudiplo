@@ -125,7 +125,9 @@ describe("FederationTrustService caching & deduplication", () => {
         );
 
         // Expire the primary cache item artificially
-        const cacheKey = "https://entity.example.org::" + JSON.stringify(trustSource.trustAnchors);
+        const cacheKey =
+            "https://entity.example.org::" +
+            JSON.stringify(trustSource.trustAnchors);
         const internalCache = (service as any).trustCache.get(cacheKey);
         internalCache.expiresAt = Date.now() - 1000;
 

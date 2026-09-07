@@ -112,19 +112,31 @@ export class ChainedAsService {
     ) {
         this.discoveryHitsCounter = this.metricService?.getCounter(
             "chained_as_discovery_cache_hits_total",
-            { description: "Total hits on Chained AS upstream discovery cache" },
+            {
+                description:
+                    "Total hits on Chained AS upstream discovery cache",
+            },
         );
         this.discoveryMissesCounter = this.metricService?.getCounter(
             "chained_as_discovery_cache_misses_total",
-            { description: "Total misses on Chained AS upstream discovery cache" },
+            {
+                description:
+                    "Total misses on Chained AS upstream discovery cache",
+            },
         );
         this.discoveryStaleCounter = this.metricService?.getCounter(
             "chained_as_discovery_cache_stale_total",
-            { description: "Total stale hits on Chained AS upstream discovery cache" },
+            {
+                description:
+                    "Total stale hits on Chained AS upstream discovery cache",
+            },
         );
         this.discoveryFetchesCounter = this.metricService?.getCounter(
             "chained_as_discovery_fetches_total",
-            { description: "Total outbound Chained AS upstream discovery fetches" },
+            {
+                description:
+                    "Total outbound Chained AS upstream discovery fetches",
+            },
         );
     }
 

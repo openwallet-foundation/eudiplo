@@ -230,7 +230,9 @@ export class FederationTrustService {
                 ),
             );
 
-            const hintMatch = [...anchorIds].some((anchor) => hints.has(anchor));
+            const hintMatch = [...anchorIds].some((anchor) =>
+                hints.has(anchor),
+            );
             const subjectMatches =
                 !entityConfig.sub ||
                 entityConfig.sub.replace(/\/$/, "") === normalizedEntityId;
