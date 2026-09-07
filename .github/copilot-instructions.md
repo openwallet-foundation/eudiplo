@@ -41,6 +41,11 @@
 - Prefer **Composition over Inheritance** for features and providers.
 
 ## Rules for Backend Code
+- **Native ESM**: The backend uses `"type": "module"`. Keep `module` and `moduleResolution` set to `nodenext`.
+- **Relative specifiers**: Every relative `import` and `export` specifier must end in `.js`, even in `.ts` source files, because the specifier targets the emitted JavaScript file.
+- **ESM runtime paths**: Use `fileURLToPath(import.meta.url)` with `dirname()` for module-relative filesystem paths. Do not use `__dirname`, `__filename`, or implicit CommonJS `require()`.
+- **Dependency interop**: Use each dependency's native ESM default or named export form. Verify deep imports use explicit exported `.js` paths where the package requires them.
+- **Production startup**: Keep `start:prod` pointed at the explicit `dist/main.js` entry point.
 - When creating a module, always generate `<feature>.module.ts`, `<feature>.controller.ts`, `<feature>.service.ts` and create subfolders: `dto/`, `entities/`, `exceptions/` as needed.
 - Always add Swagger annotations (`@ApiTags`, `@ApiOperation`, `@ApiResponse`, `@ApiBody`) on all controller endpoints.
 - For controller request boundaries, prefer Zod-backed DTOs via `createZodDto(...)` and keep schema definitions as the source of truth.
