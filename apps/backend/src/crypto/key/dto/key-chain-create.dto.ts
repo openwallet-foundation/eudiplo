@@ -3,8 +3,8 @@ import { createZodDto } from "nestjs-zod";
 import {
     KeyChainCreateSchema,
     RotationPolicyCreateSchema,
-} from "../schemas/key-chain.schema";
-import { KeyUsageType } from "../types/key-usage-type";
+} from "../schemas/key-chain.schema.js";
+import { KeyUsageType } from "../types/key-usage-type.js";
 
 /**
  * DTO for rotation policy configuration.

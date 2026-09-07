@@ -6,7 +6,7 @@ import {
     type KmsConfig,
     type KmsProviderConfig,
     parseResolvedKmsConfig,
-} from "../schemas/kms-config.schema";
+} from "../schemas/kms-config.schema.js";
 
 const DEFAULT_PROVIDER_ID = "db";
 

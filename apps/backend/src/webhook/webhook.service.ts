@@ -2,11 +2,11 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable } from "@nestjs/common";
 import { PinoLogger } from "nestjs-pino";
 import { firstValueFrom } from "rxjs";
-import { Notification, Session } from "../session/entities/session.entity";
-import { SessionService } from "../session/session.service";
-import { OutboundUrlPolicyService } from "./outbound-url-policy.service";
-import { WebhookConfig } from "./webhook.dto";
-import { extractRawTokenFromSubmission } from "./webhook.utils";
+import { Notification, Session } from "../session/entities/session.entity.js";
+import { SessionService } from "../session/session.service.js";
+import { OutboundUrlPolicyService } from "./outbound-url-policy.service.js";
+import { WebhookConfig } from "./webhook.dto.js";
+import { extractRawTokenFromSubmission } from "./webhook.utils.js";
 
 /**
  * Response from a webhook to receive credentials.

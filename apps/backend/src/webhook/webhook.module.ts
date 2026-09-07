@@ -1,8 +1,8 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
-import { SessionModule } from "../session/session.module";
-import { OutboundUrlPolicyService } from "./outbound-url-policy.service";
-import { WebhookService } from "./webhook.service";
+import { SessionModule } from "../session/session.module.js";
+import { OutboundUrlPolicyService } from "./outbound-url-policy.service.js";
+import { WebhookService } from "./webhook.service.js";
 
 /**
  * Owns outbound webhook delivery and its SSRF protection policy.

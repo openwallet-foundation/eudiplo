@@ -1,5 +1,5 @@
 import { exportJWK, generateKeyPair, importJWK, type JWK } from "jose";
-import type { KmsProviderType } from "../../dto/kms-config.dto";
+import type { KmsProviderType } from "../../dto/kms-config.dto.js";
 import type {
     KmsAdapter,
     KmsAdapterCapabilities,
@@ -7,7 +7,7 @@ import type {
     KmsKeyMaterial,
     KmsKeyRef,
     KmsSigningAlg,
-} from "../kms-adapter";
+} from "../kms-adapter.js";
 
 /**
  * Database-backed KMS adapter.

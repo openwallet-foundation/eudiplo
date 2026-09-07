@@ -1,9 +1,9 @@
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../platform/config-import/config-import-orchestrator.service";
-import { ClientEntity } from "./entities/client.entity";
-import type { CreateClient, UpdateClient } from "./schemas/client.schema";
+} from "../../platform/config-import/config-import-orchestrator.service.js";
+import { ClientEntity } from "./entities/client.entity.js";
+import type { CreateClient, UpdateClient } from "./schemas/client.schema.js";
 
 export const CLIENTS_PROVIDER = "CLIENTS_PROVIDER";
 

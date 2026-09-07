@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { SchemaMetadataModule } from "../../registrar/schema-metadata/schema-metadata.module";
-import { StatusListModule } from "../status-list/status-list.module";
-import { AttributeProviderModule } from "./attribute-provider/attribute-provider.module";
-import { CredentialConfigModule } from "./credentials/credential-config.module";
-import { CredentialIssuanceModule } from "./credentials/credential-issuance.module";
-import { IssuanceConfigModule } from "./issuance/issuance-config.module";
-import { WebhookEndpointModule } from "./webhook-endpoint/webhook-endpoint.module";
+import { SchemaMetadataModule } from "../../registrar/schema-metadata/schema-metadata.module.js";
+import { StatusListModule } from "../status-list/status-list.module.js";
+import { AttributeProviderModule } from "./attribute-provider/attribute-provider.module.js";
+import { CredentialConfigModule } from "./credentials/credential-config.module.js";
+import { CredentialIssuanceModule } from "./credentials/credential-issuance.module.js";
+import { IssuanceConfigModule } from "./issuance/issuance-config.module.js";
+import { WebhookEndpointModule } from "./webhook-endpoint/webhook-endpoint.module.js";
 
 /**
  * Configuration Module - Manages issuer configurations and credential definitions

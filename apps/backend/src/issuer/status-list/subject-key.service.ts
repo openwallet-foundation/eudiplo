@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import {
     ENCRYPTION_KEY_PROVIDER,
     type EncryptionKeyProvider,
-} from "../../platform/data-encryption/providers/encryption-key-provider.interface";
+} from "../../platform/data-encryption/providers/encryption-key-provider.interface.js";
 
 /**
  * Derives the pseudonymous subject keys used by the active-credential-limit

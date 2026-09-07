@@ -18,7 +18,7 @@ import {
     jwtVerify,
 } from "jose";
 import { PinoLogger } from "nestjs-pino";
-import { KeyChainService } from "./key/key-chain.service";
+import { KeyChainService } from "./key/key-chain.service.js";
 
 /**
  * Service for cryptographic operations, including key management and certificate handling.

@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { SessionLogEntry } from "../entities/session-log-entry.entity";
-import { SessionAuditService } from "./session-audit.service";
-import { SessionLogStoreService } from "./session-log-store.service";
-import { SessionLoggerService } from "./session-logger.service";
+import { SessionLogEntry } from "../entities/session-log-entry.entity.js";
+import { SessionAuditService } from "./session-audit.service.js";
+import { SessionLogStoreService } from "./session-log-store.service.js";
+import { SessionLoggerService } from "./session-logger.service.js";
 
 /**
  * Owns session-scoped protocol logging.

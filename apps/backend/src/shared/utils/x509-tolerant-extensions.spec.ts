@@ -3,7 +3,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import {
     registerTolerantX509Extensions,
     TolerantIssuerAlternativeNameExtension,
-} from "./x509-tolerant-extensions";
+} from "./x509-tolerant-extensions.js";
 
 /**
  * Official EU Age Verification reference-implementation IACA certificate

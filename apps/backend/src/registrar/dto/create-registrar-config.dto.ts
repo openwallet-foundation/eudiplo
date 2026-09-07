@@ -1,5 +1,5 @@
 import { createZodDto } from "nestjs-zod";
-import { CreateRegistrarConfigSchema } from "../schemas/registrar.schema";
+import { CreateRegistrarConfigSchema } from "../schemas/registrar.schema.js";
 
 /**
  * DTO for creating or importing a registrar configuration.

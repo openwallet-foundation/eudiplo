@@ -13,15 +13,15 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../roles/role.enum";
-import { Secured } from "../secure.decorator";
-import { requireTenantContext } from "../tenant-context.util";
-import { Token, TokenPayload } from "../token.decorator";
-import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider";
-import { ClientSecretResponseDto } from "./dto/client-secret-response.dto";
-import { CreateClientDto } from "./dto/create-client.dto";
-import { UpdateClientDto } from "./dto/update-client.dto";
-import { ClientEntity } from "./entities/client.entity";
+import { Role } from "../roles/role.enum.js";
+import { Secured } from "../secure.decorator.js";
+import { requireTenantContext } from "../tenant-context.util.js";
+import { Token, TokenPayload } from "../token.decorator.js";
+import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider.js";
+import { ClientSecretResponseDto } from "./dto/client-secret-response.dto.js";
+import { CreateClientDto } from "./dto/create-client.dto.js";
+import { UpdateClientDto } from "./dto/update-client.dto.js";
+import { ClientEntity } from "./entities/client.entity.js";
 
 /**
  * Controller to manage clients.

@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
-import { UpdateStatusListSchema } from "./status-list.schema";
+import { UpdateStatusListSchema } from "./status-list.schema.js";
 
 /**
  * DTO for updating a status list's binding.

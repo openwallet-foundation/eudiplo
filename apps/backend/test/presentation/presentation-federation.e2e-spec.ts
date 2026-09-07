@@ -22,7 +22,7 @@ import {
 import {
     PresentationRequest,
     ResponseType,
-} from "../../src/verifier/oid4vp/dto/presentation-request.dto";
+} from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -31,7 +31,7 @@ import {
     PresentationTestContext,
     preparePresentation,
     setupPresentationTestApp,
-} from "../utils";
+} from "../utils.js";
 
 setGlobalDispatcher(
     new Agent({

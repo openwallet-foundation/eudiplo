@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { extractRawTokenFromSubmission } from "./webhook.utils";
+import { extractRawTokenFromSubmission } from "./webhook.utils.js";
 
 describe("Webhook Utils: extractRawTokenFromSubmission", () => {
     const testId = "pid_credential";

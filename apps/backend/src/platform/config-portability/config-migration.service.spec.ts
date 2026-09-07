@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 
 describe("ConfigMigrationService", () => {
     const registry = new ConfigResourceRegistry();

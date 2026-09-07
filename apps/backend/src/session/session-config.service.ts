@@ -5,9 +5,9 @@ import { Repository } from "typeorm";
 import {
     SessionCleanupMode,
     SessionStorageConfig,
-} from "../auth/tenant/entities/session-storage-config";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { UpdateSessionConfigDto } from "./dto/update-session-config.dto";
+} from "../auth/tenant/entities/session-storage-config.js";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { UpdateSessionConfigDto } from "./dto/update-session-config.dto.js";
 
 /**
  * Service for managing session storage configuration per tenant.

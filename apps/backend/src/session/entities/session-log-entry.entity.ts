@@ -6,7 +6,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { Session } from "./session.entity";
+import { Session } from "./session.entity.js";
 
 export type SessionLogLevel = "info" | "warn" | "error";
 

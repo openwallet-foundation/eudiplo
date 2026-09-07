@@ -4,16 +4,16 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { BitsPerStatus } from "@owf/token-status-list";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import { AuditLogService } from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../audit-log/audit-log-context.util";
-import { StatusListConfig } from "../../auth/tenant/entities/status-list-config";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { TokenPayload } from "../../auth/token.decorator";
-import { UpdateStatusListConfigDto } from "./dto/update-status-list-config.dto";
+} from "../../audit-log/audit-log-context.util.js";
+import { StatusListConfig } from "../../auth/tenant/entities/status-list-config.js";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { TokenPayload } from "../../auth/token.decorator.js";
+import { UpdateStatusListConfigDto } from "./dto/update-status-list-config.dto.js";
 
 /**
  * Service for managing status list configuration per tenant.

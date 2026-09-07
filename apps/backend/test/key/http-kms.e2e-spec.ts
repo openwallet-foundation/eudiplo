@@ -14,10 +14,10 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
 import request from "supertest";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../../src/app.module";
-import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto";
-import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util";
-import { getToken } from "../utils";
+import { AppModule } from "../../src/app.module.js";
+import { KeyChainType } from "../../src/crypto/key/dto/key-chain-create.dto.js";
+import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util.js";
+import { getToken } from "../utils.js";
 
 const PROVIDER_ID = "kms-reference";
 

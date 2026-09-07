@@ -14,41 +14,41 @@ import { base64url, decodeJwt, decodeProtectedHeader } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
-import { AuditLogService } from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../audit-log/audit-log-context.util";
-import { TokenPayload } from "../../auth/token.decorator";
+} from "../../audit-log/audit-log-context.util.js";
+import { TokenPayload } from "../../auth/token.decorator.js";
 import {
     ServiceTypeIdentifier,
     TrustListService,
-} from "../../issuer/trust-list/trustlist.service";
-import { ConfigImportService } from "../../platform/config-import/config-import.service";
+} from "../../issuer/trust-list/trustlist.service.js";
+import { ConfigImportService } from "../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../platform/config-import/config-import-orchestrator.service";
-import { RegistrarService } from "../../registrar/registrar.service";
-import { Session } from "../../session/entities/session.entity";
-import { loadJsonFile } from "../../shared/utils/config-file-loader.util";
-import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
+} from "../../platform/config-import/config-import-orchestrator.service.js";
+import { RegistrarService } from "../../registrar/registrar.service.js";
+import { Session } from "../../session/entities/session.entity.js";
+import { loadJsonFile } from "../../shared/utils/config-file-loader.util.js";
+import { revocationModeToPolicy } from "../../trust/revocation-policy.util.js";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     VerifierOptions,
-} from "../../trust/types";
+} from "../../trust/types.js";
 import {
     MdocSessionDataDcApi,
     MdocSessionDataOid4vp,
     MdocverifierService,
-} from "./credential/mdocverifier/mdocverifier.service";
-import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service";
-import type { VerificationFailureType } from "./credential/verification-failure";
-import { AuthResponse } from "./dto/auth-response.dto";
-import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto";
-import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto";
-import type { RegistrationCertificateRequest } from "./dto/vp-request.dto";
+} from "./credential/mdocverifier/mdocverifier.service.js";
+import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service.js";
+import type { VerificationFailureType } from "./credential/verification-failure.js";
+import { AuthResponse } from "./dto/auth-response.dto.js";
+import { PresentationConfigCreateDto } from "./dto/presentation-config-create.dto.js";
+import { PresentationConfigUpdateDto } from "./dto/presentation-config-update.dto.js";
+import type { RegistrationCertificateRequest } from "./dto/vp-request.dto.js";
 import {
     ClaimsQuery,
     CredentialQueryValue,
@@ -58,9 +58,9 @@ import {
     TrustedAuthorityQueryOpenIdFederation,
     TrustedAuthorityType,
     TrustListRef,
-} from "./entities/presentation-config.entity";
-import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception";
-import { MetadataFetchService } from "./metadata-fetch.service";
+} from "./entities/presentation-config.entity.js";
+import { IncompletePresentationException } from "./exceptions/incomplete-presentation.exception.js";
+import { MetadataFetchService } from "./metadata-fetch.service.js";
 
 type CredentialType = "dc+sd-jwt" | "mso_mdoc";
 

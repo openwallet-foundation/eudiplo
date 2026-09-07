@@ -5,21 +5,21 @@ import { Openid4vciIssuer } from "@openid4vc/openid4vci";
 import * as x509 from "@peculiar/x509";
 import { decodeProtectedHeader, JWK } from "jose";
 import { Span } from "nestjs-otel";
-import { CryptoService } from "../crypto/crypto.service";
-import { CryptoImplementationService } from "../crypto/key/crypto-implementation/crypto-implementation.service";
-import { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity";
-import { StatusListVerifierService } from "./status-list-verifier.service";
-import { BuiltTrustStore, TrustStoreService } from "./trust-store.service";
+import { CryptoService } from "../crypto/crypto.service.js";
+import { CryptoImplementationService } from "../crypto/key/crypto-implementation/crypto-implementation.service.js";
+import { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity.js";
+import { StatusListVerifierService } from "./status-list-verifier.service.js";
+import { BuiltTrustStore, TrustStoreService } from "./trust-store.service.js";
 import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
     walletSolutionServiceTypes,
-} from "./types";
+} from "./types.js";
 import {
     MatchedTrustedEntity,
     X509ValidationService,
-} from "./x509-validation.service";
+} from "./x509-validation.service.js";
 
 export interface ClientAttestation {
     clientAttestationJwt: string;

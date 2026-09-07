@@ -4,11 +4,11 @@ import {
     getSchemaPath,
 } from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity.js";
 import {
     WebHookAuthConfigHeader,
     WebHookAuthConfigNone,
-} from "../../../../webhook/webhook.dto";
+} from "../../../../webhook/webhook.dto.js";
 
 /**
  * An Attribute Provider is an external HTTPS endpoint called during

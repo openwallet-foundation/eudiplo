@@ -11,21 +11,21 @@ import {
     Query,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../../auth/roles/role.enum";
-import { Secured } from "../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../auth/token.decorator";
+import { Role } from "../../auth/roles/role.enum.js";
+import { Secured } from "../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../auth/token.decorator.js";
 import {
     SignSchemaMetaConfigDto,
     SignVersionSchemaMetaConfigDto,
-} from "../../issuer/configuration/credentials/dto/schema-meta-config.dto";
+} from "../../issuer/configuration/credentials/dto/schema-meta-config.dto.js";
 import {
     DeprecateSchemaMetadataDto,
     SchemaMetadataResponseDto,
     SchemaMetadataVocabulariesDto,
     UpdateSchemaMetadataDto,
-} from "./dto/schema-metadata.dto";
-import { SchemaMetadataService } from "./schema-metadata.service";
-import { SchemaMetadataSubmissionService } from "./schema-metadata-submission.service";
+} from "./dto/schema-metadata.dto.js";
+import { SchemaMetadataService } from "./schema-metadata.service.js";
+import { SchemaMetadataSubmissionService } from "./schema-metadata-submission.service.js";
 
 /**
  * Controller for managing TS11 schema metadata at the configured registrar /

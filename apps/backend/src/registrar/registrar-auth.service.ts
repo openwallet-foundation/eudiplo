@@ -12,12 +12,12 @@ import {
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
+import { RegistrarConfigEntity } from "./entities/registrar-config.entity.js";
 import {
     relyingPartyControllerFindAll,
     relyingPartyControllerRegister,
-} from "./generated";
-import { client as registrarClient } from "./generated/client.gen";
+} from "./generated/index.js";
+import { client as registrarClient } from "./generated/client.gen.js";
 
 /**
  * Cached OAuth2 token with its expiration time.

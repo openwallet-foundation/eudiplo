@@ -2,10 +2,10 @@ import { createHash } from "node:crypto";
 import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as x509 from "@peculiar/x509";
-import { KeyChainEntity } from "../entities/key-chain.entity";
-import { KeyChainService } from "../key-chain.service";
-import { KeyUsageType } from "../types/key-usage-type";
-import { CrlValidationService } from "./crl-validation.service";
+import { KeyChainEntity } from "../entities/key-chain.entity.js";
+import { KeyChainService } from "../key-chain.service.js";
+import { KeyUsageType } from "../types/key-usage-type.js";
+import { CrlValidationService } from "./crl-validation.service.js";
 
 export interface FindCertOptions {
     tenantId: string;

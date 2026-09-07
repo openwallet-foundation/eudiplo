@@ -5,7 +5,7 @@ import { Repository } from "typeorm";
 import {
     SessionLogEntry,
     SessionLogLevel,
-} from "../entities/session-log-entry.entity";
+} from "../entities/session-log-entry.entity.js";
 
 export type SessionStoreMode = "off" | "errors" | "all" | "verbose";
 

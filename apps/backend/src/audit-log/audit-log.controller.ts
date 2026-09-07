@@ -1,10 +1,10 @@
 import { Controller, ForbiddenException, Get, Query } from "@nestjs/common";
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { Token, TokenPayload } from "../auth/token.decorator";
-import { AuditLogService } from "./audit-log.service";
-import { AuditLogResponseDto } from "./dto/audit-log-response.dto";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../auth/token.decorator.js";
+import { AuditLogService } from "./audit-log.service.js";
+import { AuditLogResponseDto } from "./dto/audit-log-response.dto.js";
 
 @ApiTags("Audit Log")
 @Secured([Role.Clients])

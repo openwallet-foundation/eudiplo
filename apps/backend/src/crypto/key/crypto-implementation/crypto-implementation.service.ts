@@ -2,8 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { jwaSignatureAlgorithmToFullySpecifiedCoseAlgorithm } from "@openid4vc/oauth2";
 import { ES256 } from "@owf/crypto";
-import { CredentialFormat } from "../../../issuer/configuration/credentials/entities/credential.entity";
-import { CryptoImplementation } from "./crypto-implementation";
+import { CredentialFormat } from "../../../issuer/configuration/credentials/entities/credential.entity.js";
+import { CryptoImplementation } from "./crypto-implementation.js";
 
 export type CryptoType = "ES256";
 

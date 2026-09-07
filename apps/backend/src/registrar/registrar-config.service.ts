@@ -5,21 +5,21 @@ import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { ConfigImportModeService } from "../platform/config-import/config-import-mode.service";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { ConfigImportModeService } from "../platform/config-import/config-import-mode.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../platform/config-import/config-import-orchestrator.service";
-import { ConfigMigrationService } from "../platform/config-portability/config-migration.service";
-import { ConfigOwnershipService } from "../platform/config-portability/config-ownership.service";
-import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
-import { RegistrarAuthService } from "./registrar-auth.service";
+} from "../platform/config-import/config-import-orchestrator.service.js";
+import { ConfigMigrationService } from "../platform/config-portability/config-migration.service.js";
+import { ConfigOwnershipService } from "../platform/config-portability/config-ownership.service.js";
+import { RegistrarConfigEntity } from "./entities/registrar-config.entity.js";
+import { RegistrarAuthService } from "./registrar-auth.service.js";
 import type {
     CreateRegistrarConfig,
     UpdateRegistrarConfig,
-} from "./schemas/registrar.schema";
-import { CreateRegistrarConfigSchema } from "./schemas/registrar.schema";
+} from "./schemas/registrar.schema.js";
+import { CreateRegistrarConfigSchema } from "./schemas/registrar.schema.js";
 
 /**
  * Manages per-tenant registrar configuration: CRUD, file-based import, and

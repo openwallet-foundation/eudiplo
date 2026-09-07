@@ -2,12 +2,12 @@ import { S3Client } from "@aws-sdk/client-s3";
 import { DynamicModule, Global, Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { LocalFileStorage } from "./adapters/local.storage";
-import { S3FileStorage } from "./adapters/s3.storage";
-import { FileEntity } from "./entities/files.entity";
-import { FilesService } from "./files.service";
-import { StorageController } from "./storage.controller";
-import { FILE_STORAGE, FileStorage } from "./storage.types";
+import { LocalFileStorage } from "./adapters/local.storage.js";
+import { S3FileStorage } from "./adapters/s3.storage.js";
+import { FileEntity } from "./entities/files.entity.js";
+import { FilesService } from "./files.service.js";
+import { StorageController } from "./storage.controller.js";
+import { FILE_STORAGE, FileStorage } from "./storage.types.js";
 
 type Driver = "local" | "s3";
 

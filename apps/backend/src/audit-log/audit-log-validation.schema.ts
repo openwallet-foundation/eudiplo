@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
 export const AUDIT_LOG_VALIDATION_SCHEMA = Joi.object({
     AUDIT_LOG_RETENTION_DAYS: Joi.number()

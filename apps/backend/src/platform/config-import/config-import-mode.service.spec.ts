@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { ConfigImportModeService } from "./config-import-mode.service";
+import { ConfigImportModeService } from "./config-import-mode.service.js";
 
 describe("ConfigImportModeService", () => {
     afterEach(() => vi.restoreAllMocks());

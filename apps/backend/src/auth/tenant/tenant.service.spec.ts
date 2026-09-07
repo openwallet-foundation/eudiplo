@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { TenantEntity } from "./entities/tenant.entity";
-import { TenantService } from "./tenant.service";
+import { TenantEntity } from "./entities/tenant.entity.js";
+import { TenantService } from "./tenant.service.js";
 
 describe("TenantService updates", () => {
     let storedTenant: TenantEntity;

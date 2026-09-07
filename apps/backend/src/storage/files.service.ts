@@ -5,17 +5,17 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ConfigImportService } from "../platform/config-import/config-import.service";
+import { ConfigImportService } from "../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../platform/config-import/config-import-orchestrator.service";
+} from "../platform/config-import/config-import-orchestrator.service.js";
 import {
     FILE_STORAGE,
     FileStorage,
     StoredObject,
-} from "../storage/storage.types";
-import { FileEntity } from "./entities/files.entity";
+} from "../storage/storage.types.js";
+import { FileEntity } from "./entities/files.entity.js";
 
 const MIME_TYPES: Record<string, string> = {
     ".png": "image/png",

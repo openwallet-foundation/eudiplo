@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { SessionLogLevel } from "../entities/session-log-entry.entity";
+import { SessionLogLevel } from "../entities/session-log-entry.entity.js";
 import {
     SessionLogStoreService,
     SessionStoreMode,
-} from "./session-log-store.service";
+} from "./session-log-store.service.js";
 
 /**
  * Context for audit logging operations.

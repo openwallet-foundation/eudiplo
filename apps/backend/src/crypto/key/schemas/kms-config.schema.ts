@@ -9,7 +9,7 @@ import {
     toValidationIssues,
     urlField,
     withMeta,
-} from "../../../shared/common/zod/zod-schema.util";
+} from "../../../shared/common/zod/zod-schema.util.js";
 
 const KMS_PROVIDER_TYPES = [
     "db",

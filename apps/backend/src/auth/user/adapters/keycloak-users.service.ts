@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
+import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth.js";
 import {
     ConflictException,
     Injectable,
@@ -8,10 +8,10 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { decodeJwt } from "jose";
-import { allRoles, Role } from "../../roles/role.enum";
-import { ManagedUserDto } from "../dto/managed-user.dto";
-import type { CreateUser, UpdateUser } from "../schemas/create-user.schema";
-import { UsersProvider } from "../user.provider";
+import { allRoles, Role } from "../../roles/role.enum.js";
+import { ManagedUserDto } from "../dto/managed-user.dto.js";
+import type { CreateUser, UpdateUser } from "../schemas/create-user.schema.js";
+import { UsersProvider } from "../user.provider.js";
 
 @Injectable()
 export class KeycloakUsersProvider extends UsersProvider {

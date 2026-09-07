@@ -10,8 +10,8 @@ import { CryptoKey } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../src/issuer/status-list/status-list.service";
-import { ResponseType } from "../src/verifier/oid4vp/dto/presentation-request.dto";
+import { StatusListService } from "../src/issuer/status-list/status-list.service.js";
+import { ResponseType } from "../src/verifier/oid4vp/dto/presentation-request.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -22,7 +22,7 @@ import {
     preparePresentation,
     setupIssuanceTestApp,
     setupPresentationTestApp,
-} from "./utils";
+} from "./utils.js";
 
 describe("Single-Use Validation (Issue #503) - OID4VCI", () => {
     let app: INestApplication<App>;

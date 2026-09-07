@@ -9,16 +9,16 @@ import { Test, TestingModule } from "@nestjs/testing";
 import * as axios from "axios";
 import { Logger } from "nestjs-pino";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../../src/app.module";
-import { KeyChainService } from "../../src/crypto/key/key-chain.service";
-import { getDefaultSecret, readConfig } from "../utils";
+import { AppModule } from "../../src/app.module.js";
+import { KeyChainService } from "../../src/crypto/key/key-chain.service.js";
+import { getDefaultSecret, readConfig } from "../utils.js";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
     shouldExportOidfLogs,
     useOidfContainers,
-} from "./oidf-setup";
-import { OIDFSuite, TestInstance } from "./oidf-suite";
+} from "./oidf-setup.js";
+import { OIDFSuite, TestInstance } from "./oidf-suite.js";
 
 function getAllowedResults(moduleName: string): string[] {
     const signal = moduleName.toLowerCase();

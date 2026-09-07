@@ -18,18 +18,18 @@ import request from "supertest";
 import { App } from "supertest/types";
 import { Agent, setGlobalDispatcher } from "undici";
 import { afterAll, afterEach, beforeAll, describe, expect, test } from "vitest";
-import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
+import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto.js";
 import {
     callbacks,
     getSignJwtCallback,
     IssuanceTestContext,
     setupIssuanceTestApp,
-} from "../utils";
+} from "../utils.js";
 import {
     addX5cHeaderToKeyAttestationJwt,
     createMockTrustListJwt,
     generateSelfSignedCertificate,
-} from "./attestation-trust-helpers";
+} from "./attestation-trust-helpers.js";
 
 setGlobalDispatcher(
     new Agent({

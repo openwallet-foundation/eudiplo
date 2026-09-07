@@ -10,14 +10,14 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { TraceService } from "nestjs-otel";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
-import { SessionStatus } from "../../../../../session/entities/session.entity";
-import { SessionService } from "../../../../../session/session.service";
-import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
-import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service";
-import { ManagedAuthorizationServerConfig } from "../../../../configuration/issuance/dto/authorization-server-config.dto";
-import { ChainedAsTokenConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto";
-import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
+import { SessionStatus } from "../../../../../session/entities/session.entity.js";
+import { SessionService } from "../../../../../session/session.service.js";
+import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
+import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service.js";
+import { ManagedAuthorizationServerConfig } from "../../../../configuration/issuance/dto/authorization-server-config.dto.js";
+import { ChainedAsTokenConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto.js";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
 import {
     assertTokenRequestSessionValid,
     buildAuthorizationServerMetadata,
@@ -33,7 +33,7 @@ import {
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
-} from "../shared";
+} from "../shared/index.js";
 
 type Oid4VpManagedAuthorizationServerConfig =
     ManagedAuthorizationServerConfig & {

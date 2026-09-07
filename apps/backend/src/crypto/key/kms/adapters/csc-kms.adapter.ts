@@ -3,7 +3,7 @@ import { HttpService } from "@nestjs/axios";
 import { Logger, NotImplementedException } from "@nestjs/common";
 import type { JWK } from "jose";
 import { firstValueFrom } from "rxjs";
-import type { KmsProviderType } from "../../dto/kms-config.dto";
+import type { KmsProviderType } from "../../dto/kms-config.dto.js";
 import type {
     KmsAdapter,
     KmsAdapterCapabilities,
@@ -11,8 +11,8 @@ import type {
     KmsKeyMaterial,
     KmsKeyRef,
     KmsSigningAlg,
-} from "../kms-adapter";
-import { PublicJwkCache } from "../public-jwk-cache";
+} from "../kms-adapter.js";
+import { PublicJwkCache } from "../public-jwk-cache.js";
 
 const DEFAULT_HASH_ALGORITHM_OID = "2.16.840.1.101.3.4.2.1"; // SHA-256
 const DEFAULT_SIGN_ALGORITHM_OID = "1.2.840.10045.4.3.2"; // ecdsa-with-SHA256

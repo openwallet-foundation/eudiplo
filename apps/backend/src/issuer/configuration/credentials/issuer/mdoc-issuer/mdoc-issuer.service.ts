@@ -9,14 +9,14 @@ import {
 } from "@owf/mdoc";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
-import { CertService } from "../../../../../crypto/key/cert/cert.service";
-import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../../../../crypto/key/types/key-usage-type";
-import { Session } from "../../../../../session/entities/session.entity";
-import { mdocContext } from "../../../../../verifier/presentations/mdoc-context";
-import { StatusListService } from "../../../../status-list/status-list.service";
-import { CredentialConfig } from "../../entities/credential.entity";
-import { buildClaimsByNamespace } from "../../utils";
+import { CertService } from "../../../../../crypto/key/cert/cert.service.js";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../../../../crypto/key/types/key-usage-type.js";
+import { Session } from "../../../../../session/entities/session.entity.js";
+import { mdocContext } from "../../../../../verifier/presentations/mdoc-context.js";
+import { StatusListService } from "../../../../status-list/status-list.service.js";
+import { CredentialConfig } from "../../entities/credential.entity.js";
+import { buildClaimsByNamespace } from "../../utils/index.js";
 
 export interface MdocIssueOptions {
     credentialConfiguration: CredentialConfig;

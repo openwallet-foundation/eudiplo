@@ -1,24 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import type { z } from "zod";
-import { CreateClientSchema } from "../../auth/client/schemas/client.schema";
-import { UpdateTenantSchema } from "../../auth/tenant/schemas/create-tenant.schema";
-import { KeyChainImportSchema } from "../../crypto/key/schemas/key-chain.schema";
-import { KmsConfigSchema } from "../../crypto/key/schemas/kms-config.schema";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
-import { CreateAttributeProviderSchema } from "../../issuer/configuration/attribute-provider/schemas/attribute-provider.schema";
-import { CredentialConfigCreateSchema } from "../../issuer/configuration/credentials/schemas/credential-config.schema";
-import { IssuanceConfigSchema } from "../../issuer/configuration/issuance/schemas/issuance.schema";
-import { CreateWebhookEndpointSchema } from "../../issuer/configuration/webhook-endpoint/schemas/webhook-endpoint.schema";
-import { StatusListImportSchema } from "../../issuer/status-list/dto/status-list.schema";
-import { TrustListCreateSchema } from "../../issuer/trust-list/schemas/trust-list.schema";
-import { CreateRegistrarConfigSchema } from "../../registrar/schemas/registrar.schema";
-import { PresentationConfigCreateSchema } from "../../verifier/presentations/schemas/presentation-config.schema";
-import { ConfigMigrationService } from "./config-migration.service";
+import { CreateClientSchema } from "../../auth/client/schemas/client.schema.js";
+import { UpdateTenantSchema } from "../../auth/tenant/schemas/create-tenant.schema.js";
+import { KeyChainImportSchema } from "../../crypto/key/schemas/key-chain.schema.js";
+import { KmsConfigSchema } from "../../crypto/key/schemas/kms-config.schema.js";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type.js";
+import { CreateAttributeProviderSchema } from "../../issuer/configuration/attribute-provider/schemas/attribute-provider.schema.js";
+import { CredentialConfigCreateSchema } from "../../issuer/configuration/credentials/schemas/credential-config.schema.js";
+import { IssuanceConfigSchema } from "../../issuer/configuration/issuance/schemas/issuance.schema.js";
+import { CreateWebhookEndpointSchema } from "../../issuer/configuration/webhook-endpoint/schemas/webhook-endpoint.schema.js";
+import { StatusListImportSchema } from "../../issuer/status-list/dto/status-list.schema.js";
+import { TrustListCreateSchema } from "../../issuer/trust-list/schemas/trust-list.schema.js";
+import { CreateRegistrarConfigSchema } from "../../registrar/schemas/registrar.schema.js";
+import { PresentationConfigCreateSchema } from "../../verifier/presentations/schemas/presentation-config.schema.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
 import type {
     ConfigDocument,
     ConfigMigrationIssue,
     ConfigResourceKind,
-} from "./config-resource.types";
+} from "./config-resource.types.js";
 
 @Injectable()
 export class ConfigDocumentValidationService {

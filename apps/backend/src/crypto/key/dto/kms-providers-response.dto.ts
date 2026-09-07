@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { KmsProviderInfoDto } from "./kms-provider-capabilities.dto";
+import { KmsProviderInfoDto } from "./kms-provider-capabilities.dto.js";
 
 /**
  * Response DTO for available KMS providers.

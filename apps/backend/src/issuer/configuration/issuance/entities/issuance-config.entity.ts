@@ -13,25 +13,25 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity.js";
 import {
     AuthenticationMethodAuth,
     AuthenticationMethodNone,
     AuthenticationMethodPresentation,
-} from "../dto/authentication-config.dto";
+} from "../dto/authentication-config.dto.js";
 import {
     BuiltInAuthorizationServerConfig,
     ChainedAuthorizationServerConfig,
     ExternalAuthorizationServerConfig,
     ManagedAuthorizationServerConfig,
     Oid4VpAuthorizationServerConfig,
-} from "../dto/authorization-server-config.dto";
-import { DisplayInfo } from "../dto/display.dto";
-import { FederationConfig } from "../dto/federation-config.dto";
+} from "../dto/authorization-server-config.dto.js";
+import { DisplayInfo } from "../dto/display.dto.js";
+import { FederationConfig } from "../dto/federation-config.dto.js";
 import {
     IssuerRegistrationCertificateCache,
     IssuerRegistrationCertificateConfig,
-} from "../dto/issuer-registration-certificate.dto";
+} from "../dto/issuer-registration-certificate.dto.js";
 
 class WalletProviderTrustListRefDto {
     @ApiProperty({ format: "uri" })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { SdJwtVerificationError } from "./sdjwtvcverifier.service";
+import { SdJwtVerificationError } from "./sdjwtvcverifier.service.js";
 
 describe("SdJwtVerificationError", () => {
     it("exposes the failure type and a structured, safe response body", () => {

@@ -3,34 +3,34 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import type { Jwk } from "@openid4vc/oauth2";
 import type { CredentialConfigurationSupported } from "@openid4vc/openid4vci";
-import Ajv from "ajv/dist/2020";
+import { Ajv2020 as Ajv } from "ajv/dist/2020.js";
 import { In, Repository } from "typeorm";
-import { CryptoImplementationService } from "../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { Session } from "../../../session/entities/session.entity";
-import { FederationTrustService } from "../../../trust/federation-trust.service";
-import { WebhookConfig } from "../../../webhook/webhook.dto";
-import { WebhookService } from "../../../webhook/webhook.service";
-import { VCT } from "../../issuance/oid4vci/metadata/dto/vct.dto";
-import { AttributeProviderEntity } from "../attribute-provider/entities/attribute-provider.entity";
-import { IssuanceService } from "../issuance/issuance.service";
-import { AuthorizationIdentity } from "./dto/authorization-identity";
-import { ClaimsWebhookResult } from "./dto/claims-webhook-result";
+import { CryptoImplementationService } from "../../../crypto/key/crypto-implementation/crypto-implementation.service.js";
+import { Session } from "../../../session/entities/session.entity.js";
+import { FederationTrustService } from "../../../trust/federation-trust.service.js";
+import { WebhookConfig } from "../../../webhook/webhook.dto.js";
+import { WebhookService } from "../../../webhook/webhook.service.js";
+import { VCT } from "../../issuance/oid4vci/metadata/dto/vct.dto.js";
+import { AttributeProviderEntity } from "../attribute-provider/entities/attribute-provider.entity.js";
+import { IssuanceService } from "../issuance/issuance.service.js";
+import { AuthorizationIdentity } from "./dto/authorization-identity.js";
+import { ClaimsWebhookResult } from "./dto/claims-webhook-result.js";
 import {
     CredentialConfig,
     CredentialFormat,
     CredentialProofType,
     IssuerMetadataCredentialConfig,
-} from "./entities/credential.entity";
-import { MdocIssuerService } from "./issuer/mdoc-issuer/mdoc-issuer.service";
-import { SdjwtvcIssuerService } from "./issuer/sdjwtvc-issuer/sdjwtvc-issuer.service";
+} from "./entities/credential.entity.js";
+import { MdocIssuerService } from "./issuer/mdoc-issuer/mdoc-issuer.service.js";
+import { SdjwtvcIssuerService } from "./issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.js";
 import {
     buildMsoMdocConfig,
     buildSdJwtDcConfig,
     MSO_MDOC_FORMAT,
     type TypedCredentialConfig,
     toCredentialConfigurationSupported,
-} from "./types/credential-config-types";
-import { buildClaims, buildClaimsMetadata, buildJsonSchema } from "./utils";
+} from "./types/credential-config-types.js";
+import { buildClaims, buildClaimsMetadata, buildJsonSchema } from "./utils/index.js";
 
 /**
  * Service for managing credentials and their configurations.

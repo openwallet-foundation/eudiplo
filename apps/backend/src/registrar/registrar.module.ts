@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CryptoModule } from "../crypto/crypto.module";
-import { AccessCertificateService } from "./access-certificate.service";
-import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
-import { RegistrarController } from "./registrar.controller";
-import { RegistrarService } from "./registrar.service";
-import { RegistrarAuthService } from "./registrar-auth.service";
-import { RegistrarConfigService } from "./registrar-config.service";
-import { RegistrationCertificateService } from "./registration-certificate.service";
-import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service";
+import { CryptoModule } from "../crypto/crypto.module.js";
+import { AccessCertificateService } from "./access-certificate.service.js";
+import { RegistrarConfigEntity } from "./entities/registrar-config.entity.js";
+import { RegistrarController } from "./registrar.controller.js";
+import { RegistrarService } from "./registrar.service.js";
+import { RegistrarAuthService } from "./registrar-auth.service.js";
+import { RegistrarConfigService } from "./registrar-config.service.js";
+import { RegistrationCertificateService } from "./registration-certificate.service.js";
+import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service.js";
 
 /**
  * RegistrarModule is responsible for managing the registrar service.

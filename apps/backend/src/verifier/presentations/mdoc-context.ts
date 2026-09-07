@@ -9,7 +9,7 @@ import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
-import { toBuffer } from "../../shared/utils/buffer.util";
+import { toBuffer } from "../../shared/utils/buffer.util.js";
 
 // Use global Web Crypto API (available in Node.js 19+)
 const webCrypto = globalThis.crypto;

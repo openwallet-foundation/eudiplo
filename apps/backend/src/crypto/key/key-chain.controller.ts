@@ -16,22 +16,22 @@ import {
     ApiResponse,
     ApiTags,
 } from "@nestjs/swagger";
-import { Role } from "../../auth/roles/role.enum";
-import { Secured } from "../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../auth/token.decorator";
-import { KeyChainCreateDto } from "./dto/key-chain-create.dto";
-import { KeyChainExportDto } from "./dto/key-chain-export.dto";
-import { KeyChainIdResponseDto } from "./dto/key-chain-id-response.dto";
-import { KeyChainImportDto } from "./dto/key-chain-import.dto";
-import { KeyChainResponseDto } from "./dto/key-chain-response.dto";
-import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
-import { KmsConfigDto } from "./dto/kms-config.dto";
-import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
-import { KmsTenantConfigResponseDto } from "./dto/kms-tenant-config-response.dto";
-import { ProviderHealthResponseDto } from "./dto/provider-health-response.dto";
-import { KeyChainService } from "./key-chain.service";
-import { KmsTenantConfigService } from "./kms/kms-tenant-config.service";
-import { KeyUsageType } from "./types/key-usage-type";
+import { Role } from "../../auth/roles/role.enum.js";
+import { Secured } from "../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../auth/token.decorator.js";
+import { KeyChainCreateDto } from "./dto/key-chain-create.dto.js";
+import { KeyChainExportDto } from "./dto/key-chain-export.dto.js";
+import { KeyChainIdResponseDto } from "./dto/key-chain-id-response.dto.js";
+import { KeyChainImportDto } from "./dto/key-chain-import.dto.js";
+import { KeyChainResponseDto } from "./dto/key-chain-response.dto.js";
+import { KeyChainUpdateDto } from "./dto/key-chain-update.dto.js";
+import { KmsConfigDto } from "./dto/kms-config.dto.js";
+import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto.js";
+import { KmsTenantConfigResponseDto } from "./dto/kms-tenant-config-response.dto.js";
+import { ProviderHealthResponseDto } from "./dto/provider-health-response.dto.js";
+import { KeyChainService } from "./key-chain.service.js";
+import { KmsTenantConfigService } from "./kms/kms-tenant-config.service.js";
+import { KeyUsageType } from "./types/key-usage-type.js";
 
 /**
  * KeyChainController manages unified key chains.

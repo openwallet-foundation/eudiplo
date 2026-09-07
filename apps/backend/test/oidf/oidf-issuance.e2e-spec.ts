@@ -9,22 +9,22 @@ import * as x509 from "@peculiar/x509";
 import * as axios from "axios";
 import { Logger } from "nestjs-pino";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../../src/app.module";
+import { AppModule } from "../../src/app.module.js";
 import {
     FlowType,
     OfferRequestDto,
     OfferResponse,
-} from "../../src/issuer/issuance/oid4vci/dto/offer-request.dto";
-import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
-import { getDefaultSecret, readConfig } from "../utils";
+} from "../../src/issuer/issuance/oid4vci/dto/offer-request.dto.js";
+import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
+import { getDefaultSecret, readConfig } from "../utils.js";
 import {
     BACKEND_TEST_CA_PATH,
     OIDF_HTTPD_CA_PATH,
     shouldExportOidfLogs,
     useOidfContainers,
-} from "./oidf-setup";
-import { OIDFSuite, TestInstance } from "./oidf-suite";
-import { generateCaSignedJwk } from "./utils";
+} from "./oidf-setup.js";
+import { OIDFSuite, TestInstance } from "./oidf-suite.js";
+import { generateCaSignedJwk } from "./utils.js";
 
 // Set up the x509 crypto provider
 x509.cryptoProvider.set(globalThis.crypto);

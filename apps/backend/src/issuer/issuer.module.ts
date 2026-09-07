@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { setGlobalConfig } from "@openid4vc/openid4vci";
-import { ConfigurationModule } from "./configuration/configuration.module";
-import { IssuanceModule } from "./issuance/issuance.module";
-import { StatusListModule } from "./status-list/status-list.module";
-import { TrustListModule } from "./trust-list/trustlist.module";
+import { ConfigurationModule } from "./configuration/configuration.module.js";
+import { IssuanceModule } from "./issuance/issuance.module.js";
+import { StatusListModule } from "./status-list/status-list.module.js";
+import { TrustListModule } from "./trust-list/trustlist.module.js";
 
 /**
  * Issuer Module - Root module for credential issuance functionality

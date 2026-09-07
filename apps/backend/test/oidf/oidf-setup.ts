@@ -5,7 +5,7 @@
  * It manages TestContainers for the OIDF conformance suite (MongoDB, server, httpd).
  *
  * Usage in test files:
- *   import { useOidfContainers } from "./oidf-setup";
+ *   import { useOidfContainers } from "./oidf-setup.js";
  *   useOidfContainers();
  *
  * Note: TestContainers.exposeHostPorts() starts an SSH container that maintains

@@ -1,7 +1,7 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../shared/common/zod/editor-schema";
+} from "../../../shared/common/zod/editor-schema.js";
 import {
     KeyChainConfigFileSchema,
     KeyChainCreateSchema,
@@ -9,7 +9,7 @@ import {
     KeyChainUpdateSchema,
     RotationPolicyCreateSchema,
     RotationPolicyUpdateSchema,
-} from "./key-chain.schema";
+} from "./key-chain.schema.js";
 
 export const keyChainEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "key-chain",

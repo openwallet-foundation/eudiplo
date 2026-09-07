@@ -4,10 +4,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { decodeJwt } from "jose";
 import { LessThan, Repository } from "typeorm";
 import { v4 } from "uuid";
-import { AuditLogContext } from "../../../session/logging/session-audit.service";
-import { SessionLoggerService } from "../../../session/logging/session-logger.service";
-import { NonceEntity } from "./entities/nonces.entity";
-import { CredentialRequestException } from "./exceptions";
+import { AuditLogContext } from "../../../session/logging/session-audit.service.js";
+import { SessionLoggerService } from "../../../session/logging/session-logger.service.js";
+import { NonceEntity } from "./entities/nonces.entity.js";
+import { CredentialRequestException } from "./exceptions/index.js";
 
 type SupportedCredentialProofType = "jwt" | "attestation";
 

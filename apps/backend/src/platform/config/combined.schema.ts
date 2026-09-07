@@ -1,18 +1,18 @@
-import { AUDIT_LOG_VALIDATION_SCHEMA } from "../../audit-log/audit-log-validation.schema";
-import { AUTH_VALIDATION_SCHEMA } from "../../auth/auth-validation.schema";
-import { CRYPTO_VALIDATION_SCHEMA } from "../../crypto/key/crypto-implementation/crypto-validation.schema";
-import { DB_VALIDATION_SCHEMA } from "../../database/database-validation.schema";
-import { ISSUER_VALIDATION_SCHEMA } from "../../issuer/issuer-validation.schema";
-import { STATUS_LIST_VALIDATION_SCHEMA } from "../../issuer/status-list/status-list-validation.schema";
-import { SESSION_VALIDATION_SCHEMA } from "../../session/session-validation.schema";
-import { STORAGE_VALIDATION_SCHEMA } from "../../storage/storage-validation.schema";
-import { VERIFIER_VALIDATION_SCHEMA } from "../../verifier/verifier-validation.schema";
-import { WEBHOOK_VALIDATION_SCHEMA } from "../../webhook/webhook-validation.schema";
-import { ENCRYPTION_VALIDATION_SCHEMA } from "../data-encryption/encryption-validation.schema";
-import { LOG_VALIDATION_SCHEMA } from "../observability/log-validation.schema";
-import { CONFIG_VALIDATION_SCHEMA } from "./config-validation.schema";
-import { TLS_VALIDATION_SCHEMA } from "./tls-validation.schema";
-import { BASE_VALIDATION_SCHEMA } from "./validation.schema";
+import { AUDIT_LOG_VALIDATION_SCHEMA } from "../../audit-log/audit-log-validation.schema.js";
+import { AUTH_VALIDATION_SCHEMA } from "../../auth/auth-validation.schema.js";
+import { CRYPTO_VALIDATION_SCHEMA } from "../../crypto/key/crypto-implementation/crypto-validation.schema.js";
+import { DB_VALIDATION_SCHEMA } from "../../database/database-validation.schema.js";
+import { ISSUER_VALIDATION_SCHEMA } from "../../issuer/issuer-validation.schema.js";
+import { STATUS_LIST_VALIDATION_SCHEMA } from "../../issuer/status-list/status-list-validation.schema.js";
+import { SESSION_VALIDATION_SCHEMA } from "../../session/session-validation.schema.js";
+import { STORAGE_VALIDATION_SCHEMA } from "../../storage/storage-validation.schema.js";
+import { VERIFIER_VALIDATION_SCHEMA } from "../../verifier/verifier-validation.schema.js";
+import { WEBHOOK_VALIDATION_SCHEMA } from "../../webhook/webhook-validation.schema.js";
+import { ENCRYPTION_VALIDATION_SCHEMA } from "../data-encryption/encryption-validation.schema.js";
+import { LOG_VALIDATION_SCHEMA } from "../observability/log-validation.schema.js";
+import { CONFIG_VALIDATION_SCHEMA } from "./config-validation.schema.js";
+import { TLS_VALIDATION_SCHEMA } from "./tls-validation.schema.js";
+import { BASE_VALIDATION_SCHEMA } from "./validation.schema.js";
 
 /**
  * Combined validation schema for the application configuration

@@ -1,5 +1,5 @@
 import { OmitType } from "@nestjs/swagger";
-import { IssuanceConfig } from "../entities/issuance-config.entity";
+import { IssuanceConfig } from "../entities/issuance-config.entity.js";
 
 /**
  * DTO for mapping issuance configurations.

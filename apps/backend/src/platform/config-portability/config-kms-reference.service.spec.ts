@@ -1,7 +1,7 @@
 import { exportJWK, generateKeyPair } from "jose";
 import { describe, expect, it, vi } from "vitest";
-import type { KmsProviderRegistry } from "../../crypto/key/kms/kms-provider.registry";
-import { ConfigKmsReferenceService } from "./config-kms-reference.service";
+import type { KmsProviderRegistry } from "../../crypto/key/kms/kms-provider.registry.js";
+import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
 
 describe("ConfigKmsReferenceService", () => {
     it("proves that the referenced KMS key matches the supplied public JWK", async () => {

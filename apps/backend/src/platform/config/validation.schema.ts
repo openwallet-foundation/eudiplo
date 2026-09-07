@@ -1,5 +1,5 @@
 // config/validation.schema.ts
-import * as Joi from "joi";
+import Joi from "joi";
 
 /**
  * Validation schema for base configuration

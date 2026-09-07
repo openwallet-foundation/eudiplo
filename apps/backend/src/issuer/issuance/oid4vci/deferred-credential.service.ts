@@ -19,25 +19,25 @@ import { decodeJwt } from "jose";
 import { Span, TraceService } from "nestjs-otel";
 import { LessThan, Repository } from "typeorm";
 import { v4 } from "uuid";
-import { CryptoService } from "../../../crypto/crypto.service";
-import { Session } from "../../../session/entities/session.entity";
-import { SessionService } from "../../../session/session.service";
-import { TrustStoreService } from "../../../trust/trust-store.service";
-import { X509ValidationService } from "../../../trust/x509-validation.service";
-import { CredentialsService } from "../../configuration/credentials/credentials.service";
-import { IssuanceService } from "../../configuration/issuance/issuance.service";
-import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
-import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto";
+import { CryptoService } from "../../../crypto/crypto.service.js";
+import { Session } from "../../../session/entities/session.entity.js";
+import { SessionService } from "../../../session/session.service.js";
+import { TrustStoreService } from "../../../trust/trust-store.service.js";
+import { X509ValidationService } from "../../../trust/x509-validation.service.js";
+import { CredentialsService } from "../../configuration/credentials/credentials.service.js";
+import { IssuanceService } from "../../configuration/issuance/issuance.service.js";
+import { validateAttestationProofTrust } from "./attestation-proof-trust.util.js";
+import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto.js";
 import {
     DeferredTransactionEntity,
     DeferredTransactionStatus,
-} from "./entities/deferred-transaction.entity";
-import { NonceEntity } from "./entities/nonces.entity";
+} from "./entities/deferred-transaction.entity.js";
+import { NonceEntity } from "./entities/nonces.entity.js";
 import {
     CredentialRequestException,
     DeferredCredentialException,
-} from "./exceptions";
-import { getHeadersFromRequest } from "./util";
+} from "./exceptions/index.js";
+import { getHeadersFromRequest } from "./util.js";
 
 /**
  * Parameters for creating a deferred credential transaction.

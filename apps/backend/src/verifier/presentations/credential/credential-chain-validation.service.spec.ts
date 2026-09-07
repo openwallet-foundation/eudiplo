@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { TrustListSource } from "../../../trust/types";
-import { CredentialChainValidationService } from "./credential-chain-validation.service";
+import type { TrustListSource } from "../../../trust/types.js";
+import { CredentialChainValidationService } from "./credential-chain-validation.service.js";
 
 /**
  * Regression tests for the trust-list fail-open bug.

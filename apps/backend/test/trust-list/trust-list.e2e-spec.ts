@@ -8,11 +8,11 @@ import { decodeJwt, decodeProtectedHeader, importX509, jwtVerify } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../../src/app.module";
-import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto";
-import { TrustListCreateDto } from "../../src/issuer/trust-list/dto/trust-list-create.dto";
-import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util";
-import { getToken, readConfig } from "../utils";
+import { AppModule } from "../../src/app.module.js";
+import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto.js";
+import { TrustListCreateDto } from "../../src/issuer/trust-list/dto/trust-list-create.dto.js";
+import { createAppValidationPipe } from "../../src/shared/common/zod/zod-schema.util.js";
+import { getToken, readConfig } from "../utils.js";
 
 interface TestContext {
     app: INestApplication<App>;

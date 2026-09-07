@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { OnEvent } from "@nestjs/event-emitter";
 import { filter, map, Observable, Subject } from "rxjs";
-import { Session, SessionStatus } from "./entities/session.entity";
+import { Session, SessionStatus } from "./entities/session.entity.js";
 
 /**
  * Event payload emitted when a session status changes.

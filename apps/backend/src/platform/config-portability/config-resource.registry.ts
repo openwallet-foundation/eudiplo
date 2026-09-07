@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import type { ConfigResourceKind } from "./config-resource.types";
+import type { ConfigResourceKind } from "./config-resource.types.js";
 
 export interface ConfigResourceDefinition {
     kind: ConfigResourceKind;

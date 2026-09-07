@@ -10,9 +10,9 @@ import {
 } from "jose";
 import { Span } from "nestjs-otel";
 import { Repository } from "typeorm";
-import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter";
-import { KmsProviderRegistry } from "./kms/kms-provider.registry";
+import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter.js";
+import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
 
 function base64url(input: string): string {
     return Buffer.from(input, "utf8").toString("base64url");

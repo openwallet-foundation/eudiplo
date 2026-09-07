@@ -13,13 +13,13 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorization/authorize/dto/authorize-request.dto";
-import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
-import { EncryptedJsonTransformer } from "../../platform/data-encryption";
-import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity";
-import { WebhookConfig } from "../../webhook/webhook.dto";
-import { SessionOutcome } from "./session-outcome";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { AuthorizeQueries } from "../../issuer/issuance/oid4vci/authorization/authorize/dto/authorize-request.dto.js";
+import { OfferRequestDto } from "../../issuer/issuance/oid4vci/dto/offer-request.dto.js";
+import { EncryptedJsonTransformer } from "../../platform/data-encryption/index.js";
+import { TransactionData } from "../../verifier/presentations/entities/presentation-config.entity.js";
+import { WebhookConfig } from "../../webhook/webhook.dto.js";
+import { SessionOutcome } from "./session-outcome.js";
 
 export enum SessionStatus {
     Active = "active",

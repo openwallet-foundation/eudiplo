@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
-import { CryptoImplementationService } from "./crypto-implementation.service";
+import { CryptoImplementationService } from "./crypto-implementation.service.js";
 
 @Global()
 @Module({

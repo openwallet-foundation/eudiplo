@@ -9,7 +9,7 @@ import {
 import type {
     ConfigOwnership,
     ConfigResourceKind,
-} from "../config-resource.types";
+} from "../config-resource.types.js";
 
 @Entity("config_resource_metadata")
 @Index(["tenantId", "ownership"])

@@ -1,7 +1,7 @@
 import { BadRequestException } from "@nestjs/common";
 import type { ConfigService } from "@nestjs/config";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { MetadataFetchService } from "./metadata-fetch.service";
+import { MetadataFetchService } from "./metadata-fetch.service.js";
 
 describe("MetadataFetchService", () => {
     const configService = {

@@ -17,17 +17,17 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import { Request } from "express";
-import { Role } from "../roles/role.enum";
-import { Secured } from "../secure.decorator";
-import { Token, TokenPayload } from "../token.decorator";
-import { CreateTenantDto } from "./dto/create-tenant.dto";
-import { ImportTenantDto } from "./dto/import-tenant.dto";
+import { Role } from "../roles/role.enum.js";
+import { Secured } from "../secure.decorator.js";
+import { Token, TokenPayload } from "../token.decorator.js";
+import { CreateTenantDto } from "./dto/create-tenant.dto.js";
+import { ImportTenantDto } from "./dto/import-tenant.dto.js";
 import {
     TenantCreateResponseDto,
     TenantResponseDto,
-} from "./dto/tenant-response.dto";
-import { UpdateTenantDto } from "./dto/update-tenant.dto";
-import { TenantService } from "./tenant.service";
+} from "./dto/tenant-response.dto.js";
+import { UpdateTenantDto } from "./dto/update-tenant.dto.js";
+import { TenantService } from "./tenant.service.js";
 
 /**
  * Tenant management controller

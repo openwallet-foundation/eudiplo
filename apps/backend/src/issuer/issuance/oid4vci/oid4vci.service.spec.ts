@@ -1,7 +1,7 @@
 import type { AuthorizationServerMetadata } from "@openid4vc/oauth2";
 import { of, throwError } from "rxjs";
 import { describe, expect, it, vi } from "vitest";
-import { Oid4vciService } from "./oid4vci.service";
+import { Oid4vciService } from "./oid4vci.service.js";
 
 describe("Oid4vciService internal JWKS resolution", () => {
     it("uses INTERNAL_URL only for the built-in authorization server", () => {

@@ -15,7 +15,7 @@ import {
     getSignJwtCallback,
     IssuanceTestContext,
     setupIssuanceTestApp,
-} from "../utils";
+} from "../utils.js";
 
 setGlobalDispatcher(
     new Agent({

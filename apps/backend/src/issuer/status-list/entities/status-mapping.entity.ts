@@ -1,6 +1,6 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne, Unique } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
-import { StatusListEntity } from "./status-list.entity";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
+import { StatusListEntity } from "./status-list.entity.js";
 
 @Entity()
 @Unique("UQ_status_mapping_tenant_list_index", [

@@ -6,7 +6,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import { TrustList } from "./trust-list.entity";
+import { TrustList } from "./trust-list.entity.js";
 
 /**
  * Entity representing a historical version of a Trust List for audit purposes.

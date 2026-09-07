@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { KeyUsageType } from "../types/key-usage-type";
-import { KeyChainType } from "./key-chain-create.dto";
+import { KeyUsageType } from "../types/key-usage-type.js";
+import { KeyChainType } from "./key-chain-create.dto.js";
 
 /**
  * Certificate info in the response.

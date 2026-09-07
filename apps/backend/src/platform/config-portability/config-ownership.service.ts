@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import type {
     ConfigOwnership,
     ConfigResourceKind,
-} from "./config-resource.types";
-import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadata.entity";
+} from "./config-resource.types.js";
+import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadata.entity.js";
 
 @Injectable()
 export class ConfigOwnershipService {

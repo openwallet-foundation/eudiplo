@@ -1,5 +1,8 @@
-import { resolve } from "node:path";
-import * as Joi from "joi";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import Joi from "joi";
+
+const currentDir = dirname(fileURLToPath(import.meta.url));
 
 /**
  * Validation schema for configuration
@@ -27,7 +30,7 @@ export const CONFIG_VALIDATION_SCHEMA = Joi.object({
         .meta({ group: "config", order: 30 }),
 
     CONFIG_FOLDER: Joi.string()
-        .default(resolve(__dirname + "/../../../../../assets/config"))
+        .default(resolve(currentDir, "../../../../../assets/config"))
         .description("Path to config import folder")
         .meta({ group: "config", order: 40 }),
     CONFIG_VARIABLE_STRICT: Joi.alternatives()

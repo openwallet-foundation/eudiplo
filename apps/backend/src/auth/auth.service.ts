@@ -1,11 +1,11 @@
 import { Inject, Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { InternalClientsProvider } from "./client/adapters/internal-clients.service";
-import { CLIENTS_PROVIDER } from "./client/client.provider";
-import { OidcDiscoveryDto } from "./dto/oidc-discovery.dto";
-import { TokenResponse } from "./dto/token-response.dto";
-import { JwtService } from "./jwt.service";
-import { InternalTokenPayload } from "./token.decorator";
+import { InternalClientsProvider } from "./client/adapters/internal-clients.service.js";
+import { CLIENTS_PROVIDER } from "./client/client.provider.js";
+import { OidcDiscoveryDto } from "./dto/oidc-discovery.dto.js";
+import { TokenResponse } from "./dto/token-response.dto.js";
+import { JwtService } from "./jwt.service.js";
+import { InternalTokenPayload } from "./token.decorator.js";
 
 /**
  * Authentication Service

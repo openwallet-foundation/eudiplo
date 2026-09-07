@@ -10,11 +10,11 @@ import {
     Put,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../../auth/roles/role.enum";
-import { Secured } from "../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../auth/token.decorator";
-import { TrustListCreateDto } from "./dto/trust-list-create.dto";
-import { TrustListService } from "./trustlist.service";
+import { Role } from "../../auth/roles/role.enum.js";
+import { Secured } from "../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../auth/token.decorator.js";
+import { TrustListCreateDto } from "./dto/trust-list-create.dto.js";
+import { TrustListService } from "./trustlist.service.js";
 
 /**
  * Controller for managing trust lists.

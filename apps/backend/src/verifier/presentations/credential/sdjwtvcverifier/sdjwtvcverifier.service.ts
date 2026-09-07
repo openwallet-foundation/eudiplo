@@ -5,20 +5,20 @@ import { SDJwtVcInstance, VerificationResult } from "@sd-jwt/sd-jwt-vc";
 import { base64url, JWK } from "jose";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
-import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
+import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service.js";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
-} from "../../../../trust/revocation-policy.util";
-import { VerifierOptions } from "../../../../trust/types";
-import { MatchedTrustedEntity } from "../../../../trust/x509-validation.service";
-import { ResolverService } from "../../../resolver/resolver.service";
-import { CredentialChainValidationService } from "../credential-chain-validation.service";
+} from "../../../../trust/revocation-policy.util.js";
+import { VerifierOptions } from "../../../../trust/types.js";
+import { MatchedTrustedEntity } from "../../../../trust/x509-validation.service.js";
+import { ResolverService } from "../../../resolver/resolver.service.js";
+import { CredentialChainValidationService } from "../credential-chain-validation.service.js";
 import {
     mapChainErrorToFailureType,
     shortVerificationMessage,
     type VerificationFailureType,
-} from "../verification-failure";
+} from "../verification-failure.js";
 
 /**
  * SD-JWT-VC verification failure carrying the shared, machine-readable failure

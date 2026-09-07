@@ -1,11 +1,11 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../../shared/common/zod/editor-schema";
+} from "../../../../shared/common/zod/editor-schema.js";
 import {
     CreateWebhookEndpointSchema,
     UpdateWebhookEndpointSchema,
-} from "./webhook-endpoint.schema";
+} from "./webhook-endpoint.schema.js";
 
 export const webhookEndpointEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "webhook-endpoint",

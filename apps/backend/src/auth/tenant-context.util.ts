@@ -1,5 +1,5 @@
 import { ForbiddenException } from "@nestjs/common";
-import { TokenPayload } from "./token.decorator";
+import { TokenPayload } from "./token.decorator.js";
 
 export function requireTenantContext(user: TokenPayload): string {
     if (!user.entity?.id) {

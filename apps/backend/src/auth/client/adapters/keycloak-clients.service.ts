@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import KeycloakAdminClient from "@keycloak/keycloak-admin-client";
-import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
+import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth.js";
 import {
     ConflictException,
     Injectable,
@@ -11,14 +11,14 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { decodeJwt } from "jose";
 import { Repository } from "typeorm";
-import { ConfigImportService } from "../../../platform/config-import/config-import.service";
-import { ConfigImportOrchestratorService } from "../../../platform/config-import/config-import-orchestrator.service";
-import { allRoles, Role } from "../../roles/role.enum";
-import { ClientsProvider } from "../client.provider";
-import { CreateClientDto } from "../dto/create-client.dto";
-import { UpdateClientDto } from "../dto/update-client.dto";
-import { ClientEntity } from "../entities/client.entity";
-import { CreateClientSchema } from "../schemas/client.schema";
+import { ConfigImportService } from "../../../platform/config-import/config-import.service.js";
+import { ConfigImportOrchestratorService } from "../../../platform/config-import/config-import-orchestrator.service.js";
+import { allRoles, Role } from "../../roles/role.enum.js";
+import { ClientsProvider } from "../client.provider.js";
+import { CreateClientDto } from "../dto/create-client.dto.js";
+import { UpdateClientDto } from "../dto/update-client.dto.js";
+import { ClientEntity } from "../entities/client.entity.js";
+import { CreateClientSchema } from "../schemas/client.schema.js";
 
 @Injectable()
 export class KeycloakClientsProvider

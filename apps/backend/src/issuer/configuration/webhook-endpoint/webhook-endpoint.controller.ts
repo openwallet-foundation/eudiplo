@@ -11,13 +11,13 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { Role } from "../../../auth/roles/role.enum";
-import { Secured } from "../../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../../auth/token.decorator";
-import { CreateWebhookEndpointDto } from "./dto/create-webhook-endpoint.dto";
-import { UpdateWebhookEndpointDto } from "./dto/update-webhook-endpoint.dto";
-import { WebhookEndpointEntity } from "./entities/webhook-endpoint.entity";
-import { WebhookEndpointService } from "./webhook-endpoint.service";
+import { Role } from "../../../auth/roles/role.enum.js";
+import { Secured } from "../../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../../auth/token.decorator.js";
+import { CreateWebhookEndpointDto } from "./dto/create-webhook-endpoint.dto.js";
+import { UpdateWebhookEndpointDto } from "./dto/update-webhook-endpoint.dto.js";
+import { WebhookEndpointEntity } from "./entities/webhook-endpoint.entity.js";
+import { WebhookEndpointService } from "./webhook-endpoint.service.js";
 
 // Webhook endpoints are referenced from both sides: issuance configs and,
 // since 7.0 replaced the inline `webhook` payload with `webhookEndpointId`,

@@ -1,14 +1,14 @@
 import { decodeProtectedHeader } from "jose";
-import { TrustStoreService } from "../../../trust/trust-store.service";
+import { TrustStoreService } from "../../../trust/trust-store.service.js";
 import {
     normalizeTrustListRefs,
     ServiceTypeIdentifiers,
     TrustListSource,
     walletSolutionServiceTypes,
-} from "../../../trust/types";
-import { X509ValidationService } from "../../../trust/x509-validation.service";
-import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity";
-import { CredentialRequestException } from "./exceptions";
+} from "../../../trust/types.js";
+import { X509ValidationService } from "../../../trust/x509-validation.service.js";
+import { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity.js";
+import { CredentialRequestException } from "./exceptions/index.js";
 
 export interface AttestationProofTrustValidationDeps {
     trustStoreService: TrustStoreService;

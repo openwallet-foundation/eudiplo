@@ -2,26 +2,26 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Request } from "express";
 import { Repository } from "typeorm";
-import { AuditLogService } from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../../audit-log/audit-log-context.util";
-import { TokenPayload } from "../../../auth/token.decorator";
-import { ConfigImportService } from "../../../platform/config-import/config-import.service";
+} from "../../../audit-log/audit-log-context.util.js";
+import { TokenPayload } from "../../../auth/token.decorator.js";
+import { ConfigImportService } from "../../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../../platform/config-import/config-import-orchestrator.service";
-import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
-import { OutboundUrlPolicyService } from "../../../webhook/outbound-url-policy.service";
-import { CreateWebhookEndpointDto } from "./dto/create-webhook-endpoint.dto";
-import { WebhookEndpointEntity } from "./entities/webhook-endpoint.entity";
+} from "../../../platform/config-import/config-import-orchestrator.service.js";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util.js";
+import { OutboundUrlPolicyService } from "../../../webhook/outbound-url-policy.service.js";
+import { CreateWebhookEndpointDto } from "./dto/create-webhook-endpoint.dto.js";
+import { WebhookEndpointEntity } from "./entities/webhook-endpoint.entity.js";
 import type {
     CreateWebhookEndpoint,
     UpdateWebhookEndpoint,
-} from "./schemas/webhook-endpoint.schema";
+} from "./schemas/webhook-endpoint.schema.js";
 
 @Injectable()
 export class WebhookEndpointService {

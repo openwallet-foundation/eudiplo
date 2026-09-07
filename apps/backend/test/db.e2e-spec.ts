@@ -8,7 +8,7 @@ import {
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../src/app.module";
+import { AppModule } from "../src/app.module.js";
 
 /**
  * Boots the full NestJS app with synchronize + migrations enabled,

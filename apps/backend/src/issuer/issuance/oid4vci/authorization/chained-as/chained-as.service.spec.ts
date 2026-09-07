@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import type { MetricService } from "nestjs-otel";
 import { of, throwError } from "rxjs";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { ChainedAsService } from "./chained-as.service";
+import { ChainedAsService } from "./chained-as.service.js";
 
 describe("ChainedAsService upstream discovery caching & deduplication", () => {
     let service: ChainedAsService;

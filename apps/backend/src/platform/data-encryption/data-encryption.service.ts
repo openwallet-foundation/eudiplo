@@ -3,7 +3,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import {
     ENCRYPTION_KEY_PROVIDER,
     EncryptionKeyProvider,
-} from "./providers/encryption-key-provider.interface";
+} from "./providers/encryption-key-provider.interface.js";
 
 /**
  * Service for encrypting and decrypting sensitive data at rest.

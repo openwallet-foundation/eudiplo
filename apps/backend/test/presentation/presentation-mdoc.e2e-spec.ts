@@ -10,12 +10,12 @@ import { CryptoKey, generateKeyPair } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../../src/issuer/status-list/status-list.service";
+import { StatusListService } from "../../src/issuer/status-list/status-list.service.js";
 import {
     PresentationRequest,
     ResponseType,
-} from "../../src/verifier/oid4vp/dto/presentation-request.dto";
-import { AuthConfig } from "../../src/webhook/webhook.dto";
+} from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
+import { AuthConfig } from "../../src/webhook/webhook.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -24,7 +24,7 @@ import {
     PresentationTestContext,
     prepareMdocPresentation,
     setupPresentationTestApp,
-} from "../utils";
+} from "../utils.js";
 
 describe("Presentation - mDOC Credential", () => {
     let app: INestApplication<App>;

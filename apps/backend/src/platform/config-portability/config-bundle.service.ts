@@ -3,25 +3,25 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ClientEntity } from "../../auth/client/entities/client.entity";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { KeyChainEntity } from "../../crypto/key/entities/key-chain.entity";
-import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service";
-import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity";
-import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity";
-import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity";
-import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity";
-import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity";
-import { FileEntity } from "../../storage/entities/files.entity";
-import { FilesService } from "../../storage/files.service";
-import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity";
-import { ConfigDocumentValidationService } from "./config-document-validation.service";
-import { ConfigKmsReferenceService } from "./config-kms-reference.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigOwnershipService } from "./config-ownership.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { ClientEntity } from "../../auth/client/entities/client.entity.js";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { KeyChainEntity } from "../../crypto/key/entities/key-chain.entity.js";
+import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service.js";
+import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity.js";
+import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity.js";
+import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
+import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
+import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
+import { FileEntity } from "../../storage/entities/files.entity.js";
+import { FilesService } from "../../storage/files.service.js";
+import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
+import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
+import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
     ConfigBundle,
     ConfigBundleRequirement,
@@ -31,8 +31,8 @@ import type {
     ConfigImportPlanItem,
     ConfigMigrationIssue,
     ConfigResourceKind,
-} from "./config-resource.types";
-import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
+} from "./config-resource.types.js";
+import { CONFIG_RESOURCE_KINDS } from "./config-resource.types.js";
 
 const OMITTED_FIELDS = new Set([
     "tenant",

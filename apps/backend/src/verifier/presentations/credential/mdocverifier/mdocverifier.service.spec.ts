@@ -3,8 +3,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
     shortVerificationMessage,
     type VerificationFailureType,
-} from "../verification-failure";
-import { MdocverifierService } from "./mdocverifier.service";
+} from "../verification-failure.js";
+import { MdocverifierService } from "./mdocverifier.service.js";
 
 describe("MdocverifierService failure classification", () => {
     let service: MdocverifierService;

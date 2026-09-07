@@ -6,9 +6,9 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
-import { EncryptedJsonTransformer } from "../../../platform/data-encryption";
-import { KeyUsageType } from "../types/key-usage-type";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
+import { EncryptedJsonTransformer } from "../../../platform/data-encryption/index.js";
+import { KeyUsageType } from "../types/key-usage-type.js";
 
 /**
  * Key usage types for cryptographic operations.

@@ -1,7 +1,7 @@
 import { ConflictException } from "@nestjs/common";
 import { firstValueFrom, of } from "rxjs";
 import { describe, expect, it, vi } from "vitest";
-import { ConfigGenerationInterceptor } from "./config-generation.interceptor";
+import { ConfigGenerationInterceptor } from "./config-generation.interceptor.js";
 
 function context(request: Record<string, unknown>) {
     return {

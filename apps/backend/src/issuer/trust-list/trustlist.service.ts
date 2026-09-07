@@ -11,26 +11,26 @@ import {
 } from "@owf/eudi-lote";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
 import {
     CertificateInfo,
     CertService,
-} from "../../crypto/key/cert/cert.service";
-import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
-import { ConfigImportService } from "../../platform/config-import/config-import.service";
+} from "../../crypto/key/cert/cert.service.js";
+import { KeyChainService } from "../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type.js";
+import { ConfigImportService } from "../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../platform/config-import/config-import-orchestrator.service";
-import { loadConfigDto } from "../../shared/utils/config-file-loader.util";
+} from "../../platform/config-import/config-import-orchestrator.service.js";
+import { loadConfigDto } from "../../shared/utils/config-file-loader.util.js";
 import {
     TrustListCreateDto,
     TrustListEntityInfo,
-} from "./dto/trust-list-create.dto";
-import { TrustList } from "./entities/trust-list.entity";
-import { TrustListVersion } from "./entities/trust-list-version.entity";
-import { TrustListCreateSchema } from "./schemas/trust-list.schema";
+} from "./dto/trust-list-create.dto.js";
+import { TrustList } from "./entities/trust-list.entity.js";
+import { TrustListVersion } from "./entities/trust-list-version.entity.js";
+import { TrustListCreateSchema } from "./schemas/trust-list.schema.js";
 
 export enum ServiceTypeIdentifier {
     PIDIssuance = "http://uri.etsi.org/19602/SvcType/PID/Issuance",

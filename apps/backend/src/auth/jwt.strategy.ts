@@ -3,9 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import { PassportStrategy } from "@nestjs/passport";
 import { passportJwtSecret } from "jwks-rsa";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import { CLIENTS_PROVIDER, ClientsProvider } from "./client/client.provider";
-import { TenantService } from "./tenant/tenant.service";
-import { InternalTokenPayload, TokenPayload } from "./token.decorator";
+import { CLIENTS_PROVIDER, ClientsProvider } from "./client/client.provider.js";
+import { TenantService } from "./tenant/tenant.service.js";
+import { InternalTokenPayload, TokenPayload } from "./token.decorator.js";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, "jwt") {

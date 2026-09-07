@@ -27,25 +27,25 @@ import {
     Repository,
 } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { CertService } from "../../crypto/key/cert/cert.service";
-import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
-import { ConfigImportService } from "../../platform/config-import/config-import.service";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { CertService } from "../../crypto/key/cert/cert.service.js";
+import { KeyChainService } from "../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type.js";
+import { ConfigImportService } from "../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../platform/config-import/config-import-orchestrator.service";
-import { Session } from "../../session/entities/session.entity";
-import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity";
-import { StatusListImportSchema } from "./dto/status-list.schema";
-import { StatusListImportDto } from "./dto/status-list-import.dto";
-import { StatusUpdateDto } from "./dto/status-update.dto";
-import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
-import { StatusListEntity } from "./entities/status-list.entity";
-import { StatusMapping } from "./entities/status-mapping.entity";
-import { StatusListConfigService } from "./status-list-config.service";
-import { SubjectKeyService } from "./subject-key.service";
+} from "../../platform/config-import/config-import-orchestrator.service.js";
+import { Session } from "../../session/entities/session.entity.js";
+import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity.js";
+import { StatusListImportSchema } from "./dto/status-list.schema.js";
+import { StatusListImportDto } from "./dto/status-list-import.dto.js";
+import { StatusUpdateDto } from "./dto/status-update.dto.js";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity.js";
+import { StatusListEntity } from "./entities/status-list.entity.js";
+import { StatusMapping } from "./entities/status-mapping.entity.js";
+import { StatusListConfigService } from "./status-list-config.service.js";
+import { SubjectKeyService } from "./subject-key.service.js";
 
 /**
  * Status list value meaning "revoked", per the convention documented on

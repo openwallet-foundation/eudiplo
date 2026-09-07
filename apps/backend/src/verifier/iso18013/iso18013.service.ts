@@ -18,31 +18,31 @@ import { X509Certificate } from "@peculiar/x509";
 import { exportJWK } from "jose";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
-import { EncryptionService } from "../../crypto/encryption/encryption.service";
-import { CertService } from "../../crypto/key/cert/cert.service";
-import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service";
-import { SessionStatus } from "../../session/entities/session.entity";
-import { SessionAuditService } from "../../session/logging/session-audit.service";
-import { SessionService } from "../../session/session.service";
-import { revocationModeToPolicy } from "../../trust/revocation-policy.util";
+import { EncryptionService } from "../../crypto/encryption/encryption.service.js";
+import { CertService } from "../../crypto/key/cert/cert.service.js";
+import { KeyChainService } from "../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { ServiceTypeIdentifier } from "../../issuer/trust-list/trustlist.service.js";
+import { SessionStatus } from "../../session/entities/session.entity.js";
+import { SessionAuditService } from "../../session/logging/session-audit.service.js";
+import { SessionService } from "../../session/session.service.js";
+import { revocationModeToPolicy } from "../../trust/revocation-policy.util.js";
 import {
     DEFAULT_VERIFIER_SKEW_SECONDS,
     RevocationCheckMode,
     VerifierOptions,
-} from "../../trust/types";
-import { WebhookConfig } from "../../webhook/webhook.dto";
-import { WebhookService } from "../../webhook/webhook.service";
-import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service";
-import { shortVerificationMessage } from "../presentations/credential/verification-failure";
+} from "../../trust/types.js";
+import { WebhookConfig } from "../../webhook/webhook.dto.js";
+import { WebhookService } from "../../webhook/webhook.service.js";
+import { MdocverifierService } from "../presentations/credential/mdocverifier/mdocverifier.service.js";
+import { shortVerificationMessage } from "../presentations/credential/verification-failure.js";
 import {
     TrustedAuthorityQueryEtsiTl,
     TrustedAuthorityQueryOpenIdFederation,
     TrustedAuthorityType,
-} from "../presentations/entities/presentation-config.entity";
-import { PresentationsService } from "../presentations/presentations.service";
+} from "../presentations/entities/presentation-config.entity.js";
+import { PresentationsService } from "../presentations/presentations.service.js";
 import {
     buildDeviceRequestCbor,
     buildEncryptionInfo,
@@ -50,8 +50,8 @@ import {
     buildItemsRequest,
     buildReaderAuth,
     parseEncryptedResponse,
-} from "./cbor-request";
-import { hpkeOpen } from "./hpke";
+} from "./cbor-request.js";
+import { hpkeOpen } from "./hpke.js";
 
 export interface Iso18013Offer {
     session: string;

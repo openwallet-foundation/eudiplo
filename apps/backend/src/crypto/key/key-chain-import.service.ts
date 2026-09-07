@@ -6,17 +6,17 @@ import { InjectRepository } from "@nestjs/typeorm";
 import type { JWK } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { ConfigImportService } from "../../platform/config-import/config-import.service";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { ConfigImportService } from "../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../platform/config-import/config-import-orchestrator.service";
-import { CertificateBuilderService } from "./cert/certificate-builder.service";
-import { KeyChainImportDto } from "./dto/key-chain-import.dto";
-import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity";
-import type { KmsAdapter, KmsKeyRef } from "./kms/kms-adapter";
-import { KmsProviderRegistry } from "./kms/kms-provider.registry";
+} from "../../platform/config-import/config-import-orchestrator.service.js";
+import { CertificateBuilderService } from "./cert/certificate-builder.service.js";
+import { KeyChainImportDto } from "./dto/key-chain-import.dto.js";
+import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
+import type { KmsAdapter, KmsKeyRef } from "./kms/kms-adapter.js";
+import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
 
 /**
  * Handles config-driven key-chain import and the config-import lifecycle hook.

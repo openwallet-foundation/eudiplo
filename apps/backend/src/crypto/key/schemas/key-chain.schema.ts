@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { KeyUsageType } from "../types/key-usage-type";
+import { KeyUsageType } from "../types/key-usage-type.js";
 
 export const RotationPolicyCreateSchema = z
     .object({

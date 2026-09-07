@@ -5,9 +5,9 @@ import { Readable } from "node:stream";
 import { S3Client } from "@aws-sdk/client-s3";
 import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { LocalFileStorage } from "../src/storage/adapters/local.storage";
-import { S3FileStorage } from "../src/storage/adapters/s3.storage";
-import type { FileStorage } from "../src/storage/storage.types";
+import { LocalFileStorage } from "../src/storage/adapters/local.storage.js";
+import { S3FileStorage } from "../src/storage/adapters/s3.storage.js";
+import type { FileStorage } from "../src/storage/storage.types.js";
 
 /**
  * Shared test suite for FileStorage implementations.

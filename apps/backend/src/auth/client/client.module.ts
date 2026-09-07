@@ -2,13 +2,13 @@ import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { getRepositoryToken, TypeOrmModule } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { ConfigImportService } from "../../platform/config-import/config-import.service";
-import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service";
-import { InternalClientsProvider } from "./adapters/internal-clients.service";
-import { KeycloakClientsProvider } from "./adapters/keycloak-clients.service";
-import { ClientController } from "./client.controller";
-import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider";
-import { ClientEntity } from "./entities/client.entity";
+import { ConfigImportService } from "../../platform/config-import/config-import.service.js";
+import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service.js";
+import { InternalClientsProvider } from "./adapters/internal-clients.service.js";
+import { KeycloakClientsProvider } from "./adapters/keycloak-clients.service.js";
+import { ClientController } from "./client.controller.js";
+import { CLIENTS_PROVIDER, ClientsProvider } from "./client.provider.js";
+import { ClientEntity } from "./entities/client.entity.js";
 
 @Module({
     imports: [TypeOrmModule.forFeature([ClientEntity])],

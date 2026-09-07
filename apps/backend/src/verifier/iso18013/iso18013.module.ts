@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CryptoModule } from "../../crypto/crypto.module";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { SessionLoggingModule } from "../../session/logging/session-logging.module";
-import { SessionModule } from "../../session/session.module";
-import { WebhookModule } from "../../webhook/webhook.module";
-import { PresentationsModule } from "../presentations/presentations.module";
-import { Iso18013Controller } from "./iso18013.controller";
-import { Iso18013Service } from "./iso18013.service";
+import { CryptoModule } from "../../crypto/crypto.module.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { SessionLoggingModule } from "../../session/logging/session-logging.module.js";
+import { SessionModule } from "../../session/session.module.js";
+import { WebhookModule } from "../../webhook/webhook.module.js";
+import { PresentationsModule } from "../presentations/presentations.module.js";
+import { Iso18013Controller } from "./iso18013.controller.js";
+import { Iso18013Service } from "./iso18013.service.js";
 
 @Module({
     imports: [

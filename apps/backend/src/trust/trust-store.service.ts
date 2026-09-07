@@ -1,9 +1,9 @@
 import { Injectable, Logger } from "@nestjs/common";
 import type { LoTE } from "@owf/eudi-lote";
 import { decodeJwt } from "jose";
-import { LoteParserService } from "./lote-parser.service";
-import { TrustListJwtService } from "./trustlist-jwt.service";
-import { TrustedEntity, TrustListSource } from "./types";
+import { LoteParserService } from "./lote-parser.service.js";
+import { TrustListJwtService } from "./trustlist-jwt.service.js";
+import { TrustedEntity, TrustListSource } from "./types.js";
 
 /**
  * Built trust store with TrustedEntities preserving service groupings.

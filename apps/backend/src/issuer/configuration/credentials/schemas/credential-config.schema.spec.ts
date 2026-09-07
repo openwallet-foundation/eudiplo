@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CredentialConfigCreateSchema } from "./credential-config.schema";
+import { CredentialConfigCreateSchema } from "./credential-config.schema.js";
 
 const credentialConfig = {
     id: "pid",

@@ -6,28 +6,28 @@ import {
     getSchemaPath,
 } from "@nestjs/swagger";
 import { Column, Entity, JoinColumn, ManyToOne } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
-import { KeyChainEntity } from "../../../../crypto/key/entities/key-chain.entity";
-import { VCT } from "../../../issuance/oid4vci/metadata/dto/vct.dto";
-import { AttributeProviderEntity } from "../../attribute-provider/entities/attribute-provider.entity";
-import { KeyAttestationsRequired } from "../../issuance/dto/key-attestations-required.dto";
-import { WebhookEndpointEntity } from "../../webhook-endpoint/entities/webhook-endpoint.entity";
-import { ActiveCredentialPolicy } from "../dto/active-credential-policy.dto";
-import { ClaimFieldDefinitionDto } from "../dto/claim-field-definition.dto";
-import { CredentialReusePolicy } from "../dto/credential-reuse-policy.dto";
-import { SchemaMetaConfig } from "../dto/schema-meta-config.dto";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity.js";
+import { KeyChainEntity } from "../../../../crypto/key/entities/key-chain.entity.js";
+import { VCT } from "../../../issuance/oid4vci/metadata/dto/vct.dto.js";
+import { AttributeProviderEntity } from "../../attribute-provider/entities/attribute-provider.entity.js";
+import { KeyAttestationsRequired } from "../../issuance/dto/key-attestations-required.dto.js";
+import { WebhookEndpointEntity } from "../../webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { ActiveCredentialPolicy } from "../dto/active-credential-policy.dto.js";
+import { ClaimFieldDefinitionDto } from "../dto/claim-field-definition.dto.js";
+import { CredentialReusePolicy } from "../dto/credential-reuse-policy.dto.js";
+import { SchemaMetaConfig } from "../dto/schema-meta-config.dto.js";
 import {
     IaeAction,
     IaeActionOpenid4vpPresentation,
     IaeActionRedirectToWeb,
-} from "./iae-action.dto";
+} from "./iae-action.dto.js";
 import {
     AllowListPolicy,
     AttestationBasedPolicy,
     EmbeddedDisclosurePolicy,
     NoneTrustPolicy,
     RootOfTrustPolicy,
-} from "./policies.dto";
+} from "./policies.dto.js";
 
 export class DisplayImage {
     uri!: string;

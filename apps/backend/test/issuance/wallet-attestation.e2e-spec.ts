@@ -23,15 +23,15 @@ import {
     expect,
     test,
 } from "vitest";
-import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
-import { StatusListVerifierService } from "../../src/trust/status-list-verifier.service";
-import { TrustStoreService } from "../../src/trust/trust-store.service";
+import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto.js";
+import { StatusListVerifierService } from "../../src/trust/status-list-verifier.service.js";
+import { TrustStoreService } from "../../src/trust/trust-store.service.js";
 import {
     callbacks,
     getSignJwtCallback,
     IssuanceTestContext,
     setupIssuanceTestApp,
-} from "../utils";
+} from "../utils.js";
 
 setGlobalDispatcher(
     new Agent({

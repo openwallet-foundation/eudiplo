@@ -4,8 +4,8 @@ import { z } from "zod";
 import {
     WebhookConfig,
     WebhookConfigSchema,
-} from "../../../webhook/webhook.dto";
-import { TransactionDataSchema } from "../../presentations/schemas/presentation-config.schema";
+} from "../../../webhook/webhook.dto.js";
+import { TransactionDataSchema } from "../../presentations/schemas/presentation-config.schema.js";
 
 /**
  * Values for the type of response expected from the presentation request.

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SdjwtvcverifierService } from "./sdjwtvcverifier.service";
+import { SdjwtvcverifierService } from "./sdjwtvcverifier.service.js";
 
 const instanceConfigs: any[] = [];
 const verifyMock = vi.fn();

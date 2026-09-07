@@ -6,21 +6,21 @@ import {
     OnModuleInit,
 } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
-import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto";
-import type { KmsProvidersResponseDto } from "../dto/kms-providers-response.dto";
+import type { KmsProviderInfoDto } from "../dto/kms-provider-capabilities.dto.js";
+import type { KmsProvidersResponseDto } from "../dto/kms-providers-response.dto.js";
 import type {
     KmsProviderConfig,
     KmsProviderType,
-} from "../schemas/kms-config.schema";
-import { AwsKmsAdapter } from "./adapters/aws-kms.adapter";
-import { CscKmsAdapter } from "./adapters/csc-kms.adapter";
-import { DbKmsAdapter } from "./adapters/db-kms.adapter";
-import { HttpKmsAdapter } from "./adapters/http-kms.adapter";
-import { Pkcs11KmsAdapter } from "./adapters/pkcs11-kms.adapter";
-import { VaultKmsAdapter } from "./adapters/vault-kms.adapter";
-import type { KmsAdapter } from "./kms-adapter";
-import { KmsConfigService } from "./kms-config.service";
-import { KmsCryptoProvider } from "./kms-crypto-provider";
+} from "../schemas/kms-config.schema.js";
+import { AwsKmsAdapter } from "./adapters/aws-kms.adapter.js";
+import { CscKmsAdapter } from "./adapters/csc-kms.adapter.js";
+import { DbKmsAdapter } from "./adapters/db-kms.adapter.js";
+import { HttpKmsAdapter } from "./adapters/http-kms.adapter.js";
+import { Pkcs11KmsAdapter } from "./adapters/pkcs11-kms.adapter.js";
+import { VaultKmsAdapter } from "./adapters/vault-kms.adapter.js";
+import type { KmsAdapter } from "./kms-adapter.js";
+import { KmsConfigService } from "./kms-config.service.js";
+import { KmsCryptoProvider } from "./kms-crypto-provider.js";
 
 const DEFAULT_PROVIDER_ID = "db";
 

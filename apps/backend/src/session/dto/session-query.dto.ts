@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { createZodDto } from "nestjs-zod";
 import { z } from "zod";
-import { SessionStatus } from "../entities/session.entity";
+import { SessionStatus } from "../entities/session.entity.js";
 
 export type SessionSortBy = "id" | "status" | "createdAt" | "requestId";
 export type SessionSortOrder = "asc" | "desc";

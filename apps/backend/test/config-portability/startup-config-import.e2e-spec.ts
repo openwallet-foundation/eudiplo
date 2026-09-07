@@ -12,9 +12,9 @@ import type { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { ConfigBundleService } from "../../src/platform/config-portability/config-bundle.service";
-import { ConfigFolderBundleService } from "../../src/platform/config-portability/config-folder-bundle.service";
-import { ConfigOwnershipService } from "../../src/platform/config-portability/config-ownership.service";
+import { ConfigBundleService } from "../../src/platform/config-portability/config-bundle.service.js";
+import { ConfigFolderBundleService } from "../../src/platform/config-portability/config-folder-bundle.service.js";
+import { ConfigOwnershipService } from "../../src/platform/config-portability/config-ownership.service.js";
 
 describe("startup configuration reconciliation", () => {
     let app: INestApplication;
@@ -43,7 +43,7 @@ describe("startup configuration reconciliation", () => {
         process.env.CONFIG_IMPORT_MODE = "create";
         process.env.FOLDER = runtimeFolder;
 
-        const { AppModule } = await import("../../src/app.module");
+        const { AppModule } = await import("../../src/app.module.js");
         const moduleFixture = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();

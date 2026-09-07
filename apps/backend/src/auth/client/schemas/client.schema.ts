@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Role } from "../../roles/role.enum";
+import { Role } from "../../roles/role.enum.js";
 
 const rolesSchema = z
     .array(z.enum(Role))

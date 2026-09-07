@@ -7,9 +7,9 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import { Response } from "express";
-import { StatusListAggregationDto } from "./dto/status-list-aggregation.dto";
-import { StatusListImportDto } from "./dto/status-list-import.dto";
-import { StatusListService } from "./status-list.service";
+import { StatusListAggregationDto } from "./dto/status-list-aggregation.dto.js";
+import { StatusListImportDto } from "./dto/status-list-import.dto.js";
+import { StatusListService } from "./status-list.service.js";
 
 @ApiExtraModels(StatusListImportDto)
 @ApiTags("Issuer")

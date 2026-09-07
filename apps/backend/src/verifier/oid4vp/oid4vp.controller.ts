@@ -11,8 +11,8 @@ import {
 } from "@nestjs/common";
 import { ApiParam, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { AuthorizationResponse } from "./dto/authorization-response.dto";
-import { Oid4vpService } from "./oid4vp.service";
+import { AuthorizationResponse } from "./dto/authorization-response.dto.js";
+import { Oid4vpService } from "./oid4vp.service.js";
 
 /**
  * Controller for handling OID4VP (OpenID for Verifiable Presentations) requests.

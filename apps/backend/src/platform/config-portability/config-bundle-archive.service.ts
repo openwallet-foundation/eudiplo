@@ -5,7 +5,7 @@ import type {
     ConfigBundle,
     ConfigBundleAsset,
     ConfigDocument,
-} from "./config-resource.types";
+} from "./config-resource.types.js";
 
 const sha256 = (value: Uint8Array): string =>
     createHash("sha256").update(value).digest("hex");

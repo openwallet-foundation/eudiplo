@@ -1,7 +1,7 @@
 import { Global, Module } from "@nestjs/common";
-import { ConfigImportService } from "./config-import.service";
-import { ConfigImportModeService } from "./config-import-mode.service";
-import { ConfigImportOrchestratorService } from "./config-import-orchestrator.service";
+import { ConfigImportService } from "./config-import.service.js";
+import { ConfigImportModeService } from "./config-import-mode.service.js";
+import { ConfigImportOrchestratorService } from "./config-import-orchestrator.service.js";
 
 @Global()
 @Module({

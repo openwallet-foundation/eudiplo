@@ -1,5 +1,5 @@
 import { PartialType } from "@nestjs/swagger";
-import { IssuanceDto } from "./issuance.dto";
+import { IssuanceDto } from "./issuance.dto.js";
 
 /**
  * DTO for partial issuance configuration updates.

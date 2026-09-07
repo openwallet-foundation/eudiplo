@@ -17,8 +17,8 @@ import {
     InteractiveAuthorizationOpenid4vpResponseDto,
     InteractiveAuthorizationRedirectToWebResponseDto,
     InteractiveAuthorizationRequestDto,
-} from "./dto/interactive-authorization.dto";
-import { InteractiveAuthorizationService } from "./interactive-authorization.service";
+} from "./dto/interactive-authorization.dto.js";
+import { InteractiveAuthorizationService } from "./interactive-authorization.service.js";
 
 /**
  * Controller for the Interactive Authorization Endpoint (IAE).

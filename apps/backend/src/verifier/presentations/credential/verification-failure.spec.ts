@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mapChainErrorToFailureType } from "./verification-failure";
+import { mapChainErrorToFailureType } from "./verification-failure.js";
 
 /**
  * The chain validator (CredentialChainValidationService) is shared by the mDoc

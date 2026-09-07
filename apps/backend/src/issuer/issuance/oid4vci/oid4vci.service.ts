@@ -38,54 +38,54 @@ import { MetricService, Span, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TokenPayload } from "../../../auth/token.decorator";
-import { CryptoService } from "../../../crypto/crypto.service";
-import { EncryptionService } from "../../../crypto/encryption/encryption.service";
-import { type RegistrationCertificateCreation } from "../../../registrar/generated";
-import { RegistrarService } from "../../../registrar/registrar.service";
+import { TokenPayload } from "../../../auth/token.decorator.js";
+import { CryptoService } from "../../../crypto/crypto.service.js";
+import { EncryptionService } from "../../../crypto/encryption/encryption.service.js";
+import { type RegistrationCertificateCreation } from "../../../registrar/generated/index.js";
+import { RegistrarService } from "../../../registrar/registrar.service.js";
 import {
     Session,
     SessionStatus,
-} from "../../../session/entities/session.entity";
-import { AuditLogContext } from "../../../session/logging/session-audit.service";
-import { SessionLoggerService } from "../../../session/logging/session-logger.service";
-import { SessionService } from "../../../session/session.service";
-import { FederationTrustService } from "../../../trust/federation-trust.service";
-import { TrustStoreService } from "../../../trust/trust-store.service";
-import { FederationTrustSource } from "../../../trust/types";
-import { X509ValidationService } from "../../../trust/x509-validation.service";
-import { WebhookService } from "../../../webhook/webhook.service";
-import { CredentialsService } from "../../configuration/credentials/credentials.service";
-import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity";
-import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result";
-import { CredentialProofType } from "../../configuration/credentials/entities/credential.entity";
-import { ManagedAuthorizationServerConfig } from "../../configuration/issuance/dto/authorization-server-config.dto";
+} from "../../../session/entities/session.entity.js";
+import { AuditLogContext } from "../../../session/logging/session-audit.service.js";
+import { SessionLoggerService } from "../../../session/logging/session-logger.service.js";
+import { SessionService } from "../../../session/session.service.js";
+import { FederationTrustService } from "../../../trust/federation-trust.service.js";
+import { TrustStoreService } from "../../../trust/trust-store.service.js";
+import { FederationTrustSource } from "../../../trust/types.js";
+import { X509ValidationService } from "../../../trust/x509-validation.service.js";
+import { WebhookService } from "../../../webhook/webhook.service.js";
+import { CredentialsService } from "../../configuration/credentials/credentials.service.js";
+import { AuthorizationIdentity } from "../../configuration/credentials/dto/authorization-identity.js";
+import { ClaimsWebhookResult } from "../../configuration/credentials/dto/claims-webhook-result.js";
+import { CredentialProofType } from "../../configuration/credentials/entities/credential.entity.js";
+import { ManagedAuthorizationServerConfig } from "../../configuration/issuance/dto/authorization-server-config.dto.js";
 import {
     IssuerProvidedAttestation,
     IssuerRegistrationCertificateConfig,
     IssuerRegistrationCertificateMode,
-} from "../../configuration/issuance/dto/issuer-registration-certificate.dto";
-import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-config.entity";
-import { IssuanceService } from "../../configuration/issuance/issuance.service";
-import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { SubjectKeyService } from "../../status-list/subject-key.service";
-import { validateAttestationProofTrust } from "./attestation-proof-trust.util";
-import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service";
-import { AuthorizeService } from "./authorization/authorize/authorize.service";
-import { ChainedAsService } from "./authorization/chained-as/chained-as.service";
-import { ChainedAsVpService } from "./authorization/chained-as-vp/chained-as-vp.service";
-import { DeferredCredentialService } from "./deferred-credential.service";
-import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto";
-import { NotificationRequestDto } from "./dto/notification-request.dto";
+} from "../../configuration/issuance/dto/issuer-registration-certificate.dto.js";
+import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-config.entity.js";
+import { IssuanceService } from "../../configuration/issuance/issuance.service.js";
+import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { SubjectKeyService } from "../../status-list/subject-key.service.js";
+import { validateAttestationProofTrust } from "./attestation-proof-trust.util.js";
+import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service.js";
+import { AuthorizeService } from "./authorization/authorize/authorize.service.js";
+import { ChainedAsService } from "./authorization/chained-as/chained-as.service.js";
+import { ChainedAsVpService } from "./authorization/chained-as-vp/chained-as-vp.service.js";
+import { DeferredCredentialService } from "./deferred-credential.service.js";
+import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto.js";
+import { NotificationRequestDto } from "./dto/notification-request.dto.js";
 import {
     FlowType,
     OfferRequestDto,
     OfferResponse,
-} from "./dto/offer-request.dto";
-import { DeferredTransactionEntity } from "./entities/deferred-transaction.entity";
-import { CredentialRequestException } from "./exceptions";
-import { NonceService } from "./nonce.service";
-import { getHeadersFromRequest } from "./util";
+} from "./dto/offer-request.dto.js";
+import { DeferredTransactionEntity } from "./entities/deferred-transaction.entity.js";
+import { CredentialRequestException } from "./exceptions/index.js";
+import { NonceService } from "./nonce.service.js";
+import { getHeadersFromRequest } from "./util.js";
 
 /**
  * Type alias for the OAuth2 access token payload returned by resource server verification.

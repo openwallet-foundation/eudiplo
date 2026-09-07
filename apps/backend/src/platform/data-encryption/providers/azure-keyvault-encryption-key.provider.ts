@@ -3,7 +3,7 @@ import { DefaultAzureCredential } from "@azure/identity";
 import { SecretClient } from "@azure/keyvault-secrets";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { EncryptionKeyProvider } from "./encryption-key-provider.interface";
+import { EncryptionKeyProvider } from "./encryption-key-provider.interface.js";
 
 /**
  * Azure Key Vault encryption key provider.

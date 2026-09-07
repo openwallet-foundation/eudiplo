@@ -3,7 +3,7 @@ import { HttpService } from "@nestjs/axios";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { firstValueFrom } from "rxjs";
-import { EncryptionKeyProvider } from "./encryption-key-provider.interface";
+import { EncryptionKeyProvider } from "./encryption-key-provider.interface.js";
 
 /**
  * HashiCorp Vault encryption key provider.

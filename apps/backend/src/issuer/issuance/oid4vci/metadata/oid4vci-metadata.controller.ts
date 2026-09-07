@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { CredentialsService } from "../../../configuration/credentials/credentials.service";
+import { CredentialsService } from "../../../configuration/credentials/credentials.service.js";
 
 @ApiTags("OID4VCI")
 @Controller("issuers/:tenantId/credentials-metadata")

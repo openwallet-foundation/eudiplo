@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { MatchedTrustedEntity } from "../../../trust/x509-validation.service";
-import { toProvenance } from "./verification-provenance";
+import { MatchedTrustedEntity } from "../../../trust/x509-validation.service.js";
+import { toProvenance } from "./verification-provenance.js";
 
 describe("toProvenance", () => {
     it("returns undefined when no entity matched", () => {

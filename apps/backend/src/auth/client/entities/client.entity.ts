@@ -4,8 +4,8 @@ import {
     ApiPropertyOptional,
 } from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import { Role } from "../../roles/role.enum";
-import { TenantEntity } from "../../tenant/entities/tenant.entity";
+import { Role } from "../../roles/role.enum.js";
+import { TenantEntity } from "../../tenant/entities/tenant.entity.js";
 
 /**
  * Represents a client in the system that belongs to a tenant.

@@ -1,18 +1,18 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuditLogModule } from "../../audit-log/audit-log.module";
-import { TrustListModule } from "../../issuer/trust-list/trustlist.module";
-import { RegistrarModule } from "../../registrar/registrar.module";
-import { TrustModule } from "../../trust/trust.module";
-import { ResolverModule } from "../resolver/resolver.module";
-import { CredentialChainValidationService } from "./credential/credential-chain-validation.service";
-import { MdocverifierService } from "./credential/mdocverifier/mdocverifier.service";
-import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service";
-import { PresentationConfig } from "./entities/presentation-config.entity";
-import { MetadataFetchService } from "./metadata-fetch.service";
-import { PresentationManagementController } from "./presentations.controller";
-import { PresentationsService } from "./presentations.service";
+import { AuditLogModule } from "../../audit-log/audit-log.module.js";
+import { TrustListModule } from "../../issuer/trust-list/trustlist.module.js";
+import { RegistrarModule } from "../../registrar/registrar.module.js";
+import { TrustModule } from "../../trust/trust.module.js";
+import { ResolverModule } from "../resolver/resolver.module.js";
+import { CredentialChainValidationService } from "./credential/credential-chain-validation.service.js";
+import { MdocverifierService } from "./credential/mdocverifier/mdocverifier.service.js";
+import { SdjwtvcverifierService } from "./credential/sdjwtvcverifier/sdjwtvcverifier.service.js";
+import { PresentationConfig } from "./entities/presentation-config.entity.js";
+import { MetadataFetchService } from "./metadata-fetch.service.js";
+import { PresentationManagementController } from "./presentations.controller.js";
+import { PresentationsService } from "./presentations.service.js";
 
 @Module({
     imports: [

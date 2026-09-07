@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { Role } from "../../auth/roles/role.enum";
-import { ROLES_KEY } from "../../auth/roles/roles.decorator";
-import { ConfigPortabilityController } from "./config-portability.controller";
+import { Role } from "../../auth/roles/role.enum.js";
+import { ROLES_KEY } from "../../auth/roles/roles.decorator.js";
+import { ConfigPortabilityController } from "./config-portability.controller.js";
 
 describe("ConfigPortabilityController authorization", () => {
     it.each(["export", "import", "importArchive", "detach"] as const)(

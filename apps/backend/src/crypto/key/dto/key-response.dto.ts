@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { EC_Public } from "../../../issuer/issuance/oid4vci/well-known/dto/jwks-response.dto";
+import { EC_Public } from "../../../issuer/issuance/oid4vci/well-known/dto/jwks-response.dto.js";
 
 export class KeyResponseDto {
     @ApiProperty({ description: "JSON Web Keys", type: [Object] })

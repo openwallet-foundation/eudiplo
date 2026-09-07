@@ -11,14 +11,14 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../roles/role.enum";
-import { Secured } from "../secure.decorator";
-import { requireTenantContext } from "../tenant-context.util";
-import { Token, TokenPayload } from "../token.decorator";
-import { CreateUserDto } from "./dto/create-user.dto";
-import { ManagedUserDto } from "./dto/managed-user.dto";
-import { UpdateUserDto } from "./dto/update-user.dto";
-import { USERS_PROVIDER, UsersProvider } from "./user.provider";
+import { Role } from "../roles/role.enum.js";
+import { Secured } from "../secure.decorator.js";
+import { requireTenantContext } from "../tenant-context.util.js";
+import { Token, TokenPayload } from "../token.decorator.js";
+import { CreateUserDto } from "./dto/create-user.dto.js";
+import { ManagedUserDto } from "./dto/managed-user.dto.js";
+import { UpdateUserDto } from "./dto/update-user.dto.js";
+import { USERS_PROVIDER, UsersProvider } from "./user.provider.js";
 
 @ApiTags("User")
 @Controller("user")

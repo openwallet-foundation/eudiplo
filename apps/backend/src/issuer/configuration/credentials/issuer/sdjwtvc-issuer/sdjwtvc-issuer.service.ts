@@ -4,17 +4,17 @@ import type { Jwk } from "@openid4vc/oauth2";
 import { digest, generateSalt } from "@owf/crypto";
 import { JWTwithStatusListPayload } from "@owf/token-status-list";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
-import { CertService } from "../../../../../crypto/key/cert/cert.service";
-import { CryptoImplementationService } from "../../../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../../../../crypto/key/types/key-usage-type";
-import { Session } from "../../../../../session/entities/session.entity";
-import { StatusListService } from "../../../../status-list/status-list.service";
+import { CertService } from "../../../../../crypto/key/cert/cert.service.js";
+import { CryptoImplementationService } from "../../../../../crypto/key/crypto-implementation/crypto-implementation.service.js";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../../../../crypto/key/types/key-usage-type.js";
+import { Session } from "../../../../../session/entities/session.entity.js";
+import { StatusListService } from "../../../../status-list/status-list.service.js";
 import {
     CredentialConfig,
     SdJwtTrustFormat,
-} from "../../entities/credential.entity";
-import { buildDisclosureFrame } from "../../utils";
+} from "../../entities/credential.entity.js";
+import { buildDisclosureFrame } from "../../utils/index.js";
 
 export interface SdJwtVcIssueOptions {
     credentialConfiguration: CredentialConfig;

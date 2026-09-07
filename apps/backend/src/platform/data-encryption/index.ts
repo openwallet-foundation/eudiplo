@@ -1,4 +1,4 @@
 export {
     EncryptedJsonTransformer,
     EncryptedStringTransformer,
-} from "./encrypted-column.transformer";
+} from "./encrypted-column.transformer.js";

@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { AccessCertificateService } from "./access-certificate.service";
-import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
-import { type RegistrationCertificateCreation } from "./generated";
-import { RegistrarConfigService } from "./registrar-config.service";
-import { RegistrationCertificateService } from "./registration-certificate.service";
-import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { AccessCertificateService } from "./access-certificate.service.js";
+import { RegistrarConfigEntity } from "./entities/registrar-config.entity.js";
+import { type RegistrationCertificateCreation } from "./generated/index.js";
+import { RegistrarConfigService } from "./registrar-config.service.js";
+import { RegistrationCertificateService } from "./registration-certificate.service.js";
+import { SchemaMetadataService } from "./schema-metadata/schema-metadata.service.js";
 import type {
     CreateAccessCertificate,
     CreateRegistrarConfig,
     UpdateRegistrarConfig,
-} from "./schemas/registrar.schema";
+} from "./schemas/registrar.schema.js";
 
 /**
  * Facade that preserves the original public API of the registrar domain.

@@ -11,14 +11,14 @@ import { base64url, CryptoKey } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../../src/issuer/status-list/status-list.service";
+import { StatusListService } from "../../src/issuer/status-list/status-list.service.js";
 import {
     PresentationRequest,
     ResponseType,
-} from "../../src/verifier/oid4vp/dto/presentation-request.dto";
-import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto";
-import { TransactionData } from "../../src/verifier/presentations/entities/presentation-config.entity";
-import { AuthConfig } from "../../src/webhook/webhook.dto";
+} from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
+import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto.js";
+import { TransactionData } from "../../src/verifier/presentations/entities/presentation-config.entity.js";
+import { AuthConfig } from "../../src/webhook/webhook.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -26,7 +26,7 @@ import {
     encryptVpToken,
     PresentationTestContext,
     setupPresentationTestApp,
-} from "../utils";
+} from "../utils.js";
 
 /**
  * Creates a credential for testing (similar to the internal createCredential in utils.ts)

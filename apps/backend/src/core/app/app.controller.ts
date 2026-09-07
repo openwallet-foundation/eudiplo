@@ -6,11 +6,11 @@ import {
     ApiSecurity,
     ApiTags,
 } from "@nestjs/swagger";
-import { JwtAuthGuard } from "../../auth/auth.guard";
-import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service";
-import { FrontendConfigResponseDto } from "./dto/frontend-config-response.dto";
-import { ServiceInfoResponseDto } from "./dto/service-info-response.dto";
-import { VersionResponseDto } from "./dto/version-response.dto";
+import { JwtAuthGuard } from "../../auth/auth.guard.js";
+import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service.js";
+import { FrontendConfigResponseDto } from "./dto/frontend-config-response.dto.js";
+import { ServiceInfoResponseDto } from "./dto/service-info-response.dto.js";
+import { VersionResponseDto } from "./dto/version-response.dto.js";
 
 /**
  * Main application controller

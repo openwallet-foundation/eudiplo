@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PresentationConfigCreateSchema } from "./presentation-config.schema";
+import { PresentationConfigCreateSchema } from "./presentation-config.schema.js";
 
 const basePresentationConfig = {
     id: "age-over-16",

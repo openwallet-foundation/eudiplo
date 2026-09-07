@@ -3,7 +3,7 @@ import { createZodDto } from "nestjs-zod";
 import {
     KeyChainUpdateSchema,
     RotationPolicyUpdateSchema,
-} from "../schemas/key-chain.schema";
+} from "../schemas/key-chain.schema.js";
 
 /**
  * DTO for updating rotation policy.

@@ -5,45 +5,45 @@ import { Repository } from "typeorm";
 import {
     CLIENTS_PROVIDER,
     ClientsProvider,
-} from "../../auth/client/client.provider";
-import { ClientEntity } from "../../auth/client/entities/client.entity";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { KeyChainType } from "../../crypto/key/dto/key-chain-create.dto";
+} from "../../auth/client/client.provider.js";
+import { ClientEntity } from "../../auth/client/entities/client.entity.js";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { KeyChainType } from "../../crypto/key/dto/key-chain-create.dto.js";
 import {
     KeyChainEntity,
     KeyUsage,
-} from "../../crypto/key/entities/key-chain.entity";
-import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service";
-import { AttributeProviderService } from "../../issuer/configuration/attribute-provider/attribute-provider.service";
-import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity";
-import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service";
-import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity";
-import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity";
-import { IssuanceService } from "../../issuer/configuration/issuance/issuance.service";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { WebhookEndpointService } from "../../issuer/configuration/webhook-endpoint/webhook-endpoint.service";
-import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity";
-import { StatusListService } from "../../issuer/status-list/status-list.service";
-import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity";
-import { TrustListService } from "../../issuer/trust-list/trustlist.service";
-import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity";
-import { RegistrarConfigService } from "../../registrar/registrar-config.service";
-import { FilesService } from "../../storage/files.service";
-import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity";
-import { PresentationsService } from "../../verifier/presentations/presentations.service";
-import { ConfigBundleService } from "./config-bundle.service";
-import { ConfigKmsReferenceService } from "./config-kms-reference.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigOwnershipService } from "./config-ownership.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+} from "../../crypto/key/entities/key-chain.entity.js";
+import { KeyChainService } from "../../crypto/key/key-chain.service.js";
+import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service.js";
+import { AttributeProviderService } from "../../issuer/configuration/attribute-provider/attribute-provider.service.js";
+import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity.js";
+import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service.js";
+import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity.js";
+import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity.js";
+import { IssuanceService } from "../../issuer/configuration/issuance/issuance.service.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { WebhookEndpointService } from "../../issuer/configuration/webhook-endpoint/webhook-endpoint.service.js";
+import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
+import { StatusListService } from "../../issuer/status-list/status-list.service.js";
+import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
+import { TrustListService } from "../../issuer/trust-list/trustlist.service.js";
+import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
+import { RegistrarConfigService } from "../../registrar/registrar-config.service.js";
+import { FilesService } from "../../storage/files.service.js";
+import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
+import { PresentationsService } from "../../verifier/presentations/presentations.service.js";
+import { ConfigBundleService } from "./config-bundle.service.js";
+import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
     ConfigBundle,
     ConfigDocument,
     ConfigImportMode,
     ConfigImportPlan,
     ConfigResourceKind,
-} from "./config-resource.types";
+} from "./config-resource.types.js";
 
 @Injectable()
 export class ConfigBundleApplyService {

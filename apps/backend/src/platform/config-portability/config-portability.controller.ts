@@ -14,27 +14,27 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
 import type { Request, Response } from "express";
-import { AuditLogService } from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     resolveAuditActor,
-} from "../../audit-log/audit-log-context.util";
-import { Role } from "../../auth/roles/role.enum";
-import { Secured } from "../../auth/secure.decorator";
-import { requireTenantContext } from "../../auth/tenant-context.util";
-import { Token, TokenPayload } from "../../auth/token.decorator";
-import { ConfigBundleService } from "./config-bundle.service";
-import { ConfigBundleApplyService } from "./config-bundle-apply.service";
-import { ConfigBundleArchiveService } from "./config-bundle-archive.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigOwnershipService } from "./config-ownership.service";
+} from "../../audit-log/audit-log-context.util.js";
+import { Role } from "../../auth/roles/role.enum.js";
+import { Secured } from "../../auth/secure.decorator.js";
+import { requireTenantContext } from "../../auth/tenant-context.util.js";
+import { Token, TokenPayload } from "../../auth/token.decorator.js";
+import { ConfigBundleService } from "./config-bundle.service.js";
+import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
+import { ConfigBundleArchiveService } from "./config-bundle-archive.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
 import type {
     ConfigBundle,
     ConfigDocument,
     ConfigImportMode,
     ConfigResourceKind,
-} from "./config-resource.types";
-import { CONFIG_RESOURCE_KINDS } from "./config-resource.types";
+} from "./config-resource.types.js";
+import { CONFIG_RESOURCE_KINDS } from "./config-resource.types.js";
 
 @ApiTags("Configuration portability")
 @Secured([

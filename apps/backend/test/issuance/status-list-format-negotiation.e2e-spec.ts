@@ -3,7 +3,7 @@ import { decodeProtectedHeader } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { IssuanceTestContext, setupIssuanceTestApp } from "../utils";
+import { IssuanceTestContext, setupIssuanceTestApp } from "../utils.js";
 
 function parseBinary(
     res: NodeJS.ReadableStream,

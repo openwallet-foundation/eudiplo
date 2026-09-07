@@ -1,12 +1,12 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../../shared/common/zod/editor-schema";
+} from "../../../../shared/common/zod/editor-schema.js";
 import {
     AttributeProviderAuthSchema,
     CreateAttributeProviderSchema,
     UpdateAttributeProviderSchema,
-} from "./attribute-provider.schema";
+} from "./attribute-provider.schema.js";
 
 export const attributeProviderEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "attribute-provider",

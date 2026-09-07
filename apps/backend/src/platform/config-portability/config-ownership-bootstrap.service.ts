@@ -5,10 +5,10 @@ import { Injectable, type OnApplicationBootstrap } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { ConfigImportModeService } from "../config-import/config-import-mode.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigOwnershipService } from "./config-ownership.service";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { ConfigImportModeService } from "../config-import/config-import-mode.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
 
 @Injectable()
 export class ConfigOwnershipBootstrapService implements OnApplicationBootstrap {

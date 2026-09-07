@@ -1,5 +1,5 @@
 import { createZodDto } from "nestjs-zod";
-import { ActiveCredentialPolicySchema } from "../schemas/credential-config.schema";
+import { ActiveCredentialPolicySchema } from "../schemas/credential-config.schema.js";
 
 /**
  * Issuer-side policy limiting how many credentials of a given configuration a

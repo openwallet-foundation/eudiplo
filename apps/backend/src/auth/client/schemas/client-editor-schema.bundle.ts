@@ -1,8 +1,8 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../shared/common/zod/editor-schema";
-import { CreateClientSchema, UpdateClientSchema } from "./client.schema";
+} from "../../../shared/common/zod/editor-schema.js";
+import { CreateClientSchema, UpdateClientSchema } from "./client.schema.js";
 
 export const clientEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "client",

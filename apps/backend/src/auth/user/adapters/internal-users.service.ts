@@ -1,7 +1,7 @@
 import { Injectable, NotImplementedException } from "@nestjs/common";
-import { ManagedUserDto } from "../dto/managed-user.dto";
-import type { CreateUser, UpdateUser } from "../schemas/create-user.schema";
-import { UsersProvider } from "../user.provider";
+import { ManagedUserDto } from "../dto/managed-user.dto.js";
+import type { CreateUser, UpdateUser } from "../schemas/create-user.schema.js";
+import { UsersProvider } from "../user.provider.js";
 
 @Injectable()
 export class InternalUsersProvider extends UsersProvider {

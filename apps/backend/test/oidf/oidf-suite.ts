@@ -3,7 +3,7 @@ import https from "node:https";
 import * as axios from "axios";
 import unzipper from "unzipper";
 
-import { OIDF_HTTPD_CA_PATH } from "./oidf-setup";
+import { OIDF_HTTPD_CA_PATH } from "./oidf-setup.js";
 
 export interface TestInstance {
     id: string;

@@ -16,9 +16,9 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import { Observable, startWith } from "rxjs";
-import { JwtService } from "../auth/jwt.service";
-import { SessionService } from "./session.service";
-import { SessionEventsService } from "./session-events.service";
+import { JwtService } from "../auth/jwt.service.js";
+import { SessionService } from "./session.service.js";
+import { SessionEventsService } from "./session-events.service.js";
 
 /**
  * Controller for Server-Sent Events (SSE) based session status updates.

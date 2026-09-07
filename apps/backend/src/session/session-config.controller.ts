@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, HttpCode, Put } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { SessionStorageConfig } from "../auth/tenant/entities/session-storage-config";
-import { Token, TokenPayload } from "../auth/token.decorator";
-import { UpdateSessionConfigDto } from "./dto/update-session-config.dto";
-import { SessionConfigService } from "./session-config.service";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { SessionStorageConfig } from "../auth/tenant/entities/session-storage-config.js";
+import { Token, TokenPayload } from "../auth/token.decorator.js";
+import { UpdateSessionConfigDto } from "./dto/update-session-config.dto.js";
+import { SessionConfigService } from "./session-config.service.js";
 
 /**
  * Controller for managing session storage configuration.

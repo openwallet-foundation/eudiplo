@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { hpkeOpen } from "./hpke";
+import { hpkeOpen } from "./hpke.js";
 
 /**
  * Official RFC 9180 test vector — Appendix A.3 (Base mode):

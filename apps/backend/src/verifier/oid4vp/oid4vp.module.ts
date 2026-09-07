@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CryptoModule } from "../../crypto/crypto.module";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { RegistrarModule } from "../../registrar/registrar.module";
-import { SessionModule } from "../../session/session.module";
-import { WebhookModule } from "../../webhook/webhook.module";
-import { PresentationsModule } from "../presentations/presentations.module";
-import { Oid4vpController } from "./oid4vp.controller";
-import { Oid4vpService } from "./oid4vp.service";
+import { CryptoModule } from "../../crypto/crypto.module.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { RegistrarModule } from "../../registrar/registrar.module.js";
+import { SessionModule } from "../../session/session.module.js";
+import { WebhookModule } from "../../webhook/webhook.module.js";
+import { PresentationsModule } from "../presentations/presentations.module.js";
+import { Oid4vpController } from "./oid4vp.controller.js";
+import { Oid4vpService } from "./oid4vp.service.js";
 
 @Module({
     imports: [

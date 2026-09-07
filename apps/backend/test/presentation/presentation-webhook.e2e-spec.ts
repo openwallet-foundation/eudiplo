@@ -7,12 +7,12 @@ import { CryptoKey } from "jose";
 import nock from "nock";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../../src/issuer/status-list/status-list.service";
+import { StatusListService } from "../../src/issuer/status-list/status-list.service.js";
 import {
     PresentationRequest,
     ResponseType,
-} from "../../src/verifier/oid4vp/dto/presentation-request.dto";
-import { AuthConfig } from "../../src/webhook/webhook.dto";
+} from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
+import { AuthConfig } from "../../src/webhook/webhook.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -21,7 +21,7 @@ import {
     PresentationTestContext,
     preparePresentation,
     setupPresentationTestApp,
-} from "../utils";
+} from "../utils.js";
 
 describe("Presentation - Webhook Integration", () => {
     let app: INestApplication<App>;

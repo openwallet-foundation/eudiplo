@@ -9,7 +9,7 @@ import { hkdf } from "@panva/hkdf";
 import * as x509 from "@peculiar/x509";
 import { X509Certificate } from "@peculiar/x509";
 import { exportJWK, importX509 } from "jose";
-import { toBuffer } from "../src/shared/utils/buffer.util";
+import { toBuffer } from "../src/shared/utils/buffer.util.js";
 
 export const DEVICE_JWK = {
     kty: "EC",

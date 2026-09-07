@@ -1,4 +1,4 @@
-import type { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity";
+import type { TrustListRef } from "../verifier/presentations/entities/presentation-config.entity.js";
 
 /**
  * Normalize trust-list input to structured references.

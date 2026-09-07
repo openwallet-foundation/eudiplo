@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
-import { ClientEntity } from "../../client/entities/client.entity";
-import { SessionStorageConfig } from "./session-storage-config";
-import { StatusListConfig } from "./status-list-config";
+import { ClientEntity } from "../../client/entities/client.entity.js";
+import { SessionStorageConfig } from "./session-storage-config.js";
+import { StatusListConfig } from "./status-list-config.js";
 
 export type TenantStatus = "active";
 
@@ -71,7 +71,7 @@ export class TenantEntity {
      */
     @ApiPropertyOptional({
         description: "Clients associated with the tenant",
-        type: [ClientEntity],
+        type: () => [ClientEntity],
     })
     @OneToMany(
         () => ClientEntity,

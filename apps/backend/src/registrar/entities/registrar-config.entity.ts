@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
 
 /**
  * Typed defaults for registrar registration certificate creation.

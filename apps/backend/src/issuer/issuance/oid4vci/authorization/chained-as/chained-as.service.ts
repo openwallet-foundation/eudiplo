@@ -14,14 +14,14 @@ import { MetricService, TraceService } from "nestjs-otel";
 import { firstValueFrom } from "rxjs";
 import { LessThan, Repository } from "typeorm";
 import { v4 } from "uuid";
-import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
-import { SessionService } from "../../../../../session/session.service";
-import { FederationTrustService } from "../../../../../trust/federation-trust.service";
-import { FederationTrustSource } from "../../../../../trust/types";
-import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
-import { AuthorizationIdentity } from "../../../../configuration/credentials/dto/authorization-identity";
-import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto";
-import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
+import { SessionService } from "../../../../../session/session.service.js";
+import { FederationTrustService } from "../../../../../trust/federation-trust.service.js";
+import { FederationTrustSource } from "../../../../../trust/types.js";
+import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
+import { AuthorizationIdentity } from "../../../../configuration/credentials/dto/authorization-identity.js";
+import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto.js";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
 import {
     assertTokenRequestSessionValid,
     buildAuthorizationServerMetadata,
@@ -37,7 +37,7 @@ import {
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
-} from "../shared";
+} from "../shared/index.js";
 
 /**
  * Upstream OIDC discovery document structure.

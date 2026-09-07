@@ -5,7 +5,7 @@ import {
     serviceTypeMatches,
     TrustedEntity,
     TrustedEntityServiceCert,
-} from "./types";
+} from "./types.js";
 
 type LoteInfo = {
     nextUpdate?: string;

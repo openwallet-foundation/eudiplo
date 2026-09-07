@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
 /**
  * Module for managing user sessions.

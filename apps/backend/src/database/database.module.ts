@@ -3,8 +3,8 @@ import { Logger, Module, OnModuleInit } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { DataSource, DataSourceOptions } from "typeorm";
-import * as migrations from "./migrations";
-import { buildPostgresSslOptions } from "./postgres-ssl-options";
+import * as migrations from "./migrations/index.js";
+import { buildPostgresSslOptions } from "./postgres-ssl-options.js";
 
 @Module({
     imports: [

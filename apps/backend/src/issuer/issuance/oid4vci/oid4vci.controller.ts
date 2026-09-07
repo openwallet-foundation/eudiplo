@@ -18,10 +18,10 @@ import type {
     DeferredCredentialResponse,
 } from "@openid4vc/openid4vci";
 import type { Request, Response } from "express";
-import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto";
-import { NotificationRequestDto } from "./dto/notification-request.dto";
-import { CredentialRequestException } from "./exceptions";
-import { Oid4vciService } from "./oid4vci.service";
+import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto.js";
+import { NotificationRequestDto } from "./dto/notification-request.dto.js";
+import { CredentialRequestException } from "./exceptions/index.js";
+import { Oid4vciService } from "./oid4vci.service.js";
 
 /**
  * Controller for handling OID4VCI (OpenID for Verifiable Credential Issuance) requests.

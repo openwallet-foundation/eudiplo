@@ -3,12 +3,12 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { ConfigService } from "@nestjs/config";
 import { describe, expect, it, vi } from "vitest";
-import { ConfigImportService } from "../config-import/config-import.service";
-import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service";
-import { ConfigBundleApplyService } from "./config-bundle-apply.service";
-import { ConfigFolderBundleService } from "./config-folder-bundle.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { ConfigImportService } from "../config-import/config-import.service.js";
+import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
+import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
+import { ConfigFolderBundleService } from "./config-folder-bundle.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 
 describe("ConfigFolderBundleService", () => {
     it("builds a portable bundle from the demo tenant folder", () => {

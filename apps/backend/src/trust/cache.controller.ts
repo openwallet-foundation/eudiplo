@@ -1,10 +1,10 @@
 import { Controller, Delete, Get, HttpCode, HttpStatus } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { CacheStatsResponseDto } from "./dto/cache-stats-response.dto";
-import { StatusListVerifierService } from "./status-list-verifier.service";
-import { TrustStoreService } from "./trust-store.service";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { CacheStatsResponseDto } from "./dto/cache-stats-response.dto.js";
+import { StatusListVerifierService } from "./status-list-verifier.service.js";
+import { TrustStoreService } from "./trust-store.service.js";
 
 /**
  * Controller for managing trust and status list caches.

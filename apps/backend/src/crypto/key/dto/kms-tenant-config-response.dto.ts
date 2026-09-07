@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import type { KmsConfig } from "../schemas/kms-config.schema";
-import { KmsConfigDto } from "./kms-config.dto";
+import type { KmsConfig } from "../schemas/kms-config.schema.js";
+import { KmsConfigDto } from "./kms-config.dto.js";
 
 export class KmsTenantConfigResponseDto {
     @ApiPropertyOptional({

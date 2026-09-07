@@ -1,8 +1,8 @@
 import type { Repository } from "typeorm";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { SessionLoggerService } from "../../../session/logging/session-logger.service";
-import type { NonceEntity } from "./entities/nonces.entity";
-import { NonceService } from "./nonce.service";
+import type { SessionLoggerService } from "../../../session/logging/session-logger.service.js";
+import type { NonceEntity } from "./entities/nonces.entity.js";
+import { NonceService } from "./nonce.service.js";
 
 const proof = (payload: Record<string, unknown>): string => {
     const encoded = Buffer.from(JSON.stringify(payload)).toString("base64url");

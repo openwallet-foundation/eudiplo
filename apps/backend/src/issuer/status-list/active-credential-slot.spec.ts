@@ -3,14 +3,14 @@ import { randomUUID } from "node:crypto";
 import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { ClientEntity } from "../../auth/client/entities/client.entity";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity";
-import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
-import { StatusListEntity } from "./entities/status-list.entity";
-import { StatusMapping } from "./entities/status-mapping.entity";
-import { StatusListService } from "./status-list.service";
-import type { SubjectKeyService } from "./subject-key.service";
+import { ClientEntity } from "../../auth/client/entities/client.entity.js";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import type { CredentialConfig } from "../configuration/credentials/entities/credential.entity.js";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity.js";
+import { StatusListEntity } from "./entities/status-list.entity.js";
+import { StatusMapping } from "./entities/status-mapping.entity.js";
+import { StatusListService } from "./status-list.service.js";
+import type { SubjectKeyService } from "./subject-key.service.js";
 
 /**
  * Tests for the active-credential-limit policy (issue #843).

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { allRoles } from "../../roles/role.enum";
+import { allRoles } from "../../roles/role.enum.js";
 
 const RoleSchema = z.enum(
     allRoles as [(typeof allRoles)[number], ...(typeof allRoles)[number][]],

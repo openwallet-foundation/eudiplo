@@ -9,14 +9,14 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { decodeJwt } from "jose";
 import { Repository } from "typeorm";
-import { RegistrarConfigEntity } from "./entities/registrar-config.entity";
+import { RegistrarConfigEntity } from "./entities/registrar-config.entity.js";
 import {
     type RegistrationCertificateCreation,
     registrationCertificateControllerAll,
     registrationCertificateControllerDelete,
     registrationCertificateControllerRegister,
-} from "./generated";
-import { RegistrarAuthService } from "./registrar-auth.service";
+} from "./generated/index.js";
+import { RegistrarAuthService } from "./registrar-auth.service.js";
 
 /**
  * Handles registration certificate lifecycle:

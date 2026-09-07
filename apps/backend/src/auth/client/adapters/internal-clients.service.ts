@@ -5,13 +5,13 @@ import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 import * as bcrypt from "bcrypt";
 import { IsNull, Repository } from "typeorm";
-import { ConfigImportService } from "../../../platform/config-import/config-import.service";
-import { ConfigImportOrchestratorService } from "../../../platform/config-import/config-import-orchestrator.service";
-import { Role } from "../../roles/role.enum";
-import { ClientsProvider } from "../client.provider";
-import { ClientEntity } from "../entities/client.entity";
-import type { CreateClient, UpdateClient } from "../schemas/client.schema";
-import { CreateClientSchema } from "../schemas/client.schema";
+import { ConfigImportService } from "../../../platform/config-import/config-import.service.js";
+import { ConfigImportOrchestratorService } from "../../../platform/config-import/config-import-orchestrator.service.js";
+import { Role } from "../../roles/role.enum.js";
+import { ClientsProvider } from "../client.provider.js";
+import { ClientEntity } from "../entities/client.entity.js";
+import type { CreateClient, UpdateClient } from "../schemas/client.schema.js";
+import { CreateClientSchema } from "../schemas/client.schema.js";
 
 const BCRYPT_ROUNDS = 10;
 

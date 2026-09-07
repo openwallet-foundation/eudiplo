@@ -6,7 +6,7 @@ vi.mock("node:dns/promises", () => ({
 }));
 
 import { lookup } from "node:dns/promises";
-import { OutboundUrlPolicyService } from "./outbound-url-policy.service";
+import { OutboundUrlPolicyService } from "./outbound-url-policy.service.js";
 
 type ConfigValue = string | boolean | undefined;
 

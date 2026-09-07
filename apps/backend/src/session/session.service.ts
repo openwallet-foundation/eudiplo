@@ -15,15 +15,15 @@ import {
     Repository,
 } from "typeorm";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity.js";
-import { SessionCleanupMode } from "../auth/tenant/entities/session-storage-config";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
-import { SessionQueryDto } from "./dto/session-query.dto";
-import { Session, SessionStatus } from "./entities/session.entity";
+import { SessionCleanupMode } from "../auth/tenant/entities/session-storage-config.js";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto.js";
+import { SessionQueryDto } from "./dto/session-query.dto.js";
+import { Session, SessionStatus } from "./entities/session.entity.js";
 import {
     SESSION_STATUS_CHANGED,
     SessionStatusChangedEvent,
-} from "./session-events.service";
+} from "./session-events.service.js";
 
 @Injectable()
 export class SessionService implements OnApplicationBootstrap {

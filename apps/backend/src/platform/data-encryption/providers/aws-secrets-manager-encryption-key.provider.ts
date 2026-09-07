@@ -5,7 +5,7 @@ import {
 } from "@aws-sdk/client-secrets-manager";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { EncryptionKeyProvider } from "./encryption-key-provider.interface";
+import { EncryptionKeyProvider } from "./encryption-key-provider.interface.js";
 
 /**
  * AWS Secrets Manager encryption key provider.

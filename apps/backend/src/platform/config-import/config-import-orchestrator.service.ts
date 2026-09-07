@@ -1,8 +1,8 @@
 import { existsSync, readdirSync } from "node:fs";
 import { Injectable, Logger, OnApplicationBootstrap } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { ConfigImportMode } from "../config-portability/config-resource.types";
-import { ConfigImportModeService } from "./config-import-mode.service";
+import type { ConfigImportMode } from "../config-portability/config-resource.types.js";
+import { ConfigImportModeService } from "./config-import-mode.service.js";
 
 /**
  * Import phase definitions with their order.

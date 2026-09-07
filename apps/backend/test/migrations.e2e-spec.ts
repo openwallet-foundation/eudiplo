@@ -7,9 +7,9 @@ import {
 } from "@testcontainers/postgresql";
 import { DataSource } from "typeorm";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { AddKeyUsageEntity1743000000000 } from "../src/database/migrations/1743000000000-AddKeyUsageEntity";
-import { FlattenKeyUsageType1746000000000 } from "../src/database/migrations/1746000000000-FlattenKeyUsageType";
-import { MigrateKeysToKeyChain1747000000000 } from "../src/database/migrations/1747000000000-MigrateKeysToKeyChain";
+import { AddKeyUsageEntity1743000000000 } from "../src/database/migrations/1743000000000-AddKeyUsageEntity.js";
+import { FlattenKeyUsageType1746000000000 } from "../src/database/migrations/1746000000000-FlattenKeyUsageType.js";
+import { MigrateKeysToKeyChain1747000000000 } from "../src/database/migrations/1747000000000-MigrateKeysToKeyChain.js";
 
 /**
  * Migration tests that verify migrations work correctly on both SQLite and PostgreSQL.

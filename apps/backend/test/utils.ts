@@ -39,19 +39,19 @@ import {
 } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
-import { AppModule } from "../src/app.module";
-import { Role } from "../src/auth/roles/role.enum";
-import { KeyChainImportDto } from "../src/crypto/key/dto/key-chain-import.dto";
-import { KeyChainService } from "../src/crypto/key/key-chain.service";
-import { CredentialConfigCreate } from "../src/issuer/configuration/credentials/dto/credential-config-create.dto";
-import { IssuanceDto } from "../src/issuer/configuration/issuance/dto/issuance.dto";
-import { CreateWebhookEndpointDto } from "../src/issuer/configuration/webhook-endpoint/dto/create-webhook-endpoint.dto";
-import { StatusListService } from "../src/issuer/status-list/status-list.service";
-import { TrustListCreateDto } from "../src/issuer/trust-list/dto/trust-list-create.dto";
-import { createAppValidationPipe } from "../src/shared/common/zod/zod-schema.util";
-import { PresentationRequest } from "../src/verifier/oid4vp/dto/presentation-request.dto";
-import { PresentationConfigCreateDto } from "../src/verifier/presentations/dto/presentation-config-create.dto";
-import { DEVICE_JWK, mdocContext } from "./utils-mdoc";
+import { AppModule } from "../src/app.module.js";
+import { Role } from "../src/auth/roles/role.enum.js";
+import { KeyChainImportDto } from "../src/crypto/key/dto/key-chain-import.dto.js";
+import { KeyChainService } from "../src/crypto/key/key-chain.service.js";
+import { CredentialConfigCreate } from "../src/issuer/configuration/credentials/dto/credential-config-create.dto.js";
+import { IssuanceDto } from "../src/issuer/configuration/issuance/dto/issuance.dto.js";
+import { CreateWebhookEndpointDto } from "../src/issuer/configuration/webhook-endpoint/dto/create-webhook-endpoint.dto.js";
+import { StatusListService } from "../src/issuer/status-list/status-list.service.js";
+import { TrustListCreateDto } from "../src/issuer/trust-list/dto/trust-list-create.dto.js";
+import { createAppValidationPipe } from "../src/shared/common/zod/zod-schema.util.js";
+import { PresentationRequest } from "../src/verifier/oid4vp/dto/presentation-request.dto.js";
+import { PresentationConfigCreateDto } from "../src/verifier/presentations/dto/presentation-config-create.dto.js";
+import { DEVICE_JWK, mdocContext } from "./utils-mdoc.js";
 
 export function readConfig<T>(path: string): T {
     const input = JSON.parse(readFileSync(path, "utf-8"));

@@ -1,10 +1,10 @@
 import { Controller, Get, Header, Param, Res } from "@nestjs/common";
 import { ApiOperation, ApiProduces, ApiTags } from "@nestjs/swagger";
 import { Response } from "express";
-import { ContentType } from "../../../../shared/utils/media-type/media-type.decorator";
-import { MediaType } from "../../../../shared/utils/media-type/media-type.enum";
-import { JwksResponseDto } from "./dto/jwks-response.dto";
-import { WellKnownService } from "./well-known.service";
+import { ContentType } from "../../../../shared/utils/media-type/media-type.decorator.js";
+import { MediaType } from "../../../../shared/utils/media-type/media-type.enum.js";
+import { JwksResponseDto } from "./dto/jwks-response.dto.js";
+import { WellKnownService } from "./well-known.service.js";
 
 /**
  * Controller for the OpenID4VCI well-known endpoints.

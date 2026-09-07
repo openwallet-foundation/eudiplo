@@ -7,8 +7,8 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity";
-import { EncryptedStringTransformer } from "../../../../platform/data-encryption";
+import { TenantEntity } from "../../../../auth/tenant/entities/tenant.entity.js";
+import { EncryptedStringTransformer } from "../../../../platform/data-encryption/index.js";
 
 /**
  * Status of an interactive authorization session.

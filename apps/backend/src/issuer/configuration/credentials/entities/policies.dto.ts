@@ -4,7 +4,7 @@ import {
     ClaimsQuery,
     CredentialQueryValue,
     CredentialSetQuery,
-} from "../../../../verifier/presentations/entities/presentation-config.entity";
+} from "../../../../verifier/presentations/entities/presentation-config.entity.js";
 
 const EmbeddedDisclosurePolicySchema = z
     .object({

@@ -4,4 +4,4 @@ export {
     buildClaimsMetadata,
     buildDisclosureFrame,
     buildJsonSchema,
-} from "./derive";
+} from "./derive.js";

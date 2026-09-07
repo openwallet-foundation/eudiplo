@@ -11,13 +11,13 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { Role } from "../../../auth/roles/role.enum";
-import { Secured } from "../../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../../auth/token.decorator";
-import { CredentialConfigService } from "./credential-config/credential-config.service";
-import { CredentialConfigCreate } from "./dto/credential-config-create.dto";
-import { CredentialConfigUpdate } from "./dto/credential-config-update.dto";
-import { CredentialConfig } from "./entities/credential.entity";
+import { Role } from "../../../auth/roles/role.enum.js";
+import { Secured } from "../../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../../auth/token.decorator.js";
+import { CredentialConfigService } from "./credential-config/credential-config.service.js";
+import { CredentialConfigCreate } from "./dto/credential-config-create.dto.js";
+import { CredentialConfigUpdate } from "./dto/credential-config-update.dto.js";
+import { CredentialConfig } from "./entities/credential.entity.js";
 
 /**
  * Controller for managing credential configurations.

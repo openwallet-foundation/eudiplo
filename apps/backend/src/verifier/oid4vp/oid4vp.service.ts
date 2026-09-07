@@ -7,32 +7,32 @@ import { Span, TraceService } from "nestjs-otel";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { EncryptionService } from "../../crypto/encryption/encryption.service";
-import { CertService } from "../../crypto/key/cert/cert.service";
-import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyChainService } from "../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../crypto/key/types/key-usage-type";
-import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto";
-import { RegistrarService } from "../../registrar/registrar.service";
-import { SessionStatus } from "../../session/entities/session.entity";
-import { AuditLogContext } from "../../session/logging/session-audit.service";
-import { SessionLoggerService } from "../../session/logging/session-logger.service";
-import { SessionService } from "../../session/session.service";
-import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../trust/types";
-import { WebhookService } from "../../webhook/webhook.service";
-import { SdJwtVerificationError } from "../presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service";
-import { shortVerificationMessage } from "../presentations/credential/verification-failure";
+import { EncryptionService } from "../../crypto/encryption/encryption.service.js";
+import { CertService } from "../../crypto/key/cert/cert.service.js";
+import { CryptoImplementationService } from "../../crypto/key/crypto-implementation/crypto-implementation.service.js";
+import { KeyChainService } from "../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../crypto/key/types/key-usage-type.js";
+import { CredentialFormat } from "../../issuer/configuration/credentials/entities/credential.entity.js";
+import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { OfferResponse } from "../../issuer/issuance/oid4vci/dto/offer-request.dto.js";
+import { RegistrarService } from "../../registrar/registrar.service.js";
+import { SessionStatus } from "../../session/entities/session.entity.js";
+import { AuditLogContext } from "../../session/logging/session-audit.service.js";
+import { SessionLoggerService } from "../../session/logging/session-logger.service.js";
+import { SessionService } from "../../session/session.service.js";
+import { DEFAULT_VERIFIER_SKEW_SECONDS } from "../../trust/types.js";
+import { WebhookService } from "../../webhook/webhook.service.js";
+import { SdJwtVerificationError } from "../presentations/credential/sdjwtvcverifier/sdjwtvcverifier.service.js";
+import { shortVerificationMessage } from "../presentations/credential/verification-failure.js";
 import {
     AuthResponse,
     AuthResponseSchema,
-} from "../presentations/dto/auth-response.dto";
-import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception";
-import { PresentationsService } from "../presentations/presentations.service";
-import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util";
-import { AuthorizationResponse } from "./dto/authorization-response.dto";
-import { PresentationRequestOptions } from "./dto/presentation-request.dto";
+} from "../presentations/dto/auth-response.dto.js";
+import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception.js";
+import { PresentationsService } from "../presentations/presentations.service.js";
+import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util.js";
+import { AuthorizationResponse } from "./dto/authorization-response.dto.js";
+import { PresentationRequestOptions } from "./dto/presentation-request.dto.js";
 
 @Injectable()
 export class Oid4vpService {

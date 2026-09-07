@@ -3,12 +3,12 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger, Optional } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ConfigMigrationService } from "../config-portability/config-migration.service";
-import { ConfigOwnershipService } from "../config-portability/config-ownership.service";
-import { ConfigResourceRegistry } from "../config-portability/config-resource.registry";
-import type { ConfigDocument } from "../config-portability/config-resource.types";
-import { ConfigImportModeService } from "./config-import-mode.service";
-import { ImportOptions, TenantImportOptions } from "./import-options";
+import { ConfigMigrationService } from "../config-portability/config-migration.service.js";
+import { ConfigOwnershipService } from "../config-portability/config-ownership.service.js";
+import { ConfigResourceRegistry } from "../config-portability/config-resource.registry.js";
+import type { ConfigDocument } from "../config-portability/config-resource.types.js";
+import { ConfigImportModeService } from "./config-import-mode.service.js";
+import { ImportOptions, TenantImportOptions } from "./import-options.js";
 
 function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
     if (!schemaOrDto) {
@@ -220,7 +220,7 @@ export class ConfigImportService {
 
     private async markFileManaged(
         tenantId: string,
-        kind: import("../config-portability/config-resource.types").ConfigResourceKind,
+        kind: import("../config-portability/config-resource.types.js").ConfigResourceKind,
         document: ConfigDocument,
         filePath: string,
         raw: string,
@@ -429,7 +429,7 @@ export class ConfigImportService {
 
     private resolveMode():
         | "disabled"
-        | import("../config-portability/config-resource.types").ConfigImportMode {
+        | import("../config-portability/config-resource.types.js").ConfigImportMode {
         if (this.importModeService) {
             return this.importModeService.resolve();
         }

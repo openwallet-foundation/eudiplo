@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
 /**
  * Validation schema for encryption key source configuration.

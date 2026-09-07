@@ -9,7 +9,7 @@ import type {
     MetadataSchema,
     SchemaMetadata,
     TrustAuthority,
-} from "../../generated";
+} from "../../generated/index.js";
 
 const ATTESTATION_LOS_VALUES = [
     "iso_18045_high",

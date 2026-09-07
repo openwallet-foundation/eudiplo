@@ -1,5 +1,5 @@
-import { ManagedUserDto } from "./dto/managed-user.dto";
-import type { CreateUser, UpdateUser } from "./schemas/create-user.schema";
+import { ManagedUserDto } from "./dto/managed-user.dto.js";
+import type { CreateUser, UpdateUser } from "./schemas/create-user.schema.js";
 
 export const USERS_PROVIDER = "USERS_PROVIDER";
 

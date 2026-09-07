@@ -6,7 +6,7 @@ import {
     ChainedAsTokenConfigSchema,
     UpstreamOidcConfig,
     UpstreamOidcConfigSchema,
-} from "./chained-as-config.dto";
+} from "./chained-as-config.dto.js";
 
 export type AuthorizationServerType =
     | "external"

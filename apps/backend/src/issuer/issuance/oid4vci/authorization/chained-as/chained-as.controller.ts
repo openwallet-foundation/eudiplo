@@ -19,7 +19,7 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import type { Response } from "express";
-import { Public } from "../../../../../auth/public.decorator";
+import { Public } from "../../../../../auth/public.decorator.js";
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
@@ -27,8 +27,8 @@ import {
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
     extractDpopJkt,
-} from "../shared";
-import { ChainedAsService } from "./chained-as.service";
+} from "../shared/index.js";
+import { ChainedAsService } from "./chained-as.service.js";
 
 /**
  * Controller for Chained Authorization Server endpoints.

@@ -1,5 +1,5 @@
 import { ValueTransformer } from "typeorm";
-import { DataEncryptionService } from "./data-encryption.service";
+import { DataEncryptionService } from "./data-encryption.service.js";
 
 /**
  * Singleton holder for the encryption service instance.

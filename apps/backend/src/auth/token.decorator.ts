@@ -1,7 +1,7 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { ClientEntity } from "./client/entities/client.entity";
-import { Role } from "./roles/role.enum";
-import { TenantEntity } from "./tenant/entities/tenant.entity";
+import { ClientEntity } from "./client/entities/client.entity.js";
+import { Role } from "./roles/role.enum.js";
+import { TenantEntity } from "./tenant/entities/tenant.entity.js";
 
 /**
  * Token decorator

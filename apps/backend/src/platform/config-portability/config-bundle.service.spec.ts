@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { ConfigBundleService } from "./config-bundle.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { ConfigBundleService } from "./config-bundle.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
     ConfigBundleRequirement,
     ConfigResourceKind,
-} from "./config-resource.types";
+} from "./config-resource.types.js";
 
 describe("ConfigBundleService secret handling", () => {
     const service = Object.create(

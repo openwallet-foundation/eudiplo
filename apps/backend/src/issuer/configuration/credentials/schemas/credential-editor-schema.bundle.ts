@@ -1,12 +1,12 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../../shared/common/zod/editor-schema";
+} from "../../../../shared/common/zod/editor-schema.js";
 import {
     CredentialConfigCreateSchema,
     EmbeddedDisclosurePolicySchema,
     VctSchema,
-} from "./credential-config.schema";
+} from "./credential-config.schema.js";
 
 export const credentialEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "credential",

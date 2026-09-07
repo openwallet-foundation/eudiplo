@@ -9,17 +9,17 @@ import {
     Query,
 } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { Token, TokenPayload } from "../auth/token.decorator";
-import { StatusUpdateDto } from "../issuer/status-list/dto/status-update.dto";
-import { StatusListService } from "../issuer/status-list/status-list.service";
-import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto";
-import { SessionLogEntryResponseDto } from "./dto/session-log-entry-response.dto";
-import { SessionQueryDto } from "./dto/session-query.dto";
-import { Session } from "./entities/session.entity";
-import { SessionLogStoreService } from "./logging/session-log-store.service";
-import { SessionService } from "./session.service";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../auth/token.decorator.js";
+import { StatusUpdateDto } from "../issuer/status-list/dto/status-update.dto.js";
+import { StatusListService } from "../issuer/status-list/status-list.service.js";
+import { PaginatedSessionResponseDto } from "./dto/paginated-session-response.dto.js";
+import { SessionLogEntryResponseDto } from "./dto/session-log-entry-response.dto.js";
+import { SessionQueryDto } from "./dto/session-query.dto.js";
+import { Session } from "./entities/session.entity.js";
+import { SessionLogStoreService } from "./logging/session-log-store.service.js";
+import { SessionService } from "./session.service.js";
 
 @ApiTags("Session")
 @Secured([Role.IssuanceOffer, Role.PresentationRequest])

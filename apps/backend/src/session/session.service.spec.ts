@@ -5,11 +5,11 @@ import { SchedulerRegistry } from "@nestjs/schedule";
 import { MetricService } from "nestjs-otel";
 import { Repository } from "typeorm";
 import { describe, expect, test, vi } from "vitest";
-import { SessionCleanupMode } from "../auth/tenant/entities/session-storage-config";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { Session, SessionStatus } from "./entities/session.entity";
-import { SessionService } from "./session.service";
-import { SESSION_STATUS_CHANGED } from "./session-events.service";
+import { SessionCleanupMode } from "../auth/tenant/entities/session-storage-config.js";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { Session, SessionStatus } from "./entities/session.entity.js";
+import { SessionService } from "./session.service.js";
+import { SESSION_STATUS_CHANGED } from "./session-events.service.js";
 
 describe("SessionService", () => {
     test("expires overdue presentation sessions and emits their status changes", async () => {

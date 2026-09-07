@@ -2,12 +2,12 @@ import "reflect-metadata";
 import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { ClientEntity } from "../../auth/client/entities/client.entity";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity";
-import { StatusListEntity } from "./entities/status-list.entity";
-import { StatusMapping } from "./entities/status-mapping.entity";
-import { StatusListService } from "./status-list.service";
+import { ClientEntity } from "../../auth/client/entities/client.entity.js";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { ActiveCredentialSlot } from "./entities/active-credential-slot.entity.js";
+import { StatusListEntity } from "./entities/status-list.entity.js";
+import { StatusMapping } from "./entities/status-mapping.entity.js";
+import { StatusListService } from "./status-list.service.js";
 
 describe("StatusListService SQLite concurrency", () => {
     let dataSource: DataSource;

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import type { ConfigImportMode } from "../config-portability/config-resource.types";
+import type { ConfigImportMode } from "../config-portability/config-resource.types.js";
 
 export type StartupConfigImportMode = "disabled" | ConfigImportMode;
 

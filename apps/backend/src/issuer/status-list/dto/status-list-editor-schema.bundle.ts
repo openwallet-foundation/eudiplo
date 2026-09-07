@@ -1,13 +1,13 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../shared/common/zod/editor-schema";
+} from "../../../shared/common/zod/editor-schema.js";
 import {
     CreateStatusListSchema,
     StatusListImportSchema,
     UpdateStatusListConfigSchema,
     UpdateStatusListSchema,
-} from "./status-list.schema";
+} from "./status-list.schema.js";
 
 export const statusListEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "status-list",

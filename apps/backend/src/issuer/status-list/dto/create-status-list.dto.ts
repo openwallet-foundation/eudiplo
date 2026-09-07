@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { BitsPerStatus } from "@owf/token-status-list";
 import { createZodDto } from "nestjs-zod";
-import { CreateStatusListSchema } from "./status-list.schema";
+import { CreateStatusListSchema } from "./status-list.schema.js";
 
 /**
  * DTO for creating a new status list.

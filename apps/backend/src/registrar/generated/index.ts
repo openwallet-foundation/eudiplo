@@ -55,7 +55,7 @@ export {
     wrpReadControllerListWalletRelyingPartyIntendedUses,
     wrpReadControllerListWalletRelyingPartyStatements,
     wrpReadControllerSearchWalletRelyingParties,
-} from "./sdk.gen";
+} from "./sdk.gen.js";
 export type {
     AccessCertificate,
     AccessCertificateControllerAccessCertificatesData,
@@ -282,4 +282,4 @@ export type {
     WrpReadControllerSearchWalletRelyingPartiesData,
     WrpReadControllerSearchWalletRelyingPartiesResponse,
     WrpReadControllerSearchWalletRelyingPartiesResponses,
-} from "./types.gen";
+} from "./types.gen.js";

@@ -20,7 +20,7 @@ import {
     ApiTags,
 } from "@nestjs/swagger";
 import type { Response } from "express";
-import { Public } from "../../../../../auth/public.decorator";
+import { Public } from "../../../../../auth/public.decorator.js";
 import {
     ChainedAsAuthorizeQueryDto,
     ChainedAsErrorResponseDto,
@@ -29,8 +29,8 @@ import {
     ChainedAsTokenRequestDto,
     ChainedAsTokenResponseDto,
     extractDpopJkt,
-} from "../shared";
-import { ChainedAsVpService } from "./chained-as-vp.service";
+} from "../shared/index.js";
+import { ChainedAsVpService } from "./chained-as-vp.service.js";
 
 @ApiTags("Chained AS VP")
 @Controller("issuers/:tenantId/chained-as-vp")

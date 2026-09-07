@@ -13,29 +13,29 @@ import type { UpDownCounter } from "@opentelemetry/api";
 import { Request } from "express";
 import { MetricService } from "nestjs-otel";
 import { Repository } from "typeorm";
-import { AuditLogService } from "../../audit-log/audit-log.service";
+import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     getChangedFieldsForKeys,
     resolveAuditActor,
-} from "../../audit-log/audit-log-context.util";
-import { EncryptionService } from "../../crypto/encryption/encryption.service";
-import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service";
-import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service";
-import { ConfigMigrationService } from "../../platform/config-portability/config-migration.service";
-import { ConfigOwnershipService } from "../../platform/config-portability/config-ownership.service";
-import { RegistrarService } from "../../registrar/registrar.service";
-import { FilesService } from "../../storage/files.service";
-import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider";
-import { Role } from "../roles/role.enum";
-import { TokenPayload } from "../token.decorator";
-import { TenantEntity } from "./entities/tenant.entity";
+} from "../../audit-log/audit-log-context.util.js";
+import { EncryptionService } from "../../crypto/encryption/encryption.service.js";
+import { ConfigImportModeService } from "../../platform/config-import/config-import-mode.service.js";
+import { ConfigImportOrchestratorService } from "../../platform/config-import/config-import-orchestrator.service.js";
+import { ConfigMigrationService } from "../../platform/config-portability/config-migration.service.js";
+import { ConfigOwnershipService } from "../../platform/config-portability/config-ownership.service.js";
+import { RegistrarService } from "../../registrar/registrar.service.js";
+import { FilesService } from "../../storage/files.service.js";
+import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider.js";
+import { Role } from "../roles/role.enum.js";
+import { TokenPayload } from "../token.decorator.js";
+import { TenantEntity } from "./entities/tenant.entity.js";
 import type {
     CreateTenant,
     ImportTenant,
     UpdateTenant,
-} from "./schemas/create-tenant.schema";
-import { ImportTenantSchema } from "./schemas/create-tenant.schema";
+} from "./schemas/create-tenant.schema.js";
+import { ImportTenantSchema } from "./schemas/create-tenant.schema.js";
 @Injectable()
 export class TenantService implements OnApplicationBootstrap {
     private readonly logger = new Logger(TenantService.name);
@@ -193,7 +193,7 @@ export class TenantService implements OnApplicationBootstrap {
 
     private upgradeTenantConfig(raw: string): {
         spec: Record<string, unknown>;
-        document: import("../../platform/config-portability/config-resource.types").ConfigDocument;
+        document: import("../../platform/config-portability/config-resource.types.js").ConfigDocument;
     } {
         const payload = JSON.parse(raw) as Record<string, unknown>;
         const document = this.configMigrationService.isDocument(payload)

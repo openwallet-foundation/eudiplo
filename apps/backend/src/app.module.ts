@@ -5,22 +5,22 @@ import { MulterModule } from "@nestjs/platform-express";
 import { ScheduleModule } from "@nestjs/schedule";
 import { memoryStorage } from "multer";
 import { LoggerModule } from "nestjs-pino";
-import { AuthModule } from "./auth/auth.module";
-import { CoreModule } from "./core/core.module";
-import { CryptoModule } from "./crypto/crypto.module";
-import { KeyModule } from "./crypto/key/key.module";
-import { DatabaseModule } from "./database/database.module";
-import { IssuerModule } from "./issuer/issuer.module";
-import { VALIDATION_SCHEMA } from "./platform/config/combined.schema";
-import { ConfigImportModule } from "./platform/config-import/config-import.module";
-import { ConfigPortabilityModule } from "./platform/config-portability/config-portability.module";
-import { ConfigResourceCoreModule } from "./platform/config-portability/config-resource-core.module";
-import { DataEncryptionModule } from "./platform/data-encryption/data-encryption.module";
-import { createLoggerOptions } from "./platform/observability/logger.factory";
-import { RegistrarModule } from "./registrar/registrar.module";
-import { SessionModule } from "./session/session.module";
-import { StorageModule } from "./storage/storage.module";
-import { VerifierModule } from "./verifier/verifier.module";
+import { AuthModule } from "./auth/auth.module.js";
+import { CoreModule } from "./core/core.module.js";
+import { CryptoModule } from "./crypto/crypto.module.js";
+import { KeyModule } from "./crypto/key/key.module.js";
+import { DatabaseModule } from "./database/database.module.js";
+import { IssuerModule } from "./issuer/issuer.module.js";
+import { VALIDATION_SCHEMA } from "./platform/config/combined.schema.js";
+import { ConfigImportModule } from "./platform/config-import/config-import.module.js";
+import { ConfigPortabilityModule } from "./platform/config-portability/config-portability.module.js";
+import { ConfigResourceCoreModule } from "./platform/config-portability/config-resource-core.module.js";
+import { DataEncryptionModule } from "./platform/data-encryption/data-encryption.module.js";
+import { createLoggerOptions } from "./platform/observability/logger.factory.js";
+import { RegistrarModule } from "./registrar/registrar.module.js";
+import { SessionModule } from "./session/session.module.js";
+import { StorageModule } from "./storage/storage.module.js";
+import { VerifierModule } from "./verifier/verifier.module.js";
 
 @Module({
     imports: [

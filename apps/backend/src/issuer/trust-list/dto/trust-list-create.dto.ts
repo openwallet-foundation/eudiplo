@@ -4,7 +4,7 @@ import {
     getSchemaPath,
     OmitType,
 } from "@nestjs/swagger";
-import { TrustList } from "../entities/trust-list.entity";
+import { TrustList } from "../entities/trust-list.entity.js";
 
 /**
  * Entity information for certificates (metadata for TEInformation)

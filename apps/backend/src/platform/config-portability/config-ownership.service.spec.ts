@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { ConfigOwnershipService } from "./config-ownership.service";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
 
 describe("ConfigOwnershipService", () => {
     it("finds resources managed by the startup folder and legacy file sources", async () => {

@@ -3,14 +3,14 @@ import { DeviceRequest } from "@owf/mdoc";
 import * as x509 from "@peculiar/x509";
 import { exportJWK } from "jose";
 import { beforeAll, describe, expect, it } from "vitest";
-import { mdocContext } from "../presentations/mdoc-context";
+import { mdocContext } from "../presentations/mdoc-context.js";
 import {
     buildDeviceRequestCbor,
     buildEncryptionInfo,
     buildIsoMdocDcApiTranscript,
     buildItemsRequest,
     buildReaderAuth,
-} from "./cbor-request";
+} from "./cbor-request.js";
 
 /**
  * Reader authentication for the ISO 18013-7 Annex C (DC API) flow.

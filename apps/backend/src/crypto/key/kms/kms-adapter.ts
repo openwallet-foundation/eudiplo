@@ -1,5 +1,5 @@
 import type { JWK } from "jose";
-import type { KmsProviderType } from "../dto/kms-config.dto";
+import type { KmsProviderType } from "../dto/kms-config.dto.js";
 
 /**
  * Supported signing algorithms. New algorithms can be added here once

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ConfigResourceRouteService } from "./config-resource-route.service";
+import { ConfigResourceRouteService } from "./config-resource-route.service.js";
 
 describe("ConfigResourceRouteService", () => {
     const service = new ConfigResourceRouteService();

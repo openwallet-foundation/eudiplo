@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { OpenTelemetryModule } from "nestjs-otel";
-import { AppController } from "./app/app.controller";
-import { HealthModule } from "./health/health.module";
-import { TraceIdInterceptor } from "./interceptors/trace-id.interceptor";
+import { AppController } from "./app/app.controller.js";
+import { HealthModule } from "./health/health.module.js";
+import { TraceIdInterceptor } from "./interceptors/trace-id.interceptor.js";
 
 /**
  * Core Module - Platform infrastructure and observability

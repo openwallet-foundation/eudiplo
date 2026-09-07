@@ -17,14 +17,14 @@ import {
     expect,
     test,
 } from "vitest";
-import { AppModule } from "../../src/app.module";
-import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto";
-import { CredentialConfigCreate } from "../../src/issuer/configuration/credentials/dto/credential-config-create.dto";
-import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto";
-import { SessionStatus } from "../../src/session/entities/session.entity";
-import { SessionService } from "../../src/session/session.service";
-import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto";
-import { getToken, readConfig } from "../utils";
+import { AppModule } from "../../src/app.module.js";
+import { KeyChainImportDto } from "../../src/crypto/key/dto/key-chain-import.dto.js";
+import { CredentialConfigCreate } from "../../src/issuer/configuration/credentials/dto/credential-config-create.dto.js";
+import { IssuanceDto } from "../../src/issuer/configuration/issuance/dto/issuance.dto.js";
+import { SessionStatus } from "../../src/session/entities/session.entity.js";
+import { SessionService } from "../../src/session/session.service.js";
+import { PresentationConfigCreateDto } from "../../src/verifier/presentations/dto/presentation-config-create.dto.js";
+import { getToken, readConfig } from "../utils.js";
 
 setGlobalDispatcher(
     new Agent({

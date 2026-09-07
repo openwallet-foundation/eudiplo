@@ -6,7 +6,7 @@ vi.mock("node:fs", () => ({
 }));
 
 import { existsSync, readFileSync } from "node:fs";
-import { KmsConfigService } from "./kms-config.service";
+import { KmsConfigService } from "./kms-config.service.js";
 
 describe("KmsConfigService", () => {
     beforeEach(() => {

@@ -10,7 +10,7 @@ import {
 } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { pipeline, Readable } from "node:stream";
-import { FileStorage, type PutOptions } from "../storage.types";
+import { FileStorage, type PutOptions } from "../storage.types.js";
 
 /**
  * Local file storage implementation for development and testing.

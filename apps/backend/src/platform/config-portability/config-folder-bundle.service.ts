@@ -3,11 +3,11 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { ConfigImportService } from "../config-import/config-import.service";
-import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service";
-import { ConfigBundleApplyService } from "./config-bundle-apply.service";
-import { ConfigMigrationService } from "./config-migration.service";
-import { ConfigResourceRegistry } from "./config-resource.registry";
+import { ConfigImportService } from "../config-import/config-import.service.js";
+import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
+import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
+import { ConfigMigrationService } from "./config-migration.service.js";
+import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
     ConfigBundle,
     ConfigBundleAsset,
@@ -15,7 +15,7 @@ import type {
     ConfigImportMode,
     ConfigMigrationIssue,
     ConfigResourceKind,
-} from "./config-resource.types";
+} from "./config-resource.types.js";
 
 type FolderResource =
     | { kind: ConfigResourceKind; file: string }

@@ -14,9 +14,9 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import type { Request, Response } from "express";
-import { AuthorizeService } from "./authorize.service";
-import { AuthorizeQueries } from "./dto/authorize-request.dto";
-import { ParResponseDto } from "./dto/par-response.dto";
+import { AuthorizeService } from "./authorize.service.js";
+import { AuthorizeQueries } from "./dto/authorize-request.dto.js";
+import { ParResponseDto } from "./dto/par-response.dto.js";
 
 /**
  * Controller for the OpenID4VCI authorization endpoints.

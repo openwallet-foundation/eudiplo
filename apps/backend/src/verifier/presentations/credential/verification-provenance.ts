@@ -1,5 +1,5 @@
-import { VerificationProvenance } from "../../../session/entities/session-outcome";
-import { MatchedTrustedEntity } from "../../../trust/x509-validation.service";
+import { VerificationProvenance } from "../../../session/entities/session-outcome.js";
+import { MatchedTrustedEntity } from "../../../trust/x509-validation.service.js";
 
 /**
  * Map a matched trusted entity to the safe, serialisable provenance surfaced on

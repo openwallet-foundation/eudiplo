@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RegistrationCertificateRequestSchema } from "../dto/vp-request.dto";
+import { RegistrationCertificateRequestSchema } from "../dto/vp-request.dto.js";
 
 const CredentialIdSchema = z
     .string()

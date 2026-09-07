@@ -2,7 +2,7 @@ import { HttpService } from "@nestjs/axios";
 import { BadRequestException, Logger } from "@nestjs/common";
 import { exportJWK, importJWK, type JWK } from "jose";
 import { firstValueFrom } from "rxjs";
-import type { KmsProviderType } from "../../dto/kms-config.dto";
+import type { KmsProviderType } from "../../dto/kms-config.dto.js";
 import type {
     KmsAdapter,
     KmsAdapterCapabilities,
@@ -10,8 +10,8 @@ import type {
     KmsKeyMaterial,
     KmsKeyRef,
     KmsSigningAlg,
-} from "../kms-adapter";
-import { PublicJwkCache } from "../public-jwk-cache";
+} from "../kms-adapter.js";
+import { PublicJwkCache } from "../public-jwk-cache.js";
 
 export interface VaultAdapterConfig {
     providerId: string;

@@ -1,8 +1,8 @@
-export { AwsSecretsManagerEncryptionKeyProvider } from "./aws-secrets-manager-encryption-key.provider";
-export { AzureKeyVaultEncryptionKeyProvider } from "./azure-keyvault-encryption-key.provider";
+export { AwsSecretsManagerEncryptionKeyProvider } from "./aws-secrets-manager-encryption-key.provider.js";
+export { AzureKeyVaultEncryptionKeyProvider } from "./azure-keyvault-encryption-key.provider.js";
 export {
     ENCRYPTION_KEY_PROVIDER,
     EncryptionKeySource,
-} from "./encryption-key-provider.interface";
-export { EnvEncryptionKeyProvider } from "./env-encryption-key.provider";
-export { VaultEncryptionKeyProvider } from "./vault-encryption-key.provider";
+} from "./encryption-key-provider.interface.js";
+export { EnvEncryptionKeyProvider } from "./env-encryption-key.provider.js";
+export { VaultEncryptionKeyProvider } from "./vault-encryption-key.provider.js";

@@ -6,7 +6,7 @@ import {
     ManyToOne,
     VersionColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
 
 /**
  * Entity representing a status list for a tenant.

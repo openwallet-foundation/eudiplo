@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { afterEach, describe, expect, test } from "vitest";
-import { AddStatusListVersionAndUniqueConstraint1776000000000 } from "./migrations/1776000000000-AddStatusListVersionAndUniqueConstraint";
+import { AddStatusListVersionAndUniqueConstraint1776000000000 } from "./migrations/1776000000000-AddStatusListVersionAndUniqueConstraint.js";
 
 describe("AddStatusListVersionAndUniqueConstraint1776000000000", () => {
     let dataSource: DataSource | undefined;

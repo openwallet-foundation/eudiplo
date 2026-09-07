@@ -19,14 +19,14 @@ import {
     test,
     vi,
 } from "vitest";
-import { MdocIssuerService } from "../../src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service";
+import { MdocIssuerService } from "../../src/issuer/configuration/credentials/issuer/mdoc-issuer/mdoc-issuer.service.js";
 import {
     callbacks,
     getSignJwtCallback,
     IssuanceTestContext,
     setupIssuanceTestApp,
-} from "../utils";
-import { mdocContext } from "../utils-mdoc";
+} from "../utils.js";
+import { mdocContext } from "../utils-mdoc.js";
 
 function createMdocIssuerService() {
     return new MdocIssuerService({} as any, {} as any, {} as any);

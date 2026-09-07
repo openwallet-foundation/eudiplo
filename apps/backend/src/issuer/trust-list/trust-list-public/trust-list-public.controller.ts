@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
-import { TrustListService } from "../trustlist.service";
+import { TrustListService } from "../trustlist.service.js";
 
 /**
  * Public controller for accessing trust lists

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildClaimsByNamespace } from "../../../../../src/issuer/configuration/credentials/utils/derive";
+import { buildClaimsByNamespace } from "../../../../../src/issuer/configuration/credentials/utils/derive.js";
 
 describe("buildClaimsByNamespace", () => {
     it("infers the namespace from the first path segment when namespace is omitted", () => {

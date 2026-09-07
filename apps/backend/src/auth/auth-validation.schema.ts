@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
 export const AUTH_VALIDATION_SCHEMA: Joi.ObjectSchema = Joi.object({
     OIDC: Joi.string()

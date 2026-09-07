@@ -13,7 +13,7 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiParam, ApiTags } from "@nestjs/swagger";
-import { Iso18013Service } from "./iso18013.service";
+import { Iso18013Service } from "./iso18013.service.js";
 
 @ApiTags("ISO 18013-7")
 @Controller("presentations/:sessionId/iso-18013-7")

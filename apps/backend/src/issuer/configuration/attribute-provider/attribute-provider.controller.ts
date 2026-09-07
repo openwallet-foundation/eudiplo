@@ -11,13 +11,13 @@ import {
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { Role } from "../../../auth/roles/role.enum";
-import { Secured } from "../../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../../auth/token.decorator";
-import { AttributeProviderService } from "./attribute-provider.service";
-import { CreateAttributeProviderDto } from "./dto/create-attribute-provider.dto";
-import { UpdateAttributeProviderDto } from "./dto/update-attribute-provider.dto";
-import { AttributeProviderEntity } from "./entities/attribute-provider.entity";
+import { Role } from "../../../auth/roles/role.enum.js";
+import { Secured } from "../../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../../auth/token.decorator.js";
+import { AttributeProviderService } from "./attribute-provider.service.js";
+import { CreateAttributeProviderDto } from "./dto/create-attribute-provider.dto.js";
+import { UpdateAttributeProviderDto } from "./dto/update-attribute-provider.dto.js";
+import { AttributeProviderEntity } from "./entities/attribute-provider.entity.js";
 
 @ApiTags("Issuer")
 @Secured([Role.Issuances])

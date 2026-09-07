@@ -18,14 +18,14 @@ import {
     ApiParam,
     ApiTags,
 } from "@nestjs/swagger";
-import { Role } from "../../auth/roles/role.enum";
-import { Secured } from "../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../auth/token.decorator";
-import { CreateStatusListDto } from "./dto/create-status-list.dto";
-import { StatusListResponseDto } from "./dto/status-list-response.dto";
-import { UpdateStatusListDto } from "./dto/update-status-list.dto";
-import { StatusListEntity } from "./entities/status-list.entity";
-import { StatusListService } from "./status-list.service";
+import { Role } from "../../auth/roles/role.enum.js";
+import { Secured } from "../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../auth/token.decorator.js";
+import { CreateStatusListDto } from "./dto/create-status-list.dto.js";
+import { StatusListResponseDto } from "./dto/status-list-response.dto.js";
+import { UpdateStatusListDto } from "./dto/update-status-list.dto.js";
+import { StatusListEntity } from "./entities/status-list.entity.js";
+import { StatusListService } from "./status-list.service.js";
 
 /**
  * Controller for managing status lists.

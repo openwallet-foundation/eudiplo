@@ -10,12 +10,12 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { Token, TokenPayload } from "../auth/token.decorator";
-import { FileUploadDto } from "./dto/file-upload.dto";
-import { StoredObjectResponseDto } from "./dto/stored-object-response.dto";
-import { FilesService } from "./files.service";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../auth/token.decorator.js";
+import { FileUploadDto } from "./dto/file-upload.dto.js";
+import { StoredObjectResponseDto } from "./dto/stored-object-response.dto.js";
+import { FilesService } from "./files.service.js";
 
 /**
  * Storage Controller

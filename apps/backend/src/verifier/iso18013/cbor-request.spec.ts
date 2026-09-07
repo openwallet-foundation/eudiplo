@@ -5,7 +5,7 @@ import {
     buildEncryptionInfo,
     buildIsoMdocDcApiTranscript,
     parseEncryptedResponse,
-} from "./cbor-request";
+} from "./cbor-request.js";
 
 const x = Buffer.alloc(32, 0x11).toString("base64url");
 const y = Buffer.alloc(32, 0x22).toString("base64url");

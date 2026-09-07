@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util";
+import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util.js";
 
 describe("applyTrustedAuthoritiesPolicy", () => {
     const dcqlQuery = {

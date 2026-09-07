@@ -1,8 +1,8 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../shared/common/zod/editor-schema";
-import { CertImportSchema } from "./cert.schema";
+} from "../../../shared/common/zod/editor-schema.js";
+import { CertImportSchema } from "./cert.schema.js";
 
 export const certEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "cert",

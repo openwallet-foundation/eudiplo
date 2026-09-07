@@ -10,9 +10,9 @@ import { join } from "node:path";
 import { Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { CreateClientDto } from "../../src/auth/client/dto/create-client.dto";
-import { CreateClientSchema } from "../../src/auth/client/schemas/client.schema";
-import { ConfigImportService } from "../../src/platform/config-import/config-import.service";
+import { CreateClientDto } from "../../src/auth/client/dto/create-client.dto.js";
+import { CreateClientSchema } from "../../src/auth/client/schemas/client.schema.js";
+import { ConfigImportService } from "../../src/platform/config-import/config-import.service.js";
 
 function createConfigServiceStub(configFolder: string) {
     return {

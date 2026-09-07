@@ -10,7 +10,7 @@ vi.mock("./cbor-request", () => ({
     buildReaderAuth: vi.fn(),
 }));
 
-import { Iso18013Service } from "./iso18013.service";
+import { Iso18013Service } from "./iso18013.service.js";
 
 const CONFIG_WEBHOOK = { url: "https://config.example/hook" } as any;
 const OVERRIDE_WEBHOOK = {

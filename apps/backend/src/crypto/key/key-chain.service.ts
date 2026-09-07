@@ -6,24 +6,24 @@ import type { Signer } from "@sd-jwt/core";
 import type { JWK, JWSHeaderParameters, JWTPayload } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity";
-import { CertificateBuilderService } from "./cert/certificate-builder.service";
-import { KeyChainCreateDto, KeyChainType } from "./dto/key-chain-create.dto";
-import { KeyChainExportDto } from "./dto/key-chain-export.dto";
-import { KeyChainImportDto } from "./dto/key-chain-import.dto";
+import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
+import { CertificateBuilderService } from "./cert/certificate-builder.service.js";
+import { KeyChainCreateDto, KeyChainType } from "./dto/key-chain-create.dto.js";
+import { KeyChainExportDto } from "./dto/key-chain-export.dto.js";
+import { KeyChainImportDto } from "./dto/key-chain-import.dto.js";
 import {
     CertificateInfoDto,
     KeyChainResponseDto,
     PublicKeyInfoDto,
-} from "./dto/key-chain-response.dto";
-import { KeyChainUpdateDto } from "./dto/key-chain-update.dto";
-import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto";
-import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity";
-import { KeyChainImportService } from "./key-chain-import.service";
-import { KeyChainSigningService } from "./key-chain-signing.service";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter";
-import { KmsProviderRegistry } from "./kms/kms-provider.registry";
-import { KeyUsageType } from "./types/key-usage-type";
+} from "./dto/key-chain-response.dto.js";
+import { KeyChainUpdateDto } from "./dto/key-chain-update.dto.js";
+import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto.js";
+import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
+import { KeyChainImportService } from "./key-chain-import.service.js";
+import { KeyChainSigningService } from "./key-chain-signing.service.js";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter.js";
+import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
+import { KeyUsageType } from "./types/key-usage-type.js";
 
 /**
  * KeyChainService manages the unified key chain model.

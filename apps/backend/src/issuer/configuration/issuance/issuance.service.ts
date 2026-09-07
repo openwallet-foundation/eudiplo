@@ -5,28 +5,28 @@ import { Request } from "express";
 import { decodeJwt } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { AuditLogService } from "../../../audit-log/audit-log.service";
+import { AuditLogService } from "../../../audit-log/audit-log.service.js";
 import {
     extractRequestMeta,
     getChangedFields,
     resolveAuditActor,
-} from "../../../audit-log/audit-log-context.util";
-import { TokenPayload } from "../../../auth/token.decorator";
-import { ConfigImportService } from "../../../platform/config-import/config-import.service";
+} from "../../../audit-log/audit-log-context.util.js";
+import { TokenPayload } from "../../../auth/token.decorator.js";
+import { ConfigImportService } from "../../../platform/config-import/config-import.service.js";
 import {
     ConfigImportOrchestratorService,
     ImportPhase,
-} from "../../../platform/config-import/config-import-orchestrator.service";
-import { RegistrarService } from "../../../registrar/registrar.service";
-import { loadConfigDto } from "../../../shared/utils/config-file-loader.util";
-import { FilesService } from "../../../storage/files.service";
-import { normalizeTrustListRefs } from "../../../trust/types";
-import { CredentialConfigService } from "../credentials/credential-config/credential-config.service";
-import { DisplayInfo } from "./dto/display.dto";
-import { IssuanceDto } from "./dto/issuance.dto";
-import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate.dto";
-import { IssuanceConfig } from "./entities/issuance-config.entity";
-import { IssuanceConfigSchema } from "./schemas/issuance.schema";
+} from "../../../platform/config-import/config-import-orchestrator.service.js";
+import { RegistrarService } from "../../../registrar/registrar.service.js";
+import { loadConfigDto } from "../../../shared/utils/config-file-loader.util.js";
+import { FilesService } from "../../../storage/files.service.js";
+import { normalizeTrustListRefs } from "../../../trust/types.js";
+import { CredentialConfigService } from "../credentials/credential-config/credential-config.service.js";
+import { DisplayInfo } from "./dto/display.dto.js";
+import { IssuanceDto } from "./dto/issuance.dto.js";
+import { IssuerProvidedAttestation } from "./dto/issuer-registration-certificate.dto.js";
+import { IssuanceConfig } from "./entities/issuance-config.entity.js";
+import { IssuanceConfigSchema } from "./schemas/issuance.schema.js";
 /**
  * Service for managing issuance configurations.
  * It provides methods to get, store, and delete issuance configurations.

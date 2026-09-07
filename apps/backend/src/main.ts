@@ -9,12 +9,12 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { NextFunction, Request, Response } from "express";
 import { Logger } from "nestjs-pino";
 import { cleanupOpenApiDoc } from "nestjs-zod";
-import { AllExceptionsFilter } from "./all-exceptions.filter";
-import { AppModule } from "./app.module";
-import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers";
-import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter";
-import { createAppValidationPipe } from "./shared/common/zod/zod-schema.util";
-import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions";
+import { AllExceptionsFilter } from "./all-exceptions.filter.js";
+import { AppModule } from "./app.module.js";
+import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers.js";
+import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter.js";
+import { createAppValidationPipe } from "./shared/common/zod/zod-schema.util.js";
+import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions.js";
 
 /**
  * TLS configuration options for HTTPS server.

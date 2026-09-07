@@ -1,15 +1,15 @@
 import {
     defineEditorSchema,
     defineEditorSchemaBundle,
-} from "../../../shared/common/zod/editor-schema";
+} from "../../../shared/common/zod/editor-schema.js";
 import {
     CreateTenantSchema,
     ImportTenantSchema,
     TenantConfigFileSchema,
     UpdateTenantSchema,
-} from "./create-tenant.schema";
-import { SessionStorageConfigSchema } from "./session-storage-config.schema";
-import { StatusListConfigSchema } from "./status-list-config.schema";
+} from "./create-tenant.schema.js";
+import { SessionStorageConfigSchema } from "./session-storage-config.schema.js";
+import { StatusListConfigSchema } from "./status-list-config.schema.js";
 
 export const tenantEditorSchemaBundle = defineEditorSchemaBundle({
     domain: "tenant",

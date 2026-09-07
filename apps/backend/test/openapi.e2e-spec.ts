@@ -4,8 +4,8 @@ import { Test, type TestingModule } from "@nestjs/testing";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import { App } from "supertest/types";
 import { beforeAll, describe, expect, test } from "vitest";
-import { AppModule } from "../src/app.module";
-import { GLOBAL_PREFIX_EXCLUSIONS } from "../src/main.helpers";
+import { AppModule } from "../src/app.module.js";
+import { GLOBAL_PREFIX_EXCLUSIONS } from "../src/main.helpers.js";
 
 function getOperation(
     document: ReturnType<typeof cleanupOpenApiDoc>,

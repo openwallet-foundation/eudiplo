@@ -11,22 +11,22 @@ import {
 import * as x509 from "@peculiar/x509";
 import { Span } from "nestjs-otel";
 import { PinoLogger } from "nestjs-pino";
-import { VerificationProvenance } from "../../../../session/entities/session-outcome";
+import { VerificationProvenance } from "../../../../session/entities/session-outcome.js";
 import {
     isStatusListUnavailableError,
     resolveRevocationPolicy,
-} from "../../../../trust/revocation-policy.util";
-import { VerifierOptions } from "../../../../trust/types";
-import { mdocContext } from "../../mdoc-context";
+} from "../../../../trust/revocation-policy.util.js";
+import { VerifierOptions } from "../../../../trust/types.js";
+import { mdocContext } from "../../mdoc-context.js";
 import {
     ChainValidationResult,
     CredentialChainValidationService,
-} from "../credential-chain-validation.service";
+} from "../credential-chain-validation.service.js";
 import {
     mapChainErrorToFailureType,
     type VerificationFailureType,
-} from "../verification-failure";
-import { toProvenance } from "../verification-provenance";
+} from "../verification-failure.js";
+import { toProvenance } from "../verification-provenance.js";
 
 /**
  * Session data for the standard OID4VP flow (direct_post or direct_post.jwt).

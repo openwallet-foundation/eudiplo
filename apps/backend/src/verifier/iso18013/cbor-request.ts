@@ -25,7 +25,7 @@ import {
     SessionTranscript,
     SignatureAlgorithm,
 } from "@owf/mdoc";
-import { mdocContext } from "../presentations/mdoc-context";
+import { mdocContext } from "../presentations/mdoc-context.js";
 
 // COSE Key type / curve constants (RFC 8152)
 const KTY_EC = 2;

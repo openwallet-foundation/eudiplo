@@ -1,6 +1,6 @@
 import { Request } from "express";
-import { TokenPayload } from "../auth/token.decorator";
-import { AuditLogActor } from "./audit-log.service";
+import { TokenPayload } from "../auth/token.decorator.js";
+import { AuditLogActor } from "./audit-log.service.js";
 
 export function resolveAuditActor(token: TokenPayload): AuditLogActor {
     const clientId = token.client?.clientId || token.authorizedParty;

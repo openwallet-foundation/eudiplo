@@ -7,8 +7,8 @@ import {
     type Options as Options2,
     type RequestResult,
     type TDataShape,
-} from "./client";
-import { client } from "./client.gen";
+} from "./client/index.js";
+import { client } from "./client.gen.js";
 import type {
     AccessCertificateControllerAccessCertificatesData,
     AccessCertificateControllerAccessCertificatesResponses,
@@ -129,7 +129,7 @@ import type {
     WrpReadControllerListWalletRelyingPartyStatementsResponses,
     WrpReadControllerSearchWalletRelyingPartiesData,
     WrpReadControllerSearchWalletRelyingPartiesResponses,
-} from "./types.gen";
+} from "./types.gen.js";
 
 export type Options<
     TData extends TDataShape = TDataShape,

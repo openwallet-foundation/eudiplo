@@ -14,10 +14,10 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
-import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity";
-import { RevocationCheckMode } from "../../../trust/types";
-import { RegistrationCertificateRequest } from "../dto/vp-request.dto";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
+import { WebhookEndpointEntity } from "../../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
+import { RevocationCheckMode } from "../../../trust/types.js";
+import { RegistrationCertificateRequest } from "../dto/vp-request.dto.js";
 
 export enum TrustedAuthorityType {
     ETSI_TL = "etsi_tl",

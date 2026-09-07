@@ -17,21 +17,21 @@ import {
 import type { Request } from "express";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
-import { CryptoService } from "../../../../../crypto/crypto.service";
-import { KeyChainService } from "../../../../../crypto/key/key-chain.service";
-import { SessionService } from "../../../../../session/session.service";
-import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service";
-import { IssuanceService } from "../../../../configuration/issuance/issuance.service";
-import { StatusListConfigService } from "../../../../status-list/status-list-config.service";
-import { NonceEntity } from "../../entities/nonces.entity";
-import { TokenErrorException } from "../../exceptions";
-import { getHeadersFromRequest } from "../../util";
+import { CryptoService } from "../../../../../crypto/crypto.service.js";
+import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
+import { SessionService } from "../../../../../session/session.service.js";
+import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
+import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
+import { StatusListConfigService } from "../../../../status-list/status-list-config.service.js";
+import { NonceEntity } from "../../entities/nonces.entity.js";
+import { TokenErrorException } from "../../exceptions/index.js";
+import { getHeadersFromRequest } from "../../util.js";
 import {
     buildAuthorizationServerMetadata,
     buildWalletAttestationMetadata,
     DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-} from "../shared";
-import { AuthorizeQueries } from "./dto/authorize-request.dto";
+} from "../shared/index.js";
+import { AuthorizeQueries } from "./dto/authorize-request.dto.js";
 
 interface ParsedAccessTokenAuthorizationCodeRequestGrant {
     grantType: AuthorizationCodeGrantIdentifier;

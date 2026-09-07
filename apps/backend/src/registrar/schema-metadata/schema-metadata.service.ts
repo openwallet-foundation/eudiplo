@@ -22,12 +22,12 @@ import {
     schemaMetadataControllerRemove,
     schemaMetadataControllerSetVersionDeprecation,
     schemaMetadataControllerUpdateMetadata,
-} from "../generated";
-import { RegistrarAuthService } from "../registrar-auth.service";
+} from "../generated/index.js";
+import { RegistrarAuthService } from "../registrar-auth.service.js";
 import {
     DeprecateSchemaMetadataDto,
     UpdateSchemaMetadataDto,
-} from "./dto/schema-metadata.dto";
+} from "./dto/schema-metadata.dto.js";
 
 type SchemaMetadataFilters = {
     attestationId?: string;

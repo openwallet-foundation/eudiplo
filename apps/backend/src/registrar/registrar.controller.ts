@@ -10,14 +10,14 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../auth/roles/role.enum";
-import { Secured } from "../auth/secure.decorator";
-import { Token, TokenPayload } from "../auth/token.decorator";
-import { CreateAccessCertificateDto } from "./dto/create-access-certificate.dto";
-import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto";
-import { RegistrarConfigResponseDto } from "./dto/registrar-config-response.dto";
-import { UpdateRegistrarConfigDto } from "./dto/update-registrar-config.dto";
-import { RegistrarService } from "./registrar.service";
+import { Role } from "../auth/roles/role.enum.js";
+import { Secured } from "../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../auth/token.decorator.js";
+import { CreateAccessCertificateDto } from "./dto/create-access-certificate.dto.js";
+import { CreateRegistrarConfigDto } from "./dto/create-registrar-config.dto.js";
+import { RegistrarConfigResponseDto } from "./dto/registrar-config-response.dto.js";
+import { UpdateRegistrarConfigDto } from "./dto/update-registrar-config.dto.js";
+import { RegistrarService } from "./registrar.service.js";
 
 /**
  * Controller for managing registrar configuration and creating access certificates.

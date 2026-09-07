@@ -4,11 +4,11 @@ import { z } from "zod";
 import {
     ResponseType,
     type ResponseTypeValue,
-} from "../../../../verifier/oid4vp/dto/presentation-request.dto";
+} from "../../../../verifier/oid4vp/dto/presentation-request.dto.js";
 import {
     WebhookConfig,
     WebhookConfigSchema,
-} from "../../../../webhook/webhook.dto";
+} from "../../../../webhook/webhook.dto.js";
 
 export const FlowType = {
     AUTH_CODE: "authorization_code",

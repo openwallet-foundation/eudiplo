@@ -1,25 +1,25 @@
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { CryptoModule } from "../../../../crypto/crypto.module";
-import { SessionModule } from "../../../../session/session.module";
-import { TrustModule } from "../../../../trust/trust.module";
-import { Oid4vpModule } from "../../../../verifier/oid4vp/oid4vp.module";
-import { PresentationsModule } from "../../../../verifier/presentations/presentations.module";
-import { ConfigurationModule } from "../../../configuration/configuration.module";
-import { InteractiveAuthSessionEntity } from "../entities/interactive-auth-session.entity";
-import { NonceEntity } from "../entities/nonces.entity";
-import { AuthorizationServersController } from "./authorization-servers/authorization-servers.controller";
-import { AuthorizationServersService } from "./authorization-servers/authorization-servers.service";
-import { AuthorizeController } from "./authorize/authorize.controller";
-import { AuthorizeService } from "./authorize/authorize.service";
-import { InteractiveAuthorizationController } from "./authorize/interactive-authorization.controller";
-import { InteractiveAuthorizationService } from "./authorize/interactive-authorization.service";
-import { ChainedAsController } from "./chained-as/chained-as.controller";
-import { ChainedAsService } from "./chained-as/chained-as.service";
-import { ChainedAsVpController } from "./chained-as-vp/chained-as-vp.controller";
-import { ChainedAsVpService } from "./chained-as-vp/chained-as-vp.service";
-import { ChainedAsSessionEntity } from "./shared/entities/chained-as-session.entity";
+import { CryptoModule } from "../../../../crypto/crypto.module.js";
+import { SessionModule } from "../../../../session/session.module.js";
+import { TrustModule } from "../../../../trust/trust.module.js";
+import { Oid4vpModule } from "../../../../verifier/oid4vp/oid4vp.module.js";
+import { PresentationsModule } from "../../../../verifier/presentations/presentations.module.js";
+import { ConfigurationModule } from "../../../configuration/configuration.module.js";
+import { InteractiveAuthSessionEntity } from "../entities/interactive-auth-session.entity.js";
+import { NonceEntity } from "../entities/nonces.entity.js";
+import { AuthorizationServersController } from "./authorization-servers/authorization-servers.controller.js";
+import { AuthorizationServersService } from "./authorization-servers/authorization-servers.service.js";
+import { AuthorizeController } from "./authorize/authorize.controller.js";
+import { AuthorizeService } from "./authorize/authorize.service.js";
+import { InteractiveAuthorizationController } from "./authorize/interactive-authorization.controller.js";
+import { InteractiveAuthorizationService } from "./authorize/interactive-authorization.service.js";
+import { ChainedAsController } from "./chained-as/chained-as.controller.js";
+import { ChainedAsService } from "./chained-as/chained-as.service.js";
+import { ChainedAsVpController } from "./chained-as-vp/chained-as-vp.controller.js";
+import { ChainedAsVpService } from "./chained-as-vp/chained-as-vp.service.js";
+import { ChainedAsSessionEntity } from "./shared/entities/chained-as-session.entity.js";
 
 /**
  * Authorization Module - Groups the OID4VCI authorization server implementations.

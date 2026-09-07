@@ -6,9 +6,9 @@ import {
 } from "@nestjs/common";
 import type { Request } from "express";
 import { from, mergeMap, type Observable, switchMap } from "rxjs";
-import type { TokenPayload } from "../../auth/token.decorator";
-import { ConfigOwnershipService } from "./config-ownership.service";
-import { ConfigResourceRouteService } from "./config-resource-route.service";
+import type { TokenPayload } from "../../auth/token.decorator.js";
+import { ConfigOwnershipService } from "./config-ownership.service.js";
+import { ConfigResourceRouteService } from "./config-resource-route.service.js";
 
 @Injectable()
 export class ConfigGenerationInterceptor implements NestInterceptor {

@@ -1,17 +1,17 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { AuthModule } from "../auth/auth.module";
-import { TenantEntity } from "../auth/tenant/entities/tenant.entity";
-import { StatusListModule } from "../issuer/status-list/status-list.module";
-import { Session } from "./entities/session.entity";
-import { SessionLogEntry } from "./entities/session-log-entry.entity";
-import { SessionLoggingModule } from "./logging/session-logging.module";
-import { SessionController } from "./session.controller";
-import { SessionService } from "./session.service";
-import { SessionConfigController } from "./session-config.controller";
-import { SessionConfigService } from "./session-config.service";
-import { SessionEventsController } from "./session-events.controller";
-import { SessionEventsService } from "./session-events.service";
+import { AuthModule } from "../auth/auth.module.js";
+import { TenantEntity } from "../auth/tenant/entities/tenant.entity.js";
+import { StatusListModule } from "../issuer/status-list/status-list.module.js";
+import { Session } from "./entities/session.entity.js";
+import { SessionLogEntry } from "./entities/session-log-entry.entity.js";
+import { SessionLoggingModule } from "./logging/session-logging.module.js";
+import { SessionController } from "./session.controller.js";
+import { SessionService } from "./session.service.js";
+import { SessionConfigController } from "./session-config.controller.js";
+import { SessionConfigService } from "./session-config.service.js";
+import { SessionEventsController } from "./session-events.controller.js";
+import { SessionEventsService } from "./session-events.service.js";
 
 /**
  * SessionModule is responsible for managing user sessions.

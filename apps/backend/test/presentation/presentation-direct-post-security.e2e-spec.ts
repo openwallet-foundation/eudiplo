@@ -8,8 +8,8 @@ import { CryptoKey, decodeJwt } from "jose";
 import request from "supertest";
 import { App } from "supertest/types";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
-import { StatusListService } from "../../src/issuer/status-list/status-list.service";
-import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto";
+import { StatusListService } from "../../src/issuer/status-list/status-list.service.js";
+import { ResponseType } from "../../src/verifier/oid4vp/dto/presentation-request.dto.js";
 import {
     callbacks,
     createPresentationRequest,
@@ -18,7 +18,7 @@ import {
     PresentationTestContext,
     preparePresentation,
     setupPresentationTestApp,
-} from "../utils";
+} from "../utils.js";
 
 /**
  * E2E tests for OID4VP Section 13.3 — direct_post response mode security.

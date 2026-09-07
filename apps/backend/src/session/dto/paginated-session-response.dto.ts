@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Session } from "../entities/session.entity";
+import { Session } from "../entities/session.entity.js";
 
 /**
  * Paginated response for the session list endpoint.

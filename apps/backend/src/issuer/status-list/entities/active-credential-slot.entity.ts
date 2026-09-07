@@ -8,7 +8,7 @@ import {
     UpdateDateColumn,
     VersionColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
 
 /**
  * Tracks the currently active issuance for a subject under one credential

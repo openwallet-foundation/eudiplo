@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import { afterEach, describe, expect, test } from "vitest";
-import { AddConfigResourceMetadata1777000000000 } from "./migrations/1777000000000-AddConfigResourceMetadata";
+import { AddConfigResourceMetadata1777000000000 } from "./migrations/1777000000000-AddConfigResourceMetadata.js";
 
 describe("AddConfigResourceMetadata1777000000000", () => {
     let dataSource: DataSource | undefined;

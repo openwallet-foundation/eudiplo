@@ -1,4 +1,4 @@
-import * as Joi from "joi";
+import Joi from "joi";
 
 export const STATUS_LIST_VALIDATION_SCHEMA = Joi.object({
     STATUS_CAPACITY: Joi.number()

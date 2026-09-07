@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { CreateTenantSchema, UpdateTenantSchema } from "./create-tenant.schema";
+import { CreateTenantSchema, UpdateTenantSchema } from "./create-tenant.schema.js";
 
 describe("tenant request schemas", () => {
     test("allows create without a description", () => {

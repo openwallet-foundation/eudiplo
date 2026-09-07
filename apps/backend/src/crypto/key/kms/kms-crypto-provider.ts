@@ -1,5 +1,5 @@
 import type { JWK } from "jose";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms-adapter";
+import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms-adapter.js";
 
 /**
  * Marker properties spliced onto a fake CryptoKey so that

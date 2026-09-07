@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Request } from "express";
-import { Role } from "../../../auth/roles/role.enum";
-import { Secured } from "../../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../../auth/token.decorator";
-import { IssuanceDto } from "./dto/issuance.dto";
-import { UpdateIssuanceDto } from "./dto/update-issuance.dto";
-import { IssuanceConfig } from "./entities/issuance-config.entity";
-import { IssuanceService } from "./issuance.service";
+import { Role } from "../../../auth/roles/role.enum.js";
+import { Secured } from "../../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../../auth/token.decorator.js";
+import { IssuanceDto } from "./dto/issuance.dto.js";
+import { UpdateIssuanceDto } from "./dto/update-issuance.dto.js";
+import { IssuanceConfig } from "./entities/issuance-config.entity.js";
+import { IssuanceService } from "./issuance.service.js";
 
 @ApiTags("Issuer")
 @Secured([Role.Issuances])

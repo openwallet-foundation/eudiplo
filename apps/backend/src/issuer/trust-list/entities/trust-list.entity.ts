@@ -6,9 +6,9 @@ import {
     ManyToOne,
     UpdateDateColumn,
 } from "typeorm";
-import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity";
-import { KeyChainEntity } from "../../../crypto/key/entities/key-chain.entity";
-import type { TrustListEntity } from "../dto/trust-list-create.dto";
+import { TenantEntity } from "../../../auth/tenant/entities/tenant.entity.js";
+import { KeyChainEntity } from "../../../crypto/key/entities/key-chain.entity.js";
+import type { TrustListEntity } from "../dto/trust-list-create.dto.js";
 
 /**
  * Entity representing a Trust List used for credential verification.

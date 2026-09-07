@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { CertService } from "../crypto/key/cert/cert.service";
-import { KeyChainService } from "../crypto/key/key-chain.service";
-import { accessCertificateControllerRegister } from "./generated";
-import { RegistrarAuthService } from "./registrar-auth.service";
-import type { CreateAccessCertificate } from "./schemas/registrar.schema";
+import { CertService } from "../crypto/key/cert/cert.service.js";
+import { KeyChainService } from "../crypto/key/key-chain.service.js";
+import { accessCertificateControllerRegister } from "./generated/index.js";
+import { RegistrarAuthService } from "./registrar-auth.service.js";
+import type { CreateAccessCertificate } from "./schemas/registrar.schema.js";
 
 /**
  * Handles creation of access certificates via the registrar API and their

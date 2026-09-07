@@ -8,15 +8,15 @@ import {
     Post,
 } from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { Role } from "../../../auth/roles/role.enum";
-import { Secured } from "../../../auth/secure.decorator";
-import { Token, TokenPayload } from "../../../auth/token.decorator";
+import { Role } from "../../../auth/roles/role.enum.js";
+import { Secured } from "../../../auth/secure.decorator.js";
+import { Token, TokenPayload } from "../../../auth/token.decorator.js";
 import {
     CompleteDeferredDto,
     DeferredOperationResponse,
     FailDeferredDto,
-} from "./dto/complete-deferred.dto";
-import { Oid4vciService } from "./oid4vci.service";
+} from "./dto/complete-deferred.dto.js";
+import { Oid4vciService } from "./oid4vci.service.js";
 
 @ApiTags("Issuer")
 @Secured([Role.IssuanceOffer])

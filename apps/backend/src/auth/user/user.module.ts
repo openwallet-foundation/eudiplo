@@ -1,9 +1,9 @@
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { InternalUsersProvider } from "./adapters/internal-users.service";
-import { KeycloakUsersProvider } from "./adapters/keycloak-users.service";
-import { UserController } from "./user.controller";
-import { USERS_PROVIDER, UsersProvider } from "./user.provider";
+import { InternalUsersProvider } from "./adapters/internal-users.service.js";
+import { KeycloakUsersProvider } from "./adapters/keycloak-users.service.js";
+import { UserController } from "./user.controller.js";
+import { USERS_PROVIDER, UsersProvider } from "./user.provider.js";
 
 @Module({
     providers: [

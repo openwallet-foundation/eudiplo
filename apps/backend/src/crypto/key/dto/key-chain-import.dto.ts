@@ -5,8 +5,8 @@ import {
     EcJwkSchema,
     KeyChainImportSchema,
     RotationPolicyImportSchema,
-} from "../schemas/key-chain.schema";
-import { KeyUsageType } from "../types/key-usage-type";
+} from "../schemas/key-chain.schema.js";
+import { KeyUsageType } from "../types/key-usage-type.js";
 
 /**
  * JWK structure for EC keys (P-256).

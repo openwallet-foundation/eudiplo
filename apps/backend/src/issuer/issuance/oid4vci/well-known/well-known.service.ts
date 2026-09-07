@@ -1,18 +1,18 @@
 import { HttpStatus, Injectable } from "@nestjs/common";
-import { CertService } from "../../../../crypto/key/cert/cert.service";
-import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service";
-import { KeyChainService } from "../../../../crypto/key/key-chain.service";
-import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type";
-import { MediaType } from "../../../../shared/utils/media-type/media-type.enum";
-import { IssuanceService } from "../../../configuration/issuance/issuance.service";
-import { AuthorizationServersService } from "../authorization/authorization-servers/authorization-servers.service";
-import { AuthorizeService } from "../authorization/authorize/authorize.service";
-import { ChainedAsService } from "../authorization/chained-as/chained-as.service";
-import { ChainedAsVpService } from "../authorization/chained-as-vp/chained-as-vp.service";
-import { WellKnownException } from "../exceptions";
-import { Oid4vciService } from "../oid4vci.service";
-import { CredentialIssuerMetadataDto } from "./dto/credential-issuer-metadata.dto";
-import { EC_Public, JwksResponseDto } from "./dto/jwks-response.dto";
+import { CertService } from "../../../../crypto/key/cert/cert.service.js";
+import { CryptoImplementationService } from "../../../../crypto/key/crypto-implementation/crypto-implementation.service.js";
+import { KeyChainService } from "../../../../crypto/key/key-chain.service.js";
+import { KeyUsageType } from "../../../../crypto/key/types/key-usage-type.js";
+import { MediaType } from "../../../../shared/utils/media-type/media-type.enum.js";
+import { IssuanceService } from "../../../configuration/issuance/issuance.service.js";
+import { AuthorizationServersService } from "../authorization/authorization-servers/authorization-servers.service.js";
+import { AuthorizeService } from "../authorization/authorize/authorize.service.js";
+import { ChainedAsService } from "../authorization/chained-as/chained-as.service.js";
+import { ChainedAsVpService } from "../authorization/chained-as-vp/chained-as-vp.service.js";
+import { WellKnownException } from "../exceptions/index.js";
+import { Oid4vciService } from "../oid4vci.service.js";
+import { CredentialIssuerMetadataDto } from "./dto/credential-issuer-metadata.dto.js";
+import { EC_Public, JwksResponseDto } from "./dto/jwks-response.dto.js";
 
 /**
  * Service to handle well-known endpoints and metadata retrieval.

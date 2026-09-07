@@ -1,5 +1,5 @@
 import { ApiProperty, OmitType } from "@nestjs/swagger";
-import { RegistrarConfigEntity } from "../entities/registrar-config.entity";
+import { RegistrarConfigEntity } from "../entities/registrar-config.entity.js";
 
 /**
  * DTO for the registrar configuration response.
