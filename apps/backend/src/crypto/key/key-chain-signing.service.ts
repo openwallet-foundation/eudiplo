@@ -11,7 +11,11 @@ import {
 import { Span } from "nestjs-otel";
 import { Repository } from "typeorm";
 import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter.js";
+import type {
+    KmsAdapter,
+    KmsKeyRef,
+    KmsSigningAlg,
+} from "./kms/kms-adapter.js";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
 
 function base64url(input: string): string {

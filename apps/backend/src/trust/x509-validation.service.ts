@@ -1,6 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
-import { getRevocationCert, serviceTypeMatches, TrustedEntity } from "./types.js";
+import {
+    getRevocationCert,
+    serviceTypeMatches,
+    TrustedEntity,
+} from "./types.js";
 
 type X5cInput = string[]; // base64 DER entries
 

@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import * as x509 from "@peculiar/x509";
 import type { JWK } from "jose";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "../kms/kms-adapter.js";
+import type {
+    KmsAdapter,
+    KmsKeyRef,
+    KmsSigningAlg,
+} from "../kms/kms-adapter.js";
 import {
     importPublicCryptoKey,
     makeKmsSigningKey,

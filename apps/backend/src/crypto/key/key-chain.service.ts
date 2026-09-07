@@ -21,7 +21,11 @@ import { KmsProvidersResponseDto } from "./dto/kms-providers-response.dto.js";
 import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
 import { KeyChainImportService } from "./key-chain-import.service.js";
 import { KeyChainSigningService } from "./key-chain-signing.service.js";
-import type { KmsAdapter, KmsKeyRef, KmsSigningAlg } from "./kms/kms-adapter.js";
+import type {
+    KmsAdapter,
+    KmsKeyRef,
+    KmsSigningAlg,
+} from "./kms/kms-adapter.js";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
 import { KeyUsageType } from "./types/key-usage-type.js";
 

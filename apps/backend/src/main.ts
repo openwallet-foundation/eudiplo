@@ -11,7 +11,10 @@ import { Logger } from "nestjs-pino";
 import { cleanupOpenApiDoc } from "nestjs-zod";
 import { AllExceptionsFilter } from "./all-exceptions.filter.js";
 import { AppModule } from "./app.module.js";
-import { filterOpenApiPaths, GLOBAL_PREFIX_EXCLUSIONS } from "./main.helpers.js";
+import {
+    filterOpenApiPaths,
+    GLOBAL_PREFIX_EXCLUSIONS,
+} from "./main.helpers.js";
 import { ValidationErrorFilter } from "./shared/common/filters/validation-error.filter.js";
 import { createAppValidationPipe } from "./shared/common/zod/zod-schema.util.js";
 import { registerTolerantX509Extensions } from "./shared/utils/x509-tolerant-extensions.js";

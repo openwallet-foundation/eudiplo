@@ -6,7 +6,11 @@ import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { Role } from "../src/auth/roles/role.enum.js";
 import { ResponseType } from "../src/verifier/oid4vp/dto/presentation-request.dto.js";
 import { PresentationConfigCreateDto } from "../src/verifier/presentations/dto/presentation-config-create.dto.js";
-import { IssuanceTestContext, readConfig, setupIssuanceTestApp } from "./utils.js";
+import {
+    IssuanceTestContext,
+    readConfig,
+    setupIssuanceTestApp,
+} from "./utils.js";
 
 describe("Client Resource-Level Access Control (e2e)", () => {
     let ctx: IssuanceTestContext;

@@ -30,7 +30,11 @@ import {
     type TypedCredentialConfig,
     toCredentialConfigurationSupported,
 } from "./types/credential-config-types.js";
-import { buildClaims, buildClaimsMetadata, buildJsonSchema } from "./utils/index.js";
+import {
+    buildClaims,
+    buildClaimsMetadata,
+    buildJsonSchema,
+} from "./utils/index.js";
 
 /**
  * Service for managing credentials and their configurations.

@@ -26,7 +26,10 @@ import { ConfigMigrationService } from "../../platform/config-portability/config
 import { ConfigOwnershipService } from "../../platform/config-portability/config-ownership.service.js";
 import { RegistrarService } from "../../registrar/registrar.service.js";
 import { FilesService } from "../../storage/files.service.js";
-import { CLIENTS_PROVIDER, ClientsProvider } from "../client/client.provider.js";
+import {
+    CLIENTS_PROVIDER,
+    ClientsProvider,
+} from "../client/client.provider.js";
 import { Role } from "../roles/role.enum.js";
 import { TokenPayload } from "../token.decorator.js";
 import { TenantEntity } from "./entities/tenant.entity.js";
