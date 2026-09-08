@@ -459,7 +459,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
           walletTrustListsArray.push(
             this.createWalletProviderTrustListGroup({
               trustListId: entry?.trustListId ?? '',
-            url: entry?.url ?? '',
+              url: entry?.url ?? '',
               verifierKey:
                 entry?.verifierKey && typeof entry.verifierKey === 'object'
                   ? JSON.stringify(entry.verifierKey, null, 2)
