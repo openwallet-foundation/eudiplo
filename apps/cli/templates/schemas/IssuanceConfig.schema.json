@@ -22,10 +22,14 @@
       "items": {
         "type": "object",
         "properties": {
-          "url": {
+          "trustListId": {
             "type": "string",
-            "format": "uri",
-            "description": "URL of the wallet provider trust list."
+            "minLength": 1
+          },
+          "url": {
+            "description": "URL of the wallet provider trust list.",
+            "type": "string",
+            "format": "uri"
           },
           "verifierKey": {
             "description": "Optional verifier key material used for trust list verification.",
@@ -40,9 +44,6 @@
             "type": "string"
           }
         },
-        "required": [
-          "url"
-        ],
         "additionalProperties": false
       }
     },
@@ -173,10 +174,14 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "url": {
+                    "trustListId": {
                       "type": "string",
-                      "format": "uri",
-                      "description": "URL of the wallet provider trust list."
+                      "minLength": 1
+                    },
+                    "url": {
+                      "description": "URL of the wallet provider trust list.",
+                      "type": "string",
+                      "format": "uri"
                     },
                     "verifierKey": {
                       "description": "Optional verifier key material used for trust list verification.",
@@ -191,9 +196,6 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "url"
-                  ],
                   "additionalProperties": false
                 }
               },
@@ -300,10 +302,14 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "url": {
+                    "trustListId": {
                       "type": "string",
-                      "format": "uri",
-                      "description": "URL of the wallet provider trust list."
+                      "minLength": 1
+                    },
+                    "url": {
+                      "description": "URL of the wallet provider trust list.",
+                      "type": "string",
+                      "format": "uri"
                     },
                     "verifierKey": {
                       "description": "Optional verifier key material used for trust list verification.",
@@ -318,9 +324,6 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "url"
-                  ],
                   "additionalProperties": false
                 }
               },
@@ -393,10 +396,14 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "url": {
+                    "trustListId": {
                       "type": "string",
-                      "format": "uri",
-                      "description": "URL of the wallet provider trust list."
+                      "minLength": 1
+                    },
+                    "url": {
+                      "description": "URL of the wallet provider trust list.",
+                      "type": "string",
+                      "format": "uri"
                     },
                     "verifierKey": {
                       "description": "Optional verifier key material used for trust list verification.",
@@ -411,9 +418,6 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "url"
-                  ],
                   "additionalProperties": false
                 }
               },
