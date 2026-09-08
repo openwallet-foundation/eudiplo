@@ -70,7 +70,7 @@ import { ConfigOwnershipNoticeComponent } from '../../../config-portability/conf
 export class IssuanceConfigCreateComponent implements OnInit {
   private static jsonValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value as string;
-    if (!value || !value.trim()) return null;
+    if (!value?.trim()) return null;
     try {
       JSON.parse(value);
       return null;
@@ -110,6 +110,72 @@ export class IssuanceConfigCreateComponent implements OnInit {
         validators: [this.trustListVerifierValidator.bind(this)],
       }
     );
+  }
+
+  private createWalletProviderTrustListArray(entries?: any[]): FormArray {
+    const trustLists = this.fb.array<FormGroup>([]);
+    if (Array.isArray(entries)) {
+      for (const entry of entries) {
+        if (typeof entry === 'string') {
+          trustLists.push(this.createWalletProviderTrustListGroup({ url: entry }));
+          continue;
+        }
+
+        trustLists.push(
+          this.createWalletProviderTrustListGroup({
+            url: entry?.url ?? '',
+            verifierKey:
+              typeof entry?.verifierKey === 'string'
+                ? entry.verifierKey
+                : entry?.verifierKey
+                  ? JSON.stringify(entry.verifierKey, null, 2)
+                  : '',
+            verifierX509Der: entry?.verifierX509Der ?? '',
+          })
+        );
+      }
+    }
+    return trustLists;
+  }
+
+  private createAuthorizationServerWalletAttestationControls(value?: any) {
+    const trustLists = this.createWalletProviderTrustListArray(value?.walletProviderTrustLists);
+    const inherit = new FormControl(
+      value?.inheritWalletProviderTrustLists ?? value?.walletProviderTrustLists == null
+    );
+    const updateTrustListValidation = () => {
+      if (inherit.value) {
+        trustLists.disable({ emitEvent: false });
+      } else {
+        trustLists.enable({ emitEvent: false });
+      }
+    };
+    updateTrustListValidation();
+    inherit.valueChanges.subscribe(updateTrustListValidation);
+    return {
+      walletAttestationRequired: new FormControl(value?.walletAttestationRequired ?? 'inherit'),
+      inheritWalletProviderTrustLists: inherit,
+      walletProviderTrustLists: trustLists,
+    };
+  }
+
+  private buildWalletProviderTrustLists(value: any[] | undefined): any[] {
+    return value?.length
+      ? value
+          .map((entry: any) => {
+            let verifierKey: Record<string, unknown> | undefined;
+            if (typeof entry?.verifierKey === 'string' && entry.verifierKey.trim()) {
+              verifierKey = JSON.parse(entry.verifierKey) as Record<string, unknown>;
+            }
+
+            return {
+              url: entry?.url?.trim() || undefined,
+              verifierKey,
+              verifierX509Der: entry?.verifierX509Der?.trim() || undefined,
+            };
+          })
+          .filter((entry: any) => !!entry.url)
+      : [];
   }
 
   public form: FormGroup;
@@ -318,6 +384,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
                 type: server.type ?? 'oid4vp',
                 enabled: server.enabled ?? true,
                 requireDPoP: server.requireDPoP ?? false,
+                walletAttestationRequired: server.walletAttestationRequired ?? 'inherit',
+                walletProviderTrustLists: server.walletProviderTrustLists,
                 oid4vp: {
                   presentationConfigId:
                     server.presentationConfigId ?? server.oid4vp?.presentationConfigId ?? '',
@@ -349,6 +417,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
                 label: server.label ?? 'Built-in Authorization Server',
                 enabled: server.enabled ?? true,
                 requireDPoP: server.requireDPoP ?? false,
+                walletAttestationRequired: server.walletAttestationRequired ?? 'inherit',
+                walletProviderTrustLists: server.walletProviderTrustLists,
                 token: {
                   lifetimeSeconds: server.token?.lifetimeSeconds ?? 3600,
                   signingKeyId: server.token?.signingKeyId ?? '',
@@ -507,12 +577,20 @@ export class IssuanceConfigCreateComponent implements OnInit {
             }
 
             if (server.type === 'built-in') {
+              const walletProviderTrustLists = server.inheritWalletProviderTrustLists
+                ? undefined
+                : this.buildWalletProviderTrustLists(server.walletProviderTrustLists);
               return {
                 id: server.id.trim(),
                 type: 'built-in',
                 label: server.label?.trim() || 'Built-in Authorization Server',
                 enabled: server.enabled ?? true,
                 requireDPoP: server.requireDPoP ?? false,
+                walletAttestationRequired:
+                  typeof server.walletAttestationRequired === 'boolean'
+                    ? server.walletAttestationRequired
+                    : undefined,
+                walletProviderTrustLists,
                 token: {
                   lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
                   signingKeyId: server.token?.signingKeyId || undefined,
@@ -524,12 +602,20 @@ export class IssuanceConfigCreateComponent implements OnInit {
               };
             }
 
+            const walletProviderTrustLists = server.inheritWalletProviderTrustLists
+              ? undefined
+              : this.buildWalletProviderTrustLists(server.walletProviderTrustLists);
             const base = {
               id: server.id,
               label: server.label,
               type: server.type,
               enabled: server.enabled ?? true,
               requireDPoP: server.requireDPoP ?? false,
+              walletAttestationRequired:
+                typeof server.walletAttestationRequired === 'boolean'
+                  ? server.walletAttestationRequired
+                  : undefined,
+              walletProviderTrustLists,
               token: {
                 lifetimeSeconds: server.token?.lifetimeSeconds || 3600,
                 signingKeyId: server.token?.signingKeyId || undefined,
@@ -604,25 +690,9 @@ export class IssuanceConfigCreateComponent implements OnInit {
       authorizationServers:
         unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : [],
       walletAttestationRequired: formValue.walletAttestationRequired,
-      walletProviderTrustLists:
-        formValue.walletProviderTrustLists?.length > 0
-          ? formValue.walletProviderTrustLists
-              .map((entry: any) => {
-                // JSON.parse is safe here because the jsonValidator on verifierKey
-                // prevents form submission when the value is not valid JSON.
-                let verifierKey: Record<string, unknown> | undefined;
-                if (typeof entry?.verifierKey === 'string' && entry.verifierKey.trim()) {
-                  verifierKey = JSON.parse(entry.verifierKey) as Record<string, unknown>;
-                }
-
-                return {
-                  url: entry?.url?.trim() || undefined,
-                  verifierKey,
-                  verifierX509Der: entry?.verifierX509Der?.trim() || undefined,
-                };
-              })
-              .filter((entry: any) => !!entry.url)
-          : undefined,
+      walletProviderTrustLists: this.buildWalletProviderTrustLists(
+        formValue.walletProviderTrustLists
+      ),
       federation: this.buildFederationConfig(formValue.federation) ?? undefined,
       registrationCertificate,
     };
@@ -718,6 +788,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
         label: [value?.label ?? 'Built-in Authorization Server', Validators.required],
         enabled: [value?.enabled ?? true],
         requireDPoP: [value?.requireDPoP ?? false],
+        ...this.createAuthorizationServerWalletAttestationControls(value),
         token: this.fb.group({
           lifetimeSeconds: [value?.token?.lifetimeSeconds ?? 3600, Validators.min(60)],
           signingKeyId: [value?.token?.signingKeyId ?? ''],
@@ -736,6 +807,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
       type: [value?.type ?? 'oid4vp', Validators.required],
       enabled: [value?.enabled ?? true],
       requireDPoP: [value?.requireDPoP ?? false],
+      ...this.createAuthorizationServerWalletAttestationControls(value),
       oid4vp: this.fb.group({
         presentationConfigId: [value?.oid4vp?.presentationConfigId ?? ''],
         immediateWalletRedirect: [value?.oid4vp?.immediateWalletRedirect ?? true],
@@ -778,7 +850,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     index: number,
     type: 'external' | 'oid4vp' | 'chained' | 'built-in'
   ): void {
-    const current = this.authorizationServers.at(index)?.value;
+    const current = this.authorizationServers.at(index)?.getRawValue();
     if (!current) {
       return;
     }
@@ -823,6 +895,20 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
   removeAuthorizationServer(index: number): void {
     this.authorizationServers.removeAt(index);
+  }
+
+  getAuthorizationServerWalletProviderTrustLists(index: number): FormArray {
+    return this.authorizationServers.at(index).get('walletProviderTrustLists') as FormArray;
+  }
+
+  addAuthorizationServerWalletProviderTrustList(index: number): void {
+    this.getAuthorizationServerWalletProviderTrustLists(index).push(
+      this.createWalletProviderTrustListGroup()
+    );
+  }
+
+  removeAuthorizationServerWalletProviderTrustList(index: number, trustListIndex: number): void {
+    this.getAuthorizationServerWalletProviderTrustLists(index).removeAt(trustListIndex);
   }
 
   moveAuthorizationServer(index: number, direction: 'up' | 'down'): void {

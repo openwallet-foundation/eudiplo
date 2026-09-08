@@ -2,8 +2,9 @@ import { INestApplication } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { Test, type TestingModule } from "@nestjs/testing";
 import { cleanupOpenApiDoc } from "nestjs-zod";
+import request from "supertest";
 import { App } from "supertest/types";
-import { beforeAll, describe, expect, test } from "vitest";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { AppModule } from "../src/app.module.js";
 import { GLOBAL_PREFIX_EXCLUSIONS } from "../src/main.helpers.js";
 
@@ -51,6 +52,46 @@ describe("OpenAPI contract", () => {
         );
 
         document = cleanupOpenApiDoc(swaggerDocument);
+
+        const managementDocFactory = () =>
+            cleanupOpenApiDoc(
+                SwaggerModule.createDocument(
+                    app,
+                    new DocumentBuilder()
+                        .setTitle("EUDIPLO Management API")
+                        .setOpenAPIVersion("3.1.0")
+                        .setVersion("test")
+                        .build(),
+                ),
+            );
+
+        const protocolDocFactory = () =>
+            cleanupOpenApiDoc(
+                SwaggerModule.createDocument(
+                    app,
+                    new DocumentBuilder()
+                        .setTitle("EUDIPLO Protocol API")
+                        .setOpenAPIVersion("3.1.0")
+                        .setVersion("test")
+                        .build(),
+                ),
+            );
+
+        SwaggerModule.setup("/api/docs", app, managementDocFactory);
+        SwaggerModule.setup("/docs", app, protocolDocFactory);
+    });
+
+    afterAll(async () => {
+        await app.close();
+    });
+
+    test.each([
+        ["management Swagger UI", "/api/docs"],
+        ["management Swagger init script", "/api/docs/swagger-ui-init.js"],
+        ["protocol Swagger UI", "/docs"],
+        ["protocol Swagger init script", "/docs/swagger-ui-init.js"],
+    ])("serves %s", async (_label, path) => {
+        await request(app.getHttpServer()).get(path).expect(200);
     });
 
     test("documents tenant description clearing without create-only PATCH fields", () => {

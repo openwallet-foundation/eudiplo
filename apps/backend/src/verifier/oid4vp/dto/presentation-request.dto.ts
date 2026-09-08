@@ -5,6 +5,7 @@ import {
     WebhookConfig,
     WebhookConfigSchema,
 } from "../../../webhook/webhook.dto.js";
+import { TransactionData } from "../../presentations/entities/presentation-config.entity.js";
 import { TransactionDataSchema } from "../../presentations/schemas/presentation-config.schema.js";
 
 /**
@@ -54,7 +55,7 @@ interface PresentationRequestData {
     skewSeconds?: number;
 }
 
-@ApiExtraModels(WebhookConfig)
+@ApiExtraModels(WebhookConfig, TransactionData)
 export class PresentationRequest
     extends PresentationRequestBase
     implements PresentationRequestData
@@ -93,6 +94,7 @@ export class PresentationRequest
      * Optional transaction data to include in the OID4VP request.
      * If provided, this will override the transaction_data from the presentation configuration.
      */
+    @ApiPropertyOptional({ type: () => [TransactionData] })
     transaction_data?: z.infer<typeof TransactionDataSchema>[];
 
     /**

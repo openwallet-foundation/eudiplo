@@ -165,13 +165,36 @@ export class ChainedAsVpController {
     })
     @ApiParam({ name: "tenantId", description: "Tenant identifier" })
     @ApiHeader({ name: "DPoP", required: false, description: "DPoP proof JWT" })
+    @ApiHeader({
+        name: "OAuth-Client-Attestation",
+        required: false,
+        description: "Wallet attestation JWT",
+    })
+    @ApiHeader({
+        name: "OAuth-Client-Attestation-PoP",
+        required: false,
+        description: "Wallet attestation proof-of-possession JWT",
+    })
     @ApiResponse({ status: 200, type: ChainedAsTokenResponseDto })
     @ApiResponse({ status: 400, type: ChainedAsErrorResponseDto })
     async token(
         @Param("tenantId") tenantId: string,
         @Body() body: ChainedAsTokenRequestDto,
         @Headers("dpop") dpopJwt?: string,
+        @Headers("oauth-client-attestation") clientAttestationJwt?: string,
+        @Headers("oauth-client-attestation-pop")
+        clientAttestationPopJwt?: string,
     ): Promise<ChainedAsTokenResponseDto> {
-        return this.chainedAsVpService.handleToken(tenantId, body, dpopJwt);
+        const clientAttestation =
+            clientAttestationJwt && clientAttestationPopJwt
+                ? { clientAttestationJwt, clientAttestationPopJwt }
+                : undefined;
+
+        return this.chainedAsVpService.handleToken(
+            tenantId,
+            body,
+            dpopJwt,
+            clientAttestation,
+        );
     }
 }

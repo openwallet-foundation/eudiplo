@@ -20,14 +20,14 @@ erDiagram
     Tenant ||--o{ KeyChain : owns
     Tenant ||--o{ Session : tracks
     Tenant ||--o{ Client : has
-    
+
     IssuanceConfig ||--o| KeyChain : "signs with (optional)"
     PresentationConfig ||--o{ KeyChain : "verifies with (optional)"
     CredentialConfig }o--|| AttributeProvider : "fetches claims from (optional)"
-    
+
     Session }o--|| IssuanceConfig : "created for (issuance)"
     Session }o--|| PresentationConfig : "created for (presentation)"
-    
+
     Tenant {
         string id PK
         string name
@@ -36,7 +36,7 @@ erDiagram
         json sessionConfig
         json statusListConfig
     }
-    
+
     CredentialConfig {
         string id PK
         string tenantId PK
@@ -44,16 +44,17 @@ erDiagram
         json fields
         string attributeProviderId FK
     }
-    
+
     IssuanceConfig {
         string tenantId PK
         int batchSize
         boolean dPopRequired
-        boolean walletAttestationRequired
+        boolean walletAttestationRequiredDefault
+        json walletProviderTrustLists
         string signingKeyId FK
         json authorizationServers
     }
-    
+
     PresentationConfig {
         string id PK
         string tenantId PK
@@ -61,7 +62,7 @@ erDiagram
         json trustedAuthorities
         string responseMode
     }
-    
+
     KeyChain {
         string id PK
         string tenantId PK
@@ -71,7 +72,7 @@ erDiagram
         json signingKey
         json certificates
     }
-    
+
     Session {
         uuid id PK
         string tenantId FK
@@ -123,13 +124,14 @@ A **Credential Configuration** defines the structure, display properties, and me
 
 ### Issuance Configuration
 
-An **Issuance Configuration** defines _how_ credentials are issued: which authorization servers to use, batch size, proof requirements, and wallet attestation policies.
+An **Issuance Configuration** defines _how_ credentials are issued: which authorization servers to use, batch size, token behavior, and shared trust-list policy.
 
 **Key Properties:**
 
 - **Authorization servers**: One or more AS configurations (built-in, external, chained, or OID4VP-based)
 - **DPoP requirement**: Whether wallets must prove possession of their keys
-- **Wallet attestation**: Whether to require and validate wallet provider attestations
+- **Wallet attestation defaults**: Fallback client-authentication policy for EUDIPLO-managed authorization servers
+- **Key-attestation trust**: Shared wallet-provider trust lists used when validating holder-key attestations at the credential endpoint
 - **Signing key**: Optional reference to a specific `KeyChain` for signing access tokens
 
 **Relationship to Credential Configuration:**
@@ -219,19 +221,19 @@ flowchart TD
     Tenant --> PC[Presentation Configuration]
     Tenant --> CC[Credential Configuration]
     Tenant --> KC[Key Chain]
-    
+
     IC --> AS1[Authorization Server 1]
     IC --> AS2[Authorization Server 2]
     IC -.-> KC1[Key Chain for Access Token Signing]
-    
+
     PC --> DCQL[DCQL Credential Query]
     PC --> TA[Trusted Authorities]
     PC -.-> KC2[Key Chain for Response Encryption]
-    
+
     CC --> Fields[Claim Fields]
     CC --> Display[Display Metadata]
     CC -.-> AP[Attribute Provider]
-    
+
     style Tenant fill:#e1f5ff
     style IC fill:#fff4e1
     style PC fill:#ffe1f5

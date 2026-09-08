@@ -26,7 +26,10 @@ import { TrustStoreService } from "../../../trust/trust-store.service.js";
 import { X509ValidationService } from "../../../trust/x509-validation.service.js";
 import { CredentialsService } from "../../configuration/credentials/credentials.service.js";
 import { IssuanceService } from "../../configuration/issuance/issuance.service.js";
-import { validateAttestationProofTrust } from "./attestation-proof-trust.util.js";
+import {
+    validateAttestationProofTrust,
+    validateJwtProofAttestationTrust,
+} from "./attestation-proof-trust.util.js";
 import { DeferredCredentialRequestDto } from "./dto/deferred-credential-request.dto.js";
 import {
     DeferredTransactionEntity,
@@ -212,6 +215,9 @@ export class DeferredCredentialService {
             );
         }
 
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+
         let holderCnf: Jwk;
         if (parsedCredentialRequest.proofType === "jwt") {
             const verifiedProof = await issuer.verifyCredentialRequestJwtProof({
@@ -219,6 +225,14 @@ export class DeferredCredentialService {
                 issuerMetadata,
                 jwt: proof,
             });
+            await validateJwtProofAttestationTrust(
+                proof,
+                issuanceConfig.walletProviderTrustLists ?? [],
+                {
+                    trustStoreService: this.trustStoreService,
+                    x509ValidationService: this.x509ValidationService,
+                },
+            );
             holderCnf = verifiedProof.signer.publicJwk as Jwk;
         } else {
             const verifiedAttestation =
@@ -227,9 +241,6 @@ export class DeferredCredentialService {
                     issuerMetadata,
                     keyAttestationJwt: proof,
                 });
-
-            const issuanceConfig =
-                await this.issuanceService.getIssuanceConfiguration(tenantId);
 
             await validateAttestationProofTrust(
                 proof,

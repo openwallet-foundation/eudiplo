@@ -5,7 +5,7 @@ title: Credential Issuance
 Credential issuance in EUDIPLO is organized into **three layers**:
 
 1. **[Credential Configurations](credential-configuration.md)** — Define the structure, format, and metadata of individual credentials
-2. **[Issuance Configuration](issuance-configuration.md)** — Define runtime behavior such as authorization, token settings, and wallet attestation
+2. **[Issuance Configuration](issuance-configuration.md)** — Define runtime behavior such as authorization, token settings, and trust for wallet and key attestations
 3. **[Credential Offers](credential-offers.md)** — Create issuance offers that combine configuration with runtime claim values
 
 ## Additional Components

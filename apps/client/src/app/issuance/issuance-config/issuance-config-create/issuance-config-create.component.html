@@ -358,7 +358,124 @@
                               <mat-slide-toggle formControlName="requireDPoP"
                                 >Require DPoP</mat-slide-toggle
                               >
+                              <mat-form-field>
+                                <mat-label>Wallet Attestation</mat-label>
+                                <mat-select formControlName="walletAttestationRequired">
+                                  <mat-option value="inherit">Use issuer default</mat-option>
+                                  <mat-option [value]="true">Required</mat-option>
+                                  <mat-option [value]="false">Optional</mat-option>
+                                </mat-select>
+                              </mat-form-field>
                             </div>
+
+                            <mat-slide-toggle formControlName="inheritWalletProviderTrustLists">
+                              Use shared wallet provider trust lists
+                            </mat-slide-toggle>
+                            <p class="section-hint">
+                              These settings authenticate the wallet at this authorization server.
+                              Key attestations at the credential endpoint use the shared trust
+                              lists.
+                            </p>
+                            @if (!server.get('inheritWalletProviderTrustLists')?.value) {
+                              <div
+                                formArrayName="walletProviderTrustLists"
+                                fxLayout="column"
+                                fxLayoutGap="12px"
+                                class="trust-lists-section"
+                              >
+                                @for (
+                                  trustList of getAuthorizationServerWalletProviderTrustLists(i)
+                                    .controls;
+                                  track $index;
+                                  let j = $index
+                                ) {
+                                  <div
+                                    [formGroupName]="j"
+                                    fxLayout="column"
+                                    fxLayoutGap="8px"
+                                    class="trust-list-entry"
+                                  >
+                                    <div
+                                      fxLayout="row"
+                                      fxLayoutAlign="start center"
+                                      fxLayoutGap="8px"
+                                    >
+                                      <mat-form-field fxFlex>
+                                        <mat-label>Trust List URL {{ j + 1 }}</mat-label>
+                                        <input
+                                          matInput
+                                          [id]="'auth-server-' + i + '-wallet-trust-url-' + j"
+                                          formControlName="url"
+                                          placeholder="https://trust-list.example.com/wallet-providers"
+                                          type="url"
+                                        />
+                                        <mat-icon matSuffix>security</mat-icon>
+                                      </mat-form-field>
+                                      <button
+                                        matIconButton
+                                        type="button"
+                                        color="warn"
+                                        (click)="
+                                          removeAuthorizationServerWalletProviderTrustList(i, j)
+                                        "
+                                        matTooltip="Remove this trust list"
+                                      >
+                                        <mat-icon>delete</mat-icon>
+                                      </button>
+                                    </div>
+
+                                    <mat-form-field>
+                                      <mat-label>Verifier Key (JWK JSON)</mat-label>
+                                      <textarea
+                                        matInput
+                                        [id]="'auth-server-' + i + '-wallet-trust-jwk-' + j"
+                                        formControlName="verifierKey"
+                                        rows="4"
+                                        placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
+                                      ></textarea>
+                                      <mat-icon matSuffix>vpn_key</mat-icon>
+                                      @if (
+                                        trustList.get('verifierKey')?.invalid &&
+                                        trustList.get('verifierKey')?.touched
+                                      ) {
+                                        <mat-error>Please enter a valid JWK JSON object.</mat-error>
+                                      }
+                                    </mat-form-field>
+
+                                    <mat-form-field>
+                                      <mat-label>Verifier Certificate (Base64 DER)</mat-label>
+                                      <input
+                                        matInput
+                                        [id]="'auth-server-' + i + '-wallet-trust-der-' + j"
+                                        formControlName="verifierX509Der"
+                                        placeholder="MIIB..."
+                                        type="text"
+                                      />
+                                      <mat-icon matSuffix>verified</mat-icon>
+                                    </mat-form-field>
+
+                                    @if (
+                                      trustList.hasError('missingVerifier') && trustList.touched
+                                    ) {
+                                      <p class="trust-list-error">
+                                        Provide at least one verifier method: JWK or DER
+                                        certificate.
+                                      </p>
+                                    }
+                                  </div>
+                                }
+
+                                <div fxLayout="row" fxLayoutAlign="center center">
+                                  <button
+                                    mat-raised-button
+                                    type="button"
+                                    (click)="addAuthorizationServerWalletProviderTrustList(i)"
+                                  >
+                                    <mat-icon>add</mat-icon> Add Trust List
+                                  </button>
+                                </div>
+                              </div>
+                            }
 
                             @if (server.get('type')?.value === 'oid4vp') {
                               <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
@@ -580,125 +697,121 @@
               <mat-card-header>
                 <mat-card-title>
                   <mat-icon>verified_user</mat-icon>
-                  Wallet Attestation
+                  Wallet Provider Trust and Defaults
                 </mat-card-title>
                 <mat-card-subtitle
-                  >Configure wallet attestation requirements for client
+                  >Shared provider trust for key attestations and wallet
                   authentication</mat-card-subtitle
                 >
               </mat-card-header>
               <mat-card-content fxLayout="column" fxLayoutGap="16px">
                 <mat-slide-toggle formControlName="walletAttestationRequired">
                   <div fxLayout="column">
-                    <span><strong>Require Wallet Attestation</strong></span>
+                    <span><strong>Require Wallet Attestation by Default</strong></span>
                     <span class="toggle-description"
-                      >When enabled, wallets must provide OAuth-Client-Attestation headers at the
-                      token endpoint</span
+                      >When enabled, wallets must provide OAuth-Client-Attestation headers at PAR
+                      and token endpoints unless an authorization server overrides this
+                      default.</span
                     >
                   </div>
                 </mat-slide-toggle>
 
-                @if (form.get('walletAttestationRequired')?.value) {
-                  <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
-                    <p class="section-hint">
-                      <mat-icon>info</mat-icon>
-                      Add trust lists and verification material. Each trust list requires a URL and
-                      either a verifier JWK or a DER-encoded X.509 certificate.
-                    </p>
-                    <div formArrayName="walletProviderTrustLists">
-                      @for (
-                        trustList of walletProviderTrustLists.controls;
-                        track $index;
-                        let i = $index
-                      ) {
-                        <div
-                          [formGroupName]="i"
-                          fxLayout="column"
-                          fxLayoutGap="8px"
-                          class="trust-list-entry"
-                        >
-                          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                            <mat-form-field fxFlex>
-                              <mat-label>Trust List URL {{ i + 1 }}</mat-label>
-                              <input
-                                matInput
-                                [id]="'wallet-trust-url-' + i"
-                                formControlName="url"
-                                placeholder="https://trust-list.example.com/wallet-providers"
-                                type="url"
-                              />
-                              <mat-icon matSuffix>security</mat-icon>
-                              @if (trustList.get('url')?.invalid && trustList.get('url')?.touched) {
-                                <mat-error>Please enter a valid URL</mat-error>
-                              }
-                            </mat-form-field>
-                            <button
-                              matIconButton
-                              type="button"
-                              color="warn"
-                              (click)="removeWalletProviderTrustList(i)"
-                              matTooltip="Remove this trust list"
-                            >
-                              <mat-icon>delete</mat-icon>
-                            </button>
-                          </div>
-
-                          <mat-form-field>
-                            <mat-label>Verifier Key (JWK JSON)</mat-label>
-                            <textarea
-                              matInput
-                              [id]="'wallet-trust-jwk-' + i"
-                              formControlName="verifierKey"
-                              rows="4"
-                              placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
-                            ></textarea>
-                            <mat-icon matSuffix>vpn_key</mat-icon>
-                            @if (
-                              trustList.get('verifierKey')?.invalid &&
-                              trustList.get('verifierKey')?.touched
-                            ) {
-                              <mat-error>Please enter a valid JWK JSON object.</mat-error>
-                            }
-                          </mat-form-field>
-
-                          <mat-form-field>
-                            <mat-label>Verifier Certificate (Base64 DER)</mat-label>
+                <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
+                  <p class="section-hint">
+                    <mat-icon>info</mat-icon>
+                    These lists validate key attestations during issuance and are the default for
+                    wallet authentication at managed authorization servers. Each list requires a URL
+                    and either a verifier JWK or a DER-encoded X.509 certificate.
+                  </p>
+                  <div formArrayName="walletProviderTrustLists">
+                    @for (
+                      trustList of walletProviderTrustLists.controls;
+                      track $index;
+                      let i = $index
+                    ) {
+                      <div
+                        [formGroupName]="i"
+                        fxLayout="column"
+                        fxLayoutGap="8px"
+                        class="trust-list-entry"
+                      >
+                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Trust List URL {{ i + 1 }}</mat-label>
                             <input
                               matInput
-                              [id]="'wallet-trust-der-' + i"
-                              formControlName="verifierX509Der"
-                              placeholder="MIIB..."
-                              type="text"
+                              [id]="'wallet-trust-url-' + i"
+                              formControlName="url"
+                              placeholder="https://trust-list.example.com/wallet-providers"
+                              type="url"
                             />
-                            <mat-icon matSuffix>verified</mat-icon>
+                            <mat-icon matSuffix>security</mat-icon>
+                            @if (trustList.get('url')?.invalid && trustList.get('url')?.touched) {
+                              <mat-error>Please enter a valid URL</mat-error>
+                            }
                           </mat-form-field>
-
-                          @if (trustList.hasError('missingVerifier') && trustList.touched) {
-                            <p class="trust-list-error">
-                              Provide at least one verifier method: JWK or DER certificate.
-                            </p>
-                          }
+                          <button
+                            matIconButton
+                            type="button"
+                            color="warn"
+                            (click)="removeWalletProviderTrustList(i)"
+                            matTooltip="Remove this trust list"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
                         </div>
-                      }
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="center center">
-                      <button
-                        mat-raised-button
-                        type="button"
-                        (click)="addWalletProviderTrustList()"
-                      >
-                        <mat-icon>add</mat-icon> Add Trust List
-                      </button>
-                    </div>
-                    @if (walletProviderTrustLists.length === 0) {
-                      <p class="warning-hint">
-                        <mat-icon>warning</mat-icon>
-                        No trust lists configured. All wallet providers will be rejected when wallet
-                        attestation is required.
-                      </p>
+
+                        <mat-form-field>
+                          <mat-label>Verifier Key (JWK JSON)</mat-label>
+                          <textarea
+                            matInput
+                            [id]="'wallet-trust-jwk-' + i"
+                            formControlName="verifierKey"
+                            rows="4"
+                            placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
+                          ></textarea>
+                          <mat-icon matSuffix>vpn_key</mat-icon>
+                          @if (
+                            trustList.get('verifierKey')?.invalid &&
+                            trustList.get('verifierKey')?.touched
+                          ) {
+                            <mat-error>Please enter a valid JWK JSON object.</mat-error>
+                          }
+                        </mat-form-field>
+
+                        <mat-form-field>
+                          <mat-label>Verifier Certificate (Base64 DER)</mat-label>
+                          <input
+                            matInput
+                            [id]="'wallet-trust-der-' + i"
+                            formControlName="verifierX509Der"
+                            placeholder="MIIB..."
+                            type="text"
+                          />
+                          <mat-icon matSuffix>verified</mat-icon>
+                        </mat-form-field>
+
+                        @if (trustList.hasError('missingVerifier') && trustList.touched) {
+                          <p class="trust-list-error">
+                            Provide at least one verifier method: JWK or DER certificate.
+                          </p>
+                        }
+                      </div>
                     }
                   </div>
-                }
+                  <div fxLayout="row" fxLayoutAlign="center center">
+                    <button mat-raised-button type="button" (click)="addWalletProviderTrustList()">
+                      <mat-icon>add</mat-icon> Add Trust List
+                    </button>
+                  </div>
+                  @if (walletProviderTrustLists.length === 0) {
+                    <p class="warning-hint">
+                      <mat-icon>warning</mat-icon>
+                      No shared trust lists configured. Key attestations will be rejected. Wallet
+                      attestations require trust lists here or on their authorization server.
+                    </p>
+                  }
+                </div>
               </mat-card-content>
             </mat-card>
           </div>
