@@ -16,9 +16,19 @@ import {
     defaultEnvFileName,
     hasFiles,
 } from "./compose-project.js";
+import type { KubernetesScope } from "./kubectl.js";
+import {
+    buildCanIArgs,
+    buildGetPodsArgs,
+    buildGetWorkloadArgs,
+    resolveScope,
+    resolveWorkloads,
+} from "./kubectl.js";
 import type {
+    CommandContext,
     DeploymentDriver,
     DeploymentTarget,
+    DoctorCheck,
     DriverCommandOptions,
     InstanceConfig,
 } from "../types.js";
@@ -34,21 +44,32 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
     compose: {
         target: "compose",
         async diagnostics(instance, context) {
-            const messages: string[] = [];
+            const checks: DoctorCheck[] = [];
             const projectDirectory = instance.projectDirectory ?? context.cwd;
-            if (!(await resolveComposeRuntime(context.env))) {
-                messages.push(
-                    "Docker or Podman was not found in a supported install location.",
-                );
-            }
+            const runtime = await resolveComposeRuntime(context.env);
+            checks.push({
+                name: "container runtime",
+                status: runtime ? "pass" : "warn",
+                message: runtime
+                    ? `${runtime.name} found at ${runtime.command}`
+                    : "Docker or Podman was not found in a supported install location.",
+            });
             for (const composeFile of getComposeFiles(instance)) {
+                let found = true;
                 try {
                     await access(resolve(projectDirectory, composeFile));
                 } catch {
-                    messages.push(`Compose file not found: ${composeFile}`);
+                    found = false;
                 }
+                checks.push({
+                    name: "compose file",
+                    status: found ? "pass" : "warn",
+                    message: found
+                        ? `${composeFile} is present`
+                        : `Compose file not found: ${composeFile}`,
+                });
             }
-            return messages;
+            return checks;
         },
         up(options) {
             return runCompose(["up", "-d", ...options.args], options);
@@ -66,7 +87,189 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
             return [];
         },
     },
+    kubernetes: {
+        target: "kubernetes",
+        diagnostics: kubernetesDiagnostics,
+    },
 };
+
+async function kubernetesDiagnostics(
+    instance: InstanceConfig,
+    context: CommandContext,
+): Promise<DoctorCheck[]> {
+    const checks: DoctorCheck[] = [];
+
+    const kubectl = await resolveKubectl(context.env);
+    checks.push({
+        name: "kubectl",
+        status: kubectl ? "pass" : "fail",
+        message: kubectl
+            ? `kubectl found at ${kubectl}`
+            : "kubectl was not found on PATH.",
+    });
+    if (!kubectl) {
+        return checks;
+    }
+
+    let scope: KubernetesScope;
+    try {
+        scope = resolveScope(instance, "this instance");
+    } catch (error) {
+        checks.push({
+            name: "cluster scope",
+            status: "fail",
+            message: error instanceof Error ? error.message : String(error),
+        });
+        return checks;
+    }
+
+    checks.push({
+        name: "cluster scope",
+        status: "pass",
+        message: `context ${scope.context}, namespace ${scope.namespace}`,
+    });
+
+    // A namespace read is the cheapest way to prove the context resolves, the
+    // namespace exists and the credentials still work, all in one call.
+    const namespaceRead = await captureKubectl(
+        kubectl,
+        ["get", "namespace", scope.namespace, "--context", scope.context],
+        context,
+    );
+    checks.push({
+        name: "namespace",
+        status: namespaceRead.code === 0 ? "pass" : "fail",
+        message:
+            namespaceRead.code === 0
+                ? `${scope.namespace} is reachable`
+                : `${scope.namespace} could not be read: ${firstLine(namespaceRead.stderr)}`,
+    });
+    if (namespaceRead.code !== 0) {
+        return checks;
+    }
+
+    // Ask the API server what this user may do rather than waiting for a
+    // command to fail, so a missing role reads as a permission problem
+    // instead of an unexplained error later on.
+    for (const [verb, resource] of requiredPermissions(instance)) {
+        const permission = await captureKubectl(
+            kubectl,
+            buildCanIArgs(scope, verb, resource),
+            context,
+        );
+        const allowed = permission.stdout.trim() === "yes";
+        checks.push({
+            name: "permissions",
+            status: allowed ? "pass" : "fail",
+            message: allowed
+                ? `may ${verb} ${resource}`
+                : `may not ${verb} ${resource} in namespace ${scope.namespace}. Grant it with a Role binding covering ${verb} on ${resource}.`,
+        });
+    }
+
+    for (const workload of resolveWorkloads(instance, undefined)) {
+        const read = await captureKubectl(
+            kubectl,
+            buildGetWorkloadArgs(scope, workload),
+            context,
+        );
+        checks.push({
+            name: "workload",
+            status: read.code === 0 ? "pass" : "fail",
+            message:
+                read.code === 0
+                    ? `${workload} exists`
+                    : `${workload} could not be read: ${firstLine(read.stderr)}`,
+        });
+    }
+
+    const pods = await captureKubectl(
+        kubectl,
+        buildGetPodsArgs(scope),
+        context,
+    );
+    checks.push({
+        name: "pods",
+        status: pods.code === 0 ? "pass" : "warn",
+        message:
+            pods.code === 0
+                ? `${countPodLines(pods.stdout)} pod(s) in ${scope.namespace}`
+                : `pods could not be listed: ${firstLine(pods.stderr)}`,
+    });
+
+    return checks;
+}
+
+function requiredPermissions(
+    instance: InstanceConfig,
+): Array<[verb: string, resource: string]> {
+    const permissions: Array<[string, string]> = [
+        ["get", "pods"],
+        ["get", "deployments"],
+        ["get", "pods/log"],
+    ];
+    if (instance.readOnly !== true) {
+        permissions.push(["patch", "deployments"]);
+    }
+    return permissions;
+}
+
+function countPodLines(stdout: string): number {
+    const lines = stdout.trim().split("\n").filter(Boolean);
+    return Math.max(lines.length - 1, 0);
+}
+
+function firstLine(value: string): string {
+    return value.trim().split("\n")[0] ?? "no output";
+}
+
+export async function resolveKubectl(
+    env: NodeJS.ProcessEnv,
+): Promise<string | undefined> {
+    const configured = env.EUDIPLO_KUBECTL;
+    if (configured) {
+        return (await exists(configured)) ? configured : undefined;
+    }
+    for (const candidate of executableCandidates("kubectl", env)) {
+        if (await exists(candidate)) {
+            return candidate;
+        }
+    }
+    return undefined;
+}
+
+interface CapturedCommand {
+    code: number;
+    stdout: string;
+    stderr: string;
+}
+
+async function captureKubectl(
+    kubectl: string,
+    args: string[],
+    context: CommandContext,
+): Promise<CapturedCommand> {
+    return new Promise((resolveProcess) => {
+        const child = spawn(kubectl, args, {
+            env: context.env,
+            stdio: ["ignore", "pipe", "pipe"],
+        });
+        let stdout = "";
+        let stderr = "";
+        child.stdout?.on("data", (chunk) => {
+            stdout += String(chunk);
+        });
+        child.stderr?.on("data", (chunk) => {
+            stderr += String(chunk);
+        });
+        child.on("error", (error) => {
+            resolveProcess({ code: 1, stdout, stderr: error.message });
+        });
+        child.on("close", (code) =>
+            resolveProcess({ code: code ?? 1, stdout, stderr }),
+        );
+    });
+}
 
 export async function ensureComposeProject(
     cwd: string,
@@ -376,6 +579,27 @@ function runtimePathCandidates(
         join(pathEntry, runtime),
         ...extensions.map((ext) => join(pathEntry, `${runtime}${ext}`)),
     ];
+}
+
+/**
+ * Generic PATH lookup, including the Windows PATHEXT extensions, for
+ * executables that have no well-known install location.
+ */
+function executableCandidates(
+    name: string,
+    env: NodeJS.ProcessEnv,
+): string[] {
+    const pathEntries = (env.PATH ?? "").split(delimiter).filter(Boolean);
+    if (process.platform !== "win32") {
+        return pathEntries.map((entry) => join(entry, name));
+    }
+    const extensions = (env.PATHEXT ?? ".EXE;.CMD;.BAT;.COM")
+        .split(";")
+        .filter(Boolean);
+    return pathEntries.flatMap((entry) => [
+        join(entry, name),
+        ...extensions.map((ext) => join(entry, `${name}${ext}`)),
+    ]);
 }
 
 async function exists(path: string): Promise<boolean> {

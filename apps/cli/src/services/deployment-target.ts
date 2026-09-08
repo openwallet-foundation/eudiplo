@@ -1,7 +1,7 @@
 import type { DeploymentTarget } from "../types.js";
 
 export function parseTarget(value: string): DeploymentTarget {
-    if (value === "compose" || value === "external") {
+    if (value === "compose" || value === "external" || value === "kubernetes") {
         return value;
     }
     throw new Error(`Unsupported target: ${value}`);
