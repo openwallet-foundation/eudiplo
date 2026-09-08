@@ -43,32 +43,12 @@ jobs:
     permissions:
       contents: read
 
-    services:
-      # Spin up a lightweight PostgreSQL for the backend
-      postgres:
-        image: postgres:16-alpine
-        env:
-          POSTGRES_USER: eudiplo
-          POSTGRES_PASSWORD: eudiplo
-          POSTGRES_DB: eudiplo
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     env:
       BASE_URL: http://localhost:3000
       TENANT_ID: demo
       CLIENT_ID: test-client
       CLIENT_SECRET: test-client-secret
-      # Use the postgres service above
-      DB_TYPE: postgres
-      DB_HOST: localhost
-      DB_PORT: 5432
-      DB_USERNAME: eudiplo
-      DB_PASSWORD: eudiplo
-      DB_DATABASE: eudiplo
+      K6_ENV_FILE: ${{ github.workspace }}/deployment/docker-compose/k6.env
 
     steps:
       # -------------------------------------------------------------------
@@ -76,17 +56,6 @@ jobs:
       # -------------------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v7
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v5
-        with:
-          run_install: false
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version-file: .nvmrc
-          cache: pnpm
 
       # -------------------------------------------------------------------
       # Install k6
@@ -100,62 +69,33 @@ jobs:
           sudo apt-get install -y k6
 
       # -------------------------------------------------------------------
-      # Build & start the backend
+      # Build the backend under test
       # -------------------------------------------------------------------
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build backend
-        run: pnpm --filter @eudiplo/backend build
-
-      - name: Start backend
-        run: |
-          # Copy default demo config assets
-          cp -r assets /tmp/eudiplo-assets
-          pnpm --filter @eudiplo/backend start:prod &
-          echo "BACKEND_PID=$!" >> "${GITHUB_ENV}"
-        env:
-          NODE_ENV: production
-          PORT: 3000
-          ASSETS_PATH: /tmp/eudiplo-assets
-          TEST_CLIENT_SECRET: ${{ env.CLIENT_SECRET }}
-
-      - name: Wait for backend to be ready
-        run: |
-          echo "Waiting for backend on ${BASE_URL}..."
-          for i in $(seq 1 30); do
-            if curl -sf "${BASE_URL}/health" >/dev/null 2>&1; then
-              echo "Backend is up after ${i}s"
-              exit 0
-            fi
-            sleep 2
-          done
-          echo "ERROR: Backend did not become ready in 60s" >&2
-          exit 1
-
-      # -------------------------------------------------------------------
-      # Run load tests
-      # -------------------------------------------------------------------
-      - name: Determine scenarios to run
-        id: scenarios
-        run: |
-          scenario="${{ inputs.scenario || 'all' }}"
-          if [[ "${scenario}" == "all" ]]; then
-            echo "args=" >> "${GITHUB_OUTPUT}"
-          else
-            echo "args=${scenario}" >> "${GITHUB_OUTPUT}"
-          fi
+      - name: Build backend image
+        run: docker build --target eudiplo --tag eudiplo:load-test .
 
       - name: Run k6 load tests
+        env:
+          EUDIPLO_IMAGE: eudiplo:load-test
+          K6_PROFILE: ${{ inputs.profile || 'smoke' }}
+        run: |
+          scenario="${{ inputs.scenario || 'all' }}"
+          args=()
+          if [[ "${scenario}" != "all" ]]; then
+            args+=("${scenario}")
+          fi
+
+          bash scripts/load-test/run-all.sh "${args[@]}"
+
+      - name: Capture stack logs on failure
+        if: failure()
         run: |
           mkdir -p scripts/load-test/results
-          bash scripts/load-test/run-all.sh ${{ steps.scenarios.outputs.args }}
-        env:
-          K6_PROFILE: ${{ inputs.profile || 'smoke' }}
-          BASE_URL: ${{ env.BASE_URL }}
-          TENANT_ID: ${{ env.TENANT_ID }}
-          CLIENT_ID: ${{ env.CLIENT_ID }}
-          CLIENT_SECRET: ${{ env.CLIENT_SECRET }}
+          docker compose \
+            --env-file "${K6_ENV_FILE}" \
+            --profile standard \
+            --project-directory deployment/docker-compose \
+            logs --no-color > scripts/load-test/results/compose.log 2>&1 || true
 
       # -------------------------------------------------------------------
       # Upload results regardless of pass/fail
@@ -169,11 +109,13 @@ jobs:
           retention-days: 30
 
       # -------------------------------------------------------------------
-      # Stop the backend
+      # Stop the test stack and remove its persistent data
       # -------------------------------------------------------------------
-      - name: Stop backend
+      - name: Stop test stack
         if: always()
         run: |
-          if [[ -n "${BACKEND_PID:-}" ]]; then
-            kill "${BACKEND_PID}" 2>/dev/null || true
-          fi
+          docker compose \
+            --env-file "${K6_ENV_FILE}" \
+            --profile standard \
+            --project-directory deployment/docker-compose \
+            down --volumes --remove-orphans

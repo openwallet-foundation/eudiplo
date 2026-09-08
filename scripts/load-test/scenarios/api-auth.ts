@@ -74,7 +74,7 @@ export default function (): void {
         tokenDuration.add(Date.now() - start);
 
         const ok = check(res, {
-            'status is 200': (r) => r.status === 200,
+            'status is 201': (r) => r.status === 201,
             'access_token present': (r) => {
                 try {
                     return !!r.json('access_token');
