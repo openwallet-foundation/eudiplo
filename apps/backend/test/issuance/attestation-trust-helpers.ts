@@ -6,6 +6,56 @@
 import * as x509 from "@peculiar/x509";
 import { X509Certificate, X509CertificateGenerator } from "@peculiar/x509";
 import { decodeJwt, decodeProtectedHeader, importPKCS8, SignJWT } from "jose";
+import type { INestApplication } from "@nestjs/common";
+import nock from "nock";
+import request from "supertest";
+import type { App } from "supertest/types";
+
+/** Configure an authenticated provider list for a test, restoring the prior config afterwards. */
+export async function configureTrustedAttestationProvider(
+    app: INestApplication<App>,
+    authToken: string,
+) {
+    const provider = await generateSelfSignedCertificate();
+    const listSigner = await generateSelfSignedCertificate();
+    const path = `/key-attestation-${crypto.randomUUID()}`;
+    const current = await request(app.getHttpServer())
+        .get("/issuer/config")
+        .trustLocalhost()
+        .set("Authorization", `Bearer ${authToken}`)
+        .expect(200);
+    await request(app.getHttpServer())
+        .post("/issuer/config")
+        .trustLocalhost()
+        .set("Authorization", `Bearer ${authToken}`)
+        .send({
+            ...current.body,
+            walletProviderTrustLists: [
+                {
+                    url: `http://localhost:8787${path}`,
+                    verifierX509Der: listSigner.certificate.toString("base64"),
+                },
+            ],
+        })
+        .expect(201);
+    nock("http://localhost:8787")
+        .get(path)
+        .reply(
+            200,
+            await createMockTrustListJwt(listSigner, provider.certificate),
+            { "Content-Type": "application/jwt" },
+        );
+    return {
+        provider,
+        restore: () =>
+            request(app.getHttpServer())
+                .post("/issuer/config")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send(current.body)
+                .expect(201),
+    };
+}
 
 export async function generateSelfSignedCertificate(): Promise<{
     certificate: X509Certificate;

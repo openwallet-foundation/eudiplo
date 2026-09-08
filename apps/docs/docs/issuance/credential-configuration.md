@@ -29,6 +29,8 @@ The data object for the import can be found in the [API Documentation](../refere
 
 ### Optional Fields
 
+- `config.proofTypesSupported`: **OPTIONAL** - Accepted credential proof types: `jwt`, `attestation`, or both. Defaults to both, preferring `attestation`. See [Key Attestation](#key-attestation).
+- `config.keyAttestationsRequired`: **OPTIONAL** - Key-attestation requirements advertised for JWT proofs. See [Key Attestation](#key-attestation).
 - `description`: **OPTIONAL** - Human-readable description of the credential. Will not be displayed to the end user.
 - `vct`: **OPTIONAL** - [VC Type Metadata](https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-09.html#name-sd-jwt-vc-type-metadata) provided via the `/{tenantId}/credentials-metadata/vct/{id}` endpoint. This link will be automatically added to the credential.
 - `keyChainId`: **OPTIONAL** - Unique identifier for the key chain used to sign the credential. If not provided, the key chain with `attestation` usage type will be used. See [Signing Key Chain](#signing-key-chain) for details.
@@ -219,9 +221,36 @@ Where:
 
 When `keyBinding` is enabled, EUDIPLO:
 
-1. Requires the wallet to provide a proof of possession during the credential request
+1. Validates the holder-key evidence supplied in the credential request: a JWT proof or a trusted key attestation
 2. Includes a `cnf` (confirmation) claim in the credential with the wallet's public key
 3. Enables verifiers to cryptographically verify that the credential presenter is the legitimate holder
+
+## Key Attestation
+
+A key attestation describes the holder keys and their storage or user-authentication properties. EUDIPLO verifies its signature and provider trust before issuing a credential. This is separate from wallet attestation used to authenticate the OAuth client at the authorization server.
+
+Configure these fields inside the credential's `config` object. For example, merge this fragment into an existing credential configuration to advertise JWT proofs with a key attestation:
+
+```json
+{
+    "config": {
+        "proofTypesSupported": ["jwt"],
+        "keyAttestationsRequired": {
+            "key_storage": ["iso_18045_high"],
+            "user_authentication": ["iso_18045_high"]
+        }
+    }
+}
+```
+
+`keyAttestationsRequired` is published as `proof_types_supported.jwt.key_attestations_required` in issuer metadata. An empty object advertises a key-attestation requirement without additional storage or authentication constraints.
+
+EUDIPLO accepts key attestations in two forms:
+
+- `jwt`: the wallet signs a holder proof and puts `key_attestation` in its protected header. Verification checks that the signing key is among the attested keys and that the attestation provider is trusted.
+- `attestation`: the wallet sends the key-attestation JWT directly in `proofs.attestation`. The current implementation requires exactly one attested key per attestation proof.
+
+For either form, configure trusted providers in the **issuance-level** `walletProviderTrustLists`. AS-specific trust lists apply only to wallet authentication. See [Key Attestation Trust](issuance-configuration.md#key-attestation-trust) for the shared trust-list configuration and upgrade behavior.
 
 ## Credential Reuse Policy
 

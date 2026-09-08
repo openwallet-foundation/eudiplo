@@ -20,6 +20,14 @@ export const ChainedAsTokenConfigSchema = z
     })
     .strict();
 
+const WalletProviderTrustListRefSchema = z
+    .object({
+        url: z.string(),
+        verifierKey: z.record(z.string(), z.unknown()).optional(),
+        verifierX509Der: z.string().optional(),
+    })
+    .strict();
+
 const ChainedAsVpConfigSchema = z
     .object({
         enabled: z.boolean(),
@@ -34,6 +42,10 @@ const ChainedAsConfigSchema = z
         vp: ChainedAsVpConfigSchema.optional(),
         token: ChainedAsTokenConfigSchema.optional(),
         requireDPoP: z.boolean().optional(),
+        walletAttestationRequired: z.boolean().optional(),
+        walletProviderTrustLists: z
+            .array(WalletProviderTrustListRefSchema)
+            .optional(),
     })
     .strict();
 
@@ -226,4 +238,22 @@ export class ChainedAsConfig extends createZodDto(ChainedAsConfigSchema) {
         default: true,
     })
     requireDPoP?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Require wallet attestation for this authorization server. Omit to inherit the issuance default.",
+    })
+    walletAttestationRequired?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.",
+        type: "array",
+        items: { type: "object" },
+    })
+    walletProviderTrustLists?: Array<{
+        url: string;
+        verifierKey?: Record<string, unknown>;
+        verifierX509Der?: string;
+    }>;
 }

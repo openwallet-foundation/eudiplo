@@ -16,7 +16,7 @@ EUDIPLO implements OID4VCI to enable credential issuance to EUDI Wallets. The is
 2. **Authorization**: The wallet authenticates the user (via one of the configured authorization servers)
 3. **Token Exchange**: The wallet exchanges an authorization code for an access token
 4. **Credential Request**: The wallet requests one or more credentials using the access token
-5. **Notification** *(optional)*: The wallet notifies EUDIPLO whether the credential was accepted or rejected
+5. **Notification** _(optional)_: The wallet notifies EUDIPLO whether the credential was accepted or rejected
 
 ---
 
@@ -145,7 +145,7 @@ EUDIPLO hosts a minimal OAuth AS that issues authorization codes directly. No ex
 3. User approves; EUDIPLO issues an authorization code
 4. Wallet exchanges code for access token
 
-{/*TODO(verify): Confirm whether built-in AS supports custom user attributes or only minimal flows*/}
+<!-- TODO(verify): Confirm whether built-in AS supports custom user attributes or only minimal flows -->
 
 ---
 
@@ -216,7 +216,7 @@ When `dPopRequired: true`, the wallet must include a DPoP proof in the `DPoP` he
 
 **Wallet Attestation:**
 
-When `walletAttestationRequired: true`, the wallet must include `OAuth-Client-Attestation` and `OAuth-Client-Attestation-PoP` headers. These headers contain a signed attestation from the wallet provider proving the wallet's authenticity.
+When wallet attestation is required by the selected EUDIPLO-managed authorization server, the wallet must include `OAuth-Client-Attestation` and `OAuth-Client-Attestation-PoP` headers on PAR and token requests. These headers contain a signed attestation from the wallet provider proving the wallet client's authenticity. Authorization-server-specific settings override issuance-level defaults.
 
 **Access Token Structure:**
 
@@ -251,17 +251,19 @@ The credential endpoint is where the wallet requests the actual credential. This
 **Request Flow:**
 
 1. **Validate Access Token**: EUDIPLO verifies the access token signature, expiration, audience, and issuer
-2. **Validate Proof**: The wallet must prove possession of its DID or key material (JWT or Attestation proof)
-3. **Fetch Claims** *(optional)*: If the credential configuration references an attribute provider, EUDIPLO fetches user attributes from the external system
+2. **Validate Proof**: The wallet must prove possession of, or provide trusted attestation for, the holder key material to bind into the credential
+3. **Fetch Claims** _(optional)_: If the credential configuration references an attribute provider, EUDIPLO fetches user attributes from the external system
 4. **Sign Credential**: EUDIPLO signs the credential using the attestation key chain
 5. **Return Credential**: The credential (SD-JWT VC or mDOC) is returned to the wallet
 
 **Proof Types:**
 
-| Proof Type | Description |
-|------------|-------------|
-| `jwt` | Standard JWT proof signed by the wallet's key |
-| `attestation` | Key attestation proof using HAIP or similar attestation formats |
+| Proof Type    | Description                                                                                            |
+| ------------- | ------------------------------------------------------------------------------------------------------ |
+| `jwt`         | Standard JWT proof signed by the wallet's holder key; may include a `key_attestation` protected header |
+| `attestation` | Key attestation JWT sent directly as the credential request proof                                      |
+
+Key attestation is separate from wallet attestation. It is advertised per credential with `config.keyAttestationsRequired` and validated by the credential issuer using the issuance-level `walletProviderTrustLists`.
 
 **Batch Issuance:**
 
@@ -298,9 +300,9 @@ The credential is signed using the attestation key chain referenced by the crede
 
 **Trust Format:**
 
-| Mode | Description |
-|------|-------------|
-| `x5c` | Include X.509 certificate chain in JWT header (`x5c` claim) |
+| Mode         | Description                                                      |
+| ------------ | ---------------------------------------------------------------- |
+| `x5c`        | Include X.509 certificate chain in JWT header (`x5c` claim)      |
 | `federation` | Include issuer entity ID in `iss` claim (federation-based trust) |
 
 **Selective Disclosure:**
@@ -361,11 +363,11 @@ After receiving a credential, the wallet can notify EUDIPLO whether the credenti
 
 **Events:**
 
-| Event | Description |
-| ------- | ------------- |
+| Event                 | Description                  |
+| --------------------- | ---------------------------- |
 | `credential_accepted` | User accepted the credential |
-| `credential_deleted` | User deleted the credential |
-| `credential_failure` | Credential issuance failed |
+| `credential_deleted`  | User deleted the credential  |
+| `credential_failure`  | Credential issuance failed   |
 
 **Webhook Integration:**
 
@@ -384,7 +386,7 @@ stateDiagram-v2
     Authorized --> TokenIssued: Token Exchanged
     TokenIssued --> Completed: Credential Issued
     Completed --> [*]
-    
+
     Active --> Expired: TTL Exceeded
     Authorized --> Expired: TTL Exceeded
     TokenIssued --> Expired: TTL Exceeded
@@ -395,10 +397,10 @@ stateDiagram-v2
 
 Sessions are cleaned up based on the tenant's `sessionConfig`:
 
-| Cleanup Mode | Behavior |
-|--------------|----------|
-| `full` | Completely delete the session and all associated data |
-| `anonymize` | Keep metadata (status, timestamps) but remove personal data (credentials, user attributes) |
+| Cleanup Mode | Behavior                                                                                   |
+| ------------ | ------------------------------------------------------------------------------------------ |
+| `full`       | Completely delete the session and all associated data                                      |
+| `anonymize`  | Keep metadata (status, timestamps) but remove personal data (credentials, user attributes) |
 
 **Single-Use Enforcement:**
 
@@ -410,11 +412,11 @@ Sessions are marked `consumed: true` after the first credential request. This pr
 
 The issuance flow integrates with the Key Management system:
 
-| Operation | Key Chain | Algorithm |
-| ----------- | ----------- | ----------- |
-| **Access Token Signing** | `IssuanceConfig.signingKeyId` (usage: `access`) | ES256 |
-| **Credential Signing** | Attestation key chain (usage: `attestation`) | ES256 |
-| **Status List Signing** | Status list key chain (usage: `statusList`) | ES256 |
+| Operation                | Key Chain                                       | Algorithm |
+| ------------------------ | ----------------------------------------------- | --------- |
+| **Access Token Signing** | `IssuanceConfig.signingKeyId` (usage: `access`) | ES256     |
+| **Credential Signing**   | Attestation key chain (usage: `attestation`)    | ES256     |
+| **Status List Signing**  | Status list key chain (usage: `statusList`)     | ES256     |
 
 See [Cryptography](./cryptography.md) for key management details.
 
@@ -424,16 +426,16 @@ See [Cryptography](./cryptography.md) for key management details.
 
 EUDIPLO implements the following OID4VCI features:
 
-| Feature | Supported | Notes |
-| --------- | ----------- | ------- |
-| Pre-Authorized Code Flow | ✅ | Issue credentials without user authentication |
-| Authorization Code Flow | ✅ | Issue credentials with user authentication |
-| Batch Credential Issuance | ✅ | Multiple credentials in one request |
-| Deferred Credential Endpoint | ✅ | Support for async issuance |
-| Notification Endpoint | ✅ | Wallet acknowledgment of credential acceptance |
-| DPoP | ✅ | Proof-of-possession tokens |
-| Wallet Attestation | ✅ | Verify wallet provider trustworthiness |
-| Credential Refresh | ❌ | Not yet implemented |
+| Feature                      | Supported | Notes                                          |
+| ---------------------------- | --------- | ---------------------------------------------- |
+| Pre-Authorized Code Flow     | ✅        | Issue credentials without user authentication  |
+| Authorization Code Flow      | ✅        | Issue credentials with user authentication     |
+| Batch Credential Issuance    | ✅        | Multiple credentials in one request            |
+| Deferred Credential Endpoint | ✅        | Support for async issuance                     |
+| Notification Endpoint        | ✅        | Wallet acknowledgment of credential acceptance |
+| DPoP                         | ✅        | Proof-of-possession tokens                     |
+| Wallet Attestation           | ✅        | Verify wallet provider trustworthiness         |
+| Credential Refresh           | ❌        | Not yet implemented                            |
 
 See [Supported Protocols](../reference/protocols.md) for full protocol coverage.
 

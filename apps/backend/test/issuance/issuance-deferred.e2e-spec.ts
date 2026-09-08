@@ -12,7 +12,7 @@ import {
 import { digest } from "@owf/crypto";
 import { X509Certificate } from "@peculiar/x509";
 import { SDJwtVcInstance } from "@sd-jwt/sd-jwt-vc";
-import { exportJWK, generateKeyPair } from "jose";
+import { exportJWK, generateKeyPair, SignJWT } from "jose";
 import nock from "nock";
 import request from "supertest";
 import { App } from "supertest/types";
@@ -27,6 +27,7 @@ import {
 } from "../utils.js";
 import {
     addX5cHeaderToKeyAttestationJwt,
+    configureTrustedAttestationProvider,
     createMockTrustListJwt,
     generateSelfSignedCertificate,
 } from "./attestation-trust-helpers.js";
@@ -259,152 +260,161 @@ describe("Issuance - Deferred Credential Flow", () => {
     });
 
     test("deferred credential issuance with attestation proof type", async () => {
-        const pollingInterval = 2;
+        const trust = await configureTrustedAttestationProvider(app, authToken);
+        try {
+            const pollingInterval = 2;
 
-        nock("http://localhost:8787")
-            .post("/deferred-attestation", () => true)
-            .reply(200, {
-                deferred: true,
-                interval: pollingInterval,
-            });
+            nock("http://localhost:8787")
+                .post("/deferred-attestation", () => true)
+                .reply(200, {
+                    deferred: true,
+                    interval: pollingInterval,
+                });
 
-        const offerResponse = await request(app.getHttpServer())
-            .post("/issuer/offer")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                flow: "pre_authorized_code",
-                response_type: "uri",
-                credentialConfigurationIds: ["citizen"],
-                credentialClaims: {
-                    citizen: {
-                        type: "webhook",
-                        webhook: {
-                            url: "http://localhost:8787/deferred-attestation",
-                            auth: { type: "none" },
+            const offerResponse = await request(app.getHttpServer())
+                .post("/issuer/offer")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    flow: "pre_authorized_code",
+                    response_type: "uri",
+                    credentialConfigurationIds: ["citizen"],
+                    credentialClaims: {
+                        citizen: {
+                            type: "webhook",
+                            webhook: {
+                                url: "http://localhost:8787/deferred-attestation",
+                                auth: { type: "none" },
+                            },
                         },
                     },
+                })
+                .expect(201);
+
+            const attestedHolderKeyPair = await generateKeyPair("ES256", {
+                extractable: true,
+            });
+            const attestedHolderPublicJwk = await exportJWK(
+                attestedHolderKeyPair.publicKey,
+            );
+
+            const attestationSignerKeyPair = trust.provider;
+            const attestationSignerPrivateJwk = await exportJWK(
+                attestationSignerKeyPair.privateKey,
+            );
+            const attestationSignerPublicJwk = await exportJWK(
+                attestationSignerKeyPair.publicKey,
+            );
+
+            const client = new Openid4vciClient({
+                callbacks: {
+                    ...callbacks,
+                    clientAuthentication: clientAuthenticationAnonymous(),
+                    signJwt: getSignJwtCallback([
+                        attestationSignerPrivateJwk as Jwk,
+                    ]),
                 },
-            })
-            .expect(201);
-
-        const attestedHolderKeyPair = await generateKeyPair("ES256", {
-            extractable: true,
-        });
-        const attestedHolderPublicJwk = await exportJWK(
-            attestedHolderKeyPair.publicKey,
-        );
-
-        const attestationSignerKeyPair = await generateKeyPair("ES256", {
-            extractable: true,
-        });
-        const attestationSignerPrivateJwk = await exportJWK(
-            attestationSignerKeyPair.privateKey,
-        );
-        const attestationSignerPublicJwk = await exportJWK(
-            attestationSignerKeyPair.publicKey,
-        );
-
-        const client = new Openid4vciClient({
-            callbacks: {
-                ...callbacks,
-                clientAuthentication: clientAuthenticationAnonymous(),
-                signJwt: getSignJwtCallback([
-                    attestationSignerPrivateJwk as Jwk,
-                ]),
-            },
-        });
-
-        const credentialOffer = await client.resolveCredentialOffer(
-            offerResponse.body.uri,
-        );
-
-        const issuerMetadata = await client.resolveIssuerMetadata(
-            credentialOffer.credential_issuer,
-        );
-
-        const { accessTokenResponse } =
-            await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
-                credentialOffer,
-                issuerMetadata,
             });
 
-        const nonceResponse = await client.requestNonce({ issuerMetadata });
+            const credentialOffer = await client.resolveCredentialOffer(
+                offerResponse.body.uri,
+            );
 
-        const attestationJwt = await createKeyAttestationJwt({
-            callbacks: {
-                ...callbacks,
-                signJwt: getSignJwtCallback([
-                    attestationSignerPrivateJwk as Jwk,
-                ]),
-            },
-            signer: {
-                method: "jwk",
-                alg: "ES256",
-                publicJwk: attestationSignerPublicJwk,
-            } as JwtSignerJwk,
-            issuedAt: new Date(),
-            use: "proof_type.attestation",
-            attestedKeys: [attestedHolderPublicJwk as Jwk],
-            nonce: nonceResponse.c_nonce,
-        });
+            const issuerMetadata = await client.resolveIssuerMetadata(
+                credentialOffer.credential_issuer,
+            );
 
-        const credentialResponse = await client.retrieveCredentials({
-            accessToken: accessTokenResponse.access_token,
-            credentialConfigurationId:
-                credentialOffer.credential_configuration_ids[0],
-            issuerMetadata,
-            proofs: {
-                attestation: [attestationJwt],
-            },
-        });
+            const { accessTokenResponse } =
+                await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
+                    credentialOffer,
+                    issuerMetadata,
+                });
 
-        expect(
-            credentialResponse.credentialResponse.transaction_id,
-        ).toBeDefined();
-        expect(
-            credentialResponse.credentialResponse.credential,
-        ).toBeUndefined();
+            const nonceResponse = await client.requestNonce({ issuerMetadata });
 
-        const transactionId =
-            credentialResponse.credentialResponse.transaction_id!;
-
-        const deferredResult1 = await retrieveDeferredCredential(
-            app,
-            issuerMetadata,
-            accessTokenResponse.access_token,
-            transactionId,
-        );
-        expect(deferredResult1.statusCode).toBe(400);
-        expect(deferredResult1.body.error).toBe("issuance_pending");
-
-        const town = "Hamburg";
-        await request(app.getHttpServer())
-            .post(`/issuer/deferred/${transactionId}/complete`)
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                claims: {
-                    town,
+            const attestationJwt = await createKeyAttestationJwt({
+                callbacks: {
+                    ...callbacks,
+                    signJwt: getSignJwtCallback([
+                        attestationSignerPrivateJwk as Jwk,
+                    ]),
                 },
-            })
-            .expect(200);
+                signer: {
+                    method: "jwk",
+                    alg: "ES256",
+                    publicJwk: attestationSignerPublicJwk,
+                } as JwtSignerJwk,
+                issuedAt: new Date(),
+                use: "proof_type.attestation",
+                attestedKeys: [attestedHolderPublicJwk as Jwk],
+                nonce: nonceResponse.c_nonce,
+            });
 
-        const deferredResult2 = await retrieveDeferredCredential(
-            app,
-            issuerMetadata,
-            accessTokenResponse.access_token,
-            transactionId,
-        );
-        expect(deferredResult2.statusCode).toBe(200);
-        expect(deferredResult2.body.credential).toBeDefined();
+            const credentialResponse = await client.retrieveCredentials({
+                accessToken: accessTokenResponse.access_token,
+                credentialConfigurationId:
+                    credentialOffer.credential_configuration_ids[0],
+                issuerMetadata,
+                proofs: {
+                    attestation: [
+                        await addX5cHeaderToKeyAttestationJwt(
+                            attestationJwt,
+                            trust.provider.privateKey,
+                            trust.provider.certificate,
+                        ),
+                    ],
+                },
+            });
 
-        const claims = await sdjwt.getClaims(
-            deferredResult2.body.credential as string,
-        );
-        expect(claims.town).toBe(town);
+            expect(
+                credentialResponse.credentialResponse.transaction_id,
+            ).toBeDefined();
+            expect(
+                credentialResponse.credentialResponse.credential,
+            ).toBeUndefined();
 
-        expect(nock.isDone()).toBe(true);
+            const transactionId =
+                credentialResponse.credentialResponse.transaction_id!;
+
+            const deferredResult1 = await retrieveDeferredCredential(
+                app,
+                issuerMetadata,
+                accessTokenResponse.access_token,
+                transactionId,
+            );
+            expect(deferredResult1.statusCode).toBe(400);
+            expect(deferredResult1.body.error).toBe("issuance_pending");
+
+            const town = "Hamburg";
+            await request(app.getHttpServer())
+                .post(`/issuer/deferred/${transactionId}/complete`)
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .send({
+                    claims: {
+                        town,
+                    },
+                })
+                .expect(200);
+
+            const deferredResult2 = await retrieveDeferredCredential(
+                app,
+                issuerMetadata,
+                accessTokenResponse.access_token,
+                transactionId,
+            );
+            expect(deferredResult2.statusCode).toBe(200);
+            expect(deferredResult2.body.credential).toBeDefined();
+
+            const claims = await sdjwt.getClaims(
+                deferredResult2.body.credential as string,
+            );
+            expect(claims.town).toBe(town);
+
+            expect(nock.isDone()).toBe(true);
+        } finally {
+            await trust.restore();
+        }
     });
 
     test("deferred credential - invalid transaction_id", async () => {
@@ -817,183 +827,225 @@ describe("Issuance - Deferred Credential Flow", () => {
         }
     });
 
-    test("deferred: enforces configured trust list for attestation proof x5c chains", async () => {
-        const trustListUrl =
-            "http://localhost:8787/deferred-key-attestation-trust-list-chain";
-        const trustListSigningCert = await generateSelfSignedCertificate();
-        const currentConfig = await request(app.getHttpServer())
-            .get("/issuer/config")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
+    test.each(["jwt", "attestation"] as const)(
+        "deferred: enforces configured trust list for attestation proof x5c chains (%s)",
+        async (proofType) => {
+            const trustListUrl =
+                "http://localhost:8787/deferred-key-attestation-trust-list-chain";
+            const trustListSigningCert = await generateSelfSignedCertificate();
+            const currentConfig = await request(app.getHttpServer())
+                .get("/issuer/config")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .expect(200);
 
-        await request(app.getHttpServer())
-            .post("/issuer/config")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                ...currentConfig.body,
-                walletProviderTrustLists: [
-                    {
-                        url: trustListUrl,
-                        verifierX509Der:
-                            trustListSigningCert.certificate.toString("base64"),
-                    },
-                ],
-            } as IssuanceDto)
-            .expect(201);
-
-        try {
-            const trustedWalletProviderCert =
-                await generateSelfSignedCertificate();
-            const untrustedWalletProviderCert =
-                await generateSelfSignedCertificate();
-            const trustListJwt = await createMockTrustListJwt(
-                trustListSigningCert,
-                trustedWalletProviderCert.certificate,
-            );
-
-            nock("http://localhost:8787")
-                .persist()
-                .get("/deferred-key-attestation-trust-list-chain")
-                .reply(200, trustListJwt, {
-                    "Content-Type": "application/jwt",
-                });
-
-            const deferredIssuanceWithAttestation = async (
-                attestationCert: {
-                    certificate: X509Certificate;
-                    privateKey: CryptoKey;
-                    publicKey: CryptoKey;
-                },
-                expectSuccess: boolean,
-            ) => {
-                nock("http://localhost:8787")
-                    .post("/deferred-chain-test", () => true)
-                    .reply(200, { deferred: true, interval: 2 });
-
-                const offerResponse = await request(app.getHttpServer())
-                    .post("/issuer/offer")
-                    .trustLocalhost()
-                    .set("Authorization", `Bearer ${authToken}`)
-                    .send({
-                        flow: "pre_authorized_code",
-                        response_type: "uri",
-                        credentialConfigurationIds: ["citizen"],
-                        credentialClaims: {
-                            citizen: {
-                                type: "webhook",
-                                webhook: {
-                                    url: "http://localhost:8787/deferred-chain-test",
-                                    auth: { type: "none" },
-                                },
-                            },
-                        },
-                    })
-                    .expect(201);
-
-                const attestationSignerPrivateJwk = await exportJWK(
-                    attestationCert.privateKey,
-                );
-                const attestationSignerPublicJwk = await exportJWK(
-                    attestationCert.publicKey,
-                );
-                const attestedHolderKeyPair = await generateKeyPair("ES256", {
-                    extractable: true,
-                });
-                const attestedHolderPublicJwk = await exportJWK(
-                    attestedHolderKeyPair.publicKey,
-                );
-
-                const client = new Openid4vciClient({
-                    callbacks: {
-                        ...callbacks,
-                        clientAuthentication: clientAuthenticationAnonymous(),
-                    },
-                });
-                const credentialOffer = await client.resolveCredentialOffer(
-                    offerResponse.body.uri,
-                );
-                const issuerMetadata = await client.resolveIssuerMetadata(
-                    credentialOffer.credential_issuer,
-                );
-                const { accessTokenResponse } =
-                    await client.retrievePreAuthorizedCodeAccessTokenFromOffer({
-                        credentialOffer,
-                        issuerMetadata,
-                    });
-                const nonceResponse = await client.requestNonce({
-                    issuerMetadata,
-                });
-
-                const attestationJwt = await createKeyAttestationJwt({
-                    callbacks: {
-                        ...callbacks,
-                        signJwt: getSignJwtCallback([
-                            attestationSignerPrivateJwk as Jwk,
-                        ]),
-                    },
-                    signer: {
-                        method: "jwk",
-                        alg: "ES256",
-                        publicJwk: attestationSignerPublicJwk,
-                    } as JwtSignerJwk,
-                    issuedAt: new Date(),
-                    use: "proof_type.attestation",
-                    attestedKeys: [attestedHolderPublicJwk as Jwk],
-                    nonce: nonceResponse.c_nonce,
-                });
-
-                const attestationJwtWithX5c =
-                    await addX5cHeaderToKeyAttestationJwt(
-                        attestationJwt,
-                        attestationCert.privateKey,
-                        attestationCert.certificate,
-                    );
-
-                if (expectSuccess) {
-                    const credentialResponse = await client.retrieveCredentials(
-                        {
-                            accessToken: accessTokenResponse.access_token,
-                            credentialConfigurationId:
-                                credentialOffer.credential_configuration_ids[0],
-                            issuerMetadata,
-                            proofs: { attestation: [attestationJwtWithX5c] },
-                        },
-                    );
-                    expect(
-                        credentialResponse.credentialResponse.transaction_id,
-                    ).toBeDefined();
-                } else {
-                    await expect(
-                        client.retrieveCredentials({
-                            accessToken: accessTokenResponse.access_token,
-                            credentialConfigurationId:
-                                credentialOffer.credential_configuration_ids[0],
-                            issuerMetadata,
-                            proofs: { attestation: [attestationJwtWithX5c] },
-                        }),
-                    ).rejects.toThrow();
-                }
-            };
-
-            // Untrusted signer → should be rejected
-            await deferredIssuanceWithAttestation(
-                untrustedWalletProviderCert,
-                false,
-            );
-            // Trusted signer → deferred response (transaction_id returned)
-            await deferredIssuanceWithAttestation(
-                trustedWalletProviderCert,
-                true,
-            );
-        } finally {
             await request(app.getHttpServer())
                 .post("/issuer/config")
                 .trustLocalhost()
                 .set("Authorization", `Bearer ${authToken}`)
-                .send(currentConfig.body as IssuanceDto)
+                .send({
+                    ...currentConfig.body,
+                    walletProviderTrustLists: [
+                        {
+                            url: trustListUrl,
+                            verifierX509Der:
+                                trustListSigningCert.certificate.toString(
+                                    "base64",
+                                ),
+                        },
+                    ],
+                } as IssuanceDto)
                 .expect(201);
-        }
-    });
+
+            try {
+                const trustedWalletProviderCert =
+                    await generateSelfSignedCertificate();
+                const untrustedWalletProviderCert =
+                    await generateSelfSignedCertificate();
+                const trustListJwt = await createMockTrustListJwt(
+                    trustListSigningCert,
+                    trustedWalletProviderCert.certificate,
+                );
+
+                nock("http://localhost:8787")
+                    .persist()
+                    .get("/deferred-key-attestation-trust-list-chain")
+                    .reply(200, trustListJwt, {
+                        "Content-Type": "application/jwt",
+                    });
+
+                const deferredIssuanceWithAttestation = async (
+                    attestationCert: {
+                        certificate: X509Certificate;
+                        privateKey: CryptoKey;
+                        publicKey: CryptoKey;
+                    },
+                    expectSuccess: boolean,
+                ) => {
+                    nock("http://localhost:8787")
+                        .post("/deferred-chain-test", () => true)
+                        .reply(200, { deferred: true, interval: 2 });
+
+                    const offerResponse = await request(app.getHttpServer())
+                        .post("/issuer/offer")
+                        .trustLocalhost()
+                        .set("Authorization", `Bearer ${authToken}`)
+                        .send({
+                            flow: "pre_authorized_code",
+                            response_type: "uri",
+                            credentialConfigurationIds: ["citizen"],
+                            credentialClaims: {
+                                citizen: {
+                                    type: "webhook",
+                                    webhook: {
+                                        url: "http://localhost:8787/deferred-chain-test",
+                                        auth: { type: "none" },
+                                    },
+                                },
+                            },
+                        })
+                        .expect(201);
+
+                    const attestationSignerPrivateJwk = await exportJWK(
+                        attestationCert.privateKey,
+                    );
+                    const attestationSignerPublicJwk = await exportJWK(
+                        attestationCert.publicKey,
+                    );
+                    const attestedHolderKeyPair = await generateKeyPair(
+                        "ES256",
+                        {
+                            extractable: true,
+                        },
+                    );
+                    const attestedHolderPublicJwk = await exportJWK(
+                        attestedHolderKeyPair.publicKey,
+                    );
+
+                    const client = new Openid4vciClient({
+                        callbacks: {
+                            ...callbacks,
+                            clientAuthentication:
+                                clientAuthenticationAnonymous(),
+                        },
+                    });
+                    const credentialOffer = await client.resolveCredentialOffer(
+                        offerResponse.body.uri,
+                    );
+                    const issuerMetadata = await client.resolveIssuerMetadata(
+                        credentialOffer.credential_issuer,
+                    );
+                    const { accessTokenResponse } =
+                        await client.retrievePreAuthorizedCodeAccessTokenFromOffer(
+                            {
+                                credentialOffer,
+                                issuerMetadata,
+                            },
+                        );
+                    const nonceResponse = await client.requestNonce({
+                        issuerMetadata,
+                    });
+
+                    const attestationJwt = await createKeyAttestationJwt({
+                        callbacks: {
+                            ...callbacks,
+                            signJwt: getSignJwtCallback([
+                                attestationSignerPrivateJwk as Jwk,
+                            ]),
+                        },
+                        signer: {
+                            method: "jwk",
+                            alg: "ES256",
+                            publicJwk: attestationSignerPublicJwk,
+                        } as JwtSignerJwk,
+                        issuedAt: new Date(),
+                        use:
+                            proofType === "jwt"
+                                ? "proof_type.jwt"
+                                : "proof_type.attestation",
+                        expiresAt: new Date(Date.now() + 300_000),
+                        attestedKeys: [attestedHolderPublicJwk as Jwk],
+                        nonce: nonceResponse.c_nonce,
+                    });
+
+                    const attestationJwtWithX5c =
+                        await addX5cHeaderToKeyAttestationJwt(
+                            attestationJwt,
+                            attestationCert.privateKey,
+                            attestationCert.certificate,
+                        );
+
+                    const proofs =
+                        proofType === "jwt"
+                            ? {
+                                  jwt: [
+                                      await new SignJWT({
+                                          nonce: nonceResponse.c_nonce,
+                                      })
+                                          .setProtectedHeader({
+                                              alg: "ES256",
+                                              typ: "openid4vci-proof+jwt",
+                                              jwk: attestedHolderPublicJwk,
+                                              key_attestation:
+                                                  attestationJwtWithX5c,
+                                          })
+                                          .setAudience(
+                                              credentialOffer.credential_issuer,
+                                          )
+                                          .setIssuedAt()
+                                          .sign(
+                                              attestedHolderKeyPair.privateKey,
+                                          ),
+                                  ],
+                              }
+                            : { attestation: [attestationJwtWithX5c] };
+
+                    if (expectSuccess) {
+                        const credentialResponse =
+                            await client.retrieveCredentials({
+                                accessToken: accessTokenResponse.access_token,
+                                credentialConfigurationId:
+                                    credentialOffer
+                                        .credential_configuration_ids[0],
+                                issuerMetadata,
+                                proofs,
+                            });
+                        expect(
+                            credentialResponse.credentialResponse
+                                .transaction_id,
+                        ).toBeDefined();
+                    } else {
+                        await expect(
+                            client.retrieveCredentials({
+                                accessToken: accessTokenResponse.access_token,
+                                credentialConfigurationId:
+                                    credentialOffer
+                                        .credential_configuration_ids[0],
+                                issuerMetadata,
+                                proofs,
+                            }),
+                        ).rejects.toThrow();
+                    }
+                };
+
+                // Untrusted signer → should be rejected
+                await deferredIssuanceWithAttestation(
+                    untrustedWalletProviderCert,
+                    false,
+                );
+                // Trusted signer → deferred response (transaction_id returned)
+                await deferredIssuanceWithAttestation(
+                    trustedWalletProviderCert,
+                    true,
+                );
+            } finally {
+                await request(app.getHttpServer())
+                    .post("/issuer/config")
+                    .trustLocalhost()
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .send(currentConfig.body as IssuanceDto)
+                    .expect(201);
+            }
+        },
+    );
 });

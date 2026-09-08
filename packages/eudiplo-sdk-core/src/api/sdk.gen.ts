@@ -350,7 +350,7 @@ export const keyChainControllerUpdateTenantKmsConfig = <ThrowOnError extends boo
 });
 
 /**
- * List all key chains for the tenant
+ * List user-manageable signing key chains for the tenant
  */
 export const keyChainControllerGetAll = <ThrowOnError extends boolean = true>(options?: Options<KeyChainControllerGetAllData, ThrowOnError>): RequestResult<KeyChainControllerGetAllResponses, unknown, ThrowOnError> => (options?.client ?? client).get<KeyChainControllerGetAllResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],

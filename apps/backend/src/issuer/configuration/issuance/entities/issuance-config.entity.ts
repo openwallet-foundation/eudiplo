@@ -94,7 +94,7 @@ export class IssuanceConfig {
     dPopRequired?: boolean;
 
     /**
-     * Indicates whether wallet attestation is required for the token endpoint.
+     * Default wallet attestation requirement for managed authorization servers.
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
@@ -102,7 +102,8 @@ export class IssuanceConfig {
     walletAttestationRequired?: boolean;
 
     /**
-     * Trust lists containing trusted wallet providers.
+     * Shared wallet provider trust lists for key attestations at the credential endpoint
+     * and default wallet-attestation trust at managed authorization servers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     @ApiPropertyOptional({
