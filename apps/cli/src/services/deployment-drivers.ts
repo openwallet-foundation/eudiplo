@@ -19,7 +19,7 @@ import {
 import type { KubernetesScope } from "./kubectl.js";
 import {
     buildCanIArgs,
-    buildGetEndpointsArgs,
+    buildGetEndpointSlicesArgs,
     buildGetPodsArgs,
     buildGetWorkloadArgs,
     resolveScope,
@@ -200,7 +200,7 @@ async function kubernetesDiagnostics(
 
     const endpoints = await captureKubectl(
         kubectl,
-        buildGetEndpointsArgs(scope),
+        buildGetEndpointSlicesArgs(scope),
         context,
     );
     checks.push(endpointCheck(endpoints));
@@ -243,32 +243,45 @@ function endpointCheck(endpoints: CapturedCommand): DoctorCheck {
     };
 }
 
+/**
+ * A Service may own several EndpointSlices (one per address family, and more
+ * once it grows), so readiness is grouped by service name: a Service is ready
+ * when any of its slices carries a ready endpoint.
+ */
 export function unreadyEndpoints(stdout: string): string[] {
     const parsed: unknown = JSON.parse(stdout);
     if (!isRecord(parsed) || !Array.isArray(parsed.items)) {
-        throw new Error("Unexpected endpoints payload.");
+        throw new Error("Unexpected endpointslice payload.");
     }
 
-    const unready: string[] = [];
+    const readyByService = new Map<string, boolean>();
     for (const item of parsed.items) {
-        if (!isRecord(item)) {
+        if (!isRecord(item) || !isRecord(item.metadata)) {
             continue;
         }
-        const name = isRecord(item.metadata)
-            ? String(item.metadata.name ?? "unknown")
-            : "unknown";
-        const subsets = Array.isArray(item.subsets) ? item.subsets : [];
-        const ready = subsets.some(
-            (subset) =>
-                isRecord(subset) &&
-                Array.isArray(subset.addresses) &&
-                subset.addresses.length > 0,
+        const labels = isRecord(item.metadata.labels)
+            ? item.metadata.labels
+            : {};
+        const service = String(
+            labels["kubernetes.io/service-name"] ??
+                item.metadata.name ??
+                "unknown",
         );
-        if (!ready) {
-            unready.push(name);
-        }
+        const endpoints = Array.isArray(item.endpoints) ? item.endpoints : [];
+        const ready = endpoints.some(
+            (endpoint) =>
+                isRecord(endpoint) &&
+                // An omitted ready condition means ready, per the API contract.
+                (!isRecord(endpoint.conditions) ||
+                    endpoint.conditions.ready !== false),
+        );
+        readyByService.set(service, (readyByService.get(service) ?? false) || ready);
     }
-    return unready;
+
+    return [...readyByService.entries()]
+        .filter(([, ready]) => !ready)
+        .map(([service]) => service)
+        .sort();
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

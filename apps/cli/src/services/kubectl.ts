@@ -142,8 +142,13 @@ export function buildCanIArgs(
     return ["auth", "can-i", verb, resource, ...scopeArgs(scope)];
 }
 
-export function buildGetEndpointsArgs(scope: KubernetesScope): string[] {
-    return ["get", "endpoints", ...scopeArgs(scope), "--output", "json"];
+/**
+ * EndpointSlice rather than Endpoints: the v1 Endpoints API is deprecated from
+ * Kubernetes 1.33 and reading it makes the API server emit a deprecation
+ * warning on every call.
+ */
+export function buildGetEndpointSlicesArgs(scope: KubernetesScope): string[] {
+    return ["get", "endpointslices", ...scopeArgs(scope), "--output", "json"];
 }
 
 const dns1123Label = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?$/;

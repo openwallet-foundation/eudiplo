@@ -4,7 +4,7 @@ import {
     assertNamespace,
     assertWorkloadReference,
     buildCanIArgs,
-    buildGetEndpointsArgs,
+    buildGetEndpointSlicesArgs,
     buildGetPodsArgs,
     buildLogsArgs,
     buildRestartArgs,
@@ -41,7 +41,7 @@ describe("kubectl argument construction", () => {
         ["rollout restart", buildRestartArgs(scope, "deployment/eudiplo")],
         ["rollout status", buildRolloutStatusArgs(scope, "deployment/eudiplo")],
         ["auth can-i", buildCanIArgs(scope, "get", "pods")],
-        ["get endpoints", buildGetEndpointsArgs(scope)],
+        ["get endpointslices", buildGetEndpointSlicesArgs(scope)],
     ];
 
     it.each(builders)(
@@ -144,67 +144,85 @@ describe("workload resolution", () => {
 });
 
 describe("service endpoint readiness", () => {
-    function endpointList(
-        items: Array<{ name: string; addresses: number }>,
+    function slices(
+        entries: Array<{ service: string; ready: boolean[] }>,
     ): string {
         return JSON.stringify({
-            items: items.map(({ name, addresses }) => ({
-                metadata: { name },
-                subsets:
-                    addresses > 0
-                        ? [
-                              {
-                                  addresses: Array.from(
-                                      { length: addresses },
-                                      () => ({ ip: "10.0.0.1" }),
-                                  ),
-                              },
-                          ]
-                        : [],
+            items: entries.map(({ service, ready }, index) => ({
+                metadata: {
+                    name: `${service}-${index}`,
+                    labels: { "kubernetes.io/service-name": service },
+                },
+                endpoints: ready.map((isReady) => ({
+                    addresses: ["10.0.0.1"],
+                    conditions: { ready: isReady },
+                })),
             })),
         });
     }
 
-    it("accepts services that have ready addresses", () => {
+    it("accepts services with a ready endpoint", () => {
         expect(
             unreadyEndpoints(
-                endpointList([
-                    { name: "eudiplo", addresses: 2 },
-                    { name: "eudiplo-client", addresses: 1 },
+                slices([
+                    { service: "eudiplo", ready: [true] },
+                    { service: "eudiplo-client", ready: [true] },
                 ]),
             ),
         ).toEqual([]);
     });
 
-    it("names services with no ready addresses", () => {
+    it("names services whose endpoints are all unready", () => {
         expect(
             unreadyEndpoints(
-                endpointList([
-                    { name: "eudiplo", addresses: 1 },
-                    { name: "eudiplo-client", addresses: 0 },
+                slices([
+                    { service: "eudiplo", ready: [true] },
+                    { service: "eudiplo-client", ready: [false] },
                 ]),
             ),
         ).toEqual(["eudiplo-client"]);
     });
 
-    it("treats a subset with an empty address list as unready", () => {
+    it("treats a service as ready when any of its slices is ready", () => {
+        expect(
+            unreadyEndpoints(
+                slices([
+                    { service: "eudiplo", ready: [false] },
+                    { service: "eudiplo", ready: [true] },
+                ]),
+            ),
+        ).toEqual([]);
+    });
+
+    it("treats a slice with no endpoints as unready", () => {
+        expect(unreadyEndpoints(slices([{ service: "eudiplo", ready: [] }]))).toEqual([
+            "eudiplo",
+        ]);
+    });
+
+    it("treats an omitted ready condition as ready", () => {
         expect(
             unreadyEndpoints(
                 JSON.stringify({
                     items: [
                         {
-                            metadata: { name: "eudiplo" },
-                            subsets: [{ addresses: [] }],
+                            metadata: {
+                                name: "eudiplo-abc",
+                                labels: {
+                                    "kubernetes.io/service-name": "eudiplo",
+                                },
+                            },
+                            endpoints: [{ addresses: ["10.0.0.1"] }],
                         },
                     ],
                 }),
             ),
-        ).toEqual(["eudiplo"]);
+        ).toEqual([]);
     });
 
-    it("rejects a payload that is not an endpoints list", () => {
+    it("rejects a payload that is not an endpointslice list", () => {
         expect(() => unreadyEndpoints(JSON.stringify({ kind: "Pod" }))).toThrow(
-            /Unexpected endpoints payload/,
+            /Unexpected endpointslice payload/,
         );
     });
 });
