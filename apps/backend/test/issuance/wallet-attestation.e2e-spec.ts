@@ -442,19 +442,25 @@ describe("Issuance - Wallet Attestation", () => {
                             policySource === "issuer-default"
                                 ? walletProviderTrustLists
                                 : [],
-                        authorizationServers:
-                            currentConfig.body.authorizationServers.map(
-                                (server: { type: string }) => ({
-                                    ...server,
-                                    ...(server.type === "built-in" &&
-                                    policySource === "as-override"
-                                        ? {
-                                              walletAttestationRequired: true,
-                                              walletProviderTrustLists,
-                                          }
-                                        : {}),
-                                }),
-                            ),
+                        authorizationServers: currentConfig.body.authorizationServers.map(
+                            (server: { type: string }) => ({
+                                ...server,
+                                ...(server.type === "built-in"
+                                    ? {
+                                        walletAttestationRequired: true,
+                                        walletProviderTrustLists: [
+                                            {
+                                                url: trustListUrl,
+                                                verifierX509Der:
+                                                    trustListSigningCert.certificate.toString(
+                                                        "base64",
+                                                    ),
+                                            },
+                                        ],
+                                    }
+                                    : {}),
+                            }),
+                        ),
                     } as IssuanceDto)
                     .expect(201);
 
@@ -604,6 +610,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -640,14 +665,35 @@ describe("Issuance - Wallet Attestation", () => {
             credentialOffer.credential_issuer,
         );
 
-        // Try to get access token WITHOUT wallet attestation
-        await expect(
-            client.retrievePreAuthorizedCodeAccessTokenFromOffer({
-                credentialOffer,
-                issuerMetadata,
-                // No clientAttestation provided
-            }),
-        ).rejects.toThrow();
+        const preAuthorizedGrant =
+            credentialOffer.grants?.[
+                "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+            ];
+        if (!preAuthorizedGrant) {
+            throw new Error(
+                "Credential offer does not contain a pre-authorized code grant",
+            );
+        }
+
+        const authorizationServerIssuer =
+            issuerMetadata.authorizationServers?.[0]?.issuer ??
+            credentialOffer.credential_issuer;
+        await request(app.getHttpServer())
+            .post(
+                new URL(
+                    "authorize/token",
+                    `${authorizationServerIssuer}/`,
+                ).pathname,
+            )
+            .trustLocalhost()
+            .type("form")
+            .send({
+                grant_type:
+                    "urn:ietf:params:oauth:grant-type:pre-authorized_code",
+                "pre-authorized_code":
+                    preAuthorizedGrant["pre-authorized_code"],
+            })
+            .expect(401);
     });
 
     test("should fail when wallet provider is not in trust list", async () => {
@@ -676,6 +722,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -792,6 +857,17 @@ describe("Issuance - Wallet Attestation", () => {
                 ...currentConfig.body,
                 walletAttestationRequired: false,
                 walletProviderTrustLists: [],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: false,
+                                  walletProviderTrustLists: [],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -865,6 +941,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1007,6 +1102,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1148,6 +1262,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1298,6 +1431,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1438,6 +1590,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1547,6 +1718,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1658,6 +1848,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1806,6 +2015,25 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers: currentConfig.body.authorizationServers.map(
+                    (server: { type: string }) => ({
+                        ...server,
+                        ...(server.type === "built-in"
+                            ? {
+                                  walletAttestationRequired: true,
+                                  walletProviderTrustLists: [
+                                      {
+                                          url: trustListUrl,
+                                          verifierX509Der:
+                                              trustListSigningCert.certificate.toString(
+                                                  "base64",
+                                              ),
+                                      },
+                                  ],
+                              }
+                            : {}),
+                    }),
+                ),
             } as IssuanceDto)
             .expect(201);
 
