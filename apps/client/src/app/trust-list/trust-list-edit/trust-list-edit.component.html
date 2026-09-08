@@ -160,6 +160,13 @@
                 </mat-expansion-panel-header>
 
                 <div fxLayout="column" fxLayoutGap="16px">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Provider type</mat-label>
+                    <mat-select formControlName="providerType">
+                      <mat-option value="attestation-provider">Credential provider</mat-option>
+                      <mat-option value="wallet-provider">Wallet provider</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                   @if (getEntityType(i) === 'internal') {
                     <!-- Internal Entity Form - Key Chain Selection -->
                     <mat-form-field appearance="outline">

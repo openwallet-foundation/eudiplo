@@ -4,7 +4,7 @@
  * Each VU iteration exercises the complete wallet-side issuance path:
  *
  *   1. Obtain admin Bearer token (POST /api/oauth2/token)
- *   2. Create a credential offer (POST /issuer/offer)
+ *   2. Create a credential offer (POST /api/issuer/offer)
  *   3. Resolve the credential offer URI → extract pre-authorized_code
  *   4. Exchange pre-authorized_code for a wallet access token
  *      (POST /issuers/:tenantId/authorize/token)
@@ -57,25 +57,7 @@ const ISSUER_BASE = `${BASE_URL}/issuers/${TENANT_ID}`;
 const TOKEN_ENDPOINT = `${ISSUER_BASE}/authorize/token`;
 const NONCE_ENDPOINT = `${ISSUER_BASE}/vci/nonce`;
 const CREDENTIAL_ENDPOINT = `${ISSUER_BASE}/vci/credential`;
-const OFFER_ENDPOINT = `${BASE_URL}/issuer/offer`;
-
-/** Inline PID claims used for each issuance. Default values match the pid.json config. */
-const INLINE_CLAIMS = {
-    [CREDENTIAL_CONFIG_ID]: {
-        type: 'inline',
-        claims: {
-            given_name: 'Load',
-            family_name: 'Test',
-            birthdate: '1990-01-01',
-            address: {
-                street_address: 'HEIDESTRAẞE 17',
-                locality: 'KÖLN',
-                country: 'DE',
-                postal_code: '51147',
-            },
-        },
-    },
-};
+const OFFER_ENDPOINT = `${BASE_URL}/api/issuer/offer`;
 
 // ---------------------------------------------------------------------------
 // k6 options
@@ -149,7 +131,6 @@ export default async function (data: SetupData): Promise<void> {
             response_type: 'uri',
             credentialConfigurationIds: [CREDENTIAL_CONFIG_ID],
             flow: 'pre_authorized_code',
-            credentialClaims: INLINE_CLAIMS,
         };
 
         const res = http.post(OFFER_ENDPOINT, JSON.stringify(body), {
@@ -217,11 +198,11 @@ export default async function (data: SetupData): Promise<void> {
     // -----------------------------------------------------------------------
     // Step 6 + 7: Sign proof JWT and request credential
     // -----------------------------------------------------------------------
-    await group('credential', async () => {
-        // Import the shared private key JWK for this iteration's signing.
-        const privateKey = await importPrivateKey(privateJwk);
-        const proofJwt = await signProofJwt(privateKey, publicJwk, cNonce, credentialIssuer);
+    // k6 group callbacks must be synchronous, so finish WebCrypto work first.
+    const privateKey = await importPrivateKey(privateJwk);
+    const proofJwt = await signProofJwt(privateKey, publicJwk, cNonce, credentialIssuer);
 
+    group('credential', () => {
         const body = {
             credential_identifier: CREDENTIAL_CONFIG_ID,
             proofs: {

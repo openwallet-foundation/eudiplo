@@ -26,6 +26,7 @@ import {
 import { loadConfigDto } from "../../shared/utils/config-file-loader.util.js";
 import {
     TrustListCreateDto,
+    TrustListEntity,
     TrustListEntityInfo,
 } from "./dto/trust-list-create.dto.js";
 import { TrustList } from "./entities/trust-list.entity.js";
@@ -33,6 +34,8 @@ import { TrustListVersion } from "./entities/trust-list-version.entity.js";
 import { TrustListCreateSchema } from "./schemas/trust-list.schema.js";
 
 export enum ServiceTypeIdentifier {
+    WalletIssuance = "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
+    WalletRevocation = "http://uri.etsi.org/19602/SvcType/WalletSolution/Revocation",
     PIDIssuance = "http://uri.etsi.org/19602/SvcType/PID/Issuance",
     EaaIssuance = "http://uri.etsi.org/19602/SvcType/EAA/Issuance",
     EaaRevocation = "http://uri.etsi.org/19602/SvcType/EAA/Revocation",
@@ -256,7 +259,11 @@ export class TrustListService {
         // Use existing trust list or create new
         const trustList =
             existing ??
-            this.trustListRepo.create({ tenant, id: config.id ?? v4() });
+            this.trustListRepo.create({
+                tenant,
+                tenantId: tenant.id,
+                id: config.id ?? v4(),
+            });
 
         // Update properties
         trustList.description = config.description;
@@ -303,6 +310,7 @@ export class TrustListService {
                         issuerCert,
                         revocationCert,
                         entity.info,
+                        entity.providerType,
                     ),
                 );
             } else {
@@ -312,6 +320,7 @@ export class TrustListService {
                         entity.issuerCertPem,
                         entity.revocationCertPem,
                         entity.info,
+                        entity.providerType,
                     ),
                 );
             }
@@ -321,6 +330,9 @@ export class TrustListService {
             tenant,
             entries,
             trustList.sequenceNumber,
+            config.entities.every(
+                (entity) => entity.providerType === "wallet-provider",
+            ),
         );
         trustList.jwt = await this.generateJwt(trustList);
         return this.trustListRepo.save(trustList);
@@ -384,7 +396,8 @@ export class TrustListService {
             tenantId,
             trustList.keyChainId,
         );
-        return this.formatCertEntity(cert);
+        // Pin the certificate whose key signs the JWT, rather than its root CA.
+        return this.formatPem(cert.crt[0]);
     }
 
     /**
@@ -393,10 +406,10 @@ export class TrustListService {
      * @returns Signed JWT string
      */
     async generateJwt(trustList: TrustList): Promise<string> {
-        const cert = await this.certService.find({
-            tenantId: trustList.tenantId,
-            type: KeyUsageType.TrustList,
-        });
+        const cert = await this.certService.getCertificateById(
+            trustList.tenantId,
+            trustList.keyChainId,
+        );
 
         // Get the signer from key chain service
         const signer = await this.keyChainService.signer(
@@ -422,11 +435,13 @@ export class TrustListService {
         issuerCert: CertificateInfo,
         revocationCert: CertificateInfo,
         info: TrustListEntityInfo,
+        providerType?: TrustListEntity["providerType"],
     ): LoTETrustedEntity {
         return this.createEntityFromData(
             this.formatCertEntity(issuerCert),
             this.formatCertEntity(revocationCert),
             info,
+            providerType,
         );
     }
 
@@ -437,11 +452,13 @@ export class TrustListService {
         issuerCertPem: string,
         revocationCertPem: string,
         info: TrustListEntityInfo,
+        providerType?: TrustListEntity["providerType"],
     ): LoTETrustedEntity {
         return this.createEntityFromData(
             this.formatPem(issuerCertPem),
             this.formatPem(revocationCertPem),
             info,
+            providerType,
         );
     }
 
@@ -452,20 +469,40 @@ export class TrustListService {
         issuerCertBase64: string,
         revocationCertBase64: string,
         info: TrustListEntityInfo,
+        providerType?: TrustListEntity["providerType"],
     ): LoTETrustedEntity {
         const lang = info.lang || DEFAULT_LANG;
+        const walletProvider = providerType === "wallet-provider";
 
         // Build the issuance service
         const issuanceService = service()
-            .name("EAA-Issuance-Service", lang)
-            .type(ServiceTypeIdentifier.EaaIssuance)
+            .name(
+                walletProvider
+                    ? "Wallet-Issuance-Service"
+                    : "EAA-Issuance-Service",
+                lang,
+            )
+            .type(
+                walletProvider
+                    ? ServiceTypeIdentifier.WalletIssuance
+                    : ServiceTypeIdentifier.EaaIssuance,
+            )
             .addCertificate(issuerCertBase64)
             .build();
 
         // Build the revocation service
         const revocationService = service()
-            .name("EAA-Revocation-Service", lang)
-            .type(ServiceTypeIdentifier.EaaRevocation)
+            .name(
+                walletProvider
+                    ? "Wallet-Revocation-Service"
+                    : "EAA-Revocation-Service",
+                lang,
+            )
+            .type(
+                walletProvider
+                    ? ServiceTypeIdentifier.WalletRevocation
+                    : ServiceTypeIdentifier.EaaRevocation,
+            )
             .addCertificate(revocationCertBase64)
             .build();
 
@@ -506,6 +543,7 @@ export class TrustListService {
         tenant: TenantEntity,
         entities: LoTETrustedEntity[],
         sequenceNumber = 1,
+        walletProviders = false,
     ): LoTEDocument {
         const nextUpdate = new Date();
         nextUpdate.setDate(nextUpdate.getDate() + 30);
@@ -518,15 +556,18 @@ export class TrustListService {
                         value: tenant.name,
                     },
                 ],
-                LoTEType:
-                    "http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList",
-                StatusDeterminationApproach:
-                    "http://uri.etsi.org/19602/EUEAAProvidersList/StatusDetn/EU",
+                LoTEType: walletProviders
+                    ? "http://uri.etsi.org/19602/LoTEType/EUWalletProvidersList"
+                    : "http://uri.etsi.org/19602/LoTEType/EUEAAProvidersList",
+                StatusDeterminationApproach: walletProviders
+                    ? "http://uri.etsi.org/19602/WalletProvidersList/StatusDetn/EU"
+                    : "http://uri.etsi.org/19602/EUEAAProvidersList/StatusDetn/EU",
                 SchemeTypeCommunityRules: [
                     {
                         lang: DEFAULT_LANG,
-                        uriValue:
-                            "http://uri.etsi.org/19602/EUEAAProviders/schemerules/EU",
+                        uriValue: walletProviders
+                            ? "http://uri.etsi.org/19602/WalletProvidersList/schemerules/EU"
+                            : "http://uri.etsi.org/19602/EUEAAProviders/schemerules/EU",
                     },
                 ],
                 SchemeTerritory: "EU",

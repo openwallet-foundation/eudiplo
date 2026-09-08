@@ -104,6 +104,7 @@ export class WalletAttestationService {
                 await this.validateWalletSolutionCertificate(
                     clientAttestation.clientAttestationJwt,
                     walletProviderTrustLists,
+                    tenantId,
                 );
 
             // Check the status list if present in the attestation JWT
@@ -131,12 +132,13 @@ export class WalletAttestationService {
      * Returns the matched entity and trust store for use in status list verification.
      * @param clientAttestationJwt The wallet attestation JWT
      * @param trustListInputs Trust lists to validate against
-     * @returns The matched entity and trust store (both null if no trust lists configured)
+     * @returns The matched entity and trust store
      * @throws UnauthorizedException if certificate is not trusted
      */
     private async validateWalletSolutionCertificate(
         clientAttestationJwt: string,
         trustListInputs: TrustListRef[],
+        tenantId: string,
     ): Promise<{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;
@@ -144,11 +146,9 @@ export class WalletAttestationService {
         const trustListRefs = normalizeTrustListRefs(trustListInputs);
 
         if (trustListRefs.length === 0) {
-            // No trust lists configured - accept any valid attestation
-            this.logger.warn(
-                "No wallet provider trust lists configured - accepting attestation without certificate validation",
+            throw new UnauthorizedException(
+                "No wallet provider trust lists configured for wallet attestation verification",
             );
-            return { matchedEntity: null, trustStore: null };
         }
 
         // Extract X.509 certificate chain from JWT header
@@ -164,6 +164,7 @@ export class WalletAttestationService {
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource = {
             lotes: trustListRefs,
+            tenantId,
             acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 

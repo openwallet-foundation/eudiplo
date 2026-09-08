@@ -1595,6 +1595,7 @@ export class PresentationsService {
                             ServiceTypeIdentifier.EaaIssuance,
                             ServiceTypeIdentifier.PIDIssuance,
                         ],
+                        tenantId: session.tenantId,
                     },
                     federationTrustSource: federationAuthorities?.values.length
                         ? {

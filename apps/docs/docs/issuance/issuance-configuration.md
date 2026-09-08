@@ -48,8 +48,8 @@ The auto generated schema reference can be found in the [API Documentation](../r
 - `refreshTokenEnabled` (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is `true`.
 - `refreshTokenExpiresInSeconds` (number, optional): Lifetime of issued refresh tokens in seconds. Default is `2592000` (30 days).
 - `txCodeMaxAttempts` (number, optional): Maximum failed `tx_code` attempts before invalidating pre-authorized code flow.
-- `walletAttestationRequired` (boolean, optional): Indicates whether wallet attestation is required for the token endpoint. Default value is false. See [Wallet Attestation](#wallet-attestation) below.
-- `walletProviderTrustLists` (array of strings, optional): URLs of trust lists containing trusted wallet providers. Required when `walletAttestationRequired` is true.
+- `walletAttestationRequired` (boolean, optional): Default wallet attestation policy for EUDIPLO-managed authorization servers. Per-authorization-server values take precedence. Default value is false. See [Wallet and Key Attestation](#wallet-and-key-attestation) below.
+- `walletProviderTrustLists` (array, optional): Shared trust lists for key attestations at the credential endpoint and default wallet authentication at managed authorization servers. Per-AS overrides apply only to wallet authentication.
 - `credentialRequestEncryption` (boolean, optional): Advertise support for encrypted credential requests (`credential_request_encryption`).
 - `credentialResponseEncryption` (boolean, optional): Advertise support for encrypted credential responses (`credential_response_encryption`).
 - `federation` (object, optional): OpenID Federation trust configuration for auth-server/upstream trust evaluation. See [OpenID Federation](../architecture/extension-points/federation.md).
@@ -63,6 +63,13 @@ The auto generated schema reference can be found in the [API Documentation](../r
 ## Authorization Servers
 
 Authorization servers define how wallets authenticate before receiving credentials. EUDIPLO supports four types: `external`, `oid4vp`, `chained`, and `built-in`.
+
+EUDIPLO-managed authorization servers (`oid4vp`, `chained`, and `built-in`) can define their own wallet attestation policy:
+
+- `walletAttestationRequired` (boolean, optional): Require `OAuth-Client-Attestation` and `OAuth-Client-Attestation-PoP` headers on PAR and token requests for this AS.
+- `walletProviderTrustLists` (array, optional): Trust lists used to validate wallet provider certificates for this AS.
+
+When omitted on an authorization server, EUDIPLO falls back to the issuance-level `walletAttestationRequired` and `walletProviderTrustLists` values.
 
 For complete configuration details and examples for each type, see the dedicated [Authorization](authorization.md) page.
 
@@ -165,60 +172,108 @@ The web client exposes both settings in the Issuance Configuration editor under 
 - `Issue Refresh Tokens`
 - `Refresh Token Lifetime (seconds)`
 
-## Wallet Attestation
+## Wallet and Key Attestation
 
-Wallet attestation allows issuers to verify that credential requests come from trusted wallet applications. When enabled, wallets must provide OAuth Client Attestation headers at the token endpoint, as specified in [RFC 9449](https://datatracker.ietf.org/doc/html/rfc9449) and the [OID4VCI specification](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html).
+Wallet authentication and credential-key validation use separate attestations and configuration scopes:
 
-### How It Works
+| Attestation        | Verified at                                      | Trust configuration                                                 | Requirement setting                                                         |
+| ------------------ | ------------------------------------------------ | ------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| Wallet attestation | Authorization server PAR and token endpoints     | AS `walletProviderTrustLists`, falling back to issuance-level lists | AS `walletAttestationRequired`, falling back to the issuance default        |
+| Key attestation    | Credential endpoint, including deferred issuance | Issuance-level `walletProviderTrustLists`                           | Per-credential proof policy and advertised `config.keyAttestationsRequired` |
+
+Wallet attestation authenticates the wallet as an OAuth client at the authorization server. When required, wallets provide OAuth Client Attestation headers at PAR and token endpoints, following [OID4VCI Appendix E](https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0.html#appendix-E). It is separate from the key attestation checked by the credential issuer during issuance.
+
+### Wallet Authentication Flow
 
 1. **Wallet Provider Signs Attestation**: The wallet provider (e.g., the wallet app vendor) signs a JWT attesting to the wallet instance's identity. This JWT includes an X.509 certificate chain in the `x5c` header.
 
-2. **Wallet Sends Attestation**: When requesting an access token, the wallet includes two headers:
+2. **Wallet Sends Attestation**: At PAR and token endpoints, the wallet includes two headers:
     - `OAuth-Client-Attestation`: The wallet attestation JWT signed by the wallet provider
     - `OAuth-Client-Attestation-PoP`: A proof-of-possession JWT signed by the wallet instance
 
-3. **Issuer Validates**: EUDIPLO validates the attestation by:
+3. **Authorization Server Validates**: EUDIPLO validates the attestation by:
     - Verifying the JWT signature using the X.509 certificate from the `x5c` header
     - Verifying the proof-of-possession (PoP) JWT
     - Checking that the wallet provider's certificate is trusted according to the configured trust lists
 
-### Configuration
+### Wallet Authentication Configuration
 
-To enable wallet attestation, set `walletAttestationRequired` to `true` and provide at least one trust list URL:
+To enable wallet attestation for one EUDIPLO-managed authorization server, set `walletAttestationRequired` and `walletProviderTrustLists` on that authorization server:
 
 ```json
 {
-    "walletAttestationRequired": true,
-    "walletProviderTrustLists": [
-        "https://trust-list.example.eu/wallet-providers"
+    "authorizationServers": [
+        {
+            "type": "built-in",
+            "id": "wallet-attested-as",
+            "walletAttestationRequired": true,
+            "walletProviderTrustLists": [
+                {
+                    "url": "https://trust-list.example.eu/wallet-providers",
+                    "verifierX509Der": "MIIB..."
+                }
+            ]
+        },
+        {
+            "type": "oid4vp",
+            "id": "open-as",
+            "presentationConfigId": "pid-flow",
+            "walletAttestationRequired": false
+        }
     ]
 }
 ```
 
+Issuance-level `walletAttestationRequired` and `walletProviderTrustLists` provide defaults for managed authorization servers. Omitted AS fields inherit independently; explicit `false` makes wallet attestation optional, while an explicit empty trust list disables inheritance and rejects any presented attestation. Optional means a wallet may omit attestation; any attestation it supplies must still be trusted.
+
+The web editor offers **Use issuer default** for the requirement and **Use shared wallet provider trust lists** for trust. For an external authorization server, configure wallet authentication on that external server according to the credential issuer's trust policy.
+
+### Key Attestation Trust
+
+The issuance-level `walletProviderTrustLists` also validates key-attestation signers at the credential endpoint. This applies to both `proofs.attestation` and `key_attestation` in a JWT proof's protected header, including deferred issuance. AS-specific lists do not override this issuer policy. Configure the shared lists even if wallet authentication is optional or handled by an external AS.
+
+For example, merge these settings into the issuance configuration to share provider trust between key validation and a built-in AS:
+
+```json
+{
+    "walletProviderTrustLists": [
+        {
+            "url": "https://trust-list.example.eu/wallet-providers",
+            "verifierX509Der": "MIIB..."
+        }
+    ],
+    "authorizationServers": [
+        {
+            "type": "built-in",
+            "id": "wallet-attested-as",
+            "walletAttestationRequired": true
+        }
+    ]
+}
+```
+
+Replace the example URL and certificate with your authenticated trust-list source. The AS inherits the shared list because its own `walletProviderTrustLists` is omitted. Defining a list only inside an AS entry does not configure key-attestation trust.
+
+Each list reference contains its URL and a `verifierKey` or `verifierX509Der` that authenticates the list. The list supplies wallet-provider certificates used to validate attestation signing chains. Configure [credential proof types and key-attestation requirements](credential-configuration.md#key-attestation) separately to advertise key-security requirements.
+
+Presented wallet and key attestations are rejected if no trust list is configured for their verification. Plain holder JWT proofs without a key attestation do not need provider trust lists. Deployments that previously relied on accepting attestations without configured provider trust must add trust lists before upgrading.
+
 ### Trust Lists
 
-Trust lists must be in the LoTE (List of Trusted Entities) format as defined by [ETSI TS 119 612](https://www.etsi.org/deliver/etsi_ts/119600_119699/119612/). The trust list should contain entries with the service type `http://uri.etsi.org/19602/SvcType/WalletProvider`.
+EUDIPLO consumes signed LoTE (List of Trusted Entities) JWTs. Wallet-provider entries use `http://uri.etsi.org/19602/SvcType/WalletSolution` or its `/Issuance` and `/Revocation` service roles.
 
 Each trusted entity in the list includes X.509 certificates that identify authorized wallet providers. When a wallet presents an attestation, EUDIPLO verifies that the signing certificate chains to one of these trusted certificates.
 
-### Status Claim
+### Wallet Attestation Status
 
 The wallet attestation JWT may optionally contain a `status` claim that provides a URI for checking the current validity or revocation status of the attestation. According to the [OAuth Attestation-Based Client Authentication](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-attestation-based-client-auth) specification, this claim is **optional**.
 
-:::note Current Behavior
-EUDIPLO currently does **not** check the `status` claim in wallet attestations. Attestations are validated based on:
-
-- JWT signature verification
-- Proof-of-possession verification
-- X.509 certificate chain validation against configured trust lists
-
-If your use case requires status checking (e.g., for revoked wallet instances), this would need to be implemented as an additional validation step.
-:::
+EUDIPLO checks a supplied wallet-attestation status claim and rejects revoked or suspended attestations. Its current status checker logs fetch failures and continues; requiring provider trust does not change that existing behavior. This is not a complete implementation of all ARF lifecycle and revocation requirements.
 
 :::warning[Important]
-If `walletAttestationRequired` is set to `true` but no trust lists are configured, **all wallet requests will be rejected**. Always configure at least one trust list when enabling wallet attestation.
+If `walletAttestationRequired` is set to `true` for an authorization server but neither that server nor the issuance-level defaults provide trust lists, **wallet requests to that authorization server will be rejected**. Always configure at least one trust list when enabling wallet attestation.
 :::
 
 :::info[EUDI Wallet Ecosystem]
-In the EUDI Wallet ecosystem, trust lists are typically published by EU member states or the European Commission, containing the certificates of approved wallet providers.
+The [ARF trust model](https://eudi.dev/latest/main/06-trust-model/#622-wallet-provider-notification) identifies the Commission-published Wallet Provider LoTE as the source of notified wallet-provider trust anchors for wallet and key attestations. Authenticate this list using verification material obtained through a trusted channel.
 :::

@@ -409,131 +409,182 @@ describe("Issuance - Wallet Attestation", () => {
         await app.close();
     });
 
-    test("should succeed with valid wallet attestation when required", async () => {
-        // Configure issuance with wallet attestation required
-        const trustListUrl = "http://localhost:8787/wallet-providers";
+    test.each(["issuer-default", "as-override"])(
+        "should succeed with valid wallet attestation when required (%s)",
+        async (policySource) => {
+            // Configure issuance with wallet attestation required
+            const trustListUrl = "http://localhost:8787/wallet-providers";
 
-        // First get current config to preserve other settings
-        const currentConfig = await request(app.getHttpServer())
-            .get("/issuer/config")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .expect(200);
+            // First get current config to preserve other settings
+            const currentConfig = await request(app.getHttpServer())
+                .get("/issuer/config")
+                .trustLocalhost()
+                .set("Authorization", `Bearer ${authToken}`)
+                .expect(200);
 
-        await request(app.getHttpServer())
-            .post("/issuer/config")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                ...currentConfig.body,
-                walletAttestationRequired: true,
-                walletProviderTrustLists: [
-                    {
-                        url: trustListUrl,
-                        verifierX509Der:
-                            trustListSigningCert.certificate.toString("base64"),
-                    },
-                ],
-            } as IssuanceDto)
-            .expect(201);
+            const walletProviderTrustLists = [
+                {
+                    url: trustListUrl,
+                    verifierX509Der:
+                        trustListSigningCert.certificate.toString("base64"),
+                },
+            ];
+            try {
+                await request(app.getHttpServer())
+                    .post("/issuer/config")
+                    .trustLocalhost()
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .send({
+                        ...currentConfig.body,
+                        walletAttestationRequired:
+                            policySource === "issuer-default",
+                        walletProviderTrustLists:
+                            policySource === "issuer-default"
+                                ? walletProviderTrustLists
+                                : [],
+                        authorizationServers:
+                            currentConfig.body.authorizationServers.map(
+                                (server: { type: string }) => ({
+                                    ...server,
+                                    ...(server.type === "built-in"
+                                        ? {
+                                              walletAttestationRequired: true,
+                                              walletProviderTrustLists: [
+                                                  {
+                                                      url: trustListUrl,
+                                                      verifierX509Der:
+                                                          trustListSigningCert.certificate.toString(
+                                                              "base64",
+                                                          ),
+                                                  },
+                                              ],
+                                          }
+                                        : {}),
+                                }),
+                            ),
+                    } as IssuanceDto)
+                    .expect(201);
 
-        // Mock the trust list endpoint using the ETSI wallet-solution issuance service type.
-        const trustListJwt = await createMockTrustListJwt(
-            trustListSigningCert,
-            walletProviderCert.certificate,
-            "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
-        );
+                // Mock the trust list endpoint using the ETSI wallet-solution issuance service type.
+                const trustListJwt = await createMockTrustListJwt(
+                    trustListSigningCert,
+                    walletProviderCert.certificate,
+                    "http://uri.etsi.org/19602/SvcType/WalletSolution/Issuance",
+                );
 
-        const nockScope = nock("http://localhost:8787")
-            .get("/wallet-providers")
-            .reply(200, trustListJwt, {
-                "Content-Type": "application/jwt",
-            });
+                const nockScope = nock("http://localhost:8787")
+                    .get("/wallet-providers")
+                    .reply(200, trustListJwt, {
+                        "Content-Type": "application/jwt",
+                    });
 
-        // Verify nock is set up correctly
-        expect(nockScope.isDone()).toBe(false); // Should not be called yet
+                // Verify nock is set up correctly
+                expect(nockScope.isDone()).toBe(false); // Should not be called yet
 
-        // Create offer
-        const offerResponse = await request(app.getHttpServer())
-            .post("/issuer/offer")
-            .trustLocalhost()
-            .set("Authorization", `Bearer ${authToken}`)
-            .send({
-                response_type: "uri",
-                credentialConfigurationIds: ["pid-no-key"],
-                flow: "pre_authorized_code",
-            })
-            .expect(201);
+                // Create offer
+                const offerResponse = await request(app.getHttpServer())
+                    .post("/issuer/offer")
+                    .trustLocalhost()
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .send({
+                        response_type: "uri",
+                        credentialConfigurationIds: ["pid-no-key"],
+                        flow: "pre_authorized_code",
+                    })
+                    .expect(201);
 
-        // Generate holder keys
-        const holderKeyPair = await generateKeyPair("ES256", {
-            extractable: true,
-        });
-        const holderPrivateKeyJwk = await exportJWK(holderKeyPair.privateKey);
-        const holderPublicKeyJwk = await exportJWK(holderKeyPair.publicKey);
-        holderPublicKeyJwk.alg = "ES256";
-        holderPublicKeyJwk.use = "sig";
+                // Generate holder keys
+                const holderKeyPair = await generateKeyPair("ES256", {
+                    extractable: true,
+                });
+                const holderPrivateKeyJwk = await exportJWK(
+                    holderKeyPair.privateKey,
+                );
+                const holderPublicKeyJwk = await exportJWK(
+                    holderKeyPair.publicKey,
+                );
+                holderPublicKeyJwk.alg = "ES256";
+                holderPublicKeyJwk.use = "sig";
 
-        const credentialOffer = await new Openid4vciClient({
-            callbacks: {
-                ...callbacks,
-                clientAuthentication: clientAuthenticationAnonymous(),
-                signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
-            },
-        }).resolveCredentialOffer(offerResponse.body.uri);
-
-        const issuerMetadata = await new Openid4vciClient({
-            callbacks: {
-                ...callbacks,
-                clientAuthentication: clientAuthenticationAnonymous(),
-                signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
-            },
-        }).resolveIssuerMetadata(credentialOffer.credential_issuer);
-
-        // Get authorization server URL for attestation
-        const authServerUrl =
-            issuerMetadata.authorizationServers?.[0]?.issuer ||
-            credentialOffer.credential_issuer;
-
-        // Create wallet attestation
-        const clientAttestationJwt = await createWalletAttestationJwt({
-            walletProviderCert: walletProviderCert.certificate,
-            walletProviderKey: walletProviderCert.privateKey,
-            holderPublicKey: holderPublicKeyJwk as Jwk,
-            authorizationServer: authServerUrl,
-        });
-
-        // Create a client with attestation-based authentication
-        const clientWithAttestation = new Openid4vciClient({
-            callbacks: {
-                ...callbacks,
-                clientAuthentication: clientAuthenticationClientAttestationJwt({
-                    clientAttestationJwt,
+                const credentialOffer = await new Openid4vciClient({
                     callbacks: {
+                        ...callbacks,
+                        clientAuthentication: clientAuthenticationAnonymous(),
                         signJwt: getSignJwtCallback([
                             holderPrivateKeyJwk as Jwk,
                         ]),
-                        generateRandom: callbacks.generateRandom,
                     },
-                }),
-                signJwt: getSignJwtCallback([holderPrivateKeyJwk as Jwk]),
-            },
-        });
+                }).resolveCredentialOffer(offerResponse.body.uri);
 
-        // Try to get access token with wallet attestation
-        const tokenResult =
-            await clientWithAttestation.retrievePreAuthorizedCodeAccessTokenFromOffer(
-                {
-                    credentialOffer,
-                    issuerMetadata,
-                },
-            );
+                const issuerMetadata = await new Openid4vciClient({
+                    callbacks: {
+                        ...callbacks,
+                        clientAuthentication: clientAuthenticationAnonymous(),
+                        signJwt: getSignJwtCallback([
+                            holderPrivateKeyJwk as Jwk,
+                        ]),
+                    },
+                }).resolveIssuerMetadata(credentialOffer.credential_issuer);
 
-        expect(tokenResult.accessTokenResponse.access_token).toBeDefined();
+                // Get authorization server URL for attestation
+                const authServerUrl =
+                    issuerMetadata.authorizationServers?.[0]?.issuer ||
+                    credentialOffer.credential_issuer;
 
-        // Verify nock was called
-        expect(nockScope.isDone()).toBe(true);
-    }, 30000);
+                // Create wallet attestation
+                const clientAttestationJwt = await createWalletAttestationJwt({
+                    walletProviderCert: walletProviderCert.certificate,
+                    walletProviderKey: walletProviderCert.privateKey,
+                    holderPublicKey: holderPublicKeyJwk as Jwk,
+                    authorizationServer: authServerUrl,
+                });
+
+                // Create a client with attestation-based authentication
+                const clientWithAttestation = new Openid4vciClient({
+                    callbacks: {
+                        ...callbacks,
+                        clientAuthentication:
+                            clientAuthenticationClientAttestationJwt({
+                                clientAttestationJwt,
+                                callbacks: {
+                                    signJwt: getSignJwtCallback([
+                                        holderPrivateKeyJwk as Jwk,
+                                    ]),
+                                    generateRandom: callbacks.generateRandom,
+                                },
+                            }),
+                        signJwt: getSignJwtCallback([
+                            holderPrivateKeyJwk as Jwk,
+                        ]),
+                    },
+                });
+
+                // Try to get access token with wallet attestation
+                const tokenResult =
+                    await clientWithAttestation.retrievePreAuthorizedCodeAccessTokenFromOffer(
+                        {
+                            credentialOffer,
+                            issuerMetadata,
+                        },
+                    );
+
+                expect(
+                    tokenResult.accessTokenResponse.access_token,
+                ).toBeDefined();
+
+                // Verify nock was called
+                expect(nockScope.isDone()).toBe(true);
+            } finally {
+                await request(app.getHttpServer())
+                    .post("/issuer/config")
+                    .trustLocalhost()
+                    .set("Authorization", `Bearer ${authToken}`)
+                    .send(currentConfig.body)
+                    .expect(201);
+            }
+        },
+        30000,
+    );
 
     test("should fail when wallet attestation is required but not provided", async () => {
         // Configure issuance with wallet attestation required
@@ -560,6 +611,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -596,14 +667,33 @@ describe("Issuance - Wallet Attestation", () => {
             credentialOffer.credential_issuer,
         );
 
-        // Try to get access token WITHOUT wallet attestation
-        await expect(
-            client.retrievePreAuthorizedCodeAccessTokenFromOffer({
-                credentialOffer,
-                issuerMetadata,
-                // No clientAttestation provided
-            }),
-        ).rejects.toThrow();
+        const preAuthorizedGrant =
+            credentialOffer.grants?.[
+                "urn:ietf:params:oauth:grant-type:pre-authorized_code"
+            ];
+        if (!preAuthorizedGrant) {
+            throw new Error(
+                "Credential offer does not contain a pre-authorized code grant",
+            );
+        }
+
+        const authorizationServerIssuer =
+            issuerMetadata.authorizationServers?.[0]?.issuer ??
+            credentialOffer.credential_issuer;
+        await request(app.getHttpServer())
+            .post(
+                new URL("authorize/token", `${authorizationServerIssuer}/`)
+                    .pathname,
+            )
+            .trustLocalhost()
+            .type("form")
+            .send({
+                grant_type:
+                    "urn:ietf:params:oauth:grant-type:pre-authorized_code",
+                "pre-authorized_code":
+                    preAuthorizedGrant["pre-authorized_code"],
+            })
+            .expect(401);
     });
 
     test("should fail when wallet provider is not in trust list", async () => {
@@ -632,6 +722,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -748,6 +858,18 @@ describe("Issuance - Wallet Attestation", () => {
                 ...currentConfig.body,
                 walletAttestationRequired: false,
                 walletProviderTrustLists: [],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: false,
+                                      walletProviderTrustLists: [],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -821,6 +943,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -963,6 +1105,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1104,6 +1266,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1254,6 +1436,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1394,6 +1596,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1503,6 +1725,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1614,6 +1856,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 
@@ -1762,6 +2024,26 @@ describe("Issuance - Wallet Attestation", () => {
                             trustListSigningCert.certificate.toString("base64"),
                     },
                 ],
+                authorizationServers:
+                    currentConfig.body.authorizationServers.map(
+                        (server: { type: string }) => ({
+                            ...server,
+                            ...(server.type === "built-in"
+                                ? {
+                                      walletAttestationRequired: true,
+                                      walletProviderTrustLists: [
+                                          {
+                                              url: trustListUrl,
+                                              verifierX509Der:
+                                                  trustListSigningCert.certificate.toString(
+                                                      "base64",
+                                                  ),
+                                          },
+                                      ],
+                                  }
+                                : {}),
+                        }),
+                    ),
             } as IssuanceDto)
             .expect(201);
 

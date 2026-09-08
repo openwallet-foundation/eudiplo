@@ -21,6 +21,7 @@ import { RegistrarService } from "../../../registrar/registrar.service.js";
 import { loadConfigDto } from "../../../shared/utils/config-file-loader.util.js";
 import { FilesService } from "../../../storage/files.service.js";
 import { normalizeTrustListRefs } from "../../../trust/types.js";
+import type { TrustListRef } from "../../../verifier/presentations/entities/presentation-config.entity.js";
 import { CredentialConfigService } from "../credentials/credential-config/credential-config.service.js";
 import { DisplayInfo } from "./dto/display.dto.js";
 import { IssuanceDto } from "./dto/issuance.dto.js";
@@ -383,6 +384,37 @@ export class IssuanceService {
     private sanitizeIssuanceConfigForLog(
         config: IssuanceConfig,
     ): Record<string, unknown> {
+        const sanitizeWalletProviderTrustLists = (
+            value: TrustListRef[] | null | undefined,
+        ) => {
+            let walletProviderTrustListsRaw: ReturnType<
+                typeof normalizeTrustListRefs
+            >;
+            try {
+                walletProviderTrustListsRaw = normalizeTrustListRefs(value);
+            } catch {
+                walletProviderTrustListsRaw = [];
+            }
+            return walletProviderTrustListsRaw.map((ref) => ({
+                url: ref.url,
+                hasVerifierKey: !!ref.verifierKey,
+                hasVerifierX509Der: !!ref.verifierX509Der,
+            }));
+        };
+
+        const authorizationServers = config.authorizationServers?.map(
+            (server) => ({
+                ...server,
+                walletProviderTrustLists: sanitizeWalletProviderTrustLists(
+                    (
+                        server as typeof server & {
+                            walletProviderTrustLists?: TrustListRef[];
+                        }
+                    ).walletProviderTrustLists,
+                ),
+            }),
+        );
+
         let walletProviderTrustListsRaw: ReturnType<
             typeof normalizeTrustListRefs
         >;
@@ -424,7 +456,7 @@ export class IssuanceService {
             walletAttestationRequired: config.walletAttestationRequired,
             walletProviderTrustLists,
             signingKeyId: config.signingKeyId,
-            authorizationServers: config.authorizationServers,
+            authorizationServers,
             federation: config.federation,
             registrationCertificate,
             registrationCertificateCache,

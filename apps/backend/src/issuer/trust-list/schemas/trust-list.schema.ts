@@ -42,6 +42,10 @@ const InternalTrustListEntitySchema = z
             .describe(
                 "Key chain id for revocation/status list certificate material.",
             ),
+        providerType: z
+            .enum(["attestation-provider", "wallet-provider"])
+            .optional()
+            .describe("Provider role; defaults to attestation-provider."),
         info: TrustListEntityInfoSchema.describe("Entity metadata."),
     })
     .describe("Trust list entity referencing internal key chains.")
@@ -60,6 +64,10 @@ const ExternalTrustListEntitySchema = z
             .string()
             .min(1)
             .describe("Revocation/status certificate in PEM format."),
+        providerType: z
+            .enum(["attestation-provider", "wallet-provider"])
+            .optional()
+            .describe("Provider role; defaults to attestation-provider."),
         info: TrustListEntityInfoSchema.describe("Entity metadata."),
     })
     .describe("Trust list entity using externally supplied PEM certificates.")

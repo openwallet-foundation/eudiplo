@@ -8137,19 +8137,23 @@
           "type": "boolean"
         },
         "walletAttestationRequired": {
-          "description": "Require wallet attestation in issuance flows.",
+          "description": "Default wallet attestation requirement for managed authorization servers.",
           "type": "boolean"
         },
         "walletProviderTrustLists": {
-          "description": "Optional wallet provider trust list references.",
+          "description": "Shared wallet provider trust lists for key attestations and default authorization server wallet authentication.",
           "type": "array",
           "items": {
             "type": "object",
             "properties": {
-              "url": {
+              "trustListId": {
                 "type": "string",
-                "format": "uri",
-                "description": "URL of the wallet provider trust list."
+                "minLength": 1
+              },
+              "url": {
+                "description": "URL of the wallet provider trust list.",
+                "type": "string",
+                "format": "uri"
               },
               "verifierKey": {
                 "description": "Optional verifier key material used for trust list verification.",
@@ -8164,7 +8168,6 @@
                 "type": "string"
               }
             },
-            "required": ["url"],
             "additionalProperties": false
           }
         },
@@ -8278,6 +8281,41 @@
                     "description": "Require DPoP proofs for token/credential requests.",
                     "type": "boolean"
                   },
+                  "walletAttestationRequired": {
+                    "description": "Require wallet attestation for this authorization server.",
+                    "type": "boolean"
+                  },
+                  "walletProviderTrustLists": {
+                    "description": "Optional wallet provider trust list references for this authorization server.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "trustListId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "description": "URL of the wallet provider trust list.",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "verifierKey": {
+                          "description": "Optional verifier key material used for trust list verification.",
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        },
+                        "verifierX509Der": {
+                          "description": "Optional verifier certificate in DER/base64 form.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
                   "label": {
                     "description": "Optional display label for UI selection.",
                     "type": "string"
@@ -8364,6 +8402,41 @@
                     "description": "Require DPoP proofs for token/credential requests.",
                     "type": "boolean"
                   },
+                  "walletAttestationRequired": {
+                    "description": "Require wallet attestation for this authorization server.",
+                    "type": "boolean"
+                  },
+                  "walletProviderTrustLists": {
+                    "description": "Optional wallet provider trust list references for this authorization server.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "trustListId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "description": "URL of the wallet provider trust list.",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "verifierKey": {
+                          "description": "Optional verifier key material used for trust list verification.",
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        },
+                        "verifierX509Der": {
+                          "description": "Optional verifier certificate in DER/base64 form.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
                   "label": {
                     "description": "Optional display label for UI selection.",
                     "type": "string"
@@ -8418,6 +8491,41 @@
                   "requireDPoP": {
                     "description": "Require DPoP proofs for token/credential requests.",
                     "type": "boolean"
+                  },
+                  "walletAttestationRequired": {
+                    "description": "Require wallet attestation for this authorization server.",
+                    "type": "boolean"
+                  },
+                  "walletProviderTrustLists": {
+                    "description": "Optional wallet provider trust list references for this authorization server.",
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "trustListId": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "description": "URL of the wallet provider trust list.",
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "verifierKey": {
+                          "description": "Optional verifier key material used for trust list verification.",
+                          "type": "object",
+                          "propertyNames": {
+                            "type": "string"
+                          },
+                          "additionalProperties": {}
+                        },
+                        "verifierX509Der": {
+                          "description": "Optional verifier certificate in DER/base64 form.",
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
                   },
                   "label": {
                     "description": "Optional display label for UI selection.",
@@ -11096,6 +11204,11 @@
                     "minLength": 1,
                     "description": "Key chain id for revocation/status list certificate material."
                   },
+                  "providerType": {
+                    "description": "Provider role; defaults to attestation-provider.",
+                    "type": "string",
+                    "enum": ["attestation-provider", "wallet-provider"]
+                  },
                   "info": {
                     "type": "object",
                     "properties": {
@@ -11162,6 +11275,11 @@
                     "type": "string",
                     "minLength": 1,
                     "description": "Revocation/status certificate in PEM format."
+                  },
+                  "providerType": {
+                    "description": "Provider role; defaults to attestation-provider.",
+                    "type": "string",
+                    "enum": ["attestation-provider", "wallet-provider"]
                   },
                   "info": {
                     "type": "object",

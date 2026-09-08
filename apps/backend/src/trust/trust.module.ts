@@ -1,6 +1,7 @@
 import * as https from "node:https";
 import { HttpModule } from "@nestjs/axios";
 import { Module } from "@nestjs/common";
+import { TrustListModule } from "../issuer/trust-list/trustlist.module.js";
 import { CryptoModule } from "../crypto/crypto.module.js";
 import { CacheController } from "./cache.controller.js";
 import { FederationTrustService } from "./federation-trust.service.js";
@@ -19,6 +20,7 @@ import { X509ValidationService } from "./x509-validation.service.js";
             }),
         }),
         CryptoModule,
+        TrustListModule,
     ],
     controllers: [CacheController],
     providers: [

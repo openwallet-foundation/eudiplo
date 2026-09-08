@@ -9,14 +9,14 @@
     "authorizationServers": [
       {
         "id": "issuer-built-in",
-        "type": "built-in"
+        "type": "built-in",
+        "walletAttestationRequired": true
       }
     ],
     "batchSize": 10,
     "dPopRequired": true,
     "credentialResponseEncryption": true,
     "credentialRequestEncryption": true,
-    "walletAttestationRequired": true,
     "display": [
       {
         "locale": "en-US",
@@ -24,6 +24,11 @@
         "logo": {
           "uri": "company.png"
         }
+      }
+    ],
+    "walletProviderTrustLists": [
+      {
+        "trustListId": "oidf-wallet-providers"
       }
     ]
   }

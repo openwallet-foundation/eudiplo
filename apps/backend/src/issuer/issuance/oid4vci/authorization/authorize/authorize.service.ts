@@ -21,6 +21,7 @@ import { CryptoService } from "../../../../../crypto/crypto.service.js";
 import { KeyChainService } from "../../../../../crypto/key/key-chain.service.js";
 import { SessionService } from "../../../../../session/session.service.js";
 import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
+import type { TrustListRef } from "../../../../../verifier/presentations/entities/presentation-config.entity.js";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
 import { StatusListConfigService } from "../../../../status-list/status-list-config.service.js";
 import { NonceEntity } from "../../entities/nonces.entity.js";
@@ -30,6 +31,7 @@ import {
     buildAuthorizationServerMetadata,
     buildWalletAttestationMetadata,
     DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
+    resolveWalletAttestationPolicy,
 } from "../shared/index.js";
 import { AuthorizeQueries } from "./dto/authorize-request.dto.js";
 
@@ -238,6 +240,20 @@ export class AuthorizeService {
         return { enabled: true, expiresInSeconds: 2592000 };
     }
 
+    private getBuiltInAuthorizationServerConfig(issuanceConfig: {
+        authorizationServers?: Array<{
+            type?: string;
+            enabled?: boolean;
+            walletAttestationRequired?: boolean;
+            walletProviderTrustLists?: TrustListRef[];
+        }> | null;
+    }) {
+        return (issuanceConfig.authorizationServers ?? []).find(
+            (candidate) =>
+                candidate.enabled !== false && candidate.type === "built-in",
+        );
+    }
+
     /**
      * Build the RFC 9396 `authorization_details` array that must be bound to the
      * issued access token, per OID4VCI Section 6 / 7. The list of authorized
@@ -318,8 +334,10 @@ export class AuthorizeService {
     ): Promise<AuthorizationServerMetadata> {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-        const walletAttestationRequired =
-            issuanceConfig.walletAttestationRequired ?? false;
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            this.getBuiltInAuthorizationServerConfig(issuanceConfig),
+        );
         const refreshTokenConfig =
             this.resolveRefreshTokenConfig(issuanceConfig);
 
@@ -351,7 +369,9 @@ export class AuthorizeService {
                   ],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            ...buildWalletAttestationMetadata(
+                walletAttestationPolicy.walletAttestationRequired,
+            ),
             additionalMetadata: {
                 // TODO: verify this on the server
                 require_pushed_authorization_requests: true,
@@ -401,16 +421,23 @@ export class AuthorizeService {
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
         const authorizationServerMetadata = await this.authzMetadata(tenantId);
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            this.getBuiltInAuthorizationServerConfig(issuanceConfig),
+        );
 
         try {
             await this.walletAttestationService.verifyWalletAttestation(
                 tenantId,
                 clientAttestation,
                 authorizationServerMetadata.issuer,
-                issuanceConfig.walletAttestationRequired ?? false,
-                issuanceConfig.walletProviderTrustLists ?? [],
+                walletAttestationPolicy.walletAttestationRequired,
+                walletAttestationPolicy.walletProviderTrustLists,
             );
-        } catch {
+        } catch (err) {
+            this.logger.warn(
+                `Client attestation validation failed for tenant ${tenantId}: ${err instanceof Error ? err.message : "Unknown error"}`,
+            );
             throw new TokenErrorException(
                 "invalid_client",
                 "Client attestation validation failed",
@@ -581,14 +608,18 @@ export class AuthorizeService {
             this.resolveRefreshTokenConfig(issuanceConfig);
 
         const authorizationServerMetadata = await this.authzMetadata(tenantId);
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            this.getBuiltInAuthorizationServerConfig(issuanceConfig),
+        );
 
         // Verify wallet attestation if required or provided
         await this.walletAttestationService.verifyWalletAttestation(
             tenantId,
             parsedAccessTokenRequest.clientAttestation,
             authorizationServerMetadata.issuer,
-            issuanceConfig.walletAttestationRequired ?? false,
-            issuanceConfig.walletProviderTrustLists ?? [],
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
         );
 
         let dpopValue;

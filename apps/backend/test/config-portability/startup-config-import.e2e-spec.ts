@@ -137,11 +137,11 @@ describe("startup configuration reconciliation", () => {
             .get(ConfigBundleService)
             .plan("haip", bundle, "create", `folder:${tenantRoot}`);
 
-        expect(bundle.manifest.resources).toHaveLength(22);
+        expect(bundle.manifest.resources).toHaveLength(23);
         const documents = jsonFiles(tenantRoot)
             .filter((path) => path !== join(tenantRoot, "info.json"))
             .map((path) => JSON.parse(readFileSync(path, "utf8")));
-        expect(documents).toHaveLength(22);
+        expect(documents).toHaveLength(23);
         for (const document of documents) {
             expect(document).toMatchObject({
                 apiVersion: expect.stringMatching(/^eudiplo\.io\/.+\/v\d+$/),
@@ -152,7 +152,7 @@ describe("startup configuration reconciliation", () => {
         }
         expect(plan.applicable, JSON.stringify(plan, null, 2)).toBe(true);
         expect(await app.get(ConfigOwnershipService).list("haip")).toHaveLength(
-            23,
+            24,
         );
     });
 });

@@ -1,12 +1,14 @@
+import { fileURLToPath } from "node:url";
 import swc from "unplugin-swc";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
     test: {
+        name: "backend-e2e",
         include: ["**/*.e2e-spec.ts"],
         exclude: ["**/oidf/**"],
         globals: true,
-        root: "./",
+        root: fileURLToPath(new URL("..", import.meta.url)),
         fileParallelism: false,
         coverage: {
             provider: "v8",

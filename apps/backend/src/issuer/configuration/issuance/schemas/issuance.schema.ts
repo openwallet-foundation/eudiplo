@@ -47,6 +47,49 @@ const UpstreamOidcConfigSchema = z
     .describe("OIDC upstream settings for chained authorization server mode.")
     .strict();
 
+const WalletProviderTrustListRefSchema = z
+    .object({
+        trustListId: z.string().trim().min(1).optional(),
+        url: z
+            .url()
+            .optional()
+            .describe("URL of the wallet provider trust list."),
+        verifierKey: z
+            .record(z.string(), z.unknown())
+            .optional()
+            .describe(
+                "Optional verifier key material used for trust list verification.",
+            ),
+        verifierX509Der: z
+            .string()
+            .optional()
+            .describe("Optional verifier certificate in DER/base64 form."),
+    })
+    .describe("Wallet provider trust list reference.")
+    .strict()
+    .refine(
+        (ref) =>
+            !!ref.trustListId ||
+            (!!ref.url && (!!ref.verifierKey || !!ref.verifierX509Der)),
+        {
+            message:
+                "Provide a managed trustListId or a URL with verifier material",
+        },
+    );
+
+const WalletAttestationAuthorizationServerSchema = {
+    walletAttestationRequired: z
+        .boolean()
+        .optional()
+        .describe("Require wallet attestation for this authorization server."),
+    walletProviderTrustLists: z
+        .array(WalletProviderTrustListRefSchema)
+        .optional()
+        .describe(
+            "Optional wallet provider trust list references for this authorization server.",
+        ),
+};
+
 const ExternalAuthorizationServerConfigSchema = z
     .object({
         type: z
@@ -111,6 +154,7 @@ const Oid4VpAuthorizationServerConfigSchema = z
             .boolean()
             .optional()
             .describe("Require DPoP proofs for token/credential requests."),
+        ...WalletAttestationAuthorizationServerSchema,
         label: z
             .string()
             .optional()
@@ -139,6 +183,7 @@ const ChainedAuthorizationServerConfigSchema = z
             .boolean()
             .optional()
             .describe("Require DPoP proofs for token/credential requests."),
+        ...WalletAttestationAuthorizationServerSchema,
         label: z
             .string()
             .optional()
@@ -164,6 +209,7 @@ const BuiltInAuthorizationServerConfigSchema = z
             .boolean()
             .optional()
             .describe("Require DPoP proofs for token/credential requests."),
+        ...WalletAttestationAuthorizationServerSchema,
         label: z
             .string()
             .optional()
@@ -184,23 +230,6 @@ const ManagedAuthorizationServerSchema = z
         BuiltInAuthorizationServerConfigSchema,
     ])
     .describe("Supported authorization server configurations.");
-
-const WalletProviderTrustListRefSchema = z
-    .object({
-        url: z.url().describe("URL of the wallet provider trust list."),
-        verifierKey: z
-            .record(z.string(), z.unknown())
-            .optional()
-            .describe(
-                "Optional verifier key material used for trust list verification.",
-            ),
-        verifierX509Der: z
-            .string()
-            .optional()
-            .describe("Optional verifier certificate in DER/base64 form."),
-    })
-    .describe("Wallet provider trust list reference.")
-    .strict();
 
 const DisplayLogoSchema = z
     .object({
@@ -311,11 +340,15 @@ export const IssuanceConfigSchema = z
         walletAttestationRequired: z
             .boolean()
             .optional()
-            .describe("Require wallet attestation in issuance flows."),
+            .describe(
+                "Default wallet attestation requirement for managed authorization servers.",
+            ),
         walletProviderTrustLists: z
             .array(WalletProviderTrustListRefSchema)
             .optional()
-            .describe("Optional wallet provider trust list references."),
+            .describe(
+                "Shared wallet provider trust lists for key attestations and default authorization server wallet authentication.",
+            ),
         signingKeyId: z
             .string()
             .min(1)

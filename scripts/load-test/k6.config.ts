@@ -43,7 +43,6 @@ export const onceOptions: Options = {
     thresholds: commonThresholds,
     vus: 1,
     iterations: 1,
-    maxDuration: '2m',
 };
 
 /**

@@ -11,7 +11,13 @@ export function normalizeTrustListRefs(
         return [];
     }
 
-    return refs.flatMap((ref) => {
+    return refs.flatMap<TrustListRef>((ref) => {
+        if (ref.trustListId !== undefined) {
+            const trustListId = ref.trustListId.trim();
+            if (!trustListId)
+                throw new Error("Managed trust-list ID must not be empty");
+            return [{ trustListId, url: "" }];
+        }
         const url = typeof ref.url === "string" ? ref.url.trim() : "";
         if (url.length === 0) {
             return [];
@@ -185,6 +191,8 @@ export type VerifierOptions = {
 };
 
 export type TrustListSource = {
+    /** Required when resolving managed trust-list IDs. */
+    tenantId?: string;
     lotes: TrustListRef[];
     // which service types from LoTE you want to accept as issuer identities
     acceptedServiceTypes?: ServiceTypeIdentifier[];

@@ -69,7 +69,10 @@ import { IssuanceConfig } from "../../configuration/issuance/entities/issuance-c
 import { IssuanceService } from "../../configuration/issuance/issuance.service.js";
 import { WebhookEndpointEntity } from "../../configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
 import { SubjectKeyService } from "../../status-list/subject-key.service.js";
-import { validateAttestationProofTrust } from "./attestation-proof-trust.util.js";
+import {
+    validateAttestationProofTrust,
+    validateJwtProofAttestationTrust,
+} from "./attestation-proof-trust.util.js";
 import { AuthorizationServersService } from "./authorization/authorization-servers/authorization-servers.service.js";
 import { AuthorizeService } from "./authorization/authorize/authorize.service.js";
 import { ChainedAsService } from "./authorization/chained-as/chained-as.service.js";
@@ -1570,6 +1573,16 @@ export class Oid4vciService {
                         jwt: proofValue,
                     });
 
+                await validateJwtProofAttestationTrust(
+                    proofValue,
+                    issuanceConfig.walletProviderTrustLists ?? [],
+                    {
+                        tenantId: session.tenantId,
+                        trustStoreService: this.trustStoreService,
+                        x509ValidationService: this.x509ValidationService,
+                    },
+                );
+
                 const cnf = verifiedProof.signer.publicJwk;
                 const cred = await this.credentialsService.getCredential(
                     credentialConfigurationId,
@@ -1603,6 +1616,7 @@ export class Oid4vciService {
                 proofValue,
                 issuanceConfig.walletProviderTrustLists ?? [],
                 {
+                    tenantId: session.tenantId,
                     trustStoreService: this.trustStoreService,
                     x509ValidationService: this.x509ValidationService,
                 },
