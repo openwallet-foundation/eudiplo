@@ -293,7 +293,10 @@ metadata:
   namespace: eudiplo
 rules:
   - apiGroups: [""]
-    resources: ["pods", "pods/log", "endpoints"]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list"]
+  - apiGroups: ["discovery.k8s.io"]
+    resources: ["endpointslices"]
     verbs: ["get", "list"]
   - apiGroups: ["apps"]
     resources: ["deployments"]
