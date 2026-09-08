@@ -540,18 +540,26 @@ export async function setupIssuanceTestApp(): Promise<IssuanceTestContext> {
         .expect(201);
 
     // Import issuance config (disable wallet attestation for non-OIDF tests)
+    const issuanceConfig = readConfig<IssuanceDto>(
+        join(configFolder, "haip/issuance/issuance.json"),
+    );
     await request(app.getHttpServer())
         .post("/issuer/config")
         .trustLocalhost()
         .set("Authorization", `Bearer ${authToken}`)
         .send({
-            ...readConfig<IssuanceDto>(
-                join(configFolder, "haip/issuance/issuance.json"),
+            ...issuanceConfig,
+            authorizationServers: issuanceConfig.authorizationServers?.map(
+                (server) => ({
+                    ...server,
+                    walletAttestationRequired: false,
+                }),
             ),
             dPopRequired: false,
             credentialResponseEncryption: false,
             credentialRequestEncryption: false,
             walletAttestationRequired: false,
+            walletProviderTrustLists: [],
         } as IssuanceDto)
         .expect(201);
 

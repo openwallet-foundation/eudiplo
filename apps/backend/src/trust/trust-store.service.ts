@@ -1,4 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { TrustListService } from "../issuer/trust-list/trustlist.service.js";
 import type { LoTE } from "@owf/eudi-lote";
 import { decodeJwt } from "jose";
 import { LoteParserService } from "./lote-parser.service.js";
@@ -23,12 +25,42 @@ export class TrustStoreService {
     constructor(
         private readonly trustListJwt: TrustListJwtService,
         private readonly loteParser: LoteParserService,
+        private readonly trustListService: TrustListService,
+        private readonly configService: ConfigService,
     ) {}
 
     async getTrustStore(
         source: TrustListSource,
         cacheTtlMs = 5 * 60 * 1000,
     ): Promise<BuiltTrustStore> {
+        // Resolve managed IDs at request time: configuration import may run before
+        // trust-list import, and the selected signing certificate can rotate.
+        source = {
+            ...source,
+            lotes: await Promise.all(
+                source.lotes.map(async (ref) => {
+                    if (ref.trustListId === undefined) return ref;
+                    const id = ref.trustListId.trim();
+                    if (!source.tenantId || !id) {
+                        throw new Error(
+                            "Managed trust lists require a tenant and a non-empty trustListId",
+                        );
+                    }
+                    const verifierX509Der =
+                        await this.trustListService.getVerifierX509Der(
+                            source.tenantId,
+                            id,
+                        );
+                    const baseUrl =
+                        this.configService.get<string>("INTERNAL_URL") ||
+                        this.configService.getOrThrow<string>("PUBLIC_URL");
+                    return {
+                        url: `${baseUrl.replace(/\/$/, "")}/issuers/${encodeURIComponent(source.tenantId)}/trust-list/${encodeURIComponent(id)}`,
+                        verifierX509Der,
+                    };
+                }),
+            ),
+        };
         const cacheKey = this.buildCacheKey(source);
         const cached = this.cache.get(cacheKey);
 
@@ -99,6 +131,7 @@ export class TrustStoreService {
 
     private buildCacheKey(source: TrustListSource): string {
         return JSON.stringify({
+            tenantId: source.tenantId,
             lotes: source.lotes.map((ref) => ({
                 url: ref.url,
                 verifierKey: ref.verifierKey ?? null,

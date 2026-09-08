@@ -67,4 +67,15 @@ describe('wallet attestation configuration round trips', () => {
     form.get('inheritWalletProviderTrustLists')!.setValue(false);
     expect(form.valid).toBe(false);
   });
+  it('preserves a managed list reference without requiring a URL or verifier', () => {
+    const refs = [{ trustListId: 'wallet-providers' }];
+    const form = component['createAuthorizationServerGroup']({
+      type: 'built-in', id: 'as', walletAttestationRequired: true, walletProviderTrustLists: refs,
+    });
+    expect(form.valid).toBe(true);
+    const [saved] = component['buildUnifiedAuthorizationServers']({ authorizationServers: [form.value] });
+    expect(saved.walletProviderTrustLists).toEqual(refs);
+    expect(component['buildWalletProviderTrustLists'](refs)).toEqual(refs);
+  });
+
 });

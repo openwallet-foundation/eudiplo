@@ -229,6 +229,7 @@ export class DeferredCredentialService {
                 proof,
                 issuanceConfig.walletProviderTrustLists ?? [],
                 {
+                    tenantId,
                     trustStoreService: this.trustStoreService,
                     x509ValidationService: this.x509ValidationService,
                 },
@@ -246,6 +247,7 @@ export class DeferredCredentialService {
                 proof,
                 issuanceConfig.walletProviderTrustLists ?? [],
                 {
+                    tenantId,
                     trustStoreService: this.trustStoreService,
                     x509ValidationService: this.x509ValidationService,
                 },

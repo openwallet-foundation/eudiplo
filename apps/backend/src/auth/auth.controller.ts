@@ -70,7 +70,7 @@ export class AuthController {
     getOAuth2Token(
         @Body() body: ClientCredentialsDto,
         @Headers() headers: any,
-    ): Promise<TokenResponse> {
+    ): Promise<TokenResponse> {        
         return this.authService.getOAuth2Token(body, headers);
     }
 

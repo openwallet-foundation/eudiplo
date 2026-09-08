@@ -16,11 +16,21 @@ export type AuthorizationServerType =
 
 const WalletProviderTrustListRefSchema = z
     .object({
-        url: z.url(),
+        trustListId: z.string().trim().min(1).optional(),
+        url: z.url().optional(),
         verifierKey: z.record(z.string(), z.unknown()).optional(),
         verifierX509Der: z.string().optional(),
     })
-    .strict();
+    .strict()
+    .refine(
+        (ref) =>
+            !!ref.trustListId ||
+            (!!ref.url && (!!ref.verifierKey || !!ref.verifierX509Der)),
+        {
+            message:
+                "Provide a managed trustListId or a URL with verifier material",
+        },
+    );
 
 const WalletAttestationAuthorizationServerConfigSchema = {
     walletAttestationRequired: z.boolean().optional(),
@@ -30,8 +40,14 @@ const WalletAttestationAuthorizationServerConfigSchema = {
 };
 
 class WalletProviderTrustListRefDto {
-    @ApiProperty({ format: "uri" })
-    url!: string;
+    @ApiPropertyOptional({
+        description:
+            "Managed trust-list ID in this tenant; resolves URL and signing certificate automatically.",
+    })
+    trustListId?: string;
+
+    @ApiPropertyOptional({ format: "uri" })
+    url?: string;
 
     @ApiPropertyOptional({
         type: "object",

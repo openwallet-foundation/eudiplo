@@ -11,6 +11,7 @@ import { TrustListRef } from "../../../verifier/presentations/entities/presentat
 import { CredentialRequestException } from "./exceptions/index.js";
 
 export interface AttestationProofTrustValidationDeps {
+    tenantId?: string;
     trustStoreService: TrustStoreService;
     x509ValidationService: X509ValidationService;
 }
@@ -45,6 +46,7 @@ export async function validateAttestationProofTrust(
 
         const trustListSource: TrustListSource = {
             lotes: trustListRefs,
+            tenantId: deps.tenantId,
             acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 

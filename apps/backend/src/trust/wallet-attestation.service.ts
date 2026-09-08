@@ -104,6 +104,7 @@ export class WalletAttestationService {
                 await this.validateWalletSolutionCertificate(
                     clientAttestation.clientAttestationJwt,
                     walletProviderTrustLists,
+                    tenantId,
                 );
 
             // Check the status list if present in the attestation JWT
@@ -137,6 +138,7 @@ export class WalletAttestationService {
     private async validateWalletSolutionCertificate(
         clientAttestationJwt: string,
         trustListInputs: TrustListRef[],
+        tenantId: string,
     ): Promise<{
         matchedEntity: MatchedTrustedEntity | null;
         trustStore: BuiltTrustStore | null;
@@ -162,6 +164,7 @@ export class WalletAttestationService {
         // Build trust list source from configured URLs
         const trustListSource: TrustListSource = {
             lotes: trustListRefs,
+            tenantId,
             acceptedServiceTypes: [...walletSolutionServiceTypes],
         };
 

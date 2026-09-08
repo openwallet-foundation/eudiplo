@@ -34,6 +34,12 @@ import {
 } from "../dto/issuer-registration-certificate.dto.js";
 
 class WalletProviderTrustListRefDto {
+    @ApiPropertyOptional({
+        description:
+            "Managed trust-list ID in this tenant; resolves URL and verifier automatically.",
+    })
+    trustListId?: string;
+
     @ApiProperty({ format: "uri" })
     url!: string;
 

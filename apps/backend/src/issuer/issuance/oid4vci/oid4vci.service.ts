@@ -1577,6 +1577,7 @@ export class Oid4vciService {
                     proofValue,
                     issuanceConfig.walletProviderTrustLists ?? [],
                     {
+                        tenantId: session.tenantId,
                         trustStoreService: this.trustStoreService,
                         x509ValidationService: this.x509ValidationService,
                     },
@@ -1615,6 +1616,7 @@ export class Oid4vciService {
                 proofValue,
                 issuanceConfig.walletProviderTrustLists ?? [],
                 {
+                    tenantId: session.tenantId,
                     trustStoreService: this.trustStoreService,
                     x509ValidationService: this.x509ValidationService,
                 },

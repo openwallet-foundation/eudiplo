@@ -1,3 +1,23 @@
+# OIDF HAIP Wallet Provider Trust
+
+The HAIP issuance fixture requires wallet attestation on its built-in authorization
+server. Before running issuance modules, the test setup publishes a signed wallet
+provider list through EUDIPLO at
+`/issuers/haip/trust-list/oidf-wallet-providers`.
+
+The list contains the independently generated CA certificates for both wallet
+attestations and key attestations. Each run creates or updates the managed list,
+then configures the issuance-level `walletProviderTrustLists` with its internal
+HTTPS URL and pinned signing certificate (`verifierX509Der`). The authorization
+server inherits this list; the credential endpoint uses it for key attestations.
+Setup fetches and verifies the hosted list before starting the modules. No mock
+HTTP endpoint or externally provisioned wallet-provider list is needed.
+
+These generated CAs are test trust anchors. The existing `pid-tl.json` serves
+credential-provider trust and is separate from this wallet-provider list.
+Ordinary issuance E2E helpers explicitly disable the AS wallet-attestation
+requirement because those tests do not send wallet attestations.
+
 # OIDF E2E Timing Calibration
 
 Use this note to set OIDF wait thresholds based on measured timing instead of guesswork.

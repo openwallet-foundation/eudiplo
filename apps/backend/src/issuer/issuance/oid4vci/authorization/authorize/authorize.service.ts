@@ -434,7 +434,10 @@ export class AuthorizeService {
                 walletAttestationPolicy.walletAttestationRequired,
                 walletAttestationPolicy.walletProviderTrustLists,
             );
-        } catch {
+        } catch (err) {
+            this.logger.warn(
+                `Client attestation validation failed for tenant ${tenantId}: ${err instanceof Error ? err.message : "Unknown error"}`,
+            );
             throw new TokenErrorException(
                 "invalid_client",
                 "Client attestation validation failed",

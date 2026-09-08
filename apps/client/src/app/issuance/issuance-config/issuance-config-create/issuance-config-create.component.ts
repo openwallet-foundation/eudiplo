@@ -81,10 +81,14 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
   private trustListVerifierValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value as {
+      trustListId?: string;
+      url?: string;
       verifierKey?: unknown;
       verifierX509Der?: unknown;
     };
 
+    if (value?.trustListId?.trim()) return null;
+    if (!value?.url?.trim()) return { missingUrl: true };
     const keyStr = value?.verifierKey;
     const hasVerifierKey = !!keyStr && typeof keyStr === 'string' && keyStr.trim().length > 0;
     const hasVerifierX509Der =
@@ -96,13 +100,15 @@ export class IssuanceConfigCreateComponent implements OnInit {
   }
 
   private createWalletProviderTrustListGroup(value?: {
+    trustListId?: string;
     url?: string;
     verifierKey?: string;
     verifierX509Der?: string;
   }): FormGroup {
     return this.fb.group(
       {
-        url: [value?.url ?? '', [Validators.required]],
+        trustListId: [value?.trustListId ?? ''],
+        url: [value?.url ?? ''],
         verifierKey: [value?.verifierKey ?? '', [IssuanceConfigCreateComponent.jsonValidator]],
         verifierX509Der: [value?.verifierX509Der ?? ''],
       },
@@ -123,6 +129,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
         trustLists.push(
           this.createWalletProviderTrustListGroup({
+            trustListId: entry?.trustListId ?? '',
             url: entry?.url ?? '',
             verifierKey:
               typeof entry?.verifierKey === 'string'
@@ -163,6 +170,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
     return value?.length
       ? value
           .map((entry: any) => {
+            if (entry?.trustListId?.trim()) return { trustListId: entry.trustListId.trim() };
             let verifierKey: Record<string, unknown> | undefined;
             if (typeof entry?.verifierKey === 'string' && entry.verifierKey.trim()) {
               verifierKey = JSON.parse(entry.verifierKey) as Record<string, unknown>;
@@ -174,7 +182,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
               verifierX509Der: entry?.verifierX509Der?.trim() || undefined,
             };
           })
-          .filter((entry: any) => !!entry.url)
+          .filter((entry: any) => !!entry.trustListId || !!entry.url)
       : [];
   }
 
@@ -450,7 +458,8 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
           walletTrustListsArray.push(
             this.createWalletProviderTrustListGroup({
-              url: entry?.url ?? '',
+              trustListId: entry?.trustListId ?? '',
+            url: entry?.url ?? '',
               verifierKey:
                 entry?.verifierKey && typeof entry.verifierKey === 'object'
                   ? JSON.stringify(entry.verifierKey, null, 2)

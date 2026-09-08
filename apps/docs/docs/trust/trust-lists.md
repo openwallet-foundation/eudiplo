@@ -31,6 +31,27 @@ Wallet-provider trust lists also validate attestations received during credentia
 
 Both uses authenticate the signed trust-list JWT using the configured verifier key or certificate before trusting its provider certificates. See [Wallet and Key Attestation](../issuance/issuance-configuration.md#wallet-and-key-attestation) for configuration examples and inheritance rules.
 
+### Hosting a Wallet Provider List
+
+Create a managed trust list with `providerType: "wallet-provider"` on each entity
+(internal or external). The editor exposes this as **Provider type → Wallet
+provider**. EUDIPLO publishes `WalletSolution/Issuance` and
+`WalletSolution/Revocation` services; omitting `providerType` keeps the existing
+credential-provider behavior. A list containing only wallet-provider entities
+uses wallet-provider scheme metadata from
+[ETSI TS 119 602, Annex E](https://www.etsi.org/deliver/etsi_TS/119600_119699/119602/01.01.01_60/ts_119602v010101p.pdf).
+
+Use the hosted URL `/issuers/{tenantId}/trust-list/{id}` in the issuance-level
+`walletProviderTrustLists`, together with the list signing certificate as
+`verifierX509Der` (base64 DER, without PEM headers). This pins the certificate
+that signs the list, which is separate from the provider CA certificates inside
+it. Set `authorizationServers[].walletAttestationRequired` to `true` and omit the
+AS-level list to inherit the same trust for wallet and key attestations.
+
+If wallet and key attestations use different provider CAs, include both in the
+list. The OIDF HAIP tests provision such a hosted list automatically with fresh
+test CAs on every run.
+
 ## Trust List Structure
 
 A trust list in EUDIPLO follows the LoTE (List of Trusted Entities) format and contains:

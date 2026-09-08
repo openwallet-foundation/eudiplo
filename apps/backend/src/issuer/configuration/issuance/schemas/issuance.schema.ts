@@ -49,7 +49,11 @@ const UpstreamOidcConfigSchema = z
 
 const WalletProviderTrustListRefSchema = z
     .object({
-        url: z.url().describe("URL of the wallet provider trust list."),
+        trustListId: z.string().trim().min(1).optional(),
+        url: z
+            .url()
+            .optional()
+            .describe("URL of the wallet provider trust list."),
         verifierKey: z
             .record(z.string(), z.unknown())
             .optional()
@@ -62,7 +66,16 @@ const WalletProviderTrustListRefSchema = z
             .describe("Optional verifier certificate in DER/base64 form."),
     })
     .describe("Wallet provider trust list reference.")
-    .strict();
+    .strict()
+    .refine(
+        (ref) =>
+            !!ref.trustListId ||
+            (!!ref.url && (!!ref.verifierKey || !!ref.verifierX509Der)),
+        {
+            message:
+                "Provide a managed trustListId or a URL with verifier material",
+        },
+    );
 
 const WalletAttestationAuthorizationServerSchema = {
     walletAttestationRequired: z

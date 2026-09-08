@@ -735,6 +735,11 @@
                         fxLayoutGap="8px"
                         class="trust-list-entry"
                       >
+                        <mat-form-field>
+                          <mat-label>Managed trust-list ID</mat-label>
+                          <input matInput formControlName="trustListId" placeholder="wallet-providers" />
+                          <mat-hint>For a list in this tenant, the URL and verifier below are resolved automatically.</mat-hint>
+                        </mat-form-field>
                         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
                           <mat-form-field fxFlex>
                             <mat-label>Trust List URL {{ i + 1 }}</mat-label>

@@ -251,21 +251,14 @@ describe("OIDF - oid4vci-1_0-issuer-haip-test-plan", () => {
             cn: "OIDF Test Client",
         });
 
-        // Generate CA-signed certificate for client attester
-        const attesterJwk = await generateCaSignedJwk({
-            use: "sig",
-            alg: "ES256",
-            cn: "OIDF Client Attester",
-        });
-        // Override kid to "key1" for attester
-        attesterJwk.kid = "key1";
-
-        // Generate CA-signed certificate for key attestation
-        const keyAttestationJwk = await generateCaSignedJwk({
-            use: "sig",
-            alg: "ES256",
-            cn: "OIDF Key Attestation",
-        });
+        // Test-only attester keys match the CA certificates in the HAIP
+        // wallet-providers trust-list fixture. Keep the two fixtures in sync.
+        const { wallet: attesterJwk, key: keyAttestationJwk } = JSON.parse(
+            readFileSync(
+                resolve(__dirname, "fixtures/wallet-attesters.json"),
+                "utf8",
+            ),
+        );
 
         // Generate encryption key material for encrypted credential delivery
         const encryptionJwk = await generateCaSignedJwk({

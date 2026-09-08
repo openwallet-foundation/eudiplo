@@ -39,6 +39,14 @@
                 "minLength": 1,
                 "description": "Key chain id for revocation/status list certificate material."
               },
+              "providerType": {
+                "description": "Provider role; defaults to attestation-provider.",
+                "type": "string",
+                "enum": [
+                  "attestation-provider",
+                  "wallet-provider"
+                ]
+              },
               "info": {
                 "type": "object",
                 "properties": {
@@ -112,6 +120,14 @@
                 "type": "string",
                 "minLength": 1,
                 "description": "Revocation/status certificate in PEM format."
+              },
+              "providerType": {
+                "description": "Provider role; defaults to attestation-provider.",
+                "type": "string",
+                "enum": [
+                  "attestation-provider",
+                  "wallet-provider"
+                ]
               },
               "info": {
                 "type": "object",
