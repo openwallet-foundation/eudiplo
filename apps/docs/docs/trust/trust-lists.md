@@ -22,6 +22,15 @@ Trust lists solve this by maintaining a registry of:
 Each trusted entity defines **both** an issuance certificate and a revocation certificate. When verifying a credential, EUDIPLO ensures that the status list is signed by the revocation certificate **from the same entity** that issued the credential. This prevents an attacker from using a valid issuance certificate with a rogue status list.
 :::
 
+## Wallet Provider Trust During Issuance
+
+Wallet-provider trust lists also validate attestations received during credential issuance:
+
+- The authorization server verifies wallet attestations using its configured `walletProviderTrustLists`, inheriting the issuance-level list when omitted.
+- The credential issuer verifies key attestations using the issuance-level `walletProviderTrustLists`, including attestations embedded in JWT proofs and deferred issuance.
+
+Both uses authenticate the signed trust-list JWT using the configured verifier key or certificate before trusting its provider certificates. See [Wallet and Key Attestation](../issuance/issuance-configuration.md#wallet-and-key-attestation) for configuration examples and inheritance rules.
+
 ## Trust List Structure
 
 A trust list in EUDIPLO follows the LoTE (List of Trusted Entities) format and contains:

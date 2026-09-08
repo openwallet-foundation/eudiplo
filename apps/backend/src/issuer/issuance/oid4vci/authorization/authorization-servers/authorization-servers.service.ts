@@ -15,6 +15,7 @@ import { SessionStatus } from "../../../../../session/entities/session.entity.js
 import { SessionService } from "../../../../../session/session.service.js";
 import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
 import { Oid4vpService } from "../../../../../verifier/oid4vp/oid4vp.service.js";
+import type { TrustListRef } from "../../../../../verifier/presentations/entities/presentation-config.entity.js";
 import { ManagedAuthorizationServerConfig } from "../../../../configuration/issuance/dto/authorization-server-config.dto.js";
 import { ChainedAsTokenConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto.js";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
@@ -33,6 +34,7 @@ import {
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
+    resolveWalletAttestationPolicy,
 } from "../shared/index.js";
 
 type Oid4VpManagedAuthorizationServerConfig =
@@ -42,6 +44,8 @@ type Oid4VpManagedAuthorizationServerConfig =
         presentationConfigId: string;
         token?: ChainedAsTokenConfig;
         requireDPoP?: boolean;
+        walletAttestationRequired?: boolean;
+        walletProviderTrustLists?: TrustListRef[];
     };
 
 type ExternalManagedAuthorizationServerConfig =
@@ -226,12 +230,17 @@ export class AuthorizationServersService {
             throw new BadRequestException("DPoP is required");
         }
 
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+
         await this.walletAttestationService.verifyWalletAttestation(
             tenantId,
             clientAttestation,
             this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId),
-            issuanceConfig.walletAttestationRequired ?? false,
-            issuanceConfig.walletProviderTrustLists ?? [],
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
         );
 
         let issuerState = request.issuer_state;
@@ -502,11 +511,17 @@ export class AuthorizationServersService {
         authorizationServerId: string,
         request: ChainedAsTokenRequestDto,
         dpopJwt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
     ): Promise<ChainedAsTokenResponseDto> {
         const config = await this.getAuthorizationServerConfig(
             tenantId,
             authorizationServerId,
         );
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
 
         if (
             request.grant_type !== "authorization_code" &&
@@ -516,6 +531,18 @@ export class AuthorizationServersService {
                 'Invalid grant_type, must be "authorization_code" or "refresh_token"',
             );
         }
+
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            this.getAuthorizationServerBaseUrl(tenantId, authorizationServerId),
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
+        );
 
         const session = await resolveSessionForTokenRequest(
             this.sessionRepository,
@@ -599,8 +626,10 @@ export class AuthorizationServersService {
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-        const walletAttestationRequired =
-            issuanceConfig.walletAttestationRequired ?? false;
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
         const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
@@ -614,7 +643,9 @@ export class AuthorizationServersService {
                 : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            ...buildWalletAttestationMetadata(
+                walletAttestationPolicy.walletAttestationRequired,
+            ),
         });
     }
 

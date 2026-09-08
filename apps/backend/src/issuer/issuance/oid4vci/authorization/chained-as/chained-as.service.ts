@@ -19,6 +19,7 @@ import { SessionService } from "../../../../../session/session.service.js";
 import { FederationTrustService } from "../../../../../trust/federation-trust.service.js";
 import { FederationTrustSource } from "../../../../../trust/types.js";
 import { WalletAttestationService } from "../../../../../trust/wallet-attestation.service.js";
+import type { TrustListRef } from "../../../../../verifier/presentations/entities/presentation-config.entity.js";
 import { AuthorizationIdentity } from "../../../../configuration/credentials/dto/authorization-identity.js";
 import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/chained-as-config.dto.js";
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
@@ -37,6 +38,7 @@ import {
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
+    resolveWalletAttestationPolicy,
 } from "../shared/index.js";
 
 /**
@@ -161,8 +163,12 @@ export class ChainedAsService {
             enabled?: boolean;
             type: "chained";
             upstream: ChainedAsConfig["upstream"];
-            token?: ChainedAsConfig["token"];
-            requireDPoP?: ChainedAsConfig["requireDPoP"];
+            token?: NonNullable<ChainedAsConfig["token"]>;
+            requireDPoP?: NonNullable<ChainedAsConfig["requireDPoP"]>;
+            walletAttestationRequired?: NonNullable<
+                ChainedAsConfig["walletAttestationRequired"]
+            >;
+            walletProviderTrustLists?: TrustListRef[];
         };
 
         const chainedServer = (issuanceConfig.authorizationServers ?? []).find(
@@ -184,6 +190,10 @@ export class ChainedAsService {
                 upstream: chainedServer.upstream,
                 token: chainedServer.token,
                 requireDPoP: chainedServer.requireDPoP,
+                walletAttestationRequired:
+                    chainedServer.walletAttestationRequired,
+                walletProviderTrustLists:
+                    chainedServer.walletProviderTrustLists,
             } as ChainedAsConfig;
         }
 
@@ -342,12 +352,17 @@ export class ChainedAsService {
 
         // Verify wallet attestation if provided or required
         const chainedAsUrl = this.getChainedAsBaseUrl(tenantId);
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+
         await this.walletAttestationService.verifyWalletAttestation(
             tenantId,
             clientAttestation,
             chainedAsUrl,
-            issuanceConfig.walletAttestationRequired ?? false,
-            issuanceConfig.walletProviderTrustLists ?? [],
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
         );
 
         // Find the session for the issuer_state (if provided)
@@ -742,7 +757,13 @@ export class ChainedAsService {
         tenantId: string,
         request: ChainedAsTokenRequestDto,
         dpopJwt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
     ): Promise<ChainedAsTokenResponseDto> {
+        const config = await this.getChainedAsConfig(tenantId);
+
         if (
             request.grant_type !== "authorization_code" &&
             request.grant_type !== "refresh_token"
@@ -751,6 +772,21 @@ export class ChainedAsService {
                 'Invalid grant_type, must be "authorization_code" or "refresh_token"',
             );
         }
+
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const chainedAsUrl = this.getChainedAsBaseUrl(tenantId);
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            chainedAsUrl,
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
+        );
 
         const session = await resolveSessionForTokenRequest(
             this.sessionRepository,
@@ -772,7 +808,6 @@ export class ChainedAsService {
             request,
         );
 
-        const config = await this.getChainedAsConfig(tenantId);
         const { tokenType, dpopJkt } = resolveTokenBinding(
             config.requireDPoP,
             session,
@@ -867,8 +902,10 @@ export class ChainedAsService {
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-        const walletAttestationRequired =
-            issuanceConfig.walletAttestationRequired ?? false;
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
         const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
@@ -882,7 +919,9 @@ export class ChainedAsService {
                 : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            ...buildWalletAttestationMetadata(
+                walletAttestationPolicy.walletAttestationRequired,
+            ),
         });
     }
 

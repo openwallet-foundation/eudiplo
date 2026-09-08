@@ -14,6 +14,40 @@ export type AuthorizationServerType =
     | "chained"
     | "built-in";
 
+const WalletProviderTrustListRefSchema = z
+    .object({
+        url: z.url(),
+        verifierKey: z.record(z.string(), z.unknown()).optional(),
+        verifierX509Der: z.string().optional(),
+    })
+    .strict();
+
+const WalletAttestationAuthorizationServerConfigSchema = {
+    walletAttestationRequired: z.boolean().optional(),
+    walletProviderTrustLists: z
+        .array(WalletProviderTrustListRefSchema)
+        .optional(),
+};
+
+class WalletProviderTrustListRefDto {
+    @ApiProperty({ format: "uri" })
+    url!: string;
+
+    @ApiPropertyOptional({
+        type: "object",
+        additionalProperties: true,
+        description: "JWK used to verify the trust-list JWT signature.",
+    })
+    verifierKey?: Record<string, unknown>;
+
+    @ApiPropertyOptional({
+        type: "string",
+        description:
+            "Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.",
+    })
+    verifierX509Der?: string;
+}
+
 const ManagedAuthorizationServerConfigSchema = z
     .object({
         type: z.enum(["external", "oid4vp", "chained", "built-in"]),
@@ -47,6 +81,7 @@ const Oid4VpAuthorizationServerConfigSchema = z
         immediateWalletRedirect: z.boolean().optional(),
         token: ChainedAsTokenConfigSchema.optional(),
         requireDPoP: z.boolean().optional(),
+        ...WalletAttestationAuthorizationServerConfigSchema,
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -59,6 +94,7 @@ const ChainedAuthorizationServerConfigSchema = z
         upstream: UpstreamOidcConfigSchema,
         token: ChainedAsTokenConfigSchema.optional(),
         requireDPoP: z.boolean().optional(),
+        ...WalletAttestationAuthorizationServerConfigSchema,
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -70,6 +106,7 @@ const BuiltInAuthorizationServerConfigSchema = z
         id: z.string(),
         token: ChainedAsTokenConfigSchema.optional(),
         requireDPoP: z.boolean().optional(),
+        ...WalletAttestationAuthorizationServerConfigSchema,
         label: z.string().optional(),
         enabled: z.boolean().optional(),
     })
@@ -186,6 +223,19 @@ export class Oid4VpAuthorizationServerConfig extends createZodDto(
     })
     declare requireDPoP?: boolean;
 
+    @ApiPropertyOptional({
+        description:
+            "Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.",
+    })
+    declare walletAttestationRequired?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.",
+        type: [WalletProviderTrustListRefDto],
+    })
+    declare walletProviderTrustLists?: WalletProviderTrustListRefDto[];
+
     declare label?: string;
 
     declare enabled?: boolean;
@@ -226,6 +276,19 @@ export class ChainedAuthorizationServerConfig extends createZodDto(
     })
     declare requireDPoP?: boolean;
 
+    @ApiPropertyOptional({
+        description:
+            "Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.",
+    })
+    declare walletAttestationRequired?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.",
+        type: [WalletProviderTrustListRefDto],
+    })
+    declare walletProviderTrustLists?: WalletProviderTrustListRefDto[];
+
     declare label?: string;
 
     declare enabled?: boolean;
@@ -259,6 +322,19 @@ export class BuiltInAuthorizationServerConfig extends createZodDto(
         default: false,
     })
     declare requireDPoP?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.",
+    })
+    declare walletAttestationRequired?: boolean;
+
+    @ApiPropertyOptional({
+        description:
+            "Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.",
+        type: [WalletProviderTrustListRefDto],
+    })
+    declare walletProviderTrustLists?: WalletProviderTrustListRefDto[];
 
     declare label?: string;
 

@@ -102,6 +102,7 @@ export class TrustStoreService {
             lotes: source.lotes.map((ref) => ({
                 url: ref.url,
                 verifierKey: ref.verifierKey ?? null,
+                verifierX509Der: ref.verifierX509Der ?? null,
             })),
             acceptedServiceTypes: source.acceptedServiceTypes ?? [],
         });

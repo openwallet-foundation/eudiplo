@@ -32,6 +32,7 @@ import {
     issueRefreshTokenIfEnabled,
     resolveSessionForTokenRequest,
     resolveTokenBinding,
+    resolveWalletAttestationPolicy,
 } from "../shared/index.js";
 
 @Injectable()
@@ -101,12 +102,17 @@ export class ChainedAsVpService {
             throw new BadRequestException("DPoP is required");
         }
 
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+
         await this.walletAttestationService.verifyWalletAttestation(
             tenantId,
             clientAttestation,
             this.getChainedAsVpBaseUrl(tenantId),
-            issuanceConfig.walletAttestationRequired ?? false,
-            issuanceConfig.walletProviderTrustLists ?? [],
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
         );
 
         let issuerState = request.issuer_state;
@@ -360,7 +366,13 @@ export class ChainedAsVpService {
         tenantId: string,
         request: ChainedAsTokenRequestDto,
         dpopJwt?: string,
+        clientAttestation?: {
+            clientAttestationJwt: string;
+            clientAttestationPopJwt: string;
+        },
     ): Promise<ChainedAsTokenResponseDto> {
+        const config = await this.getChainedAsVpConfig(tenantId);
+
         if (
             request.grant_type !== "authorization_code" &&
             request.grant_type !== "refresh_token"
@@ -369,6 +381,20 @@ export class ChainedAsVpService {
                 'Invalid grant_type, must be "authorization_code" or "refresh_token"',
             );
         }
+
+        const issuanceConfig =
+            await this.issuanceService.getIssuanceConfiguration(tenantId);
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
+        await this.walletAttestationService.verifyWalletAttestation(
+            tenantId,
+            clientAttestation,
+            this.getChainedAsVpBaseUrl(tenantId),
+            walletAttestationPolicy.walletAttestationRequired,
+            walletAttestationPolicy.walletProviderTrustLists,
+        );
 
         const session = await resolveSessionForTokenRequest(
             this.sessionRepository,
@@ -381,7 +407,6 @@ export class ChainedAsVpService {
             request,
         );
 
-        const config = await this.getChainedAsVpConfig(tenantId);
         const { tokenType, dpopJkt } = resolveTokenBinding(
             config.requireDPoP,
             session,
@@ -462,8 +487,10 @@ export class ChainedAsVpService {
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const issuanceConfig =
             await this.issuanceService.getIssuanceConfiguration(tenantId);
-        const walletAttestationRequired =
-            issuanceConfig.walletAttestationRequired ?? false;
+        const walletAttestationPolicy = resolveWalletAttestationPolicy(
+            issuanceConfig,
+            config,
+        );
         const refreshTokensEnabled = config.token?.refreshTokenEnabled ?? true;
 
         return buildAuthorizationServerMetadata({
@@ -477,7 +504,9 @@ export class ChainedAsVpService {
                 : ["authorization_code"],
             dpopSigningAlgValuesSupported:
                 DEFAULT_DPOP_SIGNING_ALG_VALUES_SUPPORTED,
-            ...buildWalletAttestationMetadata(walletAttestationRequired),
+            ...buildWalletAttestationMetadata(
+                walletAttestationPolicy.walletAttestationRequired,
+            ),
         });
     }
 }

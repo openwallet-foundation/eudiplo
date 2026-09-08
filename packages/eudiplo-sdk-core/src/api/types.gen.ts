@@ -4,6 +4,17 @@ export type ClientOptions = {
     baseUrl: string;
 };
 
+export type ServiceInfoResponseDto = {
+    /**
+     * Service name
+     */
+    service: string;
+    /**
+     * Documentation URL
+     */
+    documentation: string;
+};
+
 export type VersionResponseDto = {
     /**
      * Running service version
@@ -203,11 +214,11 @@ export type ClientEntity = {
     /**
      * List of presentation config IDs this client can use. If empty/null, all configs are allowed.
      */
-    allowedPresentationConfigs?: Array<string>;
+    allowedPresentationConfigs?: Array<string> | null;
     /**
      * List of issuance config IDs this client can use. If empty/null, all configs are allowed.
      */
-    allowedIssuanceConfigs?: Array<string>;
+    allowedIssuanceConfigs?: Array<string> | null;
 };
 
 export type TenantResponseDto = {
@@ -222,7 +233,7 @@ export type TenantResponseDto = {
     /**
      * Tenant description
      */
-    description?: string;
+    description?: string | null;
     /**
      * Tenant status
      */
@@ -230,11 +241,11 @@ export type TenantResponseDto = {
     /**
      * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
      */
-    sessionConfig?: SessionStorageConfig;
+    sessionConfig?: SessionStorageConfig | null;
     /**
      * Status list configuration for this tenant. Only affects newly created status lists.
      */
-    statusListConfig?: StatusListConfig;
+    statusListConfig?: StatusListConfig | null;
     /**
      * Managed clients attached to the tenant
      */
@@ -324,7 +335,7 @@ export type TenantCreateResponseDto = {
     /**
      * Tenant description
      */
-    description?: string;
+    description?: string | null;
     /**
      * Tenant status
      */
@@ -332,11 +343,11 @@ export type TenantCreateResponseDto = {
     /**
      * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
      */
-    sessionConfig?: SessionStorageConfig;
+    sessionConfig?: SessionStorageConfig | null;
     /**
      * Status list configuration for this tenant. Only affects newly created status lists.
      */
-    statusListConfig?: StatusListConfig;
+    statusListConfig?: StatusListConfig | null;
     /**
      * One-time generated client credentials for admin access
      */
@@ -501,7 +512,7 @@ export type RegistrarConfigResponseDto = {
     /**
      * Optional default values merged into registration certificate creation requests (for example privacy_policy, support_uri)
      */
-    registrationCertificateDefaults?: RegistrationCertificateDefaults;
+    registrationCertificateDefaults?: RegistrationCertificateDefaults | null;
     /**
      * Indicates whether a password is configured (actual password is never returned)
      */
@@ -947,7 +958,7 @@ export type KmsTenantConfigResponseDto = {
     /**
      * Tenant-specific KMS configuration from <CONFIG_FOLDER>/<tenantId>/kms.json. Null when no tenant file exists.
      */
-    tenantConfig?: KmsConfigDto;
+    tenantConfig?: KmsConfigDto | null;
     /**
      * Effective configuration used at runtime for the tenant (global + tenant merge).
      */
@@ -1387,7 +1398,7 @@ export type TenantEntity = {
     /**
      * Tenant description
      */
-    description?: string;
+    description?: string | null;
     /**
      * Tenant status
      */
@@ -1395,12 +1406,15 @@ export type TenantEntity = {
     /**
      * Session storage configuration for this tenant. Controls TTL and cleanup behavior.
      */
-    sessionConfig?: SessionStorageConfig;
+    sessionConfig?: SessionStorageConfig | null;
     /**
      * Status list configuration for this tenant. Only affects newly created status lists.
      */
-    statusListConfig?: StatusListConfig;
-    clients: Array<Array<ClientEntity>>;
+    statusListConfig?: StatusListConfig | null;
+    /**
+     * Clients associated with the tenant
+     */
+    clients?: Array<ClientEntity>;
 };
 
 export type AttributeProviderEntity = {
@@ -1415,7 +1429,7 @@ export type AttributeProviderEntity = {
     /**
      * Attribute provider description
      */
-    description?: string;
+    description?: string | null;
     /**
      * Attribute provider URL
      */
@@ -1713,7 +1727,7 @@ export type Session = {
      */
     offer?: {
         [key: string]: unknown;
-    };
+    } | null;
     /**
      * Offer URL for the credential offer.
      */
@@ -1748,7 +1762,7 @@ export type Session = {
      */
     responseEncryptionPrivateJwk?: {
         [key: string]: unknown;
-    };
+    } | null;
     /**
      * Verified credentials from the presentation process.
      * Encrypted at rest - contains personal information.
@@ -1783,7 +1797,7 @@ export type Session = {
     /**
      * Redirect URI to which the user-agent should be redirected after the presentation is completed.
      */
-    redirectUri?: string;
+    redirectUri?: string | null;
     /**
      * Where to send the claims webhook response.
      */
@@ -1814,6 +1828,20 @@ export type Session = {
      * Stores the error message when status is 'failed'.
      */
     errorReason?: string;
+    /**
+     * Machine-readable failure code when status is 'failed' (e.g.
+     * `trust_chain_not_trusted`). Stable across credential and trust-list
+     * formats; consumers branch on this rather than parsing {@link errorReason}.
+     */
+    failureCode?: string;
+    /**
+     * Structured verification outcome (success or failure, provenance and
+     * diagnostics, per credential). Additive to {@link status} /
+     * {@link errorReason}; verbose detail stays in the session log only.
+     */
+    outcome?: {
+        [key: string]: unknown;
+    } | null;
     /**
      * Number of failed tx_code (transaction code) validation attempts.
      * Used to enforce brute-force protection in the pre-authorized code flow.
@@ -1910,7 +1938,7 @@ export type UpdateSessionConfigDto = {
     /**
      * Time-to-live for sessions in seconds. Set to null to use global default.
      */
-    ttlSeconds?: number | null;
+    ttlSeconds?: number | null | null;
     /**
      * Cleanup mode: 'full' deletes everything, 'anonymize' keeps metadata but removes PII.
      */
@@ -1925,7 +1953,7 @@ export type StatusListImportDto = {
     /**
      * Credential configuration ID to bind this list exclusively to. Leave empty for a shared list.
      */
-    credentialConfigurationId?: string;
+    credentialConfigurationId?: string | null;
     /**
      * Key chain ID to use for signing. Leave empty to use the tenant's default StatusList key chain.
      */
@@ -1951,7 +1979,7 @@ export type UpdateStatusListConfigDto = {
     /**
      * The capacity of the status list. Set to null to reset to global default.
      */
-    capacity?: number | null;
+    capacity?: number | null | null;
     /**
      * Bits per status entry. Set to null to reset to global default.
      */
@@ -1959,7 +1987,7 @@ export type UpdateStatusListConfigDto = {
     /**
      * TTL in seconds for the status list JWT. Set to null to reset to global default.
      */
-    ttl?: number | null;
+    ttl?: number | null | null;
     /**
      * If true, regenerate JWT on every status change. Set to null to reset to default (false).
      */
@@ -1982,11 +2010,11 @@ export type StatusListResponseDto = {
     /**
      * Credential configuration ID this list is bound to. Null means shared.
      */
-    credentialConfigurationId?: string;
+    credentialConfigurationId?: string | null;
     /**
      * Key chain ID used for signing. Null means using the tenant's default.
      */
-    keyChainId?: string;
+    keyChainId?: string | null;
     /**
      * Bits per status value
      */
@@ -2014,7 +2042,7 @@ export type StatusListResponseDto = {
     /**
      * JWT expiration timestamp. Null if JWT has not been generated yet.
      */
-    expiresAt?: string;
+    expiresAt?: string | null;
 };
 
 export type CreateStatusListDto = {
@@ -2040,11 +2068,11 @@ export type UpdateStatusListDto = {
     /**
      * Credential configuration ID to bind this list exclusively to. Set to null to make this a shared list.
      */
-    credentialConfigurationId?: string | null;
+    credentialConfigurationId?: string | null | null;
     /**
      * Key chain ID to use for signing. Set to null to use the tenant's default StatusList key chain.
      */
-    keyChainId?: string | null;
+    keyChainId?: string | null | null;
 };
 
 export type ClaimsQuery = {
@@ -2145,7 +2173,7 @@ export type WebhookEndpointEntity = {
     /**
      * Webhook endpoint description
      */
-    description?: string;
+    description?: string | null;
     /**
      * Webhook endpoint URL
      */
@@ -2473,7 +2501,7 @@ export type CredentialConfig = {
     /**
      * List of IAE actions to execute before credential issuance
      */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb> | null;
     /**
      * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
      *
@@ -2482,14 +2510,14 @@ export type CredentialConfig = {
      *
      * The underlying TS11 specification is not yet finalized.
      */
-    schemaMeta?: SchemaMetaConfig;
+    schemaMeta?: SchemaMetaConfig | null;
     /**
      * Embedded disclosure policy (discriminated union by `policy`).
      * The discriminator metadata is retained for OpenAPI schema generation.
      */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy | null;
     id: string;
-    description?: string;
+    description?: string | null;
     /**
      * The tenant that owns this object.
      */
@@ -2500,13 +2528,13 @@ export type CredentialConfig = {
      * Reference to the attribute provider used for fetching claims.
      * Optional: if set, claims will be fetched from this provider during issuance.
      */
-    attributeProviderId?: string;
+    attributeProviderId?: string | null;
     attributeProvider?: AttributeProviderEntity;
     /**
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    webhookEndpointId?: string;
+    webhookEndpointId?: string | null;
     webhookEndpoint?: WebhookEndpointEntity;
     keyBinding?: boolean;
     /**
@@ -2527,13 +2555,13 @@ export type CredentialConfig = {
      * Distinct from `credentialReusePolicy` (issuer metadata published to
      * wallets); this one is enforced by the issuer at issuance time.
      */
-    activeCredentials?: ActiveCredentialPolicy;
+    activeCredentials?: ActiveCredentialPolicy | null;
     /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
+    sdJwtTrustFormat?: 'x5c' | 'federation' | null;
     lifeTime?: number;
 };
 
@@ -2545,7 +2573,7 @@ export type CredentialConfigCreate = {
     /**
      * List of IAE actions to execute before credential issuance
      */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb> | null;
     /**
      * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
      *
@@ -2554,26 +2582,26 @@ export type CredentialConfigCreate = {
      *
      * The underlying TS11 specification is not yet finalized.
      */
-    schemaMeta?: SchemaMetaConfig;
+    schemaMeta?: SchemaMetaConfig | null;
     /**
      * Embedded disclosure policy (discriminated union by `policy`).
      * The discriminator metadata is retained for OpenAPI schema generation.
      */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy | null;
     id: string;
-    description?: string;
+    description?: string | null;
     config: IssuerMetadataCredentialConfig;
     fields: Array<ClaimFieldDefinitionDto>;
     /**
      * Reference to the attribute provider used for fetching claims.
      * Optional: if set, claims will be fetched from this provider during issuance.
      */
-    attributeProviderId?: string;
+    attributeProviderId?: string | null;
     /**
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    webhookEndpointId?: string;
+    webhookEndpointId?: string | null;
     keyBinding?: boolean;
     /**
      * Reference to the key chain used for signing.
@@ -2592,13 +2620,13 @@ export type CredentialConfigCreate = {
      * Distinct from `credentialReusePolicy` (issuer metadata published to
      * wallets); this one is enforced by the issuer at issuance time.
      */
-    activeCredentials?: ActiveCredentialPolicy;
+    activeCredentials?: ActiveCredentialPolicy | null;
     /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
+    sdJwtTrustFormat?: 'x5c' | 'federation' | null;
     lifeTime?: number;
 };
 
@@ -2610,7 +2638,7 @@ export type CredentialConfigUpdate = {
     /**
      * List of IAE actions to execute before credential issuance
      */
-    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb>;
+    iaeActions?: Array<IaeActionOpenid4VpPresentation | IaeActionRedirectToWeb> | null;
     /**
      * TS11 schema metadata configuration for EUDI Catalogue of Attestations.
      *
@@ -2619,26 +2647,26 @@ export type CredentialConfigUpdate = {
      *
      * The underlying TS11 specification is not yet finalized.
      */
-    schemaMeta?: SchemaMetaConfig;
+    schemaMeta?: SchemaMetaConfig | null;
     /**
      * Embedded disclosure policy (discriminated union by `policy`).
      * The discriminator metadata is retained for OpenAPI schema generation.
      */
-    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy;
+    embeddedDisclosurePolicy?: EmbeddedDisclosurePolicy | null;
     id?: string;
-    description?: string;
+    description?: string | null;
     config?: IssuerMetadataCredentialConfig;
     fields?: Array<ClaimFieldDefinitionDto>;
     /**
      * Reference to the attribute provider used for fetching claims.
      * Optional: if set, claims will be fetched from this provider during issuance.
      */
-    attributeProviderId?: string;
+    attributeProviderId?: string | null;
     /**
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    webhookEndpointId?: string;
+    webhookEndpointId?: string | null;
     keyBinding?: boolean;
     /**
      * Reference to the key chain used for signing.
@@ -2657,13 +2685,13 @@ export type CredentialConfigUpdate = {
      * Distinct from `credentialReusePolicy` (issuer metadata published to
      * wallets); this one is enforced by the issuer at issuance time.
      */
-    activeCredentials?: ActiveCredentialPolicy;
+    activeCredentials?: ActiveCredentialPolicy | null;
     /**
      * For SD-JWT credentials: determines whether to include certificate chain (x5c)
      * or use federation-based trust (iss claim).
      * Default: "x5c" (federation must be explicitly selected)
      */
-    sdJwtTrustFormat?: 'x5c' | 'federation';
+    sdJwtTrustFormat?: 'x5c' | 'federation' | null;
     lifeTime?: number;
 };
 
@@ -2849,7 +2877,7 @@ export type PresentationConfig = {
      */
     readonly registrationCertCache?: {
         [key: string]: unknown;
-    };
+    } | null;
     /**
      * Unique identifier for the VP request.
      */
@@ -2861,7 +2889,7 @@ export type PresentationConfig = {
     /**
      * Description of the presentation configuration.
      */
-    description?: string;
+    description?: string | null;
     /**
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
@@ -2874,12 +2902,12 @@ export type PresentationConfig = {
     /**
      * The registration certificate request containing the necessary details.
      */
-    registration_cert?: RegistrationCertificateRequest;
+    registration_cert?: RegistrationCertificateRequest | null;
     /**
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    webhookEndpointId?: string;
+    webhookEndpointId?: string | null;
     /**
      * The timestamp when the VP request was created.
      */
@@ -2891,12 +2919,12 @@ export type PresentationConfig = {
     /**
      * Attestation that should be attached
      */
-    attached?: Array<PresentationAttachment>;
+    attached?: Array<PresentationAttachment> | null;
     /**
      * Redirect URI to which the user-agent should be redirected after the presentation is completed.
      * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
      */
-    redirectUri?: string;
+    redirectUri?: string | null;
     /**
      * Optional ID of the access certificate to use for signing the presentation request.
      * If not provided, the default access certificate for the tenant will be used.
@@ -2906,7 +2934,7 @@ export type PresentationConfig = {
      * that reference only part of a composite primary key. The relationship is handled
      * at the application level in the service layer.
      */
-    accessKeyChainId?: string;
+    accessKeyChainId?: string | null;
     /**
      * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
      *
@@ -2918,7 +2946,7 @@ export type PresentationConfig = {
      *
      * Only affects `response_type: "iso-18013-7"` offers.
      */
-    readerAuth?: boolean;
+    readerAuth?: boolean | null;
 };
 
 export type ResolveIssuerMetadataDto = {
@@ -3262,13 +3290,13 @@ export type SchemaMetadataResponseDto = {
 
 export type PresentationConfigCreateDto = {
     /**
-     * Presentation configuration identifier.
-     */
-    id: string;
-    /**
      * Optional presentation configuration description.
      */
     description?: string | null;
+    /**
+     * Presentation configuration identifier.
+     */
+    id: string;
     /**
      * Presentation request lifetime in seconds.
      */
@@ -3481,6 +3509,10 @@ export type PresentationConfigCreateDto = {
          * Credential query ids this transaction data applies to.
          */
         credential_ids: Array<string>;
+        /**
+         * Transaction details. Required for TS12 SCA transaction data.
+         */
+        payload?: unknown;
         [key: string]: unknown;
     }> | null;
     /**
@@ -3506,9 +3538,36 @@ export type PresentationConfigCreateDto = {
         jwt?: string;
     } | null;
     /**
+     * Optional imported registration certificate JWT.
+     */
+    registrationCertImportJwt?: Array<string>;
+    /**
+     * Optional registrar-side registration certificate id.
+     */
+    registrationCertImportId?: Array<string>;
+    /**
+     * Optional registration certificate privacy policy URI.
+     */
+    registrationCertBodyPrivacyPolicy?: Array<string>;
+    /**
+     * Optional registration certificate support URI.
+     */
+    registrationCertBodySupportUri?: Array<string>;
+    /**
+     * Optional registration certificate intermediary.
+     */
+    registrationCertBodyIntermediary?: Array<string>;
+    /**
+     * Optional registration certificate purpose entries.
+     */
+    registrationCertBodyPurpose?: Array<{
+        lang?: string;
+        content?: string;
+    }> | null;
+    /**
      * Optional webhook endpoint id for presentation callbacks.
      */
-    webhookEndpointId?: string | null;
+    webhookEndpointId?: Array<string>;
     /**
      * Optional attachments included with presentation requests.
      */
@@ -3529,26 +3588,26 @@ export type PresentationConfigCreateDto = {
     /**
      * Optional redirect URI after presentation completion.
      */
-    redirectUri?: string | null;
+    redirectUri?: Array<string>;
     /**
      * Optional key chain id for access token/auth operations.
      */
-    accessKeyChainId?: string | null;
+    accessKeyChainId?: Array<string>;
     /**
      * Whether reader authentication is required for mDoc requests.
      */
-    readerAuth?: boolean | null;
+    readerAuth?: Array<boolean>;
 };
 
 export type PresentationConfigUpdateDto = {
     /**
-     * Presentation configuration identifier.
-     */
-    id?: string;
-    /**
      * Optional presentation configuration description.
      */
     description?: string | null;
+    /**
+     * Presentation configuration identifier.
+     */
+    id?: string;
     /**
      * Presentation request lifetime in seconds.
      */
@@ -3761,6 +3820,10 @@ export type PresentationConfigUpdateDto = {
          * Credential query ids this transaction data applies to.
          */
         credential_ids: Array<string>;
+        /**
+         * Transaction details. Required for TS12 SCA transaction data.
+         */
+        payload?: unknown;
         [key: string]: unknown;
     }> | null;
     /**
@@ -3786,9 +3849,36 @@ export type PresentationConfigUpdateDto = {
         jwt?: string;
     } | null;
     /**
+     * Optional imported registration certificate JWT.
+     */
+    registrationCertImportJwt?: Array<string>;
+    /**
+     * Optional registrar-side registration certificate id.
+     */
+    registrationCertImportId?: Array<string>;
+    /**
+     * Optional registration certificate privacy policy URI.
+     */
+    registrationCertBodyPrivacyPolicy?: Array<string>;
+    /**
+     * Optional registration certificate support URI.
+     */
+    registrationCertBodySupportUri?: Array<string>;
+    /**
+     * Optional registration certificate intermediary.
+     */
+    registrationCertBodyIntermediary?: Array<string>;
+    /**
+     * Optional registration certificate purpose entries.
+     */
+    registrationCertBodyPurpose?: Array<{
+        lang?: string;
+        content?: string;
+    }> | null;
+    /**
      * Optional webhook endpoint id for presentation callbacks.
      */
-    webhookEndpointId?: string | null;
+    webhookEndpointId?: Array<string>;
     /**
      * Optional attachments included with presentation requests.
      */
@@ -3809,15 +3899,15 @@ export type PresentationConfigUpdateDto = {
     /**
      * Optional redirect URI after presentation completion.
      */
-    redirectUri?: string | null;
+    redirectUri?: Array<string>;
     /**
      * Optional key chain id for access token/auth operations.
      */
-    accessKeyChainId?: string | null;
+    accessKeyChainId?: Array<string>;
     /**
      * Whether reader authentication is required for mDoc requests.
      */
-    readerAuth?: boolean | null;
+    readerAuth?: Array<boolean>;
 };
 
 export type TrustListEntityInfo = {
@@ -4075,6 +4165,20 @@ export type ChainedAsTokenConfig = {
     refreshTokenExpiresInSeconds?: number;
 };
 
+export type WalletProviderTrustListRefDto = {
+    url: string;
+    /**
+     * JWK used to verify the trust-list JWT signature.
+     */
+    verifierKey?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.
+     */
+    verifierX509Der?: string;
+};
+
 export type Oid4VpAuthorizationServerConfig = {
     /**
      * Authorization server implementation type
@@ -4105,6 +4209,20 @@ export type Oid4VpAuthorizationServerConfig = {
      * Require DPoP for token requests issued by this authorization server
      */
     requireDPoP?: boolean;
+    /**
+     * Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.
+     */
+    walletAttestationRequired?: boolean;
+    /**
+     * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
+     */
+    walletProviderTrustLists?: Array<{
+        url: string;
+        verifierKey?: {
+            [key: string]: unknown;
+        };
+        verifierX509Der?: string;
+    }>;
     label?: string;
     enabled?: boolean;
 };
@@ -4159,6 +4277,20 @@ export type ChainedAuthorizationServerConfig = {
      * Require DPoP for token requests issued by this authorization server
      */
     requireDPoP?: boolean;
+    /**
+     * Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.
+     */
+    walletAttestationRequired?: boolean;
+    /**
+     * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
+     */
+    walletProviderTrustLists?: Array<{
+        url: string;
+        verifierKey?: {
+            [key: string]: unknown;
+        };
+        verifierX509Der?: string;
+    }>;
     label?: string;
     enabled?: boolean;
 };
@@ -4185,22 +4317,22 @@ export type BuiltInAuthorizationServerConfig = {
      * Require DPoP for token requests issued by this authorization server
      */
     requireDPoP?: boolean;
+    /**
+     * Require wallet attestation for requests to this authorization server. Omit to inherit the issuance default.
+     */
+    walletAttestationRequired?: boolean;
+    /**
+     * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
+     */
+    walletProviderTrustLists?: Array<{
+        url: string;
+        verifierKey?: {
+            [key: string]: unknown;
+        };
+        verifierX509Der?: string;
+    }>;
     label?: string;
     enabled?: boolean;
-};
-
-export type WalletProviderTrustListRefDto = {
-    url: string;
-    /**
-     * JWK used to verify the trust-list JWT signature.
-     */
-    verifierKey?: {
-        [key: string]: unknown;
-    };
-    /**
-     * Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.
-     */
-    verifierX509Der?: string;
 };
 
 export type FederationTrustAnchorConfig = {
@@ -4303,7 +4435,8 @@ export type DisplayInfo = {
 
 export type IssuanceConfig = {
     /**
-     * Trust lists containing trusted wallet providers.
+     * Shared wallet provider trust lists for key attestations at the credential endpoint
+     * and default wallet-attestation trust at managed authorization servers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
@@ -4319,16 +4452,16 @@ export type IssuanceConfig = {
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
-    federation?: FederationConfig;
+    federation?: FederationConfig | null;
     /**
      * Optional registration certificate configuration for issuer metadata (`issuer_info`).
      * Supports importing an existing JWT or generating one via registrar.
      */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    registrationCertificate?: IssuerRegistrationCertificateConfig | null;
     /**
      * Server-managed cache for generated issuer registration certificates.
      */
-    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
+    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache | null;
     /**
      * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
      */
@@ -4344,7 +4477,7 @@ export type IssuanceConfig = {
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
-    txCodeMaxAttempts?: number;
+    txCodeMaxAttempts?: number | null;
     /**
      * The tenant that owns this object.
      */
@@ -4359,7 +4492,7 @@ export type IssuanceConfig = {
      */
     dPopRequired?: boolean;
     /**
-     * Indicates whether wallet attestation is required for the token endpoint.
+     * Default wallet attestation requirement for managed authorization servers.
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
@@ -4377,7 +4510,8 @@ export type IssuanceConfig = {
 
 export type UpdateIssuanceDto = {
     /**
-     * Trust lists containing trusted wallet providers.
+     * Shared wallet provider trust lists for key attestations at the credential endpoint
+     * and default wallet-attestation trust at managed authorization servers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
@@ -4393,16 +4527,16 @@ export type UpdateIssuanceDto = {
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
-    federation?: FederationConfig;
+    federation?: FederationConfig | null;
     /**
      * Optional registration certificate configuration for issuer metadata (`issuer_info`).
      * Supports importing an existing JWT or generating one via registrar.
      */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    registrationCertificate?: IssuerRegistrationCertificateConfig | null;
     /**
      * Server-managed cache for generated issuer registration certificates.
      */
-    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache;
+    readonly registrationCertificateCache?: IssuerRegistrationCertificateCache | null;
     /**
      * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
      */
@@ -4418,7 +4552,7 @@ export type UpdateIssuanceDto = {
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
-    txCodeMaxAttempts?: number;
+    txCodeMaxAttempts?: number | null;
     /**
      * Value to determine the amount of credentials that are issued in a batch.
      * Default is 1.
@@ -4429,7 +4563,7 @@ export type UpdateIssuanceDto = {
      */
     dPopRequired?: boolean;
     /**
-     * Indicates whether wallet attestation is required for the token endpoint.
+     * Default wallet attestation requirement for managed authorization servers.
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
@@ -5041,6 +5175,25 @@ export type PresentationRequest = {
         includeRawTokensFor?: Array<string>;
     };
     /**
+     * Optional transaction data to include in the OID4VP request.
+     * If provided, this will override the transaction_data from the presentation configuration.
+     */
+    transaction_data?: Array<{
+        /**
+         * Transaction data type identifier.
+         */
+        type: string;
+        /**
+         * Credential query ids this transaction data applies to.
+         */
+        credential_ids: Array<string>;
+        /**
+         * Transaction details. Required for TS12 SCA transaction data.
+         */
+        payload?: unknown;
+        [key: string]: unknown;
+    }>;
+    /**
      * The type of response expected from the presentation request.
      */
     response_type: 'uri' | 'iso-18013-7' | 'dc-api';
@@ -5058,13 +5211,6 @@ export type PresentationRequest = {
      * Example: "http://localhost:8080"
      */
     expected_origin?: string;
-    /**
-     * Optional transaction data to include in the OID4VP request.
-     * If provided, this will override the transaction_data from the presentation configuration.
-     */
-    transaction_data?: Array<{
-        [key: string]: unknown;
-    }>;
     /**
      * Optional clock skew tolerance for this presentation offer, in seconds.
      * If provided, this overrides the presentation configuration for the created session.
@@ -5138,7 +5284,7 @@ export type PresentationConfigWritable = {
     /**
      * Description of the presentation configuration.
      */
-    description?: string;
+    description?: string | null;
     /**
      * Lifetime how long the presentation request is valid after creation, in seconds.
      */
@@ -5151,12 +5297,12 @@ export type PresentationConfigWritable = {
     /**
      * The registration certificate request containing the necessary details.
      */
-    registration_cert?: RegistrationCertificateRequest;
+    registration_cert?: RegistrationCertificateRequest | null;
     /**
      * Reference to the webhook endpoint used for notifications.
      * Optional: if set, notifications will be sent to this endpoint.
      */
-    webhookEndpointId?: string;
+    webhookEndpointId?: string | null;
     /**
      * The timestamp when the VP request was created.
      */
@@ -5168,12 +5314,12 @@ export type PresentationConfigWritable = {
     /**
      * Attestation that should be attached
      */
-    attached?: Array<PresentationAttachment>;
+    attached?: Array<PresentationAttachment> | null;
     /**
      * Redirect URI to which the user-agent should be redirected after the presentation is completed.
      * You can use the `{sessionId}` placeholder in the URI, which will be replaced with the actual session ID.
      */
-    redirectUri?: string;
+    redirectUri?: string | null;
     /**
      * Optional ID of the access certificate to use for signing the presentation request.
      * If not provided, the default access certificate for the tenant will be used.
@@ -5183,7 +5329,7 @@ export type PresentationConfigWritable = {
      * that reference only part of a composite primary key. The relationship is handled
      * at the application level in the service layer.
      */
-    accessKeyChainId?: string;
+    accessKeyChainId?: string | null;
     /**
      * Enable reader authentication for the ISO 18013-7 Annex C (DC API) flow.
      *
@@ -5195,12 +5341,13 @@ export type PresentationConfigWritable = {
      *
      * Only affects `response_type: "iso-18013-7"` offers.
      */
-    readerAuth?: boolean;
+    readerAuth?: boolean | null;
 };
 
 export type IssuanceConfigWritable = {
     /**
-     * Trust lists containing trusted wallet providers.
+     * Shared wallet provider trust lists for key attestations at the credential endpoint
+     * and default wallet-attestation trust at managed authorization servers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
@@ -5216,12 +5363,12 @@ export type IssuanceConfigWritable = {
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
-    federation?: FederationConfig;
+    federation?: FederationConfig | null;
     /**
      * Optional registration certificate configuration for issuer metadata (`issuer_info`).
      * Supports importing an existing JWT or generating one via registrar.
      */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    registrationCertificate?: IssuerRegistrationCertificateConfig | null;
     /**
      * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
      */
@@ -5237,7 +5384,7 @@ export type IssuanceConfigWritable = {
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
-    txCodeMaxAttempts?: number;
+    txCodeMaxAttempts?: number | null;
     /**
      * The tenant that owns this object.
      */
@@ -5252,7 +5399,7 @@ export type IssuanceConfigWritable = {
      */
     dPopRequired?: boolean;
     /**
-     * Indicates whether wallet attestation is required for the token endpoint.
+     * Default wallet attestation requirement for managed authorization servers.
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
@@ -5270,7 +5417,8 @@ export type IssuanceConfigWritable = {
 
 export type UpdateIssuanceDtoWritable = {
     /**
-     * Trust lists containing trusted wallet providers.
+     * Shared wallet provider trust lists for key attestations at the credential endpoint
+     * and default wallet-attestation trust at managed authorization servers.
      * Each entry MUST include either `verifierKey` or `verifierX509Der`.
      */
     walletProviderTrustLists?: Array<WalletProviderTrustListRefDto>;
@@ -5286,12 +5434,12 @@ export type UpdateIssuanceDtoWritable = {
      * Optional OpenID Federation configuration used for trust evaluation.
      * When omitted, trust checks rely on existing LoTE trust-list behavior.
      */
-    federation?: FederationConfig;
+    federation?: FederationConfig | null;
     /**
      * Optional registration certificate configuration for issuer metadata (`issuer_info`).
      * Supports importing an existing JWT or generating one via registrar.
      */
-    registrationCertificate?: IssuerRegistrationCertificateConfig;
+    registrationCertificate?: IssuerRegistrationCertificateConfig | null;
     /**
      * Whether the OID4VCI notification endpoint is exposed for this issuance configuration.
      */
@@ -5307,7 +5455,7 @@ export type UpdateIssuanceDtoWritable = {
     /**
      * Maximum failed tx_code attempts before the pre-authorized code is invalidated. Defaults to 5.
      */
-    txCodeMaxAttempts?: number;
+    txCodeMaxAttempts?: number | null;
     /**
      * Value to determine the amount of credentials that are issued in a batch.
      * Default is 1.
@@ -5318,7 +5466,7 @@ export type UpdateIssuanceDtoWritable = {
      */
     dPopRequired?: boolean;
     /**
-     * Indicates whether wallet attestation is required for the token endpoint.
+     * Default wallet attestation requirement for managed authorization servers.
      * When enabled, wallets must provide OAuth-Client-Attestation headers.
      * Default value is false.
      */
@@ -5416,6 +5564,9 @@ export type TenantControllerInitTenantResponse = TenantControllerInitTenantRespo
 export type TenantControllerDeleteTenantData = {
     body?: never;
     path: {
+        /**
+         * The ID of the tenant to delete
+         */
         id: string;
     };
     query?: never;
@@ -5434,6 +5585,9 @@ export type TenantControllerDeleteTenantResponse = TenantControllerDeleteTenantR
 export type TenantControllerGetTenantData = {
     body?: never;
     path: {
+        /**
+         * The ID of the tenant
+         */
         id: string;
     };
     query?: never;
@@ -5449,6 +5603,9 @@ export type TenantControllerGetTenantResponse = TenantControllerGetTenantRespons
 export type TenantControllerUpdateTenantData = {
     body: UpdateTenantDto;
     path: {
+        /**
+         * The ID of the tenant
+         */
         id: string;
     };
     query?: never;
@@ -7368,6 +7525,9 @@ export type CredentialOfferControllerGetOfferResponse = CredentialOfferControlle
 export type DeferredControllerCompleteDeferredData = {
     body: CompleteDeferredDto;
     path: {
+        /**
+         * The transaction ID returned when issuance was deferred
+         */
         transactionId: string;
     };
     query?: never;
@@ -7393,6 +7553,9 @@ export type DeferredControllerCompleteDeferredResponse = DeferredControllerCompl
 export type DeferredControllerFailDeferredData = {
     body: FailDeferredDto;
     path: {
+        /**
+         * The transaction ID returned when issuance was deferred
+         */
         transactionId: string;
     };
     query?: never;
@@ -7514,6 +7677,14 @@ export type ChainedAsVpControllerTokenData = {
          * DPoP proof JWT
          */
         DPoP?: string;
+        /**
+         * Wallet attestation JWT
+         */
+        'OAuth-Client-Attestation'?: string;
+        /**
+         * Wallet attestation proof-of-possession JWT
+         */
+        'OAuth-Client-Attestation-PoP'?: string;
     };
     path: {
         /**

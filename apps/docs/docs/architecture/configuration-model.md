@@ -18,7 +18,7 @@ flowchart LR
     Schema --> Migration[Version Migration]
     Migration --> DB[Database Entity]
     DB --> Runtime[Protocol Behavior]
-    
+
     style JSON fill:#e1f5ff
     style Schema fill:#ffe1e1
     style Migration fill:#fff4e1
@@ -39,20 +39,20 @@ flowchart LR
 
 EUDIPLO translates JSON configuration into protocol behavior at runtime:
 
-| Configuration Layer | Protocol Layer | Example |
-| --------------------- | ---------------- | --------- |
-| **Credential Configuration** (`CredentialConfig`) | `credential_configurations_supported` in OID4VCI metadata | SD-JWT VC schema with selective disclosure fields |
-| **Issuance Configuration** (`IssuanceConfig`) | Authorization server metadata, token endpoint behavior | DPoP enforcement, wallet attestation validation |
-| **Presentation Configuration** (`PresentationConfig`) | OID4VP authorization request, DCQL query | Required credentials, trusted issuers, field constraints |
-| **Key Chain** (`KeyChain`) | JWT/CWT signing, JWE encryption | ES256 signing key with X.509 certificate chain |
-| **Trust List** (`TrustList`) | Trusted issuer validation | ETSI TL or OpenID Federation trust anchor |
-| **Status List** (`StatusList`) | Revocation status lookup | OAuth Token Status List JWT |
+| Configuration Layer                                   | Protocol Layer                                                                      | Example                                                                           |
+| ----------------------------------------------------- | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| **Credential Configuration** (`CredentialConfig`)     | `credential_configurations_supported` in OID4VCI metadata                           | SD-JWT VC schema, selective disclosure fields, key-attestation proof requirements |
+| **Issuance Configuration** (`IssuanceConfig`)         | Authorization server metadata, PAR/token behavior, credential-endpoint trust policy | DPoP enforcement, wallet attestation defaults, key-attestation trust lists        |
+| **Presentation Configuration** (`PresentationConfig`) | OID4VP authorization request, DCQL query                                            | Required credentials, trusted issuers, field constraints                          |
+| **Key Chain** (`KeyChain`)                            | JWT/CWT signing, JWE encryption                                                     | ES256 signing key with X.509 certificate chain                                    |
+| **Trust List** (`TrustList`)                          | Trusted issuer validation                                                           | ETSI TL or OpenID Federation trust anchor                                         |
+| **Status List** (`StatusList`)                        | Revocation status lookup                                                            | OAuth Token Status List JWT                                                       |
 
 **Runtime Example (Issuance):**
 
 ```text
 1. JSON Config (IssuanceConfig)
-   └─> { "dPopRequired": true, "walletAttestationRequired": true }
+    └─> { "authorizationServers": [{ "walletAttestationRequired": true }], "walletProviderTrustLists": [...] }
 
 2. Validation (Zod Schema)
    └─> Ensures boolean types, validates authorization server structure
@@ -60,8 +60,8 @@ EUDIPLO translates JSON configuration into protocol behavior at runtime:
 3. Database Entity (IssuanceConfig)
    └─> Stored as rows in `issuance_config` table, scoped by tenantId
 
-4. Protocol Behavior (OID4VCI Token Endpoint)
-   └─> Enforces DPoP proof validation and wallet attestation checks
+4. Protocol Behavior (OID4VCI AS and Credential Endpoints)
+    └─> Enforces wallet attestation at PAR/token endpoints and key-attestation trust at the credential endpoint
 ```
 
 ---
@@ -76,10 +76,10 @@ Configuration files are loaded from the `config/` directory (or `assets/config/`
 
 **Environment Variables:**
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `CONFIG_FOLDER` | Base directory for configuration files | `config/` (Docker), `assets/config/` (Node.js) |
-| `CONFIG_IMPORT_MODE` | Import mode: `disabled`, `create`, `upsert`, `replace` | `disabled` |
+| Variable             | Description                                            | Default                                        |
+| -------------------- | ------------------------------------------------------ | ---------------------------------------------- |
+| `CONFIG_FOLDER`      | Base directory for configuration files                 | `config/` (Docker), `assets/config/` (Node.js) |
+| `CONFIG_IMPORT_MODE` | Import mode: `disabled`, `create`, `upsert`, `replace` | `disabled`                                     |
 
 **Import Modes:**
 
@@ -154,14 +154,14 @@ Every portable resource uses a stable envelope structure:
 
 **Envelope Fields:**
 
-| Field | Description |
-| ------- | ------------- |
-| `apiVersion` | Selects the portable schema and migration chain (e.g., `eudiplo.io/presentation-config/v2`) |
-| `kind` | Resource type (e.g., `PresentationConfig`, `CredentialConfig`, `KeyChain`) |
-| `metadata.id` | Stable identifier across instances |
-| `metadata.generation` | Prevents an older file/bundle from overwriting newer configuration |
-| `metadata.ownership` | `unmanaged` (editable via API/UI) or `file-managed` (authoritative from file) |
-| `spec` | Desired configuration only (excludes runtime state, caches, sessions, timestamps) |
+| Field                 | Description                                                                                 |
+| --------------------- | ------------------------------------------------------------------------------------------- |
+| `apiVersion`          | Selects the portable schema and migration chain (e.g., `eudiplo.io/presentation-config/v2`) |
+| `kind`                | Resource type (e.g., `PresentationConfig`, `CredentialConfig`, `KeyChain`)                  |
+| `metadata.id`         | Stable identifier across instances                                                          |
+| `metadata.generation` | Prevents an older file/bundle from overwriting newer configuration                          |
+| `metadata.ownership`  | `unmanaged` (editable via API/UI) or `file-managed` (authoritative from file)               |
+| `spec`                | Desired configuration only (excludes runtime state, caches, sessions, timestamps)           |
 
 **Bare JSON Support:**
 
@@ -220,13 +220,13 @@ Images and other binary assets are stored directly in the ZIP (in the `images/` 
 
 Export is **safe by design** and never includes sensitive data:
 
-| Resource Type | Export Behavior | Import Requirement |
-| --------------- | ----------------- | --------------------- |
-| **Retrievable passwords/tokens** | Replaced with `${ENV_NAME}` placeholders | Supply from target environment's secret manager |
-| **Client secrets** | Not exported (only bcrypt hash is stored) | Replace placeholder with new secret or use `!generate` |
-| **Database-held private keys** | Not included, reported as required input | Supply from target KMS or use `!regenerate` |
-| **Non-exportable KMS keys** | Represented by provider ID, external key ID, and public JWK | Provider must have access to the same KMS key |
-| **Runtime session/status data** | Never exported | N/A - not part of desired configuration |
+| Resource Type                    | Export Behavior                                             | Import Requirement                                     |
+| -------------------------------- | ----------------------------------------------------------- | ------------------------------------------------------ |
+| **Retrievable passwords/tokens** | Replaced with `${ENV_NAME}` placeholders                    | Supply from target environment's secret manager        |
+| **Client secrets**               | Not exported (only bcrypt hash is stored)                   | Replace placeholder with new secret or use `!generate` |
+| **Database-held private keys**   | Not included, reported as required input                    | Supply from target KMS or use `!regenerate`            |
+| **Non-exportable KMS keys**      | Represented by provider ID, external key ID, and public JWK | Provider must have access to the same KMS key          |
+| **Runtime session/status data**  | Never exported                                              | N/A - not part of desired configuration                |
 
 **Secret Placeholder Syntax:**
 
@@ -281,7 +281,7 @@ flowchart LR
     Preflight --> Plan[Produce Plan]
     Plan --> Apply[Apply in Dependency Order]
     Apply --> Record[Record Ownership]
-    
+
     style Decode fill:#e1f5ff
     style Verify fill:#ffe1e1
     style Migrate fill:#fff4e1
@@ -365,10 +365,10 @@ Secrets and environment-specific values can be injected at runtime using placeho
 
 Resources are either **unmanaged** or **file-managed**:
 
-| Ownership | API/UI Edits | Re-import Behavior | Use Case |
-| ----------- | -------------- | --------------------- | ---------- |
-| **`unmanaged`** | ✅ Allowed | Imports succeed but do not prevent manual edits | Development, ad-hoc testing |
-| **`file-managed`** | ❌ Rejected with conflict | Re-importing is idempotent; file is authoritative | Production, CI/CD, GitOps |
+| Ownership          | API/UI Edits              | Re-import Behavior                                | Use Case                    |
+| ------------------ | ------------------------- | ------------------------------------------------- | --------------------------- |
+| **`unmanaged`**    | ✅ Allowed                | Imports succeed but do not prevent manual edits   | Development, ad-hoc testing |
+| **`file-managed`** | ❌ Rejected with conflict | Re-importing is idempotent; file is authoritative | Production, CI/CD, GitOps   |
 
 **Lifecycle:**
 
@@ -392,14 +392,14 @@ The web client shows a managed-resource notice with the provisioning source and 
 
 The configuration portability API exposes:
 
-| Endpoint | Method | Purpose |
-| ---------- | -------- | --------- |
-| `/api/config-bundles/export?format=zip` | GET | Export a tenant archive |
-| `/api/config-bundles/plan/archive?mode=upsert` | POST | Validate and plan a ZIP import |
-| `/api/config-bundles/import/archive?mode=upsert` | POST | Apply a planned ZIP import |
-| `/api/config-bundles/documents/upgrade` | POST | Upgrade one resource envelope |
-| `/api/config-bundles/resources` | GET | List ownership and generations |
-| `/api/config-bundles/resources/:kind/:id/detach` | POST | Detach a managed resource |
+| Endpoint                                         | Method | Purpose                        |
+| ------------------------------------------------ | ------ | ------------------------------ |
+| `/api/config-bundles/export?format=zip`          | GET    | Export a tenant archive        |
+| `/api/config-bundles/plan/archive?mode=upsert`   | POST   | Validate and plan a ZIP import |
+| `/api/config-bundles/import/archive?mode=upsert` | POST   | Apply a planned ZIP import     |
+| `/api/config-bundles/documents/upgrade`          | POST   | Upgrade one resource envelope  |
+| `/api/config-bundles/resources`                  | GET    | List ownership and generations |
+| `/api/config-bundles/resources/:kind/:id/detach` | POST   | Detach a managed resource      |
 
 **Import Parameters:**
 
@@ -490,13 +490,13 @@ When `rotationPolicy.enabled` is `true`:
 
 **Usage Types:**
 
-| Usage Type | Purpose |
-| ------------ | --------- |
-| `access` | OAuth/OIDC access token signing and authentication |
-| `attestation` | Credential/attestation signing (SD-JWT VC, mDOC) |
-| `trustList` | Trust list signing |
-| `statusList` | Status list (credential revocation) signing |
-| `encrypt` | Encryption (JWE) |
+| Usage Type    | Purpose                                            |
+| ------------- | -------------------------------------------------- |
+| `access`      | OAuth/OIDC access token signing and authentication |
+| `attestation` | Credential/attestation signing (SD-JWT VC, mDOC)   |
+| `trustList`   | Trust list signing                                 |
+| `statusList`  | Status list (credential revocation) signing        |
+| `encrypt`     | Encryption (JWE)                                   |
 
 **Schema Reference**: [Key Chain Import DTO](https://github.com/openwallet-foundation/eudiplo/blob/main/schemas/KeyChainImportDto.schema.json)
 
@@ -516,12 +516,14 @@ Define credential templates and schemas.
     "description": "University Diploma Credential",
     "config": {
         "format": "dc+sd-jwt",
-        "display": [{
-            "name": "University Diploma",
-            "locale": "en-US",
-            "background_color": "#12107c",
-            "text_color": "#FFFFFF"
-        }],
+        "display": [
+            {
+                "name": "University Diploma",
+                "locale": "en-US",
+                "background_color": "#12107c",
+                "text_color": "#FFFFFF"
+            }
+        ],
         "scope": "diploma"
     },
     "fields": [
@@ -584,16 +586,22 @@ Define verification requirements for credential presentations.
     "id": "age-verification",
     "description": "Verify user is over 18",
     "credentialQuery": {
-        "credential_sets": [[{
-            "format": "dc+sd-jwt",
-            "meta": { "vct_values": ["urn:eu:age-over-18"] },
-            "claims": [{ "path": ["age"], "values": ["18+"] }]
-        }]]
+        "credential_sets": [
+            [
+                {
+                    "format": "dc+sd-jwt",
+                    "meta": { "vct_values": ["urn:eu:age-over-18"] },
+                    "claims": [{ "path": ["age"], "values": ["18+"] }]
+                }
+            ]
+        ]
     },
-    "trustedAuthorities": [{
-        "type": "etsi_tl",
-        "values": [{ "trustListId": "eu-wallet-providers" }]
-    }]
+    "trustedAuthorities": [
+        {
+            "type": "etsi_tl",
+            "values": [{ "trustListId": "eu-wallet-providers" }]
+        }
+    ]
 }
 ```
 
