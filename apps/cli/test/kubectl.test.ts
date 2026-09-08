@@ -13,6 +13,7 @@ import {
     resolveWorkload,
     resolveWorkloads,
 } from "../src/services/kubectl.js";
+import { unreadyEndpoints } from "../src/services/deployment-drivers.js";
 import type { InstanceConfig } from "../src/types.js";
 
 const scope = { context: "production", namespace: "eudiplo" };
@@ -139,6 +140,72 @@ describe("workload resolution", () => {
             "deployment/eudiplo",
             "deployment/eudiplo-client",
         ]);
+    });
+});
+
+describe("service endpoint readiness", () => {
+    function endpointList(
+        items: Array<{ name: string; addresses: number }>,
+    ): string {
+        return JSON.stringify({
+            items: items.map(({ name, addresses }) => ({
+                metadata: { name },
+                subsets:
+                    addresses > 0
+                        ? [
+                              {
+                                  addresses: Array.from(
+                                      { length: addresses },
+                                      () => ({ ip: "10.0.0.1" }),
+                                  ),
+                              },
+                          ]
+                        : [],
+            })),
+        });
+    }
+
+    it("accepts services that have ready addresses", () => {
+        expect(
+            unreadyEndpoints(
+                endpointList([
+                    { name: "eudiplo", addresses: 2 },
+                    { name: "eudiplo-client", addresses: 1 },
+                ]),
+            ),
+        ).toEqual([]);
+    });
+
+    it("names services with no ready addresses", () => {
+        expect(
+            unreadyEndpoints(
+                endpointList([
+                    { name: "eudiplo", addresses: 1 },
+                    { name: "eudiplo-client", addresses: 0 },
+                ]),
+            ),
+        ).toEqual(["eudiplo-client"]);
+    });
+
+    it("treats a subset with an empty address list as unready", () => {
+        expect(
+            unreadyEndpoints(
+                JSON.stringify({
+                    items: [
+                        {
+                            metadata: { name: "eudiplo" },
+                            subsets: [{ addresses: [] }],
+                        },
+                    ],
+                }),
+            ),
+        ).toEqual(["eudiplo"]);
+    });
+
+    it("rejects a payload that is not an endpoints list", () => {
+        expect(() => unreadyEndpoints(JSON.stringify({ kind: "Pod" }))).toThrow(
+            /Unexpected endpoints payload/,
+        );
     });
 });
 

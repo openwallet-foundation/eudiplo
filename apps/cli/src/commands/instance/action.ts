@@ -9,6 +9,7 @@ import { parseTarget } from "../../services/deployment-target.js";
 import {
     assertContextName,
     assertNamespace,
+    defaultWorkloads,
     parseWorkloadMap,
 } from "../../services/kubectl.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
@@ -121,9 +122,6 @@ function readKubernetesOptions(flags: ParsedArgs["flags"]): {
         throw new Error("--namespace is required for kubernetes instances.");
     }
     const workload = readStringFlag(flags, "workload");
-    if (!workload) {
-        throw new Error("--workload is required for kubernetes instances.");
-    }
 
     assertContextName(kubeContext, "--context");
     assertNamespace(namespace, "--namespace");
@@ -131,7 +129,9 @@ function readKubernetesOptions(flags: ParsedArgs["flags"]): {
     return {
         context: kubeContext,
         namespace,
-        workloads: parseWorkloadMap(workload),
+        workloads: workload
+            ? parseWorkloadMap(workload)
+            : { ...defaultWorkloads },
         readOnly: flags["read-only"] === true ? true : undefined,
     };
 }

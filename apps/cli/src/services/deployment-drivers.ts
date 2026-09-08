@@ -19,6 +19,7 @@ import {
 import type { KubernetesScope } from "./kubectl.js";
 import {
     buildCanIArgs,
+    buildGetEndpointsArgs,
     buildGetPodsArgs,
     buildGetWorkloadArgs,
     resolveScope,
@@ -197,7 +198,81 @@ async function kubernetesDiagnostics(
                 : `pods could not be listed: ${firstLine(pods.stderr)}`,
     });
 
+    const endpoints = await captureKubectl(
+        kubectl,
+        buildGetEndpointsArgs(scope),
+        context,
+    );
+    checks.push(endpointCheck(endpoints));
+
     return checks;
+}
+
+/**
+ * A Service with no ready addresses is the usual shape of "the API answers on
+ * localhost but not through the ingress", so it is worth calling out
+ * separately from pod status.
+ */
+function endpointCheck(endpoints: CapturedCommand): DoctorCheck {
+    if (endpoints.code !== 0) {
+        return {
+            name: "service endpoints",
+            status: "warn",
+            message: `endpoints could not be listed: ${firstLine(endpoints.stderr)}`,
+        };
+    }
+
+    let unready: string[];
+    try {
+        unready = unreadyEndpoints(endpoints.stdout);
+    } catch {
+        return {
+            name: "service endpoints",
+            status: "warn",
+            message: "endpoints could not be parsed.",
+        };
+    }
+
+    return {
+        name: "service endpoints",
+        status: unready.length === 0 ? "pass" : "fail",
+        message:
+            unready.length === 0
+                ? "all services have ready addresses"
+                : `no ready addresses for: ${unready.join(", ")}`,
+    };
+}
+
+export function unreadyEndpoints(stdout: string): string[] {
+    const parsed: unknown = JSON.parse(stdout);
+    if (!isRecord(parsed) || !Array.isArray(parsed.items)) {
+        throw new Error("Unexpected endpoints payload.");
+    }
+
+    const unready: string[] = [];
+    for (const item of parsed.items) {
+        if (!isRecord(item)) {
+            continue;
+        }
+        const name = isRecord(item.metadata)
+            ? String(item.metadata.name ?? "unknown")
+            : "unknown";
+        const subsets = Array.isArray(item.subsets) ? item.subsets : [];
+        const ready = subsets.some(
+            (subset) =>
+                isRecord(subset) &&
+                Array.isArray(subset.addresses) &&
+                subset.addresses.length > 0,
+        );
+        if (!ready) {
+            unready.push(name);
+        }
+    }
+    return unready;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === "object" && value !== null && !Array.isArray(value);
 }
 
 function requiredPermissions(
@@ -223,7 +298,7 @@ function firstLine(value: string): string {
     return value.trim().split("\n")[0] ?? "no output";
 }
 
-export async function resolveKubectl(
+async function resolveKubectl(
     env: NodeJS.ProcessEnv,
 ): Promise<string | undefined> {
     const configured = env.EUDIPLO_KUBECTL;

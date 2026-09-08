@@ -10,7 +10,7 @@ export interface KubernetesScope {
  * command can never fall through to whatever the user's current kubeconfig
  * happens to point at.
  */
-export function scopeArgs(scope: KubernetesScope): string[] {
+function scopeArgs(scope: KubernetesScope): string[] {
     return [
         "--context",
         scope.context,
@@ -35,6 +35,15 @@ export function resolveScope(
     }
     return { context: instance.context, namespace: instance.namespace };
 }
+
+/**
+ * Workload names from deployment/k8s/base, used when an instance is registered
+ * without an explicit --workload map.
+ */
+export const defaultWorkloads: Record<string, string> = {
+    backend: "deployment/eudiplo",
+    client: "deployment/eudiplo-client",
+};
 
 /**
  * Resolves a `--service` value against the configured workload map. Refuses
