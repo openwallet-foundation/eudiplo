@@ -207,6 +207,101 @@ pod/minio-0                           1/1     Running     0          3m
 pod/minio-mc-bootstrap-xxxxx          0/1     Completed   0          2m
 ```
 
+## Managing the Deployment with the CLI
+
+Once the workloads are running, register the deployment with the EUDIPLO CLI to
+run diagnostics against it without switching kubeconfig contexts by hand.
+
+### Register the Instance
+
+```bash
+eudiplo instance add production \
+  --target kubernetes \
+  --url https://eudiplo.example.com \
+  --context production \
+  --namespace eudiplo
+```
+
+The CLI never applies manifests and never creates cluster resources. It reads
+the workloads you deployed above and, later, restarts them. Everything in
+[Deployment Steps](#deployment-steps) stays the way you run it today.
+
+Each flag has a job:
+
+| Flag | Purpose |
+| ------------- | -------------------------------------------------------------- |
+| `--url` | Public API URL, used for HTTP health and reachability checks |
+| `--context` | kubeconfig context, sent explicitly on every `kubectl` call |
+| `--namespace` | Namespace, sent explicitly on every `kubectl` call |
+| `--workload` | Override the workloads the CLI may touch |
+| `--read-only` | Refuse any command that would change the deployment |
+
+The context and namespace are always sent as arguments, so a CLI command cannot
+act on whatever your current kubeconfig happens to point at, and no command is
+ever issued across all namespaces.
+
+Registration defaults to the workloads shipped in the deployment profiles,
+`backend=deployment/eudiplo` and `client=deployment/eudiplo-client`. Override
+them if you renamed the workloads or run additional ones:
+
+```bash
+eudiplo instance add production \
+  --target kubernetes \
+  --url https://eudiplo.example.com \
+  --context production \
+  --namespace eudiplo \
+  --workload backend=deployment/eudiplo-api,client=deployment/eudiplo-web
+```
+
+The workload map is what `--service` resolves against. Commands acting on a
+single workload require `--service` when several are configured, and refuse to
+guess.
+
+Verify the registration:
+
+```bash
+eudiplo doctor --instance production
+```
+
+Add `--read-only` for an instance you want to inspect but never modify, such as
+a production cluster you hold credentials for but do not operate.
+
+### Required Permissions
+
+`eudiplo doctor` asks the API server what your credentials may do, using
+`kubectl auth can-i`, and reports a missing permission as a failed check rather
+than letting a later command fail with an unexplained error.
+
+A Role covering the namespace needs these verbs:
+
+| Resource | Verb | Needed for |
+| ------------- | ------- | ------------------------------------- |
+| `pods` | `get` | Pod status checks |
+| `deployments` | `get` | Confirming configured workloads exist |
+| `pods/log` | `get` | Reading workload logs |
+| `deployments` | `patch` | Restarting workloads via rollout |
+
+The `patch` permission is only checked when the instance is not registered with
+`--read-only`, so a read-only instance backed by read-only credentials reports
+all checks as passing.
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: eudiplo-cli
+  namespace: eudiplo
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "endpoints"]
+    verbs: ["get", "list"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "patch"]
+```
+
+Drop the `patch` verb for credentials used only with `--read-only` instances.
+
 ## Access the Application
 
 ### Using Ingress (Recommended)
@@ -339,6 +434,7 @@ kubectl cluster-info
 
 ## Related Topics
 
+- [CLI Deployment](cli) — Manage instances from the command line
 - [Docker Compose Deployment](docker-compose) — Local development
 - [TLS Configuration](tls) — Enable HTTPS
 - [Monitoring](../administration/monitoring) — Set up observability
