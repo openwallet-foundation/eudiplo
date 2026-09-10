@@ -63,7 +63,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   value = '';
   disabled = false;
 
-  private readonly ajv = new Ajv();
+  private readonly ajv = new Ajv({ allowUnionTypes: true });
   private validateFn?: ValidateFunction;
   private schemaValidationError?: string;
   private readonly instanceId = ++editorInstanceCounter;
@@ -127,7 +127,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     }
 
     if (this.validateFn && !this.validateFn(parsed)) {
-      const msg = this.ajv.errorsText(this.validateFn.errors || undefined, { separator: ' | ' });
+      const msg = this.formatValidationErrors(this.validateFn.errors);
       return { invalidSchema: msg || 'Schema validation failed' };
     }
 
@@ -139,6 +139,28 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
   }
   registerOnValidatorChange?(fn: () => void): void {
     this._validatorChange = fn;
+  }
+
+  /**
+   * Turn Ajv errors into readable messages, naming the offending property
+   * instead of Ajv's generic root "data" placeholder.
+   */
+  private formatValidationErrors(errors: ValidateFunction['errors']): string {
+    if (!errors?.length) {
+      return '';
+    }
+
+    return errors
+      .map((error) => {
+        const path = error.instancePath?.replace(/^\//, '').replaceAll('/', '.') || 'root';
+        if (error.keyword === 'additionalProperty' || error.keyword === 'additionalProperties') {
+          const extra = (error.params as { additionalProperty?: string })?.additionalProperty;
+          const suffix = extra ? ` "${extra}"` : '';
+          return `${path}: must NOT have additional property${suffix}`;
+        }
+        return `${path} ${error.message}`;
+      })
+      .join(' | ');
   }
 
   // Handlers

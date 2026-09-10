@@ -1,10 +1,15 @@
 mat-dialog-content {
-  min-width: 800px;
+  box-sizing: border-box;
+  width: min(1200px, 90vw);
+  min-width: min(800px, 90vw);
   min-height: 800px;
   max-width: 90vw;
   max-height: 80vh;
+  overflow-x: hidden;
 }
 ::ng-deep ngx-monaco-editor {
   height: 800px !important;
-  width: 1200px;
+  display: block;
+  width: 100%;
+  min-width: 0;
 }

@@ -945,9 +945,10 @@ export class CredentialConfigCreateComponent implements OnInit {
 
     formValue.fields = this.buildFieldsPayload(formValue.fields || []);
 
-    // Convert empty strings to null to clear optional fields (for PATCH semantics)
-    formValue.keyChainId = formValue.keyChainId || null;
-    formValue.scope = formValue.scope || null;
+    // Omit empty optional strings so they remain valid against the config schema.
+    if (!formValue.keyChainId?.trim()) {
+      delete formValue.keyChainId;
+    }
 
     // SD-JWT specific fields (only include if SD-JWT format)
     if (isMdoc) {
@@ -1002,6 +1003,7 @@ export class CredentialConfigCreateComponent implements OnInit {
     delete formValue.vctString;
     delete formValue.format;
     delete formValue.docType;
+    delete formValue.scope;
     delete formValue.namespace;
     delete formValue.keyAttestationEnabled;
     delete formValue.keyStorageTypes;
@@ -1134,7 +1136,8 @@ export class CredentialConfigCreateComponent implements OnInit {
 
     if (parentType === 'array' && childPath.length > 0) {
       if (childPath[0] === null || typeof childPath[0] === 'number') {
-        return [...parentPath, ...childPath.slice(1)];
+        // Keep a wildcard marker so the array item's path stays distinct from its parent's.
+        return [...parentPath, null, ...childPath.slice(1)];
       }
     }
 

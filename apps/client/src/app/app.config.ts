@@ -29,6 +29,10 @@ const monacoBaseUrl = new URL(
   new URL(baseHref, document.location.origin)
 ).toString();
 
+function normalizeLocalSchemaUri(uri: string): string {
+  return uri.startsWith('./') ? `a://b/${uri.slice(2)}` : uri;
+}
+
 const transactionDataArraySchema = {
   uri: 'https://raw.githubusercontent.com/openwallet-foundation/eudiplo/refs/heads/main/schemas/TransactionDataArray.schema.json',
   fileMatch: ['a://b/TransactionDataArray*.schema.json'],
@@ -52,7 +56,11 @@ function toEditorFriendlySchema(node: any): any {
 
   const out: Record<string, any> = {};
   for (const [key, value] of Object.entries(node)) {
-    out[key] = toEditorFriendlySchema(value);
+    if ((key === '$id' || key === '$ref') && typeof value === 'string') {
+      out[key] = normalizeLocalSchemaUri(value);
+    } else {
+      out[key] = toEditorFriendlySchema(value);
+    }
   }
 
   // Monaco JSON suggestions are more stable with anyOf than oneOf for
@@ -153,10 +161,13 @@ function onMonacoLoad() {
 
   const editorSchemas = schemas.map((entry) => ({
     ...entry,
+    uri: normalizeLocalSchemaUri(entry.uri),
     fileMatch:
       entry.uri === './TransactionData.schema.json'
         ? ['a://b/TransactionData-*.schema.json']
-        : entry.fileMatch,
+        : entry.uri === './CredentialConfig.schema.json'
+          ? ['a://b/CredentialConfig-*.schema.json']
+          : entry.fileMatch,
     schema: toEditorFriendlySchema(entry.schema),
   }));
 

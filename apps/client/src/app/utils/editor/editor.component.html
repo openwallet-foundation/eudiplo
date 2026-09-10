@@ -4,6 +4,7 @@
       <ngx-monaco-editor
         [options]="themedEditorOptions"
         [(ngModel)]="value"
+        [ngModelOptions]="{ standalone: true }"
         [model]="model"
         (onInit)="onEditorInit($event)"
         (ngModelChange)="handleChange($event)"

@@ -144,7 +144,9 @@ export class ConfigImportService {
                     );
 
                     if (!validationResult.isValid) {
-                        continue; // Skip invalid config
+                        throw new Error(
+                            `Validation failed for ${options.resourceType} ${file}`,
+                        );
                     }
 
                     data = validationResult.data as T;
@@ -312,7 +314,9 @@ export class ConfigImportService {
                         );
 
                         if (!validationResult.isValid) {
-                            continue; // Skip invalid config
+                            throw new Error(
+                                `Validation failed for ${options.resourceType} ${file}`,
+                            );
                         }
 
                         data = validationResult.data as T;

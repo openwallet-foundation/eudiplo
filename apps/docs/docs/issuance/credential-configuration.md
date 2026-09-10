@@ -64,7 +64,21 @@ Nested child paths can be defined in two ways:
 - relative to the parent path (recommended), or
 - as a full absolute path (also supported).
 
-For arrays, use numeric child path segments such as `[0]` to describe item entries.
+For arrays, use a wildcard item path. In the form editor, write `*` (for example
+`nationalities.*`). In JSON configuration, the equivalent path segment is `null`:
+
+```json
+{
+    "path": ["nationalities"],
+    "type": "array",
+    "children": [
+        {
+            "path": [null],
+            "type": "string"
+        }
+    ]
+}
+```
 
 :::info[Claims Priority System]
 EUDIPLO supports multiple ways to provide claims (configuration-level and offer-level), with a priority system that determines which claims are used. For a complete explanation of the claims priority order and when to use each method, see [Claims](claims.md).
@@ -129,7 +143,7 @@ You can define defaults directly in each field using `defaultValue`:
             },
             "children": [
                 {
-                    "path": [0],
+                    "path": [null],
                     "type": "string",
                     "defaultValue": "DE",
                     "disclosable": false
@@ -153,6 +167,21 @@ Use `children` when you want to model grouped structures like `address`, `age_eq
 - Parent node: define `path` and `type` (`object` or `array`)
 - Child nodes: define claim fields under `children[]`
 - Child paths: prefer relative paths (for example `"path": ["street_address"]` under parent `"path": ["address"]`)
+
+#### Web Client Field Editor
+
+The web client displays fields as a flat list, so use dot-separated paths to represent the
+nested structure:
+
+- Add the container first, with type `object` or `array`.
+- Add each object property using its full path, such as `address.locality`.
+- Add an array item using `*`, such as `nationalities.*`.
+- For deeper structures, use **JSON View** and the nested `children[]` form shown above. Array
+  item paths use `null` in JSON, not `0`, because the item represents any array element.
+
+For example, the form editor entries `address` (`object`), `address.locality` (`string`), and
+`nationalities` (`array`), `nationalities.*` (`string`) produce nested object and array fields
+when saved.
 
 This structure improves readability in config files and enables grouped rendering in form-based UIs.
 
