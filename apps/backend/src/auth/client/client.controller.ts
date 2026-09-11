@@ -5,8 +5,6 @@ import {
     ForbiddenException,
     Get,
     HttpCode,
-    HttpException,
-    HttpStatus,
     Inject,
     Param,
     Patch,
@@ -61,25 +59,6 @@ export class ClientController {
     getClient(@Param("id") id: string, @Token() user: TokenPayload) {
         const tenantId = requireTenantContext(user);
         return this.clients.getClient(tenantId, id);
-    }
-
-    /**
-     * @deprecated Client secrets are now hashed and cannot be retrieved.
-     * Use POST /client/:id/rotate-secret to generate a new secret.
-     * @param id
-     * @param user
-     * @returns
-     */
-    @Secured([Role.Clients])
-    @Get(":id/secret")
-    getClientSecret(
-        @Param("id") id: string,
-        @Token() user: TokenPayload,
-    ): Promise<ClientSecretResponseDto> {
-        throw new HttpException(
-            "Client secrets are hashed and cannot be retrieved. Use POST /client/:id/rotate-secret to generate a new secret.",
-            HttpStatus.GONE,
-        );
     }
 
     /**
