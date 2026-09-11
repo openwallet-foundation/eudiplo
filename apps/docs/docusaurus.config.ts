@@ -162,7 +162,7 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://openwallet-foundation.github.io/eudiplo/docs/latest/',
+          href: 'https://docs.eudiplo.dev/',
           label: 'Legacy Docs',
           position: 'right',
         },

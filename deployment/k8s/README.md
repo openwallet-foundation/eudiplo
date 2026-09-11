@@ -2,7 +2,7 @@
 
 This directory contains Kubernetes manifests for EUDIPLO using Kustomize for flexible, composable deployments.
 
-📚 **Full documentation:** [https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/)
+📚 **Full documentation:** [https://docs.eudiplo.dev/deployment/kubernetes/](https://docs.eudiplo.dev/deployment/kubernetes/)
 
 ## Directory Structure
 
@@ -153,4 +153,4 @@ The full overlay deploys Vault in development mode and creates its encryption ke
 automatically. Use an externally managed, initialized Vault instance with a
 restricted token for production.
 
-👉 **[Read the full documentation](https://openwallet-foundation.github.io/eudiplo/docs/latest/deployment/kubernetes/)**
+👉 **[Read the full documentation](https://docs.eudiplo.dev/deployment/kubernetes/)**

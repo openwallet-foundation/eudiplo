@@ -158,7 +158,7 @@ Use the current documentation:
 - **Legacy documentation**: [https://openwallet-foundation.github.io/eudiplo/docs/latest/](https://openwallet-foundation.github.io/eudiplo/docs/latest/)
 
 The current documentation reflects the active release. For older releases,
-use the [legacy documentation archive](https://openwallet-foundation.github.io/eudiplo/docs/latest/).
+use the [legacy documentation archive](https://docs.eudiplo.dev/).
 
 **Key sections:**
 

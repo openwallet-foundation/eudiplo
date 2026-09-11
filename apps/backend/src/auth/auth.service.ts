@@ -142,8 +142,7 @@ export class AuthService {
             id_token_signing_alg_values_supported: ["ES256"],
             scopes_supported: ["openid"],
             claims_supported: ["iss", "sub", "aud", "exp", "iat"],
-            service_documentation:
-                "https://openwallet-foundation.github.io/eudiplo/docs/latest/",
+            service_documentation: "https://docs.eudiplo.dev/",
         };
     }
 }

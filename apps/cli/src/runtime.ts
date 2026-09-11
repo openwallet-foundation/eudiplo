@@ -54,7 +54,7 @@ export function createProgram(
         .helpCommand(true)
         .addHelpText(
             "afterAll",
-            "\nFor more information, see https://openwallet-foundation.github.io/eudiplo/docs/latest/getting-started/cli/",
+            "\nFor more information, see https://docs.eudiplo.dev/getting-started/quick-start",
         );
 
     program.addCommand(createDemoCommand(context, setExitCode));
