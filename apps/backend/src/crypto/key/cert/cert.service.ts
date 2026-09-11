@@ -12,11 +12,6 @@ export interface FindCertOptions {
     type: KeyUsageType;
     /**
      * Optional key chain ID to find a specific key chain.
-     * @deprecated Use `keyId` instead.
-     */
-    certId?: string;
-    /**
-     * Optional key chain ID to find a specific key chain.
      */
     keyId?: string;
     /**
@@ -84,9 +79,8 @@ export class CertService {
      * Returns the certificate from the matching key chain.
      */
     async find(options: FindCertOptions): Promise<CertificateInfo> {
-        const { tenantId, type, skipValidation, fallbackType } = options;
-        // Support both certId (deprecated) and keyId
-        const keyId = options.keyId || options.certId;
+        const { tenantId, type, skipValidation, fallbackType } = options;        
+        const keyId = options.keyId;
 
         const keyChain = await this.keyChainService.findByUsageType(
             tenantId,
