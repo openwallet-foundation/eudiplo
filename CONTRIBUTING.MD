@@ -73,20 +73,25 @@ These issues are self-contained, have clear guidance, and help you learn the cod
 
    ```bash
    cp .env.example .env
-   # Optional: Set up Python environment for documentation
-   pnpm run setup
+   
+   # Then set MASTER_SECRET, AUTH_CLIENT_ID and AUTH_CLIENT_SECRET
    ```
 
 4. **Start the application(s)** you want to work on:
 
    ```bash
+   # Option I:
    # Start just the backend
-   pnpm --filter @eudiplo/backend run start:dev
+   pnpm run dev:backend
+   
+   # Start the generation of the SDK & API (requires a started backend)
+   pnpm run gen:all
 
-   # Start just the client
-   pnpm --filter @eudiplo/client run dev
+   # Start just the client (requires a generated SDK & API)
+   pnpm run dev:client
 
-   # Or start both with Docker Compose
+   # Option II:
+   # Or start all with Docker Compose
    docker compose up -d
    ```
 
@@ -151,10 +156,10 @@ Documentation is a Docusaurus site in `apps/docs/`. To work with documentation:
 
 ```bash
 # Build documentation
-pnpm run doc:build
+pnpm run build:docs
 
 # Serve documentation with live reload
-pnpm run doc:watch
+pnpm run dev:docs
 ```
 
 The documentation includes:

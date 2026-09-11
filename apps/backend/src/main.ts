@@ -147,10 +147,7 @@ async function bootstrap() {
             "API for managing credentials, sessions, keys, and configurations. " +
                 "All endpoints require OAuth2 authentication.",
         )
-        .setExternalDoc(
-            "Documentation",
-            "https://docs.eudiplo.dev/",
-        )
+        .setExternalDoc("Documentation", "https://docs.eudiplo.dev/")
         .setOpenAPIVersion("3.1.0")
         .setVersion(process.env.VERSION ?? "main");
 
@@ -191,10 +188,7 @@ async function bootstrap() {
             "Wallet-facing protocol endpoints for OID4VCI, OID4VP, and related standards. " +
                 "These endpoints are public and secured at the protocol level (DPoP, Wallet Attestation, etc.).",
         )
-        .setExternalDoc(
-            "Documentation",
-            "https://docs.eudiplo.dev/",
-        )
+        .setExternalDoc("Documentation", "https://docs.eudiplo.dev/")
         .setOpenAPIVersion("3.1.0")
         .setVersion(process.env.VERSION ?? "main")
         .build();
@@ -300,9 +294,7 @@ async function bootstrap() {
             logger.log("📚 API Documentation:");
             logger.log(`   → Management:   ${baseUrl}/api/docs`);
             logger.log(`   → Protocol:     ${baseUrl}/docs`);
-            logger.log(
-                `   → Full Docs:    https://docs.eudiplo.dev/`,
-            );
+            logger.log(`   → Full Docs:    https://docs.eudiplo.dev/`);
             logger.log("");
             logger.log("🏥 Health Check:");
             logger.log(`   → Endpoint:     ${baseUrl}/health`);
