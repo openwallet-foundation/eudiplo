@@ -3923,6 +3923,10 @@ export type TrustListEntityInfo = {
 
 export type InternalTrustListEntity = {
     type: 'internal';
+    /**
+     * Provider role published in the trust list.
+     */
+    providerType?: 'attestation-provider' | 'wallet-provider';
     issuerKeyChainId: string;
     revocationKeyChainId: string;
     info: TrustListEntityInfo;
@@ -3930,6 +3934,10 @@ export type InternalTrustListEntity = {
 
 export type ExternalTrustListEntity = {
     type: 'external';
+    /**
+     * Provider role published in the trust list.
+     */
+    providerType?: 'attestation-provider' | 'wallet-provider';
     issuerCertPem: string;
     revocationCertPem: string;
     info: TrustListEntityInfo;
@@ -4166,7 +4174,11 @@ export type ChainedAsTokenConfig = {
 };
 
 export type WalletProviderTrustListRefDto = {
-    url: string;
+    /**
+     * Managed trust-list ID in this tenant; resolves URL and signing certificate automatically.
+     */
+    trustListId?: string;
+    url?: string;
     /**
      * JWK used to verify the trust-list JWT signature.
      */
@@ -4217,7 +4229,8 @@ export type Oid4VpAuthorizationServerConfig = {
      * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
      */
     walletProviderTrustLists?: Array<{
-        url: string;
+        trustListId?: string;
+        url?: string;
         verifierKey?: {
             [key: string]: unknown;
         };
@@ -4285,7 +4298,8 @@ export type ChainedAuthorizationServerConfig = {
      * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
      */
     walletProviderTrustLists?: Array<{
-        url: string;
+        trustListId?: string;
+        url?: string;
         verifierKey?: {
             [key: string]: unknown;
         };
@@ -4325,7 +4339,8 @@ export type BuiltInAuthorizationServerConfig = {
      * Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.
      */
     walletProviderTrustLists?: Array<{
-        url: string;
+        trustListId?: string;
+        url?: string;
         verifierKey?: {
             [key: string]: unknown;
         };
@@ -5723,21 +5738,6 @@ export type ClientControllerUpdateClientResponses = {
 };
 
 export type ClientControllerUpdateClientResponse = ClientControllerUpdateClientResponses[keyof ClientControllerUpdateClientResponses];
-
-export type ClientControllerGetClientSecretData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/api/client/{id}/secret';
-};
-
-export type ClientControllerGetClientSecretResponses = {
-    200: ClientSecretResponseDto;
-};
-
-export type ClientControllerGetClientSecretResponse = ClientControllerGetClientSecretResponses[keyof ClientControllerGetClientSecretResponses];
 
 export type ClientControllerRotateClientSecretData = {
     body?: never;
@@ -7165,22 +7165,6 @@ export type SchemaMetadataControllerPublishSchemaMetadataResponses = {
 
 export type SchemaMetadataControllerPublishSchemaMetadataResponse = SchemaMetadataControllerPublishSchemaMetadataResponses[keyof SchemaMetadataControllerPublishSchemaMetadataResponses];
 
-export type SchemaMetadataControllerSignSchemaMetaConfigData = {
-    body: SignSchemaMetaConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/schema-metadata/sign';
-};
-
-export type SchemaMetadataControllerSignSchemaMetaConfigResponses = {
-    /**
-     * Registrar metadata entry for the freshly submitted schema metadata.
-     */
-    201: SchemaMetadataResponseDto;
-};
-
-export type SchemaMetadataControllerSignSchemaMetaConfigResponse = SchemaMetadataControllerSignSchemaMetaConfigResponses[keyof SchemaMetadataControllerSignSchemaMetaConfigResponses];
-
 export type SchemaMetadataControllerPublishSchemaMetadataVersionData = {
     body: SignVersionSchemaMetaConfigDto;
     path?: never;
@@ -7203,22 +7187,6 @@ export type SchemaMetadataControllerPublishSchemaMetadataVersionResponses = {
 };
 
 export type SchemaMetadataControllerPublishSchemaMetadataVersionResponse = SchemaMetadataControllerPublishSchemaMetadataVersionResponses[keyof SchemaMetadataControllerPublishSchemaMetadataVersionResponses];
-
-export type SchemaMetadataControllerSignVersionSchemaMetaConfigData = {
-    body: SignVersionSchemaMetaConfigDto;
-    path?: never;
-    query?: never;
-    url: '/api/schema-metadata/sign-version';
-};
-
-export type SchemaMetadataControllerSignVersionSchemaMetaConfigResponses = {
-    /**
-     * Registrar metadata entry for the newly submitted version.
-     */
-    201: SchemaMetadataResponseDto;
-};
-
-export type SchemaMetadataControllerSignVersionSchemaMetaConfigResponse = SchemaMetadataControllerSignVersionSchemaMetaConfigResponses[keyof SchemaMetadataControllerSignVersionSchemaMetaConfigResponses];
 
 export type SchemaMetadataControllerGetVocabulariesData = {
     body?: never;

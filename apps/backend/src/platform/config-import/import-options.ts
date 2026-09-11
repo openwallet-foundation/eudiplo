@@ -18,12 +18,6 @@ export interface ImportOptions<T extends object> {
     validationSchema?: unknown;
 
     /**
-     * Backward-compatible alias for validationSchema.
-     * @deprecated Use validationSchema.
-     */
-    validationClass?: unknown;
-
-    /**
      * Check if item already exists
      */
     checkExists: (tenantId: string, data: T, file: string) => Promise<boolean>;

@@ -8,7 +8,7 @@ import { ConfigOwnershipService } from "../config-portability/config-ownership.s
 import { ConfigResourceRegistry } from "../config-portability/config-resource.registry.js";
 import type { ConfigDocument } from "../config-portability/config-resource.types.js";
 import { ConfigImportModeService } from "./config-import-mode.service.js";
-import { ImportOptions, TenantImportOptions } from "./import-options.js";
+import { TenantImportOptions } from "./import-options.js";
 
 function resolveValidationSchema(schemaOrDto: unknown): any | undefined {
     if (!schemaOrDto) {
@@ -130,14 +130,12 @@ export class ConfigImportService {
                 data = this.replacePlaceholders(data);
 
                 // Validate if validation schema is provided
-                const schemaOrDto =
-                    options.validationSchema ?? options.validationClass;
-                if (schemaOrDto) {
+                if (options.validationSchema) {
                     const validationResult = await this.validateConfig(
                         filePath,
                         file,
                         data,
-                        schemaOrDto,
+                        options.validationSchema,
                         { name: tenantId },
                         options.resourceType,
                         options.formatValidationError,
@@ -236,130 +234,6 @@ export class ConfigImportService {
             source: filePath,
             sourceHash: createHash("sha256").update(raw).digest("hex"),
         });
-    }
-
-    /**
-     * Generic import method that handles the common pattern across all services.
-     * @deprecated Use importConfigsForTenant with the orchestrator's tenant-by-tenant approach instead.
-     */
-    async importConfigs<T extends object>(
-        options: ImportOptions<T>,
-    ): Promise<void> {
-        const mode = this.resolveMode();
-        if (mode === "disabled") {
-            return;
-        }
-
-        const configPath = this.configService.getOrThrow("CONFIG_FOLDER");
-        const updateExisting = mode !== "create";
-
-        const tenantFolders = readdirSync(configPath, {
-            withFileTypes: true,
-        }).filter((tenant) => tenant.isDirectory());
-
-        const strictConfig = this.configService.get<any>(
-            "CONFIG_VARIABLE_STRICT",
-        );
-
-        for (const tenant of tenantFolders) {
-            let counter = 0;
-            const path = join(configPath, tenant.name, options.subfolder);
-
-            if (!existsSync(path)) {
-                continue;
-            }
-
-            const files = readdirSync(path);
-
-            for (const file of files) {
-                const filePath = join(path, file);
-
-                // Filter by extension if provided
-                if (
-                    options.fileExtension &&
-                    !file.endsWith(options.fileExtension)
-                ) {
-                    continue;
-                }
-
-                try {
-                    // Load data using custom loader or default JSON loader
-                    let data: T;
-                    if (options.loadData) {
-                        data = await Promise.resolve(
-                            options.loadData(filePath),
-                        );
-                    } else {
-                        const payload = JSON.parse(
-                            readFileSync(filePath, "utf8"),
-                        );
-                        data = payload as T;
-                    }
-
-                    // Replace placeholders like ${ENV_VAR} or ${ENV_VAR:default}
-                    data = this.replacePlaceholders(data);
-
-                    // Validate if validation class is provided
-                    const schemaOrDto =
-                        options.validationSchema ?? options.validationClass;
-                    if (schemaOrDto) {
-                        const validationResult = await this.validateConfig(
-                            filePath,
-                            file,
-                            data,
-                            schemaOrDto,
-                            tenant,
-                            options.resourceType,
-                            options.formatValidationError,
-                        );
-
-                        if (!validationResult.isValid) {
-                            throw new Error(
-                                `Validation failed for ${options.resourceType} ${file}`,
-                            );
-                        }
-
-                        data = validationResult.data as T;
-                    }
-
-                    // Check if exists
-                    const exists = await options
-                        .checkExists(tenant.name, data, file)
-                        .catch(() => false);
-
-                    if (exists && !updateExisting) {
-                        this.logger.debug(
-                            `[${tenant.name}] ${options.resourceType} ${file} already exists, skipping`,
-                        );
-                        continue;
-                    }
-
-                    // Delete existing if force is enabled
-                    if (exists && updateExisting && options.deleteExisting) {
-                        await options.deleteExisting(tenant.name, data, file);
-                    }
-
-                    // Process and store item
-                    await options.processItem(tenant.name, data, file);
-                    counter++;
-                } catch (error: any) {
-                    const reason = error?.message || "Unknown error";
-                    this.logger.error(
-                        `[${tenant.name}] Failed to import ${options.resourceType} ${file} (${filePath}): ${reason}`,
-                    );
-                    if (strictConfig === "abort") {
-                        // Abort the entire import process in strict abort mode
-                        throw error;
-                    }
-                }
-            }
-
-            if (counter > 0) {
-                this.logger.log(
-                    `[${tenant.name}] ${counter} ${options.resourceType}(s) imported`,
-                );
-            }
-        }
     }
 
     /**

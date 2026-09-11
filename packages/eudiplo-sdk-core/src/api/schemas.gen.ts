@@ -8483,6 +8483,15 @@ export const InternalTrustListEntitySchema = {
                 'internal'
             ]
         },
+        providerType: {
+            enum: [
+                'attestation-provider',
+                'wallet-provider'
+            ],
+            type: 'string',
+            default: 'attestation-provider',
+            description: 'Provider role published in the trust list.'
+        },
         issuerKeyChainId: {
             type: 'string'
         },
@@ -8509,6 +8518,15 @@ export const ExternalTrustListEntitySchema = {
             enum: [
                 'external'
             ]
+        },
+        providerType: {
+            enum: [
+                'attestation-provider',
+                'wallet-provider'
+            ],
+            type: 'string',
+            default: 'attestation-provider',
+            description: 'Provider role published in the trust list.'
         },
         issuerCertPem: {
             type: 'string'
@@ -9093,6 +9111,10 @@ export const ChainedAsTokenConfigSchema = {
 export const WalletProviderTrustListRefDtoSchema = {
     type: 'object',
     properties: {
+        trustListId: {
+            type: 'string',
+            description: 'Managed trust-list ID in this tenant; resolves URL and signing certificate automatically.'
+        },
         url: {
             type: 'string',
             format: 'uri'
@@ -9106,10 +9128,7 @@ export const WalletProviderTrustListRefDtoSchema = {
             type: 'string',
             description: 'Base64 DER-encoded X.509 certificate used to verify the trust-list JWT signature.'
         }
-    },
-    required: [
-        'url'
-    ]
+    }
 } as const;
 
 export const Oid4VpAuthorizationServerConfigSchema = {
@@ -9177,6 +9196,10 @@ export const Oid4VpAuthorizationServerConfigSchema = {
             items: {
                 type: 'object',
                 properties: {
+                    trustListId: {
+                        type: 'string',
+                        minLength: 1
+                    },
                     url: {
                         type: 'string',
                         format: 'uri'
@@ -9192,9 +9215,6 @@ export const Oid4VpAuthorizationServerConfigSchema = {
                         type: 'string'
                     }
                 },
-                required: [
-                    'url'
-                ],
                 additionalProperties: false
             },
             description: 'Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.',
@@ -9332,6 +9352,10 @@ export const ChainedAuthorizationServerConfigSchema = {
             items: {
                 type: 'object',
                 properties: {
+                    trustListId: {
+                        type: 'string',
+                        minLength: 1
+                    },
                     url: {
                         type: 'string',
                         format: 'uri'
@@ -9347,9 +9371,6 @@ export const ChainedAuthorizationServerConfigSchema = {
                         type: 'string'
                     }
                 },
-                required: [
-                    'url'
-                ],
                 additionalProperties: false
             },
             description: 'Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.',
@@ -9425,6 +9446,10 @@ export const BuiltInAuthorizationServerConfigSchema = {
             items: {
                 type: 'object',
                 properties: {
+                    trustListId: {
+                        type: 'string',
+                        minLength: 1
+                    },
                     url: {
                         type: 'string',
                         format: 'uri'
@@ -9440,9 +9465,6 @@ export const BuiltInAuthorizationServerConfigSchema = {
                         type: 'string'
                     }
                 },
-                required: [
-                    'url'
-                ],
                 additionalProperties: false
             },
             description: 'Wallet authentication trust lists for this authorization server. Omit to inherit shared issuance trust; an empty array rejects presented attestations.',

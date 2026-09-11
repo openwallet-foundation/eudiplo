@@ -46,7 +46,7 @@ export class AttributeProviderService {
             {
                 subfolder: "attribute-providers",
                 fileExtension: ".json",
-                validationClass: CreateAttributeProviderDto,
+                validationSchema: CreateAttributeProviderDto,
                 resourceType: "attribute provider",
                 checkExists: (tid, data) =>
                     this.getById(tid, data.id)
