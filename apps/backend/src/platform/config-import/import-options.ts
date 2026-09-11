@@ -1,4 +1,4 @@
-export interface ImportOptions<T extends object> {
+interface ImportOptions<T extends object> {
     /** Explicit portable resource kind. Inferred from resourceType when omitted. */
     resourceKind?: import("../config-portability/config-resource.types.js").ConfigResourceKind;
 
