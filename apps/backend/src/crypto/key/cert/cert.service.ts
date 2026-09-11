@@ -79,7 +79,7 @@ export class CertService {
      * Returns the certificate from the matching key chain.
      */
     async find(options: FindCertOptions): Promise<CertificateInfo> {
-        const { tenantId, type, skipValidation, fallbackType } = options;        
+        const { tenantId, type, skipValidation, fallbackType } = options;
         const keyId = options.keyId;
 
         const keyChain = await this.keyChainService.findByUsageType(
