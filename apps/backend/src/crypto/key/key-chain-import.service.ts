@@ -52,7 +52,7 @@ export class KeyChainImportService {
             {
                 subfolder: "key-chains",
                 fileExtension: ".json",
-                validationClass: KeyChainImportDto,
+                validationSchema: KeyChainImportDto,
                 resourceType: "key-chain",
                 loadData: (filePath) => {
                     const payload = JSON.parse(readFileSync(filePath, "utf8"));

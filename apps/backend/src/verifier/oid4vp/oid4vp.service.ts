@@ -251,7 +251,7 @@ export class Oid4vpService {
             const cert = await this.certService.find({
                 tenantId: session.tenantId,
                 type: KeyUsageType.Access,
-                certId: presentationConfig.accessKeyChainId ?? undefined,
+                keyId: presentationConfig.accessKeyChainId ?? undefined,
             });
 
             const certHash = this.certService.getCertHash(cert);
@@ -416,7 +416,7 @@ export class Oid4vpService {
         const cert = await this.certService.find({
             tenantId: tenantId,
             type: KeyUsageType.Access,
-            certId: presentationConfig.accessKeyChainId ?? undefined,
+            keyId: presentationConfig.accessKeyChainId ?? undefined,
         });
 
         const certHash = this.certService.getCertHash(cert);

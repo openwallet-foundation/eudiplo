@@ -82,30 +82,6 @@ export class SchemaMetadataController {
         );
     }
 
-    @Post("sign")
-    @Secured([Role.Issuances])
-    @ApiOperation({
-        summary: "Deprecated alias for publish endpoint",
-        description: "Deprecated. Use POST /schema-metadata/publish instead.",
-        deprecated: true,
-    })
-    @ApiResponse({
-        status: 201,
-        description:
-            "Registrar metadata entry for the freshly submitted schema metadata.",
-        type: SchemaMetadataResponseDto,
-    })
-    @ApiBody({ type: SignSchemaMetaConfigDto })
-    async signSchemaMetaConfig(
-        @Token() user: TokenPayload,
-        @Body() body: SignSchemaMetaConfigDto,
-    ) {
-        return this.schemaMetadataSubmissionService.submitSchemaMetadata(
-            user.entity!.id,
-            body,
-        );
-    }
-
     /**
      * Submits new-version schema metadata input values for an existing schema.
      * The registrar builds and signs the new version.
@@ -131,31 +107,6 @@ export class SchemaMetadataController {
     })
     @ApiBody({ type: SignVersionSchemaMetaConfigDto })
     async publishSchemaMetadataVersion(
-        @Token() user: TokenPayload,
-        @Body() body: SignVersionSchemaMetaConfigDto,
-    ) {
-        return this.schemaMetadataSubmissionService.submitSchemaMetadataVersion(
-            user.entity!.id,
-            body,
-        );
-    }
-
-    @Post("sign-version")
-    @Secured([Role.Issuances])
-    @ApiOperation({
-        summary: "Deprecated alias for publish-version endpoint",
-        description:
-            "Deprecated. Use POST /schema-metadata/publish-version instead.",
-        deprecated: true,
-    })
-    @ApiResponse({
-        status: 201,
-        description:
-            "Registrar metadata entry for the newly submitted version.",
-        type: SchemaMetadataResponseDto,
-    })
-    @ApiBody({ type: SignVersionSchemaMetaConfigDto })
-    async signVersionSchemaMetaConfig(
         @Token() user: TokenPayload,
         @Body() body: SignVersionSchemaMetaConfigDto,
     ) {

@@ -261,7 +261,7 @@ export class Iso18013Service {
         const cert = await this.certService.find({
             tenantId,
             type: KeyUsageType.Access,
-            certId: accessKeyChainId,
+            keyId: accessKeyChainId,
         });
 
         const keyChain = await this.keyChainService.getEntity(

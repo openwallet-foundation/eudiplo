@@ -239,7 +239,7 @@ export class PresentationsService {
             {
                 subfolder: "presentation",
                 fileExtension: ".json",
-                validationClass: PresentationConfigCreateDto,
+                validationSchema: PresentationConfigCreateDto,
                 resourceType: "presentation config",
                 loadData: (filePath) => {
                     const payload =

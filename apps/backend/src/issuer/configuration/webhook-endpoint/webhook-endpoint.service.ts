@@ -46,7 +46,7 @@ export class WebhookEndpointService {
             {
                 subfolder: "webhook-endpoints",
                 fileExtension: ".json",
-                validationClass: CreateWebhookEndpointDto,
+                validationSchema: CreateWebhookEndpointDto,
                 resourceType: "webhook endpoint",
                 checkExists: (tid, data) =>
                     this.getById(tid, data.id)

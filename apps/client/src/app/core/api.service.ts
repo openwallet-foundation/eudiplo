@@ -94,6 +94,7 @@ export class ApiService {
 
     this.oauth2Client = new OAuth2Client({
       discoveryEndpoint: `${oidcUrl}/.well-known/oauth-authorization-server`,
+      tokenEndpoint: `${baseUrl}/api/oauth2/token`,
       clientId,
       clientSecret,
     });
@@ -160,6 +161,9 @@ export class ApiService {
           if (storedSecret && oauthConfig?.server && oauthConfig?.clientId) {
             this.oauth2Client = new OAuth2Client({
               discoveryEndpoint: `${oauthConfig.server}/.well-known/oauth-authorization-server`,
+              tokenEndpoint: oauthConfig.baseUrl
+                ? `${oauthConfig.baseUrl}/api/oauth2/token`
+                : undefined,
               clientId: oauthConfig.clientId,
               clientSecret: storedSecret,
             });
@@ -396,6 +400,9 @@ export class ApiService {
               // Restore OAuth client configuration for refresh
               this.oauth2Client = new OAuth2Client({
                 discoveryEndpoint: `${oauthConfig.server}/.well-known/oauth-authorization-server`,
+                tokenEndpoint: oauthConfig.baseUrl
+                  ? `${oauthConfig.baseUrl}/api/oauth2/token`
+                  : undefined,
                 clientId: oauthConfig.clientId,
                 clientSecret: storedSecret,
               });

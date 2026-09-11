@@ -36,16 +36,16 @@ export function loadJsonFile<T>(filePath: string): T {
 
 export function loadConfigDto<T extends object>(
     filePath: string,
-    validationClass: any,
+    validationSchema: any,
 ): T {
     const payload = resolvePlaceholders(loadJsonFile<object>(filePath));
 
-    if (validationClass?.schema) {
-        return validationClass.schema.parse(payload) as T;
+    if (validationSchema?.schema) {
+        return validationSchema.schema.parse(payload) as T;
     }
 
-    if (typeof validationClass?.parse === "function") {
-        return validationClass.parse(payload);
+    if (typeof validationSchema?.parse === "function") {
+        return validationSchema.parse(payload);
     }
 
     return payload as T;
