@@ -180,7 +180,9 @@ describe("S3FileStorage (MinIO)", () => {
 
     beforeAll(async () => {
         // Start MinIO container
-        minioContainer = await new GenericContainer("minio/minio:latest")
+        minioContainer = await new GenericContainer(
+            "quay.io/minio/minio:latest",
+        )
             .withExposedPorts(MINIO_PORT)
             .withEnvironment({
                 MINIO_ROOT_USER: ACCESS_KEY,
