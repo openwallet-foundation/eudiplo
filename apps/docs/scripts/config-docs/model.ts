@@ -7,6 +7,7 @@ interface ConfigItem {
   key: string;
   type: string;
   defaultValue?: unknown;
+  allowedValues?: unknown[];
   description: string;
   presence: Presence;
   group: string;
@@ -60,6 +61,10 @@ export function buildModelFromSchema(schema: Joi.ObjectSchema): ConfigModel {
       Array.isArray(keyDesc.type) ? keyDesc.type.join(" | ") : keyDesc.type ?? "unknown";
 
     const conditions = extractConditionsFromKeyDesc(keyDesc);
+    const allowedValues =
+      keyDesc.flags?.only === true && Array.isArray(keyDesc.allow)
+        ? keyDesc.allow
+        : undefined;
 
     items.push({
       key,
@@ -67,6 +72,7 @@ export function buildModelFromSchema(schema: Joi.ObjectSchema): ConfigModel {
       defaultValue: Object.prototype.hasOwnProperty.call(flags, "default")
         ? flags.default
         : undefined,
+      allowedValues,
       description,
       presence,
       group,

@@ -5,6 +5,7 @@ export interface ConfigItem {
     key: string;
     type: string;
     defaultValue?: unknown;
+    allowedValues?: unknown[];
     description: string;
     presence: "required" | "optional" | "";
     group: string;
@@ -53,6 +54,7 @@ export default function ConfigTable({
                 <tr>
                     <th>Key</th>
                     <th>Type</th>
+                    <th>Allowed values</th>
                     <th>Notes</th>
                 </tr>
             </thead>
@@ -64,6 +66,16 @@ export default function ConfigTable({
                         </td>
                         <td>
                             <code>{item.type}</code>
+                        </td>
+                        <td>
+                            {item.allowedValues && item.allowedValues.length > 0
+                                ? item.allowedValues.map((value, idx) => (
+                                      <React.Fragment key={String(value)}>
+                                          {idx > 0 && ", "}
+                                          <code>{String(value)}</code>
+                                      </React.Fragment>
+                                  ))
+                                : "-"}
                         </td>
                         <td>
                             <ConfigNotes item={item} />
@@ -83,6 +95,12 @@ function ConfigNotes({ item }: { item: ConfigItem }): React.ReactElement {
                 <>
                     {" "}
                     <strong>[required]</strong>
+                </>
+            )}
+            {item.presence !== "required" && (
+                <>
+                    {" "}
+                    <strong>[optional]</strong>
                 </>
             )}
             {item.defaultValue !== undefined && (
