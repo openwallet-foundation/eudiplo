@@ -25,7 +25,7 @@ import {
     CONFIG_SINGLETON_IDS,
     normalizeDocument,
     resourceId,
-} from "../../src/shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 
 describe("startup configuration reconciliation", () => {
     let app: INestApplication;

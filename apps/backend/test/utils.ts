@@ -55,10 +55,7 @@ import { DEVICE_JWK, mdocContext } from "./utils-mdoc.js";
 
 export function readConfig<T>(path: string): T {
     const input = JSON.parse(readFileSync(path, "utf-8"));
-    if (        
-        !input.spec ||
-        typeof input.spec !== "object"
-    ) {        
+    if (!input.spec || typeof input.spec !== "object") {
         return input as T;
     }
 
@@ -66,7 +63,7 @@ export function readConfig<T>(path: string): T {
     if (spec.keySource?.type === "private-jwk") {
         spec.key = spec.keySource.jwk;
         delete spec.keySource;
-    }    
+    }
     return spec as T;
 }
 
@@ -394,7 +391,7 @@ export async function getToken(
     clientId: string,
     clientSecret: string,
     tenantId = "root",
-) {    
+) {
     // Get JWT token using client credentials
     const tokenResponse = await request(app.getHttpServer())
         .post("/api/oauth2/token")

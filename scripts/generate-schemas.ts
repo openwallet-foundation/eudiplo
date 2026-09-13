@@ -3,7 +3,7 @@ import {
   CONFIG_FORMATS,
   CONFIG_SINGLETON_IDS,
   schemaUrl,
-} from "../apps/backend/src/shared/config-format/config-format.js";
+} from "../packages/eudiplo-config-format/src/config-format.js";
 import "reflect-metadata";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";

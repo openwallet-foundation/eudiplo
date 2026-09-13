@@ -5,7 +5,7 @@ import { resolve } from "node:path";
 import {
   CONFIG_FORMATS,
   SCHEMA_BASE,
-} from "../apps/backend/src/shared/config-format/config-format.js";
+} from "../packages/eudiplo-config-format/src/config-format.js";
 
 // Explicit, additive publication step. Existing snapshots are never overwritten.
 const root = resolve(import.meta.dirname, "..");

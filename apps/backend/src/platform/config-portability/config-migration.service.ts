@@ -5,8 +5,8 @@ import {
     normalizeDocument,
     resourceId,
     schemaUrl,
-} from "../../shared/config-format/config-format.js";
-import { validateConfigDocument } from "../../shared/config-format/config-validator.js";
+} from "@eudiplo/config-format/config-format.js";
+import { validateConfigDocument } from "@eudiplo/config-format/config-validator.js";
 import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
     ConfigDocument,

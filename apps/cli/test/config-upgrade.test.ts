@@ -11,7 +11,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { schemaUrl } from "../src/generated/config-format.js";
+import { schemaUrl } from "@eudiplo/config-format/config-format.js";
 import { runCli } from "../src/runtime.js";
 import type { CommandContext } from "../src/types.js";
 

@@ -43,7 +43,7 @@ import { RegistrarConfigService } from "../../registrar/registrar-config.service
 import {
     normalizeDocument,
     resourceId,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 import { FilesService } from "../../storage/files.service.js";
 import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
 import { PresentationsService } from "../../verifier/presentations/presentations.service.js";

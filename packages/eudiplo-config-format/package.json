@@ -1,0 +1,46 @@
+{
+    "name": "@eudiplo/config-format",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "description": "Shared portable-config format, validation, and bundle logic for the EUDIPLO backend and CLI",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./*.js": {
+            "types": "./dist/*.d.ts",
+            "import": "./dist/*.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc -p tsconfig.json",
+        "test": "vitest run",
+        "clean": "rm -rf dist"
+    },
+    "dependencies": {
+        "ajv": "^8.20.0",
+        "fflate": "^0.8.3"
+    },
+    "devDependencies": {
+        "@types/node": "^26.4.0",
+        "typescript": "^6.0.3",
+        "vitest": "4.1.11"
+    },
+    "files": [
+        "dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/openwallet-foundation/eudiplo.git",
+        "directory": "packages/eudiplo-config-format"
+    },
+    "author": "OpenWallet Foundation",
+    "license": "Apache-2.0",
+    "engines": {
+        "node": ">=22.12.0"
+    }
+}

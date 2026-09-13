@@ -1,4 +1,4 @@
-import { atomicWriteFileSync } from "../../../shared/config-format/config-io.js";
+import { atomicWriteFileSync } from "@eudiplo/config-format/config-io.js";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { Injectable, NotFoundException } from "@nestjs/common";

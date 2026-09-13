@@ -7,7 +7,7 @@ import {
     resourceId,
     schemaUrl,
     serializeDocument,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 import { ConfigImportService } from "../config-import/config-import.service.js";
 import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";

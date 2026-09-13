@@ -19,18 +19,18 @@ import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoi
 import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
 import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
 import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
-import { assertConfigBundle } from "../../shared/config-format/config-bundle.js";
+import { assertConfigBundle } from "@eudiplo/config-format/config-bundle.js";
 import {
     CONFIG_SINGLETON_IDS,
     resourceId,
     schemaUrl,
     serializeDocument,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 import {
     type ConfigChange,
     configChanges,
     stableConfigJson,
-} from "../../shared/config-format/config-values.js";
+} from "@eudiplo/config-format/config-values.js";
 import { FileEntity } from "../../storage/entities/files.entity.js";
 import { FilesService } from "../../storage/files.service.js";
 import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";

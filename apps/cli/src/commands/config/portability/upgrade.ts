@@ -22,7 +22,7 @@ import {
     assertConfigBundle,
     type ConfigBundle,
     ConfigBundleCodec,
-} from "../../../generated/config-bundle.js";
+} from "@eudiplo/config-format/config-bundle.js";
 import {
     CONFIG_FORMATS,
     CONFIG_RESOURCE_KINDS,
@@ -31,12 +31,12 @@ import {
     normalizeDocument,
     resourceId,
     schemaUrl,
-} from "../../../generated/config-format.js";
-import { atomicWriteFile } from "../../../generated/config-io.js";
+} from "@eudiplo/config-format/config-format.js";
+import { atomicWriteFile } from "@eudiplo/config-format/config-io.js";
 import {
     configChanges,
     stableConfigJson,
-} from "../../../generated/config-values.js";
+} from "@eudiplo/config-format/config-values.js";
 import { readStringFlag } from "../../../options.js";
 import type { CommandContext, ParsedArgs } from "../../../types.js";
 import { TENANT_RESOURCE_REGISTRY } from "../validate/registry.js";

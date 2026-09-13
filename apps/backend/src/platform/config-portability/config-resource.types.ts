@@ -2,14 +2,14 @@ import type {
     ConfigDocument,
     ConfigMigrationIssue,
     ConfigResourceKind,
-} from "../../shared/config-format/config-format.js";
-export { CONFIG_RESOURCE_KINDS } from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
+export { CONFIG_RESOURCE_KINDS } from "@eudiplo/config-format/config-format.js";
 export type {
     ConfigFile,
     ConfigDocument,
     ConfigMigrationIssue,
     ConfigResourceKind,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 export type ConfigOwnership = "unmanaged" | "file-managed";
 export type ConfigImportMode = "disabled" | "create" | "upsert" | "replace";
 
@@ -23,13 +23,13 @@ export type {
     ConfigBundle,
     ConfigBundleAsset,
     ConfigBundleRequirement,
-} from "../../shared/config-format/config-bundle.js";
+} from "@eudiplo/config-format/config-bundle.js";
 
 export interface ConfigImportPlanItem {
     kind: ConfigResourceKind;
     id: string;
     action: "create" | "update" | "unchanged" | "skip" | "delete" | "blocked";
-    changes?: import("../../shared/config-format/config-values.js").ConfigChange[];
+    changes?: import("@eudiplo/config-format/config-values.js").ConfigChange[];
     metadataChanged?: boolean;
     sourceVersion: string;
     targetVersion: string;

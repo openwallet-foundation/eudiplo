@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import {
     CONFIG_FORMATS,
     schemaUrl,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
 import type { ConfigResourceKind } from "./config-resource.types.js";
 
 export interface ConfigResourceDefinition {

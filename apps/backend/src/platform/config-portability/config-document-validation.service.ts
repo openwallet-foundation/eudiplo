@@ -12,7 +12,7 @@ import { CreateWebhookEndpointSchema } from "../../issuer/configuration/webhook-
 import { StatusListImportSchema } from "../../issuer/status-list/dto/status-list.schema.js";
 import { TrustListCreateSchema } from "../../issuer/trust-list/schemas/trust-list.schema.js";
 import { CreateRegistrarConfigSchema } from "../../registrar/schemas/registrar.schema.js";
-import { resourceId } from "../../shared/config-format/config-format.js";
+import { resourceId } from "@eudiplo/config-format/config-format.js";
 import { PresentationConfigCreateSchema } from "../../verifier/presentations/schemas/presentation-config.schema.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import type {

@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { basename, extname, isAbsolute, join } from "node:path";
-import { atomicWriteFile } from "../../../generated/config-io.js";
+import { atomicWriteFile } from "@eudiplo/config-format/config-io.js";
 import { upgradeFile } from "./upgrade.js";
 import { readStringFlag } from "../../../options.js";
 import { resolveInstance } from "../../../services/instance-selection.js";

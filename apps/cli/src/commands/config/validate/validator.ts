@@ -12,9 +12,9 @@ import {
     migrateDocument,
     schemaUrl,
     serializeDocument,
-} from "../../../generated/config-format.js";
-import { validateConfigDocument } from "../../../generated/config-validator.js";
-import { resolveConfigVariables } from "../../../generated/config-values.js";
+} from "@eudiplo/config-format/config-format.js";
+import { validateConfigDocument } from "@eudiplo/config-format/config-validator.js";
+import { resolveConfigVariables } from "@eudiplo/config-format/config-values.js";
 import { CLI_VALIDATED_REGISTRY } from "./registry.js";
 import type {
     DirectoryResourceDefinition,

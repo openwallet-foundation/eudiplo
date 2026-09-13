@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { ConfigService } from "@nestjs/config";
 import { describe, expect, it, vi } from "vitest";
-import { schemaUrl } from "../../shared/config-format/config-format.js";
+import { schemaUrl } from "@eudiplo/config-format/config-format.js";
 import { ConfigImportService } from "../config-import/config-import.service.js";
 import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";

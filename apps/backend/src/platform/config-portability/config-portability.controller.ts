@@ -1,5 +1,5 @@
 import { ConfigImportJournalService } from "./config-import-journal.service.js";
-import { serializeDocument } from "../../shared/config-format/config-format.js";
+import { serializeDocument } from "@eudiplo/config-format/config-format.js";
 import {
     BadRequestException,
     Body,

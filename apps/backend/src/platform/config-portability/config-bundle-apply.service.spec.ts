@@ -1,5 +1,5 @@
+import { schemaUrl } from "@eudiplo/config-format/config-format.js";
 import { describe, expect, it, vi } from "vitest";
-import { schemaUrl } from "../../shared/config-format/config-format.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
 import type {
     ConfigBundle,

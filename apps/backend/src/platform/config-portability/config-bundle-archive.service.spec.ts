@@ -1,12 +1,12 @@
 import { createHash } from "node:crypto";
-import { strToU8, unzipSync, zipSync } from "fflate";
-import { describe, expect, it } from "vitest";
-import { assertConfigBundle } from "../../shared/config-format/config-bundle.js";
+import { assertConfigBundle } from "@eudiplo/config-format/config-bundle.js";
 import {
     migrateDocument,
     schemaUrl,
     serializeDocument,
-} from "../../shared/config-format/config-format.js";
+} from "@eudiplo/config-format/config-format.js";
+import { strToU8, unzipSync, zipSync } from "fflate";
+import { describe, expect, it } from "vitest";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service.js";
 import type { ConfigBundle, ConfigDocument } from "./config-resource.types.js";
 
