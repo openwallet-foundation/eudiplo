@@ -13,7 +13,10 @@ import {
     resolveWorkload,
     resolveWorkloads,
 } from "../src/services/kubectl.js";
-import { unreadyEndpoints } from "../src/services/deployment-drivers.js";
+import {
+    readReplicaCounts,
+    unreadyEndpoints,
+} from "../src/services/deployment-drivers.js";
 import type { InstanceConfig } from "../src/types.js";
 
 const scope = { context: "production", namespace: "eudiplo" };
@@ -140,6 +143,43 @@ describe("workload resolution", () => {
             "deployment/eudiplo",
             "deployment/eudiplo-client",
         ]);
+    });
+});
+
+describe("workload replica counts", () => {
+    function deployment(status: object, spec?: object): string {
+        return JSON.stringify({ spec: spec ?? { replicas: 3 }, status });
+    }
+
+    it("reads ready and desired replicas", () => {
+        expect(
+            readReplicaCounts(deployment({ readyReplicas: 2, replicas: 3 })),
+        ).toEqual({ ready: 2, desired: 3 });
+    });
+
+    it("treats an omitted readyReplicas as none ready", () => {
+        expect(readReplicaCounts(deployment({ replicas: 3 }))).toEqual({
+            ready: 0,
+            desired: 3,
+        });
+    });
+
+    it("defaults desired replicas to one when spec omits it", () => {
+        expect(
+            readReplicaCounts(deployment({ readyReplicas: 1 }, {})),
+        ).toEqual({ ready: 1, desired: 1 });
+    });
+
+    it("reads a scaled-to-zero deployment", () => {
+        expect(
+            readReplicaCounts(deployment({}, { replicas: 0 })),
+        ).toEqual({ ready: 0, desired: 0 });
+    });
+
+    it("rejects a payload with no status", () => {
+        expect(() => readReplicaCounts(JSON.stringify({ kind: "Pod" }))).toThrow(
+            /Unexpected workload payload/,
+        );
     });
 });
 

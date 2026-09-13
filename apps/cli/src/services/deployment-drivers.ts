@@ -174,14 +174,7 @@ async function kubernetesDiagnostics(
             buildGetWorkloadArgs(scope, workload),
             context,
         );
-        checks.push({
-            name: "workload",
-            status: read.code === 0 ? "pass" : "fail",
-            message:
-                read.code === 0
-                    ? `${workload} exists`
-                    : `${workload} could not be read: ${firstLine(read.stderr)}`,
-        });
+        checks.push(workloadCheck(workload, read));
     }
 
     const pods = await captureKubectl(
@@ -206,6 +199,78 @@ async function kubernetesDiagnostics(
     checks.push(endpointCheck(endpoints));
 
     return checks;
+}
+
+/**
+ * Kubernetes removes an unready pod from its Service endpoints, so a
+ * deployment running below its desired replica count still serves traffic
+ * through the remaining pods. That is a warning rather than a failure: only a
+ * deployment with nothing ready is actually down.
+ */
+function workloadCheck(workload: string, read: CapturedCommand): DoctorCheck {
+    if (read.code !== 0) {
+        return {
+            name: "workload",
+            status: "fail",
+            message: `${workload} could not be read: ${firstLine(read.stderr)}`,
+        };
+    }
+
+    let replicas: { ready: number; desired: number };
+    try {
+        replicas = readReplicaCounts(read.stdout);
+    } catch {
+        return {
+            name: "workload",
+            status: "warn",
+            message: `${workload} exists, but its replica counts could not be read.`,
+        };
+    }
+
+    const counts = `${replicas.ready}/${replicas.desired} replicas ready`;
+    if (replicas.desired === 0) {
+        return {
+            name: "workload",
+            status: "warn",
+            message: `${workload} is scaled to zero.`,
+        };
+    }
+    if (replicas.ready === 0) {
+        return {
+            name: "workload",
+            status: "fail",
+            message: `${workload} has no ready replicas (${counts}).`,
+        };
+    }
+    return {
+        name: "workload",
+        status: replicas.ready < replicas.desired ? "warn" : "pass",
+        message: `${workload}: ${counts}`,
+    };
+}
+
+export function readReplicaCounts(stdout: string): {
+    ready: number;
+    desired: number;
+} {
+    const parsed: unknown = JSON.parse(stdout);
+    if (!isRecord(parsed) || !isRecord(parsed.status)) {
+        throw new Error("Unexpected workload payload.");
+    }
+
+    // `readyReplicas` is omitted entirely rather than set to zero when no pod
+    // is ready, and `spec.replicas` defaults to 1 when unset.
+    const ready = numberOr(parsed.status.readyReplicas, 0);
+    const desired = isRecord(parsed.spec)
+        ? numberOr(parsed.spec.replicas, 1)
+        : numberOr(parsed.status.replicas, 1);
+    return { ready, desired };
+}
+
+function numberOr(value: unknown, fallback: number): number {
+    return typeof value === "number" && Number.isFinite(value)
+        ? value
+        : fallback;
 }
 
 /**
