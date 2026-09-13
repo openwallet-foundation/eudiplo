@@ -21,7 +21,7 @@ interface ConfigBundleResource {
     generation: number;
 }
 
-interface ConfigBundleRequirement {
+export interface ConfigBundleRequirement {
     code: string;
     resource: { kind: ConfigResourceKind; id: string };
     path: string;
@@ -29,7 +29,7 @@ interface ConfigBundleRequirement {
     placeholder?: string;
 }
 
-interface ConfigBundleAsset {
+export interface ConfigBundleAsset {
     path: string;
     contentType?: string;
     sha256: string;

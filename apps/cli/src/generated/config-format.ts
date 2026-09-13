@@ -47,7 +47,7 @@ export type ConfigResourceKind = keyof typeof CONFIG_FORMATS;
 export const CONFIG_RESOURCE_KINDS = Object.keys(
     CONFIG_FORMATS,
 ) as ConfigResourceKind[];
-const SCHEMA_BASE = "https://eudiplo.dev/schemas/";
+export const SCHEMA_BASE = "https://eudiplo.dev/schemas/";
 interface ConfigMetadata {
     generation?: number;
     ownership?: "unmanaged" | "file-managed";
