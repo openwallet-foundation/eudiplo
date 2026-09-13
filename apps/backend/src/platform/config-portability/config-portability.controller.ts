@@ -1,3 +1,5 @@
+import { ConfigImportJournalService } from "./config-import-journal.service.js";
+import { serializeDocument } from "../../shared/config-format/config-format.js";
 import {
     BadRequestException,
     Body,
@@ -12,7 +14,7 @@ import {
     UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiConsumes, ApiOperation, ApiTags } from "@nestjs/swagger";
+import { ApiConsumes, ApiOperation, ApiTags, ApiQuery } from "@nestjs/swagger";
 import type { Request, Response } from "express";
 import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
@@ -30,7 +32,7 @@ import { ConfigMigrationService } from "./config-migration.service.js";
 import { ConfigOwnershipService } from "./config-ownership.service.js";
 import type {
     ConfigBundle,
-    ConfigDocument,
+    ConfigFile,
     ConfigImportMode,
     ConfigResourceKind,
 } from "./config-resource.types.js";
@@ -54,6 +56,7 @@ export class ConfigPortabilityController {
         private readonly migrationService: ConfigMigrationService,
         private readonly ownershipService: ConfigOwnershipService,
         private readonly auditLogService: AuditLogService,
+        private readonly journal: ConfigImportJournalService,
     ) {}
 
     @Get("export")
@@ -130,6 +133,12 @@ export class ConfigPortabilityController {
         );
     }
 
+    @ApiQuery({
+        name: "planFingerprint",
+        required: true,
+        type: String,
+        description: "Fingerprint from the reviewed plan",
+    })
     @Post("import")
     @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Apply a validated tenant configuration bundle" })
@@ -139,10 +148,24 @@ export class ConfigPortabilityController {
         @Body() bundle: ConfigBundle,
         @Query("mode") mode: ConfigImportMode = "upsert",
         @Query("confirmReplace") confirmReplace?: string,
+        @Query("planFingerprint") planFingerprint?: string,
     ) {
-        return this.applyAndAudit(token, request, bundle, mode, confirmReplace);
+        return this.applyAndAudit(
+            token,
+            request,
+            bundle,
+            mode,
+            confirmReplace,
+            planFingerprint,
+        );
     }
 
+    @ApiQuery({
+        name: "planFingerprint",
+        required: true,
+        type: String,
+        description: "Fingerprint from the reviewed plan",
+    })
     @Post("import/archive")
     @Secured([Role.Tenants, Role.TenantAdmin])
     @UseInterceptors(
@@ -156,6 +179,7 @@ export class ConfigPortabilityController {
         @UploadedFile() file: { buffer: Buffer } | undefined,
         @Query("mode") mode: ConfigImportMode = "upsert",
         @Query("confirmReplace") confirmReplace?: string,
+        @Query("planFingerprint") planFingerprint?: string,
     ) {
         if (!file?.buffer)
             throw new BadRequestException("bundle file is required");
@@ -165,6 +189,7 @@ export class ConfigPortabilityController {
             this.archiveService.decode(file.buffer),
             mode,
             confirmReplace,
+            planFingerprint,
         );
     }
 
@@ -174,6 +199,7 @@ export class ConfigPortabilityController {
         bundle: ConfigBundle,
         mode: ConfigImportMode,
         confirmReplace?: string,
+        planFingerprint?: string,
     ) {
         this.assertMode(mode);
         if (mode === "replace" && confirmReplace !== "true") {
@@ -182,7 +208,17 @@ export class ConfigPortabilityController {
             );
         }
         const tenantId = requireTenantContext(token);
-        const plan = await this.applyService.apply(tenantId, bundle, mode);
+        if (!planFingerprint || !/^[a-f0-9]{64}$/.test(planFingerprint))
+            throw new BadRequestException(
+                "A planFingerprint from a reviewed plan is required",
+            );
+        const plan = await this.applyService.apply(
+            tenantId,
+            bundle,
+            mode,
+            undefined,
+            planFingerprint,
+        );
         await this.auditLogService.record({
             tenantId,
             actionType: "config_bundle_imported",
@@ -212,10 +248,46 @@ export class ConfigPortabilityController {
         return plan;
     }
 
+    @Get("operations")
+    @Secured([Role.Tenants, Role.TenantAdmin])
+    @ApiOperation({ summary: "List recent configuration operations" })
+    operations(@Token() token: TokenPayload) {
+        return this.journal.list(requireTenantContext(token));
+    }
+
+    @Get("operations/:id")
+    @Secured([Role.Tenants, Role.TenantAdmin])
+    @ApiOperation({ summary: "Read a durable configuration operation report" })
+    operation(@Token() token: TokenPayload, @Param("id") id: string) {
+        return this.journal.get(requireTenantContext(token), id);
+    }
+
+    @Post("operations/:id/acknowledge-interruption")
+    @Secured([Role.Tenants, Role.TenantAdmin])
+    @ApiOperation({
+        summary:
+            "Release an interrupted operation after its worker has been stopped",
+    })
+    acknowledgeInterruption(
+        @Token() token: TokenPayload,
+        @Param("id") id: string,
+        @Query("confirmWorkerStopped") confirmed?: string,
+    ) {
+        if (confirmed !== "true")
+            throw new BadRequestException(
+                "Stop the original worker before setting confirmWorkerStopped=true",
+            );
+        return this.journal.acknowledgeInterruption(
+            requireTenantContext(token),
+            id,
+        );
+    }
+
     @Post("documents/upgrade")
     @ApiOperation({ summary: "Upgrade one configuration document" })
-    upgrade(@Body() input: ConfigDocument) {
-        return this.migrationService.upgrade(input);
+    upgrade(@Body() input: ConfigFile) {
+        const result = this.migrationService.upgrade(input);
+        return { ...result, document: serializeDocument(result.document) };
     }
 
     @Get("resources")
@@ -240,7 +312,9 @@ export class ConfigPortabilityController {
         }
         const kind = rawKind as ConfigResourceKind;
         const tenantId = requireTenantContext(token);
-        const metadata = await this.ownershipService.detach(tenantId, kind, id);
+        const metadata = await this.journal.run(tenantId, "detach", async () =>
+            this.ownershipService.detach(tenantId, kind, id),
+        );
         await this.auditLogService.record({
             tenantId,
             actionType: "config_resource_detached",

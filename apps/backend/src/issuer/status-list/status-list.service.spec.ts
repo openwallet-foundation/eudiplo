@@ -78,6 +78,75 @@ describe("StatusListService SQLite concurrency", () => {
         await dataSource.destroy();
     });
 
+    test("config binding updates preserve revoked entries and allocated indexes", async () => {
+        const repository = dataSource.getRepository(StatusListEntity);
+        await repository.update(
+            { tenantId: "tenant-1", id: "list-1" },
+            { elements: [1, 0], stack: [1] },
+        );
+        await service.processStatusListConfig("tenant-1", {
+            id: "list-1",
+            capacity: 2,
+            bits: 1,
+            credentialConfigurationId: "new-binding",
+        });
+        const list = await repository.findOneByOrFail({
+            tenantId: "tenant-1",
+            id: "list-1",
+        });
+        expect(list.elements).toEqual([1, 0]);
+        expect(list.stack).toEqual([1]);
+        expect(list.credentialConfigurationId).toBe("new-binding");
+    });
+
+    test("refuses to reset an existing list's layout", async () => {
+        await expect(
+            service.processStatusListConfig("tenant-1", {
+                id: "list-1",
+                capacity: 100,
+            }),
+        ).rejects.toThrow("cannot change capacity or bits");
+        await expect(
+            service.processStatusListConfig("tenant-1", {
+                id: "list-1",
+                bits: 2,
+            }),
+        ).rejects.toThrow("cannot change capacity or bits");
+        expect(
+            (
+                await dataSource
+                    .getRepository(StatusListEntity)
+                    .findOneByOrFail({ tenantId: "tenant-1", id: "list-1" })
+            ).elements,
+        ).toEqual([0, 0]);
+    });
+
+    test("detects concurrent allocations while validating a binding update", async () => {
+        const repository = dataSource.getRepository(StatusListEntity);
+        Object.assign(service, {
+            certService: {
+                find: async () => {
+                    await repository.update(
+                        { tenantId: "tenant-1", id: "list-1" },
+                        { stack: [1] },
+                    );
+                    return {};
+                },
+            },
+        });
+        await expect(
+            service.updateList("tenant-1", "list-1", { keyChainId: "new-key" }),
+        ).rejects.toThrow("changed concurrently");
+        expect(
+            (
+                await repository.findOneByOrFail({
+                    tenantId: "tenant-1",
+                    id: "list-1",
+                })
+            ).stack,
+        ).toEqual([1]);
+    });
+
     test("allocates an entry without unsupported pessimistic locks", async () => {
         const payload = await service.createEntry(
             { id: "session-1", tenantId: "tenant-1" } as never,

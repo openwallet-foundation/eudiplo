@@ -1,8 +1,9 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-const sourceRoot = resolve(process.cwd(), "src");
+const sourceRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 
 const typescriptFiles = (directory: string): string[] =>
     readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {

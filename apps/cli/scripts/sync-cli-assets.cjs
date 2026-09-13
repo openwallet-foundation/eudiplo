@@ -69,3 +69,5 @@ writeFileSync(
 );
 
 console.log("CLI assets synchronized from canonical sources.");
+
+require("node:child_process").execFileSync(process.execPath, [join(__dirname, "../../../scripts/sync-config-format.mjs")], { stdio: "inherit" });

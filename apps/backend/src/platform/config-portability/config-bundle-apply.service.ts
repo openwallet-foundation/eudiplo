@@ -1,5 +1,16 @@
-import { createHash, randomBytes } from "node:crypto";
-import { BadRequestException, Inject, Injectable } from "@nestjs/common";
+import {
+    createHash,
+    createPrivateKey,
+    randomBytes,
+    X509Certificate,
+} from "node:crypto";
+import {
+    BadRequestException,
+    ConflictException,
+    Inject,
+    Injectable,
+    InternalServerErrorException,
+} from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import {
@@ -29,26 +40,34 @@ import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js
 import { TrustListService } from "../../issuer/trust-list/trustlist.service.js";
 import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
 import { RegistrarConfigService } from "../../registrar/registrar-config.service.js";
+import {
+    normalizeDocument,
+    resourceId,
+} from "../../shared/config-format/config-format.js";
 import { FilesService } from "../../storage/files.service.js";
 import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
 import { PresentationsService } from "../../verifier/presentations/presentations.service.js";
 import { ConfigBundleService } from "./config-bundle.service.js";
+import { ConfigImportJournalService } from "./config-import-journal.service.js";
 import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import { ConfigOwnershipService } from "./config-ownership.service.js";
 import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type {
+    ConfigApplyOperation,
     ConfigBundle,
     ConfigDocument,
     ConfigImportMode,
     ConfigImportPlan,
     ConfigResourceKind,
 } from "./config-resource.types.js";
+import type { ConfigImportRunEntity } from "./entities/config-import-run.entity.js";
 
 @Injectable()
 export class ConfigBundleApplyService {
     constructor(
         private readonly bundleService: ConfigBundleService,
+        private readonly journal: ConfigImportJournalService,
         private readonly migrationService: ConfigMigrationService,
         private readonly ownershipService: ConfigOwnershipService,
         private readonly filesService: FilesService,
@@ -95,6 +114,27 @@ export class ConfigBundleApplyService {
         bundle: ConfigBundle,
         mode: ConfigImportMode,
         ownershipSource = `bundle:${bundle.manifest.tenant}`,
+        expectedFingerprint?: string,
+    ): Promise<ConfigImportPlan> {
+        return this.journal.run(tenantId, mode, (run) =>
+            this.applyLocked(
+                tenantId,
+                bundle,
+                mode,
+                ownershipSource,
+                run,
+                expectedFingerprint,
+            ),
+        );
+    }
+
+    private async applyLocked(
+        tenantId: string,
+        bundle: ConfigBundle,
+        mode: ConfigImportMode,
+        ownershipSource: string,
+        run: ConfigImportRunEntity,
+        expectedFingerprint?: string,
     ): Promise<ConfigImportPlan> {
         const plan = await this.bundleService.plan(
             tenantId,
@@ -102,54 +142,144 @@ export class ConfigBundleApplyService {
             mode,
             ownershipSource,
         );
+        if (
+            expectedFingerprint &&
+            plan.planFingerprint !== expectedFingerprint
+        ) {
+            throw new ConflictException({
+                code: "CONFIG_PLAN_STALE",
+                message:
+                    "The bundle, mode or target configuration changed. Review a new plan before applying.",
+                operationId: run.id,
+            });
+        }
+        run.planFingerprint = plan.planFingerprint ?? null;
         if (!plan.applicable) {
             throw new BadRequestException({
                 message: "Configuration bundle has blocking issues",
                 plan,
             });
         }
-        // Resource importers resolve image filenames to stored public URLs, so
-        // bundle assets must exist before the dependent resources are applied.
-        await this.restoreAssets(tenantId, bundle, mode !== "create");
-        const applicable = new Set(
-            plan.items
-                .filter(
-                    (item) =>
-                        item.action === "create" || item.action === "update",
-                )
-                .map((item) => `${item.kind}/${item.id}`),
-        );
-        const ordered = [...bundle.documents]
-            .sort(
-                (left, right) => this.order(left.kind) - this.order(right.kind),
-            )
-            .filter((document) =>
-                applicable.has(`${document.kind}/${document.metadata.id}`),
-            );
         const generatedSecrets: NonNullable<
             ConfigImportPlan["generatedSecrets"]
         > = [];
+        const operations: ConfigApplyOperation[] = [];
+        const tasks: Array<() => Promise<void>> = [];
+        const add = (
+            operation: Omit<ConfigApplyOperation, "status">,
+            run: () => Promise<void>,
+        ) => {
+            operations.push({ ...operation, status: "pending" });
+            tasks.push(run);
+        };
+        // Assets must exist before importers resolve image filenames to public URLs.
+        for (const asset of bundle.assets ?? []) {
+            if (
+                !plan.assets?.some(
+                    (item) =>
+                        item.path === asset.path &&
+                        (item.action === "create" || item.action === "update"),
+                )
+            )
+                continue;
+            add({ stage: "asset", path: asset.path }, async () => {
+                await this.filesService.saveImportedAsset(
+                    tenantId,
+                    asset.path.replace(/^images\//, ""),
+                    Buffer.from(asset.data, "base64"),
+                    asset.contentType,
+                    mode !== "create",
+                );
+            });
+        }
+        const items = new Map(
+            plan.items.map((item) => [`${item.kind}/${item.id}`, item]),
+        );
+        const ordered = bundle.documents
+            .map(normalizeDocument)
+            .sort(
+                (left, right) => this.order(left.kind) - this.order(right.kind),
+            );
         for (const input of ordered) {
             const { document } = this.migrationService.upgrade(input);
-            // A startup-folder KMS document is already the live backing file.
-            // Record it as managed without rewriting an envelope into a bare spec.
-            const generatedSecret =
-                document.kind === "KmsConfig" &&
-                ownershipSource.startsWith("folder:")
-                    ? undefined
-                    : await this.applyDocument(tenantId, document);
-            if (generatedSecret) generatedSecrets.push(generatedSecret);
-            await this.ownershipService.markApplied({
+            const item = items.get(`${document.kind}/${resourceId(document)}`);
+            const write =
+                item?.action === "create" || item?.action === "update";
+            if (
+                !write &&
+                !(item?.action === "unchanged" && item.metadataChanged)
+            )
+                continue;
+            const ownership = {
                 tenantId,
                 kind: document.kind,
-                resourceId: document.metadata.id,
-                ownership: "file-managed",
+                resourceId: resourceId(document),
+                ownership: "file-managed" as const,
                 generation: document.metadata.generation ?? 1,
                 source: ownershipSource,
                 sourceHash: createHash("sha256")
                     .update(JSON.stringify(document))
                     .digest("hex"),
-            });
+            };
+            if (write && document.kind === "Tenant") {
+                // These writes share a database, so commit the config and ownership together.
+                add(
+                    {
+                        stage: "resource-and-ownership",
+                        kind: document.kind,
+                        id: resourceId(document),
+                    },
+                    async () => {
+                        await this.tenants.manager.transaction(
+                            async (manager) => {
+                                await manager.update(
+                                    TenantEntity,
+                                    { id: tenantId },
+                                    document.spec,
+                                );
+                                await this.ownershipService.markApplied(
+                                    ownership,
+                                    manager,
+                                );
+                            },
+                        );
+                    },
+                );
+                continue;
+            }
+            // A startup KMS document is already the backing file. Only record ownership.
+            if (
+                write &&
+                !(
+                    document.kind === "KmsConfig" &&
+                    ownershipSource.startsWith("folder:")
+                )
+            ) {
+                add(
+                    {
+                        stage: "resource",
+                        kind: document.kind,
+                        id: resourceId(document),
+                    },
+                    async () => {
+                        const secret = await this.applyDocument(
+                            tenantId,
+                            document,
+                        );
+                        if (secret) generatedSecrets.push(secret);
+                    },
+                );
+            }
+            add(
+                {
+                    stage: "ownership",
+                    kind: document.kind,
+                    id: resourceId(document),
+                },
+                async () => {
+                    await this.ownershipService.markApplied(ownership);
+                },
+            );
         }
         const deletions = plan.items
             .filter((item) => item.action === "delete")
@@ -157,34 +287,44 @@ export class ConfigBundleApplyService {
                 (left, right) => this.order(right.kind) - this.order(left.kind),
             );
         for (const item of deletions) {
-            await this.deleteDocument(tenantId, item.kind, item.id);
-            await this.ownershipService.remove(tenantId, item.kind, item.id);
-        }
-        return generatedSecrets.length ? { ...plan, generatedSecrets } : plan;
-    }
-
-    private async restoreAssets(
-        tenantId: string,
-        bundle: ConfigBundle,
-        overwrite: boolean,
-    ): Promise<void> {
-        for (const asset of bundle.assets ?? []) {
-            const data = Buffer.from(asset.data, "base64");
-            if (
-                createHash("sha256").update(data).digest("hex") !== asset.sha256
-            ) {
-                throw new BadRequestException(
-                    `Asset checksum mismatch: ${asset.path}`,
-                );
-            }
-            await this.filesService.saveImportedAsset(
-                tenantId,
-                asset.path.replace(/^images\//, ""),
-                data,
-                asset.contentType,
-                overwrite,
+            add({ stage: "delete", kind: item.kind, id: item.id }, () =>
+                this.deleteDocument(tenantId, item.kind, item.id),
+            );
+            add(
+                { stage: "delete-ownership", kind: item.kind, id: item.id },
+                () =>
+                    this.ownershipService.remove(tenantId, item.kind, item.id),
             );
         }
+        run.operations = operations;
+        await this.journal.checkpoint(run);
+        for (let index = 0; index < tasks.length; index++) {
+            try {
+                operations[index].status = "running";
+                await this.journal.checkpoint(run);
+                await tasks[index]();
+                operations[index].status = "completed";
+                await this.journal.checkpoint(run);
+            } catch {
+                // A failing service may already have changed external state. Never claim rollback.
+                operations[index].status = "failed";
+                throw new InternalServerErrorException({
+                    code: "CONFIG_APPLY_FAILED",
+                    operationId: run.id,
+                    message:
+                        "Configuration apply stopped. Completed operations remain applied; the failed operation may have partial effects. Inspect the report and run plan again before retrying.",
+                    tenantId,
+                    mode,
+                    operations,
+                    ...(generatedSecrets.length ? { generatedSecrets } : {}),
+                });
+            }
+        }
+        return {
+            ...plan,
+            operationId: run.id,
+            ...(generatedSecrets.length ? { generatedSecrets } : {}),
+        };
     }
 
     private async deleteDocument(
@@ -256,7 +396,7 @@ export class ConfigBundleApplyService {
                 const exists =
                     (await this.clients.countBy({
                         tenantId,
-                        clientId: document.metadata.id,
+                        clientId: resourceId(document),
                     })) > 0;
                 const generated = spec.secret === "!generate";
                 const secret = generated
@@ -269,23 +409,23 @@ export class ConfigBundleApplyService {
                 delete spec.secret;
                 const client = {
                     ...spec,
-                    clientId: document.metadata.id,
+                    clientId: resourceId(document),
                 } as any;
                 if (exists) {
                     await this.clientsProvider.updateClient(
                         tenantId,
-                        document.metadata.id,
+                        resourceId(document),
                         client,
                     );
                     if (generated) {
                         const value =
                             await this.clientsProvider.rotateClientSecret(
                                 tenantId,
-                                document.metadata.id,
+                                resourceId(document),
                             );
                         return {
                             kind: "Client",
-                            id: document.metadata.id,
+                            id: resourceId(document),
                             path: "/spec/secret",
                             value,
                         };
@@ -293,7 +433,7 @@ export class ConfigBundleApplyService {
                     if (secret) {
                         await this.clientsProvider.setClientSecret(
                             tenantId,
-                            document.metadata.id,
+                            resourceId(document),
                             secret,
                         );
                     }
@@ -306,7 +446,7 @@ export class ConfigBundleApplyService {
                 return generated
                     ? {
                           kind: "Client",
-                          id: document.metadata.id,
+                          id: resourceId(document),
                           path: "/spec/secret",
                           value: secret!,
                       }
@@ -336,32 +476,32 @@ export class ConfigBundleApplyService {
             case "CredentialConfig":
                 await this.credentialConfigService.store(
                     tenantId,
-                    { ...spec, id: document.metadata.id } as any,
+                    { ...spec, id: resourceId(document) } as any,
                     true,
                 );
                 return;
             case "PresentationConfig":
                 await this.presentationsService.storePresentationConfig(
                     tenantId,
-                    { ...spec, id: document.metadata.id } as any,
+                    { ...spec, id: resourceId(document) } as any,
                 );
                 return;
             case "AttributeProvider":
                 if (
                     await this.attributeProviders.countBy({
                         tenantId,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     })
                 ) {
                     await this.attributeProviderService.update(
                         tenantId,
-                        document.metadata.id,
+                        resourceId(document),
                         spec as any,
                     );
                 } else {
                     await this.attributeProviderService.create(tenantId, {
                         ...spec,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     } as any);
                 }
                 return;
@@ -369,18 +509,18 @@ export class ConfigBundleApplyService {
                 if (
                     await this.webhookEndpoints.countBy({
                         tenantId,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     })
                 ) {
                     await this.webhookEndpointService.update(
                         tenantId,
-                        document.metadata.id,
+                        resourceId(document),
                         spec as any,
                     );
                 } else {
                     await this.webhookEndpointService.create(tenantId, {
                         ...spec,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     } as any);
                 }
                 return;
@@ -391,30 +531,26 @@ export class ConfigBundleApplyService {
                 if (
                     await this.trustLists.countBy({
                         tenantId,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     })
                 ) {
                     await this.trustListService.update(
                         tenantId,
-                        document.metadata.id,
-                        { ...spec, id: document.metadata.id } as any,
+                        resourceId(document),
+                        { ...spec, id: resourceId(document) } as any,
                     );
                 } else {
                     await this.trustListService.create(
-                        { ...spec, id: document.metadata.id } as any,
+                        { ...spec, id: resourceId(document) } as any,
                         tenant,
                     );
                 }
                 return;
             }
             case "StatusList":
-                await this.statusLists.delete({
-                    tenantId,
-                    id: document.metadata.id,
-                });
                 await this.statusListService.processStatusListConfig(tenantId, {
                     ...spec,
-                    id: document.metadata.id,
+                    id: resourceId(document),
                 } as any);
         }
     }
@@ -427,7 +563,7 @@ export class ConfigBundleApplyService {
         if (spec.keySource?.type === "regenerate") {
             await this.keyChainService.regenerate(
                 tenantId,
-                document.metadata.id,
+                resourceId(document),
                 {
                     usageType: spec.usageType,
                     type:
@@ -444,15 +580,31 @@ export class ConfigBundleApplyService {
             return;
         }
         if (spec.keySource?.type === "private-jwk") {
-            await this.keyChains.delete({ tenantId, id: document.metadata.id });
             if (spec.keySource.activeJwk) {
+                // Validate both key/certificate pairs before touching the live row.
+                for (const [jwk, certificate] of [
+                    [spec.keySource.jwk, spec.crt?.at(-1)],
+                    [spec.keySource.activeJwk, spec.activeCertificate],
+                ]) {
+                    const key = createPrivateKey({ key: jwk, format: "jwk" });
+                    if (
+                        !certificate ||
+                        !new X509Certificate(certificate).checkPrivateKey(key)
+                    ) {
+                        throw new BadRequestException(
+                            "Imported certificate does not match its private key",
+                        );
+                    }
+                }
                 await this.keyChains.save({
-                    id: document.metadata.id,
+                    id: resourceId(document),
                     tenantId,
                     description: spec.description,
                     usageType: spec.usageType,
                     usage: KeyUsage.Sign,
                     kmsProvider: "db",
+                    externalKeyId: null as any,
+                    rootExternalKeyId: null as any,
                     rootJwk: spec.keySource.jwk,
                     rootCertificate: spec.crt?.at(-1),
                     activeJwk: spec.keySource.activeJwk,
@@ -471,12 +623,12 @@ export class ConfigBundleApplyService {
         }
         if (spec.keySource?.type !== "external-reference") {
             throw new BadRequestException(
-                `KeyChain '${document.metadata.id}' has no importable key source`,
+                `KeyChain '${resourceId(document)}' has no importable key source`,
             );
         }
         await this.kmsReferenceService.verify(tenantId, spec.keySource);
         await this.keyChains.save({
-            id: document.metadata.id,
+            id: resourceId(document),
             tenantId,
             description: spec.description,
             usageType: spec.usageType,
@@ -484,13 +636,13 @@ export class ConfigBundleApplyService {
             kmsProvider: spec.keySource.provider,
             rootJwk: spec.keySource.activeExternalKeyId
                 ? spec.keySource.publicJwk
-                : undefined,
+                : (null as any),
             rootExternalKeyId: spec.keySource.activeExternalKeyId
                 ? spec.keySource.externalKeyId
-                : undefined,
+                : (null as any),
             rootCertificate: spec.keySource.activeExternalKeyId
                 ? spec.crt?.at(-1)
-                : undefined,
+                : (null as any),
             activeJwk:
                 spec.keySource.activePublicJwk ?? spec.keySource.publicJwk,
             externalKeyId:
@@ -499,8 +651,10 @@ export class ConfigBundleApplyService {
             activeCertificate:
                 spec.activeCertificate ?? spec.crt?.join("\n") ?? "",
             rotationEnabled: spec.rotationPolicy?.enabled ?? false,
-            rotationIntervalDays: spec.rotationPolicy?.intervalDays,
-            certValidityDays: spec.rotationPolicy?.certValidityDays,
+            rotationIntervalDays:
+                spec.rotationPolicy?.intervalDays ?? (null as any),
+            certValidityDays:
+                spec.rotationPolicy?.certValidityDays ?? (null as any),
         });
     }
 

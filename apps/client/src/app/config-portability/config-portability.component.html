@@ -88,7 +88,9 @@
         <button
           mat-button
           (click)="applyImport()"
-          [disabled]="busy || !plan?.applicable || !canApply"
+          [disabled]="
+            busy || !plan?.applicable || !plan?.planFingerprint || !!plan?.operationId || !canApply
+          "
         >
           Apply bundle
         </button>
@@ -105,7 +107,13 @@
         <mat-icon mat-card-avatar>{{ plan.applicable ? 'check_circle' : 'error' }}</mat-icon>
         <mat-card-title>Import plan</mat-card-title>
         <mat-card-subtitle>
-          {{ plan.applicable ? 'Ready to apply' : 'Resolve blocking issues before import' }}
+          {{
+            plan.operationId
+              ? 'Operation: ' + plan.operationId
+              : plan.applicable
+                ? 'Ready to apply'
+                : 'Resolve blocking issues before import'
+          }}
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-content class="table-scroll">
@@ -150,6 +158,14 @@
           <tr mat-header-row *matHeaderRowDef="planColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: planColumns"></tr>
         </table>
+        @if (plan.assets?.length) {
+          <h3>Assets</h3>
+          @for (asset of plan.assets; track asset.path) {
+            <p>
+              <code>{{ asset.path }}</code> — {{ asset.action }}
+            </p>
+          }
+        }
       </mat-card-content>
     </mat-card>
 
@@ -278,3 +294,39 @@
     </mat-card-content>
   </mat-card>
 </div>
+
+@if (canApply) {
+  <mat-card>
+    <mat-card-header
+      ><mat-card-title>Recent configuration operations</mat-card-title></mat-card-header
+    >
+    <mat-card-content>
+      <button mat-button (click)="refreshOperations()" [disabled]="busy">Refresh history</button>
+      @for (operation of operations; track operation.id) {
+        <details>
+          <summary>
+            {{ operation.createdAt | date: 'short' }} · {{ operation.mode }} ·
+            {{ operation.status }}
+          </summary>
+          <p>
+            Operation <code>{{ operation.id }}</code>
+          </p>
+          @for (step of operation.operations; track $index) {
+            <p>
+              {{ step.path || (step.kind || '') + '/' + (step.id || '') }} · {{ step.stage }} ·
+              {{ step.status }}
+            </p>
+          }
+          @if (operation.status === 'running') {
+            <p>
+              This operation may still be running. If its worker crashed, stop that worker before
+              acknowledging the interruption with the CLI.
+            </p>
+          }
+        </details>
+      } @empty {
+        <p>No configuration operations recorded.</p>
+      }
+    </mat-card-content>
+  </mat-card>
+}

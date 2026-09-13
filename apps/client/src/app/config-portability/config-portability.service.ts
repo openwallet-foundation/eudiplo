@@ -18,9 +18,10 @@ export type { ConfigResourceMetadata } from './config-ownership.service';
 export type ConfigImportMode = 'create' | 'upsert' | 'replace';
 
 interface ConfigDocument {
-  apiVersion: string;
-  kind: string;
-  metadata: { id: string; generation?: number; ownership?: string };
+  $schema?: string;
+  apiVersion?: string;
+  kind?: string;
+  metadata?: { generation?: number; ownership?: string };
   spec: Record<string, unknown>;
 }
 
@@ -49,7 +50,7 @@ interface ConfigPlanIssue {
 interface ConfigPlanItem {
   kind: string;
   id: string;
-  action: 'create' | 'update' | 'skip' | 'delete' | 'blocked';
+  action: 'create' | 'update' | 'unchanged' | 'skip' | 'delete' | 'blocked';
   sourceVersion: string;
   targetVersion: string;
   migrations: string[];
@@ -62,12 +63,23 @@ export interface ConfigImportPlan {
   applicable: boolean;
   items: ConfigPlanItem[];
   issues: ConfigPlanIssue[];
+  planFingerprint?: string;
+  operationId?: string;
+  assets?: { path: string; action: string }[];
   generatedSecrets?: {
     kind: 'Client';
     id: string;
     path: '/spec/secret';
     value: string;
   }[];
+}
+
+export interface ConfigOperation {
+  id: string;
+  mode: string;
+  status: string;
+  createdAt: string;
+  operations: { stage: string; kind?: string; id?: string; path?: string; status: string }[];
 }
 
 @Injectable({ providedIn: 'root' })
@@ -114,27 +126,37 @@ export class ConfigPortabilityService {
   import(
     bundle: ConfigBundle,
     mode: ConfigImportMode,
-    confirmReplace: boolean
+    confirmReplace: boolean,
+    planFingerprint: string
   ): Promise<ConfigImportPlan> {
     return configPortabilityControllerImport<true>({
       client: this.api.client,
       body: bundle,
-      query: { mode, confirmReplace },
+      query: { mode, confirmReplace, planFingerprint },
     } as never).then((result) => result.data as unknown as ConfigImportPlan);
   }
 
   importArchive(
     file: File,
     mode: ConfigImportMode,
-    confirmReplace: boolean
+    confirmReplace: boolean,
+    planFingerprint: string
   ): Promise<ConfigImportPlan> {
     const body = new FormData();
     body.set('bundle', file);
     return configPortabilityControllerImportArchive<true>({
       client: this.api.client,
       body,
-      query: { mode, confirmReplace },
+      query: { mode, confirmReplace, planFingerprint },
     } as never).then((result) => result.data as unknown as ConfigImportPlan);
+  }
+
+  async listOperations(): Promise<ConfigOperation[]> {
+    const result = await this.api.client.get({
+      url: '/api/config-bundles/operations',
+      throwOnError: true,
+    });
+    return result.data as ConfigOperation[];
   }
 
   listResources(): Promise<ConfigResourceMetadata[]> {

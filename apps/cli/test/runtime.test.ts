@@ -1135,10 +1135,9 @@ describe("EUDIPLO CLI", () => {
         expect(
             JSON.parse(await readFile(join(tenantPath, "info.json"), "utf8")),
         ).toEqual({
-            apiVersion: "eudiplo.io/tenant/v1",
-            kind: "Tenant",
+            $schema:
+                "https://eudiplo.dev/schemas/v1/TenantConfigFile.schema.json",
             metadata: {
-                id: "acme",
                 generation: 1,
             },
             spec: {

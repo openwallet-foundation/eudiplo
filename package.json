@@ -20,7 +20,12 @@
     "gen:all": "pnpm run gen:api && pnpm run gen:sdk",
     "check:env-example": "pnpm exec tsx scripts/check-env-example.ts",
     "prepare": "husky",
-    "knip": "knip"
+    "knip": "knip",
+    "schemas:snapshot": "pnpm exec tsx scripts/snapshot-config-schemas.mts",
+    "schemas:sync": "node scripts/sync-config-format.mjs",
+    "schemas:check": "node scripts/sync-config-format.mjs --check",
+    "schemas:check-history": "node scripts/check-published-schemas.mjs",
+    "schemas:check-contract": "node --import tsx scripts/generate-schemas.ts --check && node --import tsx scripts/snapshot-config-schemas.mts --check"
   },
   "devDependencies": {
     "@codedependant/semantic-release-docker": "^8.0.0",

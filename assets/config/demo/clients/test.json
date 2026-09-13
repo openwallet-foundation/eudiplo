@@ -1,12 +1,18 @@
 {
+  "$schema": "https://eudiplo.dev/schemas/v1/ClientConfigFile.schema.json",
+  "metadata": {
+    "generation": 1
+  },
+  "spec": {
     "clientId": "test-client",
     "secret": "${TEST_CLIENT_SECRET:test-client-secret}",
     "description": "Test client",
     "roles": [
-        "clients:manage",
-        "issuance:offer",
-        "issuance:manage",
-        "presentation:request",
-        "presentation:manage"
+      "clients:manage",
+      "issuance:offer",
+      "issuance:manage",
+      "presentation:request",
+      "presentation:manage"
     ]
+  }
 }

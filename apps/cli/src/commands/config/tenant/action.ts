@@ -1,8 +1,8 @@
 import {
     access,
     mkdir,
-    readFile,
     readdir,
+    readFile,
     rm,
     stat,
     writeFile,
@@ -313,9 +313,8 @@ async function writeTenantInfo(
 ): Promise<void> {
     const info = description ? { name, description } : { name };
     const document = {
-        apiVersion: "eudiplo.io/tenant/v1",
-        kind: "Tenant",
-        metadata: { id: tenantPath.split(/[/\\]/).pop()!, generation: 1 },
+        $schema: "https://eudiplo.dev/schemas/v1/TenantConfigFile.schema.json",
+        metadata: { generation: 1 },
         spec: info,
     };
     await writeFile(

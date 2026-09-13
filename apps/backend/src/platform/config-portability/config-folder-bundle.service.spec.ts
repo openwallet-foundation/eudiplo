@@ -1,8 +1,10 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { ConfigService } from "@nestjs/config";
 import { describe, expect, it, vi } from "vitest";
+import { schemaUrl } from "../../shared/config-format/config-format.js";
 import { ConfigImportService } from "../config-import/config-import.service.js";
 import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
@@ -15,7 +17,13 @@ describe("ConfigFolderBundleService", () => {
         const registry = new ConfigResourceRegistry();
         const service = new ConfigFolderBundleService(
             {
-                getOrThrow: () => resolve("../..", "assets/config"),
+                getOrThrow: () =>
+                    fileURLToPath(
+                        new URL(
+                            "../../../../../assets/config",
+                            import.meta.url,
+                        ),
+                    ),
             } as unknown as ConfigService,
             {
                 replacePlaceholders: <T>(value: T) => value,
@@ -30,16 +38,22 @@ describe("ConfigFolderBundleService", () => {
 
         const bundle = service.buildBundle(
             "demo",
-            resolve("../..", "assets/config/demo"),
+            fileURLToPath(
+                new URL("../../../../../assets/config/demo", import.meta.url),
+            ),
         );
 
         expect(bundle.documents).toHaveLength(17);
         expect(bundle.assets).toHaveLength(4);
         expect(bundle.documents).toEqual(
             expect.arrayContaining([
-                expect.objectContaining({ kind: "IssuanceConfig" }),
-                expect.objectContaining({ kind: "PresentationConfig" }),
-                expect.objectContaining({ kind: "KeyChain" }),
+                expect.objectContaining({
+                    $schema: schemaUrl("IssuanceConfig"),
+                }),
+                expect.objectContaining({
+                    $schema: schemaUrl("PresentationConfig"),
+                }),
+                expect.objectContaining({ $schema: schemaUrl("KeyChain") }),
             ]),
         );
         expect(bundle.manifest.resources).toHaveLength(bundle.documents.length);
@@ -51,7 +65,13 @@ describe("ConfigFolderBundleService", () => {
         const registry = new ConfigResourceRegistry();
         const service = new ConfigFolderBundleService(
             {
-                getOrThrow: () => resolve("../..", "assets/config"),
+                getOrThrow: () =>
+                    fileURLToPath(
+                        new URL(
+                            "../../../../../assets/config",
+                            import.meta.url,
+                        ),
+                    ),
             } as unknown as ConfigService,
             {
                 replacePlaceholders: <T>(value: T) => value,
@@ -73,7 +93,7 @@ describe("ConfigFolderBundleService", () => {
                 manifest: expect.objectContaining({ tenant: "demo" }),
             }),
             "replace",
-            `folder:${resolve("../..", "assets/config/demo")}`,
+            `folder:${fileURLToPath(new URL("../../../../../assets/config/demo", import.meta.url))}`,
         );
     });
 
@@ -103,7 +123,13 @@ describe("ConfigFolderBundleService", () => {
         const registry = new ConfigResourceRegistry();
         const service = new ConfigFolderBundleService(
             {
-                getOrThrow: () => resolve("../..", "assets/config"),
+                getOrThrow: () =>
+                    fileURLToPath(
+                        new URL(
+                            "../../../../../assets/config",
+                            import.meta.url,
+                        ),
+                    ),
             } as unknown as ConfigService,
             {
                 replacePlaceholders: <T>(value: T) => value,
@@ -122,12 +148,12 @@ describe("ConfigFolderBundleService", () => {
             expect(bundle.documents).toEqual(
                 expect.arrayContaining([
                     expect.objectContaining({
-                        kind: "RegistrarConfig",
-                        metadata: expect.objectContaining({ id: "registrar" }),
+                        $schema: schemaUrl("RegistrarConfig"),
+                        metadata: { generation: 1 },
                     }),
                     expect.objectContaining({
-                        kind: "IssuanceConfig",
-                        metadata: expect.objectContaining({ id: "issuance" }),
+                        $schema: schemaUrl("IssuanceConfig"),
+                        metadata: { generation: 1 },
                     }),
                 ]),
             );

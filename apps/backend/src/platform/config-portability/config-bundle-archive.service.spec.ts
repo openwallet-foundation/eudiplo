@@ -1,5 +1,12 @@
 import { createHash } from "node:crypto";
+import { strToU8, unzipSync, zipSync } from "fflate";
 import { describe, expect, it } from "vitest";
+import { assertConfigBundle } from "../../shared/config-format/config-bundle.js";
+import {
+    migrateDocument,
+    schemaUrl,
+    serializeDocument,
+} from "../../shared/config-format/config-format.js";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service.js";
 import type { ConfigBundle, ConfigDocument } from "./config-resource.types.js";
 
@@ -8,9 +15,9 @@ const hash = (value: string | Buffer) =>
 
 function bundle(): ConfigBundle {
     const document: ConfigDocument = {
-        apiVersion: "eudiplo.io/tenant/v1",
+        $schema: schemaUrl("Tenant"),
         kind: "Tenant",
-        metadata: { id: "tenant", generation: 1, ownership: "unmanaged" },
+        metadata: { generation: 1, ownership: "unmanaged" },
         spec: { name: "Example" },
     };
     const asset = Buffer.from("image");
@@ -25,7 +32,7 @@ function bundle(): ConfigBundle {
                 {
                     kind: "Tenant",
                     id: "tenant",
-                    apiVersion: document.apiVersion,
+                    $schema: document.$schema,
                     path: "info.json",
                     sha256: hash(JSON.stringify(document)),
                     ownership: "unmanaged",
@@ -62,6 +69,19 @@ describe("ConfigBundleArchiveService", () => {
         expect(service.decode(service.encode(input))).toEqual(input);
     });
 
+    it("round-trips schema-based version 2 bundles", () => {
+        const input = bundle();
+        input.documents = input.documents.map((document) =>
+            serializeDocument(migrateDocument(document, () => []).document),
+        );
+        input.manifest.formatVersion = 2;
+        const resource = input.manifest.resources[0];
+        resource.$schema = schemaUrl("Tenant");
+        delete resource.apiVersion;
+        resource.sha256 = hash(JSON.stringify(input.documents[0]));
+        expect(service.decode(service.encode(input))).toEqual(input);
+    });
+
     it("rejects path traversal in archive paths", () => {
         const input = bundle();
         input.manifest.resources[0].path = "../info.json";
@@ -85,5 +105,46 @@ describe("ConfigBundleArchiveService", () => {
         expect(() => service.decode(archive)).toThrow(
             "Expanded configuration ZIP exceeds 100 MiB",
         );
+    });
+    it.each([
+        "duplicate identity",
+        "duplicate path",
+        "missing document",
+        "missing asset",
+        "invalid base64",
+    ])("rejects %s in JSON and ZIP input", (scenario) => {
+        const input = bundle();
+        if (scenario === "duplicate identity") {
+            input.manifest.resources.push({
+                ...input.manifest.resources[0],
+                path: "copy.json",
+            });
+            input.documents.push(input.documents[0]);
+        }
+        if (scenario === "duplicate path")
+            input.manifest.assets[0].path = input.manifest.resources[0].path;
+        if (scenario === "missing document") input.documents = [];
+        if (scenario === "missing asset") input.assets = [];
+        if (scenario === "invalid base64") input.assets[0].data = "%%%";
+        expect(() => assertConfigBundle(input)).toThrow();
+        expect(() => service.encode(input)).toThrow();
+    });
+    it("rejects ZIP entries not listed by the manifest", () => {
+        const entries = unzipSync(service.encode(bundle()));
+        entries["unexpected.json"] = strToU8("{}");
+        expect(() => service.decode(Buffer.from(zipSync(entries)))).toThrow(
+            "Unlisted",
+        );
+    });
+    it("does not include JSON snippets in parse errors", () => {
+        const entries = unzipSync(service.encode(bundle()));
+        entries["manifest.json"] = strToU8('{"secret":"do-not-print",');
+        try {
+            service.decode(Buffer.from(zipSync(entries)));
+            throw new Error("Expected invalid JSON");
+        } catch (error) {
+            expect(String(error)).toContain("Invalid JSON");
+            expect(String(error)).not.toContain("do-not-print");
+        }
     });
 });

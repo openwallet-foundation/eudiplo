@@ -9,25 +9,10 @@ const currentDir = dirname(fileURLToPath(import.meta.url));
  */
 export const CONFIG_VALIDATION_SCHEMA = Joi.object({
     CONFIG_IMPORT_MODE: Joi.string()
+        .default("disabled")
         .valid("disabled", "create", "upsert", "replace")
-        .description(
-            "Startup configuration reconciliation mode. Replaces CONFIG_IMPORT and CONFIG_IMPORT_FORCE.",
-        )
+        .description("Startup configuration reconciliation mode.")
         .meta({ group: "config", order: 10 }),
-
-    CONFIG_IMPORT: Joi.boolean()
-        .default(false)
-        .description(
-            "Deprecated: enable startup config import when CONFIG_IMPORT_MODE is unset",
-        )
-        .meta({ group: "config", order: 20 }),
-
-    CONFIG_IMPORT_FORCE: Joi.boolean()
-        .default(false)
-        .description(
-            "Deprecated: select upsert instead of create when CONFIG_IMPORT_MODE is unset",
-        )
-        .meta({ group: "config", order: 30 }),
 
     CONFIG_FOLDER: Joi.string()
         .default(resolve(currentDir, "../../../../../assets/config"))

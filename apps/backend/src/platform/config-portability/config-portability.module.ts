@@ -1,3 +1,5 @@
+import { ConfigImportJournalService } from "./config-import-journal.service.js";
+import { ConfigImportRunEntity } from "./entities/config-import-run.entity.js";
 import { Global, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -47,6 +49,7 @@ import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadat
         PresentationsModule,
         TypeOrmModule.forFeature([
             ConfigResourceMetadataEntity,
+            ConfigImportRunEntity,
             TenantEntity,
             ClientEntity,
             KeyChainEntity,
@@ -64,6 +67,7 @@ import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadat
     controllers: [ConfigPortabilityController],
     providers: [
         ConfigDocumentValidationService,
+        ConfigImportJournalService,
         ConfigOwnershipService,
         ConfigResourceRouteService,
         ConfigBundleService,

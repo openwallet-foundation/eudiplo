@@ -2,30 +2,58 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "./PresentationConfigFile.schema.json",
   "title": "PresentationConfigFile",
-  "description": "A presentation configuration file in legacy payload or versioned-envelope form.",
+  "description": "Configuration file identified by its $schema URL.",
   "oneOf": [
-    {
-      "$ref": "./PresentationConfigCreateDto.schema.json"
-    },
     {
       "type": "object",
       "properties": {
-        "apiVersion": {
+        "$schema": {
           "type": "string",
-          "const": "eudiplo.io/presentation-config/v2"
-        },
-        "kind": {
-          "type": "string",
-          "const": "PresentationConfig"
+          "const": "https://eudiplo.dev/schemas/v1/PresentationConfigFile.schema.json"
         },
         "metadata": {
-          "$ref": "./ConfigDocumentMetadata.schema.json"
+          "type": "object",
+          "properties": {
+            "generation": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Monotonically increasing configuration generation."
+            },
+            "ownership": {
+              "type": "string",
+              "enum": [
+                "unmanaged",
+                "file-managed"
+              ],
+              "description": "Requested ownership recorded when the document is applied."
+            }
+          },
+          "additionalProperties": false
         },
         "spec": {
-          "$ref": "./PresentationConfigCreateDto.schema.json"
+          "allOf": [
+            {
+              "$ref": "./PresentationConfigCreateDto.schema.json"
+            },
+            {
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          ]
         }
       },
-      "required": ["apiVersion", "kind", "metadata", "spec"],
+      "required": [
+        "$schema",
+        "spec"
+      ],
       "additionalProperties": false
     }
   ]

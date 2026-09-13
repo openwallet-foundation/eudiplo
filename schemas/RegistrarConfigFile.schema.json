@@ -2,33 +2,40 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "./RegistrarConfigFile.schema.json",
   "title": "RegistrarConfigFile",
-  "description": "A registrar configuration file in legacy payload or versioned-envelope form.",
+  "description": "Configuration file identified by its $schema URL.",
   "oneOf": [
-    {
-      "$ref": "./CreateRegistrarConfigDto.schema.json"
-    },
     {
       "type": "object",
       "properties": {
-        "apiVersion": {
+        "$schema": {
           "type": "string",
-          "const": "eudiplo.io/registrar-config/v1"
-        },
-        "kind": {
-          "type": "string",
-          "const": "RegistrarConfig"
+          "const": "https://eudiplo.dev/schemas/v1/RegistrarConfigFile.schema.json"
         },
         "metadata": {
-          "$ref": "./ConfigDocumentMetadata.schema.json"
+          "type": "object",
+          "properties": {
+            "generation": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Monotonically increasing configuration generation."
+            },
+            "ownership": {
+              "type": "string",
+              "enum": [
+                "unmanaged",
+                "file-managed"
+              ],
+              "description": "Requested ownership recorded when the document is applied."
+            }
+          },
+          "additionalProperties": false
         },
         "spec": {
           "$ref": "./CreateRegistrarConfigDto.schema.json"
         }
       },
       "required": [
-        "apiVersion",
-        "kind",
-        "metadata",
+        "$schema",
         "spec"
       ],
       "additionalProperties": false

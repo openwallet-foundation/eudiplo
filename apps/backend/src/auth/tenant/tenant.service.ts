@@ -207,6 +207,8 @@ export class TenantService implements OnApplicationBootstrap {
                   "tenant",
               );
         const result = this.configMigrationService.upgrade(document);
+        if (result.document.kind !== "Tenant")
+            throw new Error("Expected Tenant configuration");
         const blocking = result.issues.filter(
             (issue) => issue.severity !== "warning",
         );

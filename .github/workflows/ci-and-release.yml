@@ -14,6 +14,36 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  config-schemas:
+    name: Check Config Schemas and Website
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+      - uses: pnpm/action-setup@v5
+        with:
+          run_install: false
+      - name: Install dependencies for contract generation
+        run: pnpm install --frozen-lockfile
+      - name: Check current DTOs against published config contracts
+        run: pnpm schemas:check-contract
+      - name: Check shared config implementation and bundled snapshots
+        run: node scripts/sync-config-format.mjs --check
+      - name: Prevent changes to existing published schema versions
+        env:
+          SCHEMA_BASE_REVISION: ${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha || github.event.before || 'HEAD' }}
+        run: |
+          if [ "$SCHEMA_BASE_REVISION" = "0000000000000000000000000000000000000000" ]; then SCHEMA_BASE_REVISION=HEAD; fi
+          node scripts/check-published-schemas.mjs "$SCHEMA_BASE_REVISION"
+      - name: Build website and verify published schema references
+        run: node scripts/build-website.mjs
+
   lint:
     permissions:
       contents: read

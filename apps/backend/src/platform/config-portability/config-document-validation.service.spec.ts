@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import { ConfigResourceRegistry } from "./config-resource.registry.js";
+import { schemaUrl } from "../../shared/config-format/config-format.js";
 
 describe("ConfigDocumentValidationService", () => {
     const migrations = new ConfigMigrationService(new ConfigResourceRegistry());
@@ -10,9 +11,9 @@ describe("ConfigDocumentValidationService", () => {
     it("accepts an explicit key-regeneration decision", () => {
         expect(
             service.validate({
-                apiVersion: "eudiplo.io/key-chain/v2",
+                $schema: schemaUrl("KeyChain"),
                 kind: "KeyChain",
-                metadata: { id: "issuer" },
+                metadata: {},
                 spec: {
                     id: "issuer",
                     usageType: "attestation",
@@ -26,21 +27,17 @@ describe("ConfigDocumentValidationService", () => {
         ).toEqual([]);
     });
 
-    it("reports envelope/spec identity mismatches", () => {
+    it("accepts identity carried by the schema-described spec", () => {
         expect(
             service.validate({
-                apiVersion: "eudiplo.io/client/v1",
+                $schema: schemaUrl("Client"),
                 kind: "Client",
-                metadata: { id: "expected" },
+                metadata: {},
                 spec: {
                     clientId: "different",
                     roles: ["clients:manage"],
                 },
             }),
-        ).toEqual(
-            expect.arrayContaining([
-                expect.objectContaining({ code: "RESOURCE_ID_MISMATCH" }),
-            ]),
-        );
+        ).toEqual([]);
     });
 });

@@ -10,7 +10,7 @@ export default defineConfig({
             `${repositoryRoot}/apps/backend/test/vitest.config.ts`,
             {
                 test: {
-                    include: ["apps/cli/test/**/*.test.ts"],
+                    include: ["apps/cli/test/**/*.test.ts", "apps/cli/src/**/*.spec.ts"],
                     name: "cli",
                     root: repositoryRoot,
                 },

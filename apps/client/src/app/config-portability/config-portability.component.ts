@@ -17,6 +17,7 @@ import { getApiErrorMessage } from '../utils/error-message';
 import { JwtService } from '../services/jwt.service';
 import {
   ConfigBundle,
+  ConfigOperation,
   ConfigImportMode,
   ConfigImportPlan,
   ConfigPortabilityService,
@@ -55,6 +56,7 @@ export class ConfigPortabilityComponent implements OnInit {
   bundleFileName = '';
   plan?: ConfigImportPlan;
   resources: ConfigResourceMetadata[] = [];
+  operations: ConfigOperation[] = [];
   selected = new Set<string>();
   busy = false;
 
@@ -70,6 +72,7 @@ export class ConfigPortabilityComponent implements OnInit {
 
   ngOnInit(): void {
     void this.refreshResources();
+    if (this.canApply) void this.refreshOperations();
   }
 
   async exportBundle(): Promise<void> {
@@ -140,17 +143,29 @@ export class ConfigPortabilityComponent implements OnInit {
   }
 
   async applyImport(): Promise<void> {
-    if ((!this.bundle && !this.bundleArchive) || !this.plan?.applicable) return;
+    if (
+      (!this.bundle && !this.bundleArchive) ||
+      !this.plan?.applicable ||
+      !this.plan.planFingerprint ||
+      this.plan.operationId
+    )
+      return;
     const confirmed =
       this.mode !== 'replace' ||
       globalThis.confirm(
         'Replace mode deletes file-managed resources from this bundle source that are not in the bundle. Continue?'
       );
     if (!confirmed) return;
+    const fingerprint = this.plan.planFingerprint;
     await this.run(async () => {
       this.plan = this.bundleArchive
-        ? await this.portability.importArchive(this.bundleArchive, this.mode, confirmed)
-        : await this.portability.import(this.bundle!, this.mode, confirmed);
+        ? await this.portability.importArchive(
+            this.bundleArchive,
+            this.mode,
+            confirmed,
+            fingerprint
+          )
+        : await this.portability.import(this.bundle!, this.mode, confirmed, fingerprint);
       await this.refreshResources();
       this.snackBar.open('Configuration bundle imported', 'Close', { duration: 3000 });
     }, 'Configuration import failed');
@@ -282,6 +297,16 @@ export class ConfigPortabilityComponent implements OnInit {
     );
   }
 
+  async refreshOperations(): Promise<void> {
+    try {
+      this.operations = await this.portability.listOperations();
+    } catch (error) {
+      this.snackBar.open(getApiErrorMessage(error, 'Could not load operation history'), 'Close', {
+        duration: 5000,
+      });
+    }
+  }
+
   private async refreshResources(): Promise<void> {
     try {
       this.resources = await this.portability.listResources();
@@ -301,9 +326,21 @@ export class ConfigPortabilityComponent implements OnInit {
     try {
       await operation();
     } catch (error) {
+      const report = error as {
+        operationId?: string;
+        generatedSecrets?: ConfigImportPlan['generatedSecrets'];
+      };
+      if (this.plan && report?.operationId)
+        this.plan = {
+          ...this.plan,
+          applicable: false,
+          operationId: report.operationId,
+          generatedSecrets: report.generatedSecrets,
+        };
       this.snackBar.open(getApiErrorMessage(error, fallback), 'Close', { duration: 6000 });
     } finally {
       this.busy = false;
+      if (this.canApply) await this.refreshOperations();
     }
   }
 

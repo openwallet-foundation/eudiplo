@@ -4,7 +4,15 @@ import { ROLES_KEY } from "../../auth/roles/roles.decorator.js";
 import { ConfigPortabilityController } from "./config-portability.controller.js";
 
 describe("ConfigPortabilityController authorization", () => {
-    it.each(["export", "import", "importArchive", "detach"] as const)(
+    it.each([
+        "export",
+        "import",
+        "importArchive",
+        "detach",
+        "operations",
+        "operation",
+        "acknowledgeInterruption",
+    ] as const)(
         "requires tenant configuration-management permission for %s",
         (method) => {
             expect(

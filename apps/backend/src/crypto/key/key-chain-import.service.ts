@@ -83,6 +83,10 @@ export class KeyChainImportService {
         const hostname = this.getHostname();
 
         const privateKey: JWK = { ...dto.key };
+        const replacing = await this.keyChainRepository.existsBy({
+            tenantId,
+            id,
+        });
         if (!privateKey.kid) {
             privateKey.kid = `${id}-active`;
         }
@@ -91,6 +95,9 @@ export class KeyChainImportService {
         }
 
         const adapter = this.kmsRegistry.resolve(dto.kmsProvider, tenantId);
+        // External adapters must not overwrite the active key while a replacement is being validated.
+        if (replacing && adapter.type !== "db")
+            privateKey.kid = `${id}-import-${v4()}`;
         const normalizedCertificates = this.resolveCertificateChain(dto);
 
         if (dto.rotationPolicy?.enabled) {
@@ -141,8 +148,13 @@ export class KeyChainImportService {
             kmsProvider: adapter.providerId,
             activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
             activeCertificate,
-            externalKeyId: activeMat.ref.externalKeyId,
+            externalKeyId: activeMat.ref.externalKeyId ?? (null as any),
+            rootJwk: null as any,
+            rootCertificate: null as any,
+            rootExternalKeyId: null as any,
             rotationEnabled: false,
+            rotationIntervalDays: null as any,
+            certValidityDays: null as any,
         });
 
         this.logger.log(
@@ -220,11 +232,11 @@ export class KeyChainImportService {
             description: dto.description,
             kmsProvider: adapter.providerId,
             rootJwk: this.storedKeyForEntity(adapter, rootMat.ref),
-            rootExternalKeyId: rootMat.ref.externalKeyId,
+            rootExternalKeyId: rootMat.ref.externalKeyId ?? (null as any),
             rootCertificate,
             activeJwk: this.storedKeyForEntity(adapter, activeMat.ref),
             activeCertificate: chain.join("\n"),
-            externalKeyId: activeMat.ref.externalKeyId,
+            externalKeyId: activeMat.ref.externalKeyId ?? (null as any),
             rotationEnabled: true,
             rotationIntervalDays,
             certValidityDays,

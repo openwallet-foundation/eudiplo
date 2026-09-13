@@ -1,7 +1,12 @@
 import { createHash } from "node:crypto";
-import { BadRequestException, Injectable } from "@nestjs/common";
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
+import { compare as compareSecret } from "bcrypt";
 import { Repository } from "typeorm";
 import { ClientEntity } from "../../auth/client/entities/client.entity.js";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
@@ -14,6 +19,18 @@ import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoi
 import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
 import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
 import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
+import { assertConfigBundle } from "../../shared/config-format/config-bundle.js";
+import {
+    CONFIG_SINGLETON_IDS,
+    resourceId,
+    schemaUrl,
+    serializeDocument,
+} from "../../shared/config-format/config-format.js";
+import {
+    type ConfigChange,
+    configChanges,
+    stableConfigJson,
+} from "../../shared/config-format/config-values.js";
 import { FileEntity } from "../../storage/entities/files.entity.js";
 import { FilesService } from "../../storage/files.service.js";
 import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
@@ -32,7 +49,6 @@ import type {
     ConfigMigrationIssue,
     ConfigResourceKind,
 } from "./config-resource.types.js";
-import { CONFIG_RESOURCE_KINDS } from "./config-resource.types.js";
 
 const OMITTED_FIELDS = new Set([
     "tenant",
@@ -140,8 +156,8 @@ export class ConfigBundleService {
             {
                 name: tenant.name,
                 description: tenant.description,
-                sessionConfig: tenant.sessionConfig,
-                statusListConfig: tenant.statusListConfig,
+                sessionConfig: tenant.sessionConfig ?? undefined,
+                statusListConfig: tenant.statusListConfig ?? undefined,
             },
         );
 
@@ -342,21 +358,21 @@ export class ConfigBundleService {
 
         await this.rewriteAssetReferences(tenantId, documents);
         documents.sort((left, right) =>
-            `${left.kind}/${left.metadata.id}`.localeCompare(
-                `${right.kind}/${right.metadata.id}`,
+            `${left.kind}/${resourceId(left)}`.localeCompare(
+                `${right.kind}/${resourceId(right)}`,
             ),
         );
         const assets = await this.exportAssets(tenantId);
         const resources = documents.map((document) => {
             const definition = this.registry.get(document.kind);
-            const serialized = JSON.stringify(document);
+            const serialized = JSON.stringify(serializeDocument(document));
             return {
                 kind: document.kind,
-                id: document.metadata.id,
-                apiVersion: document.apiVersion,
+                id: resourceId(document),
+                $schema: schemaUrl(document.kind),
                 path:
                     definition.bundlePath ??
-                    `${definition.legacyFolders.at(-1)}/${document.metadata.id}.json`,
+                    `${definition.legacyFolders.at(-1)}/${resourceId(document)}.json`,
                 sha256: sha256(serialized),
                 ownership: document.metadata.ownership ?? "unmanaged",
                 generation: document.metadata.generation ?? 1,
@@ -366,7 +382,7 @@ export class ConfigBundleService {
         return {
             manifest: {
                 format: "eudiplo.config-bundle",
-                formatVersion: 1,
+                formatVersion: 2,
                 sourceVersion:
                     this.configService.get("VERSION") ??
                     process.env.VERSION ??
@@ -382,7 +398,7 @@ export class ConfigBundleService {
                 requirements,
                 warnings,
             },
-            documents,
+            documents: documents.map(serializeDocument),
             assets,
         };
     }
@@ -393,23 +409,32 @@ export class ConfigBundleService {
         mode: ConfigImportMode,
         ownershipSource = `bundle:${bundle.manifest.tenant}`,
     ): Promise<ConfigImportPlan> {
-        this.assertBundle(bundle);
+        try {
+            this.assertBundle(bundle);
+        } catch (error) {
+            throw new BadRequestException(
+                error instanceof Error ? error.message : String(error),
+            );
+        }
+        const revision = await this.configurationRevision(tenantId);
+        const assets = await this.planAssets(tenantId, bundle, mode);
         const items: ConfigImportPlanItem[] = [];
         const issues: ConfigMigrationIssue[] = [];
         const upgradedDocuments: ConfigDocument[] = [];
-        for (const input of bundle.documents) {
-            const sourceVersion = input.apiVersion;
+        for (const file of bundle.documents) {
+            const input = this.migrationService.normalize(file);
+            const sourceVersion = input.$schema!;
             const result = this.migrationService.upgrade(input);
             upgradedDocuments.push(result.document);
             const exists = await this.exists(
                 tenantId,
                 result.document.kind,
-                result.document.metadata.id,
+                resourceId(result.document),
             );
             const metadata = await this.ownershipService.get(
                 tenantId,
                 result.document.kind,
-                result.document.metadata.id,
+                resourceId(result.document),
             );
             const itemIssues = [...result.issues];
             itemIssues.push(
@@ -427,9 +452,37 @@ export class ConfigBundleService {
                     message: `Generation ${result.document.metadata.generation ?? 1} is older than stored generation ${metadata.generation}.`,
                     resource: {
                         kind: result.document.kind,
-                        id: result.document.metadata.id,
+                        id: resourceId(result.document),
                     },
                 });
+            }
+            if (
+                exists &&
+                mode !== "create" &&
+                result.document.kind === "StatusList"
+            ) {
+                const current = await this.statusLists.findOneByOrFail({
+                    tenantId,
+                    id: resourceId(result.document),
+                });
+                const spec = result.document.spec;
+                for (const [field, value] of [
+                    ["capacity", current.elements.length],
+                    ["bits", current.bits],
+                ] as const) {
+                    if (spec[field] !== undefined && spec[field] !== value)
+                        itemIssues.push({
+                            severity: "error",
+                            code: "STATUS_LIST_LAYOUT_IMMUTABLE",
+                            path: `/spec/${field}`,
+                            message:
+                                "Create a new status list ID to change capacity or bits; existing status data must be preserved.",
+                            resource: {
+                                kind: "StatusList",
+                                id: resourceId(result.document),
+                            },
+                        });
+                }
             }
             const skipExisting = exists && mode === "create";
             if (skipExisting) {
@@ -441,7 +494,7 @@ export class ConfigBundleService {
                         "Resource already exists and will be skipped in create mode.",
                     resource: {
                         kind: result.document.kind,
-                        id: result.document.metadata.id,
+                        id: resourceId(result.document),
                     },
                 });
             }
@@ -450,18 +503,31 @@ export class ConfigBundleService {
                     issue.severity === "error" ||
                     issue.severity === "required-input",
             );
+            const comparison =
+                exists && mode !== "create" && !blocked
+                    ? await this.compareDocument(tenantId, result.document)
+                    : undefined;
+            const metadataChanged =
+                metadata.ownership !== "file-managed" ||
+                metadata.source !== ownershipSource ||
+                metadata.generation !==
+                    (result.document.metadata.generation ?? 1);
             items.push({
+                changes: comparison?.changes,
+                metadataChanged,
                 kind: result.document.kind,
-                id: result.document.metadata.id,
+                id: resourceId(result.document),
                 action: blocked
                     ? "blocked"
                     : skipExisting
                       ? "skip"
-                      : exists
-                        ? "update"
-                        : "create",
+                      : comparison?.unchanged
+                        ? "unchanged"
+                        : exists
+                          ? "update"
+                          : "create",
                 sourceVersion,
-                targetVersion: result.document.apiVersion,
+                targetVersion: result.document.$schema!,
                 migrations: result.migrations,
                 issues: itemIssues,
             });
@@ -487,8 +553,8 @@ export class ConfigBundleService {
         }
         if (mode === "replace") {
             const included = new Set(
-                bundle.documents.map(
-                    (document) => `${document.kind}/${document.metadata.id}`,
+                upgradedDocuments.map(
+                    (document) => `${document.kind}/${resourceId(document)}`,
                 ),
             );
             const managed =
@@ -514,9 +580,25 @@ export class ConfigBundleService {
                 });
             }
         }
+        if (revision !== (await this.configurationRevision(tenantId)))
+            throw new ConflictException(
+                "Configuration changed while planning; request a new plan",
+            );
         return {
             tenantId,
             mode,
+            assets,
+            planFingerprint: sha256(
+                stableConfigJson({
+                    tenantId,
+                    mode,
+                    ownershipSource,
+                    bundle,
+                    revision,
+                    assets,
+                    items,
+                }),
+            ),
             applicable: !issues.some(
                 (issue) =>
                     issue.severity === "error" ||
@@ -525,6 +607,88 @@ export class ConfigBundleService {
             items,
             issues,
         };
+    }
+
+    /** Hash configuration only; live status values and allocation stacks are not configuration. */
+    private async configurationRevision(tenantId: string): Promise<string> {
+        const repositories: Repository<any>[] = [
+            this.clients,
+            this.keyChains,
+            this.registrarConfigs,
+            this.issuanceConfigs,
+            this.credentialConfigs,
+            this.presentationConfigs,
+            this.attributeProviders,
+            this.webhookEndpoints,
+            this.trustLists,
+        ];
+        const rows = await Promise.all(
+            repositories.map((repository) =>
+                repository.find({ where: { tenantId } }),
+            ),
+        );
+        const lists = await this.statusLists.find({ where: { tenantId } });
+        const state = {
+            tenant: await this.tenants.findOneBy({ id: tenantId }),
+            resources: rows.map((entries) =>
+                entries
+                    .map(canonicalize)
+                    .sort((a, b) =>
+                        stableConfigJson(a).localeCompare(stableConfigJson(b)),
+                    ),
+            ),
+            statusLists: lists
+                .map((entry) => ({
+                    id: entry.id,
+                    keyChainId: entry.keyChainId,
+                    credentialConfigurationId: entry.credentialConfigurationId,
+                    bits: entry.bits,
+                    capacity: entry.elements.length,
+                }))
+                .sort((a, b) => a.id.localeCompare(b.id)),
+            ownership: await this.ownershipService.list(tenantId),
+            kms: this.kmsTenantConfigService.getTenantConfig(tenantId),
+        };
+        return sha256(stableConfigJson(canonicalize(state)));
+    }
+
+    private async planAssets(
+        tenantId: string,
+        bundle: ConfigBundle,
+        mode: ConfigImportMode,
+    ): Promise<NonNullable<ConfigImportPlan["assets"]>> {
+        const result: NonNullable<ConfigImportPlan["assets"]> = [];
+        for (const asset of bundle.assets) {
+            const file = await this.files.findOneBy({
+                tenantId,
+                filename: asset.path.replace(/^images\//, ""),
+            });
+            let currentHash: string | undefined;
+            let currentContentType: string | undefined;
+            if (file) {
+                const stored = await this.filesService.getStream(file.id);
+                currentContentType = stored.contentType;
+                const hash = createHash("sha256");
+                for await (const chunk of stored.stream) hash.update(chunk);
+                currentHash = hash.digest("hex");
+            }
+            result.push({
+                path: asset.path,
+                sha256: asset.sha256,
+                currentHash,
+                currentContentType,
+                action: !file
+                    ? "create"
+                    : currentHash === asset.sha256 &&
+                        (!asset.contentType ||
+                            asset.contentType === currentContentType)
+                      ? "unchanged"
+                      : mode === "create"
+                        ? "skip"
+                        : "update",
+            });
+        }
+        return result;
     }
 
     private async validateReferences(
@@ -591,12 +755,12 @@ export class ConfigBundleService {
             ).map((item) => item.id),
         );
         for (const document of documents) {
-            available.get(document.kind)?.add(document.metadata.id);
+            available.get(document.kind)?.add(resourceId(document));
         }
         if (mode === "replace") {
             const included = new Set(
                 documents.map(
-                    (document) => `${document.kind}/${document.metadata.id}`,
+                    (document) => `${document.kind}/${resourceId(document)}`,
                 ),
             );
             const managed =
@@ -658,7 +822,7 @@ export class ConfigBundleService {
                         message: `${target} '${item}' does not exist in the target instance or bundle.`,
                         resource: {
                             kind: document.kind,
-                            id: document.metadata.id,
+                            id: resourceId(document),
                         },
                     });
                 }
@@ -677,7 +841,7 @@ export class ConfigBundleService {
                                 message: `${arrayTarget} '${reference}' does not exist in the target instance or bundle.`,
                                 resource: {
                                     kind: document.kind,
-                                    id: document.metadata.id,
+                                    id: resourceId(document),
                                 },
                             });
                         }
@@ -711,7 +875,7 @@ export class ConfigBundleService {
                         : `The external KMS key could not sign a preflight challenge: ${error instanceof Error ? error.message : String(error)}`,
                     resource: {
                         kind: document.kind,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     },
                 });
             }
@@ -763,8 +927,9 @@ export class ConfigBundleService {
                     batchSize: entity.batchSize,
                     dPopRequired: entity.dPopRequired,
                     walletAttestationRequired: entity.walletAttestationRequired,
-                    walletProviderTrustLists: entity.walletProviderTrustLists,
-                    signingKeyId: entity.signingKeyId,
+                    walletProviderTrustLists:
+                        entity.walletProviderTrustLists ?? undefined,
+                    signingKeyId: entity.signingKeyId ?? undefined,
                     authorizationServers: entity.authorizationServers,
                     federation: entity.federation,
                     registrationCertificate: entity.registrationCertificate,
@@ -787,11 +952,11 @@ export class ConfigBundleService {
                     webhookEndpointId: entity.webhookEndpointId,
                     vct: entity.vct,
                     keyBinding: entity.keyBinding,
-                    keyChainId: entity.keyChainId,
+                    keyChainId: entity.keyChainId ?? undefined,
                     statusManagement: entity.statusManagement,
                     iaeActions: entity.iaeActions,
                     sdJwtTrustFormat: entity.sdJwtTrustFormat,
-                    lifeTime: entity.lifeTime,
+                    lifeTime: entity.lifeTime ?? undefined,
                     schemaMeta: entity.schemaMeta,
                     embeddedDisclosurePolicy: entity.embeddedDisclosurePolicy,
                 };
@@ -799,7 +964,7 @@ export class ConfigBundleService {
                 return {
                     id: entity.id,
                     description: entity.description,
-                    lifeTime: entity.lifeTime,
+                    lifeTime: entity.lifeTime ?? undefined,
                     skewSeconds: entity.skewSeconds,
                     statusCheckMode: entity.statusCheckMode,
                     dcql_query: entity.dcql_query,
@@ -840,11 +1005,14 @@ export class ConfigBundleService {
         const spec = redact
             ? this.redact(kind, id, canonicalize(rawSpec), requirements)
             : canonicalize(rawSpec);
+        if (!CONFIG_SINGLETON_IDS[kind]) {
+            (spec as Record<string, unknown>)[
+                kind === "Client" ? "clientId" : "id"
+            ] = id;
+        }
         documents.push({
-            apiVersion: this.registry.apiVersion(kind),
-            kind,
+            $schema: schemaUrl(kind),
             metadata: {
-                id,
                 generation: metadata.generation,
                 ownership: metadata.ownership,
             },
@@ -961,95 +1129,7 @@ export class ConfigBundleService {
     }
 
     private assertBundle(bundle: ConfigBundle): void {
-        if (
-            bundle?.manifest?.format !== "eudiplo.config-bundle" ||
-            bundle.manifest.formatVersion !== 1 ||
-            !Array.isArray(bundle.documents)
-        ) {
-            throw new BadRequestException(
-                "Invalid EUDIPLO configuration bundle",
-            );
-        }
-        if (
-            !Array.isArray(bundle.manifest.resources) ||
-            !Array.isArray(bundle.assets) ||
-            typeof bundle.manifest.tenant !== "string"
-        ) {
-            throw new BadRequestException(
-                "Incomplete configuration bundle manifest",
-            );
-        }
-        const seen = new Set<string>();
-        for (const document of bundle.documents) {
-            if (
-                !this.migrationService.isDocument(document) ||
-                !CONFIG_RESOURCE_KINDS.includes(document.kind)
-            ) {
-                throw new BadRequestException(
-                    "Invalid configuration document envelope",
-                );
-            }
-            const identity = `${document.kind}/${document.metadata.id}`;
-            if (seen.has(identity)) {
-                throw new BadRequestException(
-                    `Duplicate resource: ${identity}`,
-                );
-            }
-            seen.add(identity);
-            const resource = bundle.manifest.resources.find(
-                (candidate) =>
-                    candidate.kind === document.kind &&
-                    candidate.id === document.metadata.id,
-            );
-            if (!resource || resource.apiVersion !== document.apiVersion) {
-                throw new BadRequestException(
-                    `Missing or mismatched manifest entry: ${identity}`,
-                );
-            }
-            this.assertSafeBundlePath(resource.path);
-        }
-        if (bundle.manifest.resources.length !== bundle.documents.length) {
-            throw new BadRequestException(
-                "Manifest resource count does not match bundle documents",
-            );
-        }
-        for (const asset of bundle.assets) {
-            this.assertSafeBundlePath(asset.path);
-            if (!/^[A-Za-z0-9+/]*={0,2}$/.test(asset.data)) {
-                throw new BadRequestException(
-                    `Invalid base64 asset: ${asset.path}`,
-                );
-            }
-            const bytes = Buffer.from(asset.data, "base64");
-            const manifestAsset = bundle.manifest.assets?.find(
-                (candidate) => candidate.path === asset.path,
-            );
-            if (
-                sha256(bytes) !== asset.sha256 ||
-                !manifestAsset ||
-                manifestAsset.sha256 !== asset.sha256
-            ) {
-                throw new BadRequestException(
-                    `Missing or mismatched asset manifest entry: ${asset.path}`,
-                );
-            }
-        }
-        if ((bundle.manifest.assets?.length ?? 0) !== bundle.assets.length) {
-            throw new BadRequestException(
-                "Manifest asset count does not match bundle assets",
-            );
-        }
-    }
-
-    private assertSafeBundlePath(path: string): void {
-        if (
-            !path ||
-            path.startsWith("/") ||
-            path.includes("\\") ||
-            path.split("/").some((part) => part === ".." || part === "")
-        ) {
-            throw new BadRequestException(`Unsafe bundle path: ${path}`);
-        }
+        assertConfigBundle(bundle);
     }
 
     private collectUnresolvedRequirements(
@@ -1069,7 +1149,7 @@ export class ConfigBundleService {
                     message: `Resolve ${value} before applying this resource.`,
                     resource: {
                         kind: document.kind,
-                        id: document.metadata.id,
+                        id: resourceId(document),
                     },
                 });
                 return;
@@ -1097,10 +1177,228 @@ export class ConfigBundleService {
                     "Supply private key material, an accessible external KMS reference, or explicitly regenerate the key.",
                 resource: {
                     kind: document.kind,
-                    id: document.metadata.id,
+                    id: resourceId(document),
                 },
             });
         }
+    }
+
+    /** Compare the fields this import would write with current persisted configuration. */
+    async compareDocument(
+        tenantId: string,
+        document: ConfigDocument,
+    ): Promise<{ unchanged: boolean; changes: ConfigChange[] }> {
+        const current = await this.currentSpec(tenantId, document);
+        if (!current) return { unchanged: false, changes: [] };
+        let desired = structuredClone(document.spec) as Record<string, any>;
+        // Importers derive the identifier from metadata when it is omitted.
+        if (document.kind === "Client")
+            desired.clientId ??= resourceId(document);
+        else if (!this.registry.get(document.kind).singletonId)
+            desired.id ??= resourceId(document);
+        if (
+            document.kind === "Client" &&
+            typeof desired.secret === "string" &&
+            desired.secret !== "!generate" &&
+            typeof current.secret === "string"
+        ) {
+            try {
+                if (await compareSecret(desired.secret, current.secret))
+                    current.secret = desired.secret;
+            } catch {
+                /* Treat an unknown secret encoding as a change. */
+            }
+        }
+        const before = this.documentValidationService.normalizeForComparison({
+            ...document,
+            spec: current,
+        });
+        const replacesSpec =
+            document.kind === "KmsConfig" || document.kind === "KeyChain";
+        const after = this.documentValidationService.normalizeForComparison({
+            ...document,
+            spec: replacesSpec ? desired : { ...current, ...desired },
+        });
+        // Omitted top-level fields retain their existing values in the importers.
+        const previous = replacesSpec
+            ? before
+            : Object.fromEntries(
+                  Object.keys(desired).map((key) => [key, before[key]]),
+              );
+        const next = replacesSpec
+            ? after
+            : Object.fromEntries(
+                  Object.keys(desired).map((key) => [key, after[key]]),
+              );
+        const changes = configChanges(
+            previous,
+            next,
+            this.registry.get(document.kind).sensitivePaths,
+            "/spec",
+        );
+        const alwaysApply =
+            (document.kind === "KeyChain" &&
+                desired.keySource?.type === "regenerate") ||
+            (document.kind === "Client" &&
+                (desired.secret === "!generate" ||
+                    !!this.configService.get("OIDC")));
+        return {
+            unchanged:
+                !alwaysApply &&
+                stableConfigJson(previous) === stableConfigJson(next),
+            changes,
+        };
+    }
+
+    private async currentSpec(
+        tenantId: string,
+        document: ConfigDocument,
+    ): Promise<Record<string, any> | undefined> {
+        const id = resourceId(document);
+        let entity: any;
+        switch (document.kind) {
+            case "Tenant": {
+                entity = await this.tenants.findOneBy({ id: tenantId });
+                return entity
+                    ? {
+                          name: entity.name,
+                          description: entity.description ?? undefined,
+                          sessionConfig: entity.sessionConfig ?? undefined,
+                          statusListConfig:
+                              entity.statusListConfig ?? undefined,
+                      }
+                    : undefined;
+            }
+            case "Client": {
+                entity = await this.clients.findOneBy({
+                    tenantId,
+                    clientId: id,
+                });
+                return entity
+                    ? {
+                          clientId: entity.clientId,
+                          description: entity.description ?? undefined,
+                          roles: entity.roles,
+                          secret: entity.secret,
+                          allowedPresentationConfigs:
+                              entity.allowedPresentationConfigs,
+                          allowedIssuanceConfigs: entity.allowedIssuanceConfigs,
+                      }
+                    : undefined;
+            }
+            case "KmsConfig":
+                return (
+                    this.kmsTenantConfigService.getTenantConfig(tenantId) ??
+                    undefined
+                );
+            case "KeyChain": {
+                entity = await this.keyChains.findOneBy({ tenantId, id });
+                if (!entity) return undefined;
+                const internal = entity.hasInternalCa();
+                const keySource = entity.externalKeyId
+                    ? {
+                          type: "external-reference",
+                          provider: entity.kmsProvider,
+                          externalKeyId: internal
+                              ? entity.rootExternalKeyId
+                              : entity.externalKeyId,
+                          publicJwk: this.toPublicJwk(
+                              internal ? entity.rootJwk : entity.activeJwk,
+                          ),
+                          ...(internal
+                              ? {
+                                    activeExternalKeyId: entity.externalKeyId,
+                                    activePublicJwk: this.toPublicJwk(
+                                        entity.activeJwk,
+                                    ),
+                                }
+                              : {}),
+                      }
+                    : {
+                          type: "private-jwk",
+                          jwk: internal ? entity.rootJwk : entity.activeJwk,
+                          ...(internal ? { activeJwk: entity.activeJwk } : {}),
+                      };
+                return {
+                    id,
+                    description: entity.description,
+                    usageType: entity.usageType,
+                    keySource,
+                    crt: [
+                        internal
+                            ? entity.rootCertificate
+                            : entity.activeCertificate,
+                    ],
+                    activeCertificate: internal
+                        ? entity.activeCertificate
+                        : undefined,
+                    kmsProvider: entity.kmsProvider,
+                    rotationPolicy: {
+                        enabled: entity.rotationEnabled,
+                        intervalDays: entity.rotationIntervalDays ?? undefined,
+                        certValidityDays: entity.certValidityDays ?? undefined,
+                    },
+                };
+            }
+            case "RegistrarConfig":
+                entity = await this.registrarConfigs.findOneBy({ tenantId });
+                break;
+            case "IssuanceConfig":
+                entity = await this.issuanceConfigs.findOneBy({ tenantId });
+                break;
+            case "CredentialConfig":
+                entity = await this.credentialConfigs.findOneBy({
+                    tenantId,
+                    id,
+                });
+                break;
+            case "PresentationConfig":
+                entity = await this.presentationConfigs.findOneBy({
+                    tenantId,
+                    id,
+                });
+                break;
+            case "AttributeProvider":
+                entity = await this.attributeProviders.findOneBy({
+                    tenantId,
+                    id,
+                });
+                break;
+            case "WebhookEndpoint":
+                entity = await this.webhookEndpoints.findOneBy({
+                    tenantId,
+                    id,
+                });
+                break;
+            case "TrustList": {
+                entity = await this.trustLists.findOneBy({ tenantId, id });
+                return entity
+                    ? {
+                          id,
+                          description: entity.description,
+                          keyChainId: entity.keyChainId,
+                          entities: entity.entityConfig ?? [],
+                          data: entity.data,
+                      }
+                    : undefined;
+            }
+            case "StatusList": {
+                entity = await this.statusLists.findOneBy({ tenantId, id });
+                return entity
+                    ? {
+                          id,
+                          credentialConfigurationId:
+                              entity.credentialConfigurationId,
+                          keyChainId: entity.keyChainId,
+                          capacity: entity.elements.length,
+                          bits: entity.bits,
+                      }
+                    : undefined;
+            }
+        }
+        return entity
+            ? this.canonicalEntitySpec(document.kind, entity)
+            : undefined;
     }
 
     private async exists(

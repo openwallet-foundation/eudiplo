@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import {
     cpSync,
     mkdirSync,
@@ -11,10 +12,20 @@ import { join, resolve } from "node:path";
 import type { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { DataSource } from "typeorm";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { TenantEntity } from "../../src/auth/tenant/entities/tenant.entity.js";
+import { StatusListEntity } from "../../src/issuer/status-list/entities/status-list.entity.js";
 import { ConfigBundleService } from "../../src/platform/config-portability/config-bundle.service.js";
+import { ConfigBundleApplyService } from "../../src/platform/config-portability/config-bundle-apply.service.js";
+import { ConfigBundleArchiveService } from "../../src/platform/config-portability/config-bundle-archive.service.js";
 import { ConfigFolderBundleService } from "../../src/platform/config-portability/config-folder-bundle.service.js";
 import { ConfigOwnershipService } from "../../src/platform/config-portability/config-ownership.service.js";
+import {
+    CONFIG_SINGLETON_IDS,
+    normalizeDocument,
+    resourceId,
+} from "../../src/shared/config-format/config-format.js";
 
 describe("startup configuration reconciliation", () => {
     let app: INestApplication;
@@ -125,6 +136,191 @@ describe("startup configuration reconciliation", () => {
         );
     });
 
+    it("exports schema documents in a version 2 bundle and packs matching checksums", async () => {
+        const service = app.get(ConfigBundleService);
+        const bundle = await service.exportBundle("demo");
+        expect(bundle.manifest.formatVersion).toBe(2);
+        for (const document of bundle.documents) {
+            expect(document.$schema).toMatch(
+                /^https:\/\/eudiplo\.dev\/schemas\/v1\//,
+            );
+            expect(document.kind).toBeUndefined();
+            expect(document.apiVersion).toBeUndefined();
+            expect(document.metadata).not.toHaveProperty("id");
+            const { kind } = normalizeDocument(document);
+            if (!CONFIG_SINGLETON_IDS[kind]) {
+                expect(
+                    document.spec[kind === "Client" ? "clientId" : "id"],
+                ).toBe(resourceId(document));
+            }
+        }
+        const archive = app.get(ConfigBundleArchiveService);
+        expect(archive.decode(archive.encode(bundle))).toEqual(bundle);
+        const plan = await service.plan("demo", bundle, "create");
+        expect(
+            plan.issues.filter(
+                (issue) => issue.code === "CONFIG_SCHEMA_VALIDATION_FAILED",
+            ),
+        ).toEqual([]);
+    });
+
+    it("reapplying matching definitions preserves live status data and ownership timestamps", async () => {
+        const root = join(
+            app.get(ConfigService).getOrThrow<string>("CONFIG_FOLDER"),
+            "haip",
+        );
+        const bundle = app
+            .get(ConfigFolderBundleService)
+            .buildBundle("haip", root);
+        const service = app.get(ConfigBundleService);
+        const plan = await service.plan(
+            "haip",
+            bundle,
+            "upsert",
+            `folder:${root}`,
+        );
+        const unchanged = plan.items.filter((item) =>
+            [
+                "PresentationConfig",
+                "StatusList",
+                "AttributeProvider",
+                "WebhookEndpoint",
+            ].includes(item.kind),
+        );
+        expect(unchanged.length).toBeGreaterThan(0);
+        expect(unchanged, JSON.stringify(plan.items, null, 2)).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({
+                    kind: "StatusList",
+                    action: "unchanged",
+                }),
+            ]),
+        );
+        const resource = plan.items.find((item) => item.kind === "StatusList")!;
+        const repository = app.get(DataSource).getRepository(StatusListEntity);
+        const stored = await repository.findOneByOrFail({
+            tenantId: "haip",
+            id: resource.id,
+        });
+        stored.elements[0] = 1;
+        await repository.save(stored);
+        const ownership = app.get(ConfigOwnershipService);
+        const before = await ownership.get("haip", "StatusList", resource.id);
+        // Apply only matching resources: explicit key regeneration remains a write.
+        const identities = new Set(
+            plan.items
+                .filter((item) => item.action === "unchanged")
+                .map((item) => `${item.kind}/${item.id}`),
+        );
+        const selected = bundle.manifest.resources.filter((item) =>
+            identities.has(`${item.kind}/${item.id}`),
+        );
+        bundle.manifest.resources = selected;
+        bundle.documents = bundle.documents.filter((document) =>
+            selected.some(
+                (item) =>
+                    item.$schema === document.$schema &&
+                    item.id === resourceId(document),
+            ),
+        );
+        await app
+            .get(ConfigBundleApplyService)
+            .apply("haip", bundle, "upsert", `folder:${root}`);
+        expect(
+            (
+                await repository.findOneByOrFail({
+                    tenantId: "haip",
+                    id: resource.id,
+                })
+            ).elements[0],
+        ).toBe(1);
+        expect(
+            (await ownership.get("haip", "StatusList", resource.id))
+                .lastAppliedAt,
+        ).toEqual(before.lastAppliedAt);
+    });
+
+    it("binds a reviewed plan to current target configuration and records the rejected run", async () => {
+        const service = app.get(ConfigBundleService);
+        const bundle = await service.exportBundle("demo");
+        bundle.manifest.resources = bundle.manifest.resources.filter(
+            (resource) => resource.kind === "Tenant",
+        );
+        bundle.documents = bundle.documents.filter((document) =>
+            document.$schema?.endsWith("/TenantConfigFile.schema.json"),
+        );
+        bundle.assets = [];
+        bundle.manifest.assets = [];
+        const reviewed = await service.plan("demo", bundle, "upsert");
+        expect(reviewed.planFingerprint).toMatch(/^[a-f0-9]{64}$/);
+        expect(
+            (await service.plan("demo", bundle, "upsert")).planFingerprint,
+        ).toBe(reviewed.planFingerprint);
+        const repository = app.get(DataSource).getRepository(TenantEntity);
+        const tenant = await repository.findOneByOrFail({ id: "demo" });
+        await repository.update({ id: "demo" }, { name: "Concurrent edit" });
+        try {
+            await expect(
+                app
+                    .get(ConfigBundleApplyService)
+                    .apply(
+                        "demo",
+                        bundle,
+                        "upsert",
+                        undefined,
+                        reviewed.planFingerprint,
+                    ),
+            ).rejects.toMatchObject({
+                response: expect.objectContaining({
+                    code: "CONFIG_PLAN_STALE",
+                }),
+            });
+            expect(
+                (await repository.findOneByOrFail({ id: "demo" })).name,
+            ).toBe("Concurrent edit");
+        } finally {
+            await repository.update({ id: "demo" }, { name: tenant.name });
+        }
+    });
+
+    it("rolls back tenant settings if their ownership write fails", async () => {
+        const bundle = await app.get(ConfigBundleService).exportBundle("demo");
+        bundle.manifest.resources = bundle.manifest.resources.filter(
+            (resource) => resource.kind === "Tenant",
+        );
+        bundle.documents = bundle.documents.filter((document) =>
+            document.$schema?.endsWith("/TenantConfigFile.schema.json"),
+        );
+        bundle.assets = [];
+        bundle.manifest.assets = [];
+        const document = bundle.documents[0];
+        const repository = app.get(DataSource).getRepository(TenantEntity);
+        const before = await repository.findOneByOrFail({ id: "demo" });
+        document.spec.name = "Should roll back";
+        bundle.manifest.resources[0].sha256 = createHash("sha256")
+            .update(JSON.stringify(document))
+            .digest("hex");
+        const spy = vi
+            .spyOn(app.get(ConfigOwnershipService), "markApplied")
+            .mockRejectedValueOnce(new Error("Injected ownership failure"));
+        try {
+            await expect(
+                app
+                    .get(ConfigBundleApplyService)
+                    .apply("demo", bundle, "upsert"),
+            ).rejects.toMatchObject({
+                response: expect.objectContaining({
+                    code: "CONFIG_APPLY_FAILED",
+                }),
+            });
+            expect(
+                (await repository.findOneByOrFail({ id: "demo" })).name,
+            ).toBe(before.name);
+        } finally {
+            spy.mockRestore();
+        }
+    });
+
     it("accepts the HAIP OIDF configuration fixtures", async () => {
         const configRoot = app
             .get(ConfigService)
@@ -144,9 +340,10 @@ describe("startup configuration reconciliation", () => {
         expect(documents).toHaveLength(23);
         for (const document of documents) {
             expect(document).toMatchObject({
-                apiVersion: expect.stringMatching(/^eudiplo\.io\/.+\/v\d+$/),
-                kind: expect.any(String),
-                metadata: { id: expect.any(String), generation: 1 },
+                $schema: expect.stringMatching(
+                    /^https:\/\/eudiplo\.dev\/schemas\/v\d+\/.+ConfigFile\.schema\.json$/,
+                ),
+                metadata: { generation: 1 },
                 spec: expect.any(Object),
             });
         }

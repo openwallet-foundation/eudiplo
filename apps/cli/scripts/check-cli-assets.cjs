@@ -117,3 +117,5 @@ function reportMissingAndExtra(expectedFiles, actualFiles) {
         }
     }
 }
+
+require("node:child_process").execFileSync(process.execPath, [join(__dirname, "../../../scripts/sync-config-format.mjs"), "--check"], { stdio: "inherit" });

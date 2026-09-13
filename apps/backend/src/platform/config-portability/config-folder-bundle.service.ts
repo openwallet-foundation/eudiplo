@@ -3,6 +3,11 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import {
+    resourceId,
+    schemaUrl,
+    serializeDocument,
+} from "../../shared/config-format/config-format.js";
 import { ConfigImportService } from "../config-import/config-import.service.js";
 import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
@@ -153,17 +158,17 @@ export class ConfigFolderBundleService {
         const assets = this.loadAssets(tenantRoot);
         const resources = documents.map((document) => ({
             kind: document.kind,
-            id: document.metadata.id,
-            apiVersion: document.apiVersion,
+            id: resourceId(document),
+            $schema: schemaUrl(document.kind),
             path: this.documentPath(tenantRoot, document),
-            sha256: sha256(JSON.stringify(document)),
+            sha256: sha256(JSON.stringify(serializeDocument(document))),
             ownership: "file-managed" as const,
             generation: document.metadata.generation ?? 1,
         }));
         return {
             manifest: {
                 format: "eudiplo.config-bundle",
-                formatVersion: 1,
+                formatVersion: 2,
                 sourceVersion: "startup-folder",
                 exportedAt: new Date(0).toISOString(),
                 tenant: tenantId,
@@ -176,7 +181,7 @@ export class ConfigFolderBundleService {
                 requirements: [],
                 warnings,
             },
-            documents,
+            documents: documents.map(serializeDocument),
             assets,
         };
     }
@@ -227,7 +232,7 @@ export class ConfigFolderBundleService {
         if ("file" in definition) {
             return definition.file;
         }
-        return `${definition.directory}/${document.metadata.id}.json`;
+        return `${definition.directory}/${resourceId(document)}.json`;
     }
 }
 

@@ -20,6 +20,11 @@ describe("ConfigGenerationInterceptor", () => {
         const interceptor = new ConfigGenerationInterceptor(
             ownership as any,
             routes as any,
+            {
+                run: async (_tenant: string, _mode: string, execute: any) =>
+                    execute({ id: "run-1", operations: [] }),
+                checkpoint: vi.fn(),
+            } as any,
         );
 
         await expect(
@@ -57,6 +62,11 @@ describe("ConfigGenerationInterceptor", () => {
         const interceptor = new ConfigGenerationInterceptor(
             ownership as any,
             routes as any,
+            {
+                run: async (_tenant: string, _mode: string, execute: any) =>
+                    execute({ id: "run-1", operations: [] }),
+                checkpoint: vi.fn(),
+            } as any,
         );
 
         await expect(
@@ -92,6 +102,11 @@ describe("ConfigGenerationInterceptor", () => {
         const interceptor = new ConfigGenerationInterceptor(
             ownership as any,
             routes as any,
+            {
+                run: async (_tenant: string, _mode: string, execute: any) =>
+                    execute({ id: "run-1", operations: [] }),
+                checkpoint: vi.fn(),
+            } as any,
         );
 
         await expect(

@@ -1,8 +1,6 @@
 {
-  "apiVersion": "eudiplo.io/presentation-config/v2",
-  "kind": "PresentationConfig",
+  "$schema": "https://eudiplo.dev/schemas/v1/PresentationConfigFile.schema.json",
   "metadata": {
-    "id": "age-over-18",
     "generation": 1
   },
   "spec": {
@@ -14,11 +12,16 @@
           "id": "pid-sd-jwt",
           "format": "dc+sd-jwt",
           "meta": {
-            "vct_values": ["urn:eudi:pid:de:1"]
+            "vct_values": [
+              "urn:eudi:pid:de:1"
+            ]
           },
           "claims": [
             {
-              "path": ["age_equal_or_over", "18"]
+              "path": [
+                "age_equal_or_over",
+                "18"
+              ]
             }
           ]
         },
@@ -30,7 +33,10 @@
           },
           "claims": [
             {
-              "path": ["eu.europa.ec.eudi.pid.1", "age_over_18"],
+              "path": [
+                "eu.europa.ec.eudi.pid.1",
+                "age_over_18"
+              ],
               "intent_to_retain": false
             }
           ],
@@ -48,7 +54,14 @@
       ],
       "credential_sets": [
         {
-          "options": [["pid-sd-jwt"], ["pid-mso-mdoc"]]
+          "options": [
+            [
+              "pid-sd-jwt"
+            ],
+            [
+              "pid-mso-mdoc"
+            ]
+          ]
         }
       ]
     },

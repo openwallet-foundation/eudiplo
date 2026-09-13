@@ -1,13 +1,18 @@
-import { readFile, writeFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
 import { basename, extname, isAbsolute, join } from "node:path";
-import { strFromU8, strToU8, unzipSync, zipSync } from "fflate";
+import { atomicWriteFile } from "../../../generated/config-io.js";
+import { upgradeFile } from "./upgrade.js";
 import { readStringFlag } from "../../../options.js";
 import { resolveInstance } from "../../../services/instance-selection.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../../types.js";
-import { upgradeDocument, type PortableDocument } from "./migrations.js";
 
-type Action = "export" | "plan" | "import" | "upgrade";
+type Action =
+    | "export"
+    | "plan"
+    | "import"
+    | "upgrade"
+    | "operations"
+    | "recover";
 
 export async function runPortabilityCommand(
     action: Action,
@@ -29,6 +34,29 @@ export async function runPortabilityCommand(
     };
     const baseUrl = instance.url.replace(/\/$/, "");
 
+    if (action === "operations" || action === "recover") {
+        const id = parsed.positionals[0];
+        if (
+            action === "recover" &&
+            (!id || parsed.flags["confirm-worker-stopped"] !== true)
+        )
+            throw new Error(
+                "Recovery requires an operation ID and --confirm-worker-stopped after stopping the original worker",
+            );
+        const path = id ? `/${encodeURIComponent(id)}` : "";
+        const response = await context.fetch(
+            `${baseUrl}/api/config-bundles/operations${path}${action === "recover" ? "/acknowledge-interruption?confirmWorkerStopped=true" : ""}`,
+            {
+                method: action === "recover" ? "POST" : "GET",
+                headers: authHeaders,
+            },
+        );
+        await assertOk(response);
+        context.stdout.write(
+            `${JSON.stringify(await response.json(), null, 2)}\n`,
+        );
+        return 0;
+    }
     if (action === "export") {
         const output = resolvePath(
             readStringFlag(parsed.flags, "output") ??
@@ -46,7 +74,7 @@ export async function runPortabilityCommand(
             format === "zip"
                 ? Buffer.from(await response.arrayBuffer())
                 : `${JSON.stringify(await response.json(), null, 2)}\n`;
-        await writeFile(output, data, { mode: 0o600 });
+        await atomicWriteFile(output, data);
         context.stdout.write(`Exported configuration bundle to ${output}\n`);
         return 0;
     }
@@ -57,6 +85,21 @@ export async function runPortabilityCommand(
     const archive = extname(bundlePath).toLowerCase() === ".zip";
     const mode = readStringFlag(parsed.flags, "mode") ?? "upsert";
     const query = new URLSearchParams({ mode });
+    if (action === "import") {
+        const planFile = readStringFlag(parsed.flags, "plan");
+        const fingerprint = planFile
+            ? JSON.parse(await readFile(resolvePath(planFile, context), "utf8"))
+                  .planFingerprint
+            : readStringFlag(parsed.flags, "plan-fingerprint");
+        if (
+            typeof fingerprint !== "string" ||
+            !/^[a-f0-9]{64}$/.test(fingerprint)
+        )
+            throw new Error(
+                "Import requires --plan <saved-plan.json> or --plan-fingerprint from a reviewed plan",
+            );
+        query.set("planFingerprint", fingerprint);
+    }
     if (parsed.flags["confirm-replace"] === true) {
         query.set("confirmReplace", "true");
     }
@@ -83,136 +126,43 @@ export async function runPortabilityCommand(
     );
     await assertOk(response);
     const result = await response.json();
-    context.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
-    return (result as any).applicable === false ? 1 : 0;
-}
-
-async function upgradeFile(
-    parsed: ParsedArgs,
-    context: CommandContext,
-): Promise<number> {
-    const file = parsed.positionals[0];
-    if (!file)
-        throw new Error("Usage: eudiplo config upgrade <bundle-or-document>");
-    const inputPath = resolvePath(file, context);
-    if (extname(inputPath).toLowerCase() === ".zip") {
-        return upgradeArchive(inputPath, file, parsed, context);
+    if (action === "plan") {
+        const output = readStringFlag(parsed.flags, "output");
+        if (output)
+            await atomicWriteFile(
+                resolvePath(output, context),
+                `${JSON.stringify(result, null, 2)}\n`,
+            );
     }
-    const input = JSON.parse(await readFile(inputPath, "utf8"));
-    const results: Array<ReturnType<typeof upgradeDocument>> = Array.isArray(
-        input.documents,
-    )
-        ? input.documents.map((document: PortableDocument) =>
-              upgradeDocument(document),
-          )
-        : [upgradeDocument(input as PortableDocument)];
-    const output = Array.isArray(input.documents)
-        ? upgradeJsonBundle(input, results)
-        : results[0].document;
-    const report = results.flatMap((result) => result.issues);
-    const outputPath = resolvePath(
-        readStringFlag(parsed.flags, "output") ?? `${file}.upgraded.json`,
-        context,
-    );
-    if (parsed.flags["dry-run"] !== true) {
-        await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`, {
-            mode: 0o600,
-        });
-        context.stdout.write(`Wrote upgraded configuration to ${outputPath}\n`);
-    }
-    for (const result of results) {
-        for (const migration of result.migrations) {
-            context.stdout.write(`Applied ${migration}\n`);
+    if (action === "plan" && parsed.flags.diff === true) {
+        for (const item of (result as any).items ?? []) {
+            context.stdout.write(
+                `${item.kind}/${item.id}: ${item.action}${item.action === "unchanged" && item.metadataChanged ? " (ownership update)" : ""}\n`,
+            );
+            for (const change of item.changes ?? [])
+                context.stdout.write(
+                    `  ${change.path}: ${JSON.stringify(change.before) ?? "(absent)"} -> ${JSON.stringify(change.after) ?? "(absent)"}\n`,
+                );
+            for (const issue of item.issues ?? [])
+                context.stderr.write(
+                    `${item.kind}/${item.id}${issue.path}: ${issue.message}\n`,
+                );
         }
-    }
-    for (const issue of report) {
-        context.stderr.write(
-            `${issue.severity} ${issue.code} ${issue.path}: ${issue.message}\n`,
-        );
-    }
-    return report.some((issue) => issue.severity !== "warning") ? 1 : 0;
-}
-
-function upgradeJsonBundle(
-    input: any,
-    results: Array<ReturnType<typeof upgradeDocument>>,
-): any {
-    const documents = results.map((result) => result.document);
-    const resources = (input.manifest?.resources ?? []).map((resource: any) => {
-        const document = documents.find(
-            (candidate) =>
-                candidate.kind === resource.kind &&
-                candidate.metadata.id === resource.id,
-        );
-        if (!document) return resource;
-        return {
-            ...resource,
-            apiVersion: document.apiVersion,
-            sha256: createHash("sha256")
-                .update(JSON.stringify(document))
-                .digest("hex"),
-        };
-    });
-    return {
-        ...input,
-        manifest: { ...input.manifest, resources },
-        documents,
-    };
-}
-
-async function upgradeArchive(
-    inputPath: string,
-    displayPath: string,
-    parsed: ParsedArgs,
-    context: CommandContext,
-): Promise<number> {
-    const entries = unzipSync(new Uint8Array(await readFile(inputPath)));
-    const manifestBytes = entries["manifest.json"];
-    if (!manifestBytes)
-        throw new Error("Configuration ZIP has no manifest.json");
-    const manifest = JSON.parse(strFromU8(manifestBytes));
-    const reports: Array<ReturnType<typeof upgradeDocument>> = [];
-    for (const resource of manifest.resources ?? []) {
-        const bytes = entries[resource.path];
-        if (!bytes)
-            throw new Error(`Configuration ZIP is missing ${resource.path}`);
-        const result = upgradeDocument(JSON.parse(strFromU8(bytes)));
-        reports.push(result);
-        const output = strToU8(JSON.stringify(result.document));
-        entries[resource.path] = output;
-        resource.apiVersion = result.document.apiVersion;
-        resource.sha256 = createHash("sha256").update(output).digest("hex");
-    }
-    entries["manifest.json"] = strToU8(JSON.stringify(manifest, null, 2));
-    const outputPath = resolvePath(
-        readStringFlag(parsed.flags, "output") ?? `${displayPath}.upgraded.zip`,
-        context,
-    );
-    if (parsed.flags["dry-run"] !== true) {
-        await writeFile(
-            outputPath,
-            Buffer.from(zipSync(entries, { level: 6 })),
-            {
-                mode: 0o600,
-            },
-        );
-        context.stdout.write(`Wrote upgraded configuration to ${outputPath}\n`);
-    }
-    for (const result of reports) {
-        for (const migration of result.migrations) {
-            context.stdout.write(`Applied ${migration}\n`);
-        }
-        for (const issue of result.issues) {
+        for (const issue of (result as any).issues ?? []) {
             context.stderr.write(
-                `${issue.severity} ${issue.code} ${issue.path}: ${issue.message}\n`,
+                `${issue.code ?? "CONFIG_ISSUE"}${issue.path ?? ""}: ${issue.message}\n`,
             );
         }
-    }
-    return reports.some((result) =>
-        result.issues.some((issue) => issue.severity !== "warning"),
-    )
-        ? 1
-        : 0;
+        for (const asset of (result as any).assets ?? [])
+            context.stdout.write(`${asset.path}: ${asset.action}\n`);
+        context.stdout.write(
+            `Plan fingerprint: ${(result as any).planFingerprint}\n`,
+        );
+        context.stdout.write(
+            `Applicable: ${(result as any).applicable ? "yes" : "no"}\n`,
+        );
+    } else context.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    return (result as any).applicable === false ? 1 : 0;
 }
 
 function resolvePath(value: string, context: CommandContext): string {

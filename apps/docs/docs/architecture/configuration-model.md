@@ -139,33 +139,39 @@ Every portable resource uses a stable envelope structure:
 
 ```json
 {
-    "apiVersion": "eudiplo.io/presentation-config/v2",
-    "kind": "PresentationConfig",
+    "$schema": "https://eudiplo.dev/schemas/v1/PresentationConfigFile.schema.json",
     "metadata": {
-        "id": "age-check",
         "generation": 3,
         "ownership": "unmanaged"
     },
     "spec": {
-        // Desired configuration only - no runtime state
+        "id": "age-check"
+        // Other desired configuration fields - no runtime state
     }
 }
 ```
 
 **Envelope Fields:**
 
-| Field                 | Description                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------------- |
-| `apiVersion`          | Selects the portable schema and migration chain (e.g., `eudiplo.io/presentation-config/v2`) |
-| `kind`                | Resource type (e.g., `PresentationConfig`, `CredentialConfig`, `KeyChain`)                  |
-| `metadata.id`         | Stable identifier across instances                                                          |
-| `metadata.generation` | Prevents an older file/bundle from overwriting newer configuration                          |
-| `metadata.ownership`  | `unmanaged` (editable via API/UI) or `file-managed` (authoritative from file)               |
-| `spec`                | Desired configuration only (excludes runtime state, caches, sessions, timestamps)           |
+| Field                       | Description                                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------ |
+| `$schema`                   | Canonical schema URL identifying both resource type and configuration format version |
+| `spec.id` / `spec.clientId` | Stable identifier across instances                                                   |
+| `metadata.generation`       | Prevents an older file/bundle from overwriting newer configuration                   |
+| `metadata.ownership`        | `unmanaged` (editable via API/UI) or `file-managed` (authoritative from file)        |
+| `spec`                      | Desired configuration only (excludes runtime state, caches, sessions, timestamps)    |
+
+Metadata is optional and currently holds only generation and ownership. Resource IDs live in `spec.id` (`spec.clientId` for clients). Tenant, KMS, registrar and issuance settings are singletons within a tenant and need no ID in the document; their type and tenant context identify them. Bundle manifest IDs remain an index of the resources.
+
+The first published format, v1, rejects `metadata.id` and uses `$schema` as the sole configuration identity.
 
 **Bare JSON Support:**
 
-For backward compatibility, EUDIPLO accepts bare JSON (without the envelope). It detects the version, wraps it in an envelope, and runs the same migrations used by bundles.
+Startup importers accept bare JSON in folders where the resource type is known and wrap it into a canonical `$schema` document. Arbitrary unversioned files are not guessed by the standalone upgrade command. Unknown schema URLs and unsupported future versions are rejected.
+
+The backend resolves URLs through its bundled registry without network requests. Internally, kind and version remain available for dispatch and ownership tracking. Exported files contain only `$schema`, `metadata`, and `spec`. Each resource type evolves independently; the configuration format version is separate from the application release and `metadata.generation`.
+
+New bundles use `formatVersion: 2`. Manifest resources retain `kind` and `id` as an index and identify their file format with `$schema`. Version 1 bundles remain readable. Upgrading a bundle updates its manifest identifiers and document checksums together; old runtimes do not understand the new bundle format.
 
 ---
 
@@ -392,18 +398,21 @@ The web client shows a managed-resource notice with the provisioning source and 
 
 The configuration portability API exposes:
 
-| Endpoint                                         | Method | Purpose                        |
-| ------------------------------------------------ | ------ | ------------------------------ |
-| `/api/config-bundles/export?format=zip`          | GET    | Export a tenant archive        |
-| `/api/config-bundles/plan/archive?mode=upsert`   | POST   | Validate and plan a ZIP import |
-| `/api/config-bundles/import/archive?mode=upsert` | POST   | Apply a planned ZIP import     |
-| `/api/config-bundles/documents/upgrade`          | POST   | Upgrade one resource envelope  |
-| `/api/config-bundles/resources`                  | GET    | List ownership and generations |
-| `/api/config-bundles/resources/:kind/:id/detach` | POST   | Detach a managed resource      |
+| Endpoint                                         | Method | Purpose                               |
+| ------------------------------------------------ | ------ | ------------------------------------- |
+| `/api/config-bundles/export?format=zip`          | GET    | Export a tenant archive               |
+| `/api/config-bundles/plan/archive?mode=upsert`   | POST   | Validate and plan a ZIP import        |
+| `/api/config-bundles/import/archive?mode=upsert` | POST   | Apply a planned ZIP import            |
+| `/api/config-bundles/documents/upgrade`          | POST   | Upgrade one resource envelope         |
+| `/api/config-bundles/operations`                 | GET    | List recent durable operation reports |
+| `/api/config-bundles/operations/:id`             | GET    | Inspect one operation                 |
+| `/api/config-bundles/resources`                  | GET    | List ownership and generations        |
+| `/api/config-bundles/resources/:kind/:id/detach` | POST   | Detach a managed resource             |
 
 **Import Parameters:**
 
 - `mode`: `create`, `upsert`, or `replace`
+- `planFingerprint`: Required fingerprint from the reviewed plan; stale plans are rejected before resource writes.
 - `confirmReplace=true`: Required for `replace` mode (safety check)
 
 **Bundle Format:**

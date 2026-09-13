@@ -40,22 +40,20 @@ export const ImportTenantSchema = CreateTenantSchema.pick({
 
 const TenantConfigMetadataSchema = z
     .object({
-        id: NonBlankStringSchema,
-        generation: z.number().optional(),
+        generation: z.number().int().min(1).optional(),
         ownership: z.enum(["unmanaged", "file-managed"]).optional(),
     })
     .strict();
 
 export const TenantConfigFileSchema = z.union([
+    z.strictObject({
+        $schema: z.literal(
+            "https://eudiplo.dev/schemas/v1/TenantConfigFile.schema.json",
+        ),
+        metadata: TenantConfigMetadataSchema,
+        spec: ImportTenantSchema,
+    }),
     ImportTenantSchema,
-    z
-        .object({
-            apiVersion: z.literal("eudiplo.io/tenant/v1"),
-            kind: z.literal("Tenant"),
-            metadata: TenantConfigMetadataSchema,
-            spec: ImportTenantSchema,
-        })
-        .strict(),
 ]);
 
 export const UpdateTenantSchema = z

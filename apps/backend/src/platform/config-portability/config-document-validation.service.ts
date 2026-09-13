@@ -12,6 +12,7 @@ import { CreateWebhookEndpointSchema } from "../../issuer/configuration/webhook-
 import { StatusListImportSchema } from "../../issuer/status-list/dto/status-list.schema.js";
 import { TrustListCreateSchema } from "../../issuer/trust-list/schemas/trust-list.schema.js";
 import { CreateRegistrarConfigSchema } from "../../registrar/schemas/registrar.schema.js";
+import { resourceId } from "../../shared/config-format/config-format.js";
 import { PresentationConfigCreateSchema } from "../../verifier/presentations/schemas/presentation-config.schema.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import type {
@@ -32,17 +33,17 @@ export class ConfigDocumentValidationService {
         const identityIssues: ConfigMigrationIssue[] = [];
         if (
             typeof identityField === "string" &&
-            identityField !== document.metadata.id
+            identityField !== resourceId(document)
         ) {
             identityIssues.push({
                 severity: "error",
                 code: "RESOURCE_ID_MISMATCH",
                 path:
                     document.kind === "Client" ? "/spec/clientId" : "/spec/id",
-                message: `Resource id '${identityField}' does not match envelope id '${document.metadata.id}'.`,
+                message: `Resource id '${identityField}' does not match envelope id '${resourceId(document)}'.`,
                 resource: {
                     kind: document.kind,
-                    id: document.metadata.id,
+                    id: resourceId(document),
                 },
             });
         }
@@ -65,7 +66,7 @@ export class ConfigDocumentValidationService {
                 message: issue.message,
                 resource: {
                     kind: document.kind,
-                    id: document.metadata.id,
+                    id: resourceId(document),
                 },
             })),
         );
@@ -84,7 +85,7 @@ export class ConfigDocumentValidationService {
                 message,
                 resource: {
                     kind: document.kind,
-                    id: document.metadata.id,
+                    id: resourceId(document),
                 },
             });
         if (!Object.values(KeyUsageType).includes(spec.usageType)) {
@@ -135,6 +136,16 @@ export class ConfigDocumentValidationService {
             );
         }
         return issues;
+    }
+
+    normalizeForComparison(document: ConfigDocument): Record<string, unknown> {
+        if (document.kind === "KeyChain") return structuredClone(document.spec);
+        const result = this.schema(document.kind, document)?.safeParse(
+            structuredClone(document.spec),
+        );
+        return result?.success
+            ? (result.data as Record<string, unknown>)
+            : structuredClone(document.spec);
     }
 
     private schema(

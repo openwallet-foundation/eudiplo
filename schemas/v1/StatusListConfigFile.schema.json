@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://eudiplo.dev/schemas/v1/StatusListConfigFile.schema.json",
+  "title": "StatusListConfigFile",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "const": "https://eudiplo.dev/schemas/v1/StatusListConfigFile.schema.json"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Monotonically increasing configuration generation."
+        },
+        "ownership": {
+          "type": "string",
+          "enum": [
+            "unmanaged",
+            "file-managed"
+          ],
+          "description": "Requested ownership recorded when the document is applied."
+        }
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/StatusListImportDto"
+        },
+        {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    }
+  },
+  "required": [
+    "$schema",
+    "spec"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "StatusListImportDto": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Status list identifier."
+        },
+        "credentialConfigurationId": {
+          "description": "Optional credential configuration binding. Null means shared list.",
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "keyChainId": {
+          "description": "Optional key chain used for signing this status list.",
+          "type": "string",
+          "minLength": 1
+        },
+        "capacity": {
+          "description": "Optional list capacity override.",
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 9007199254740991
+        },
+        "bits": {
+          "description": "Optional bits-per-status override.",
+          "anyOf": [
+            {
+              "type": "number",
+              "const": 1
+            },
+            {
+              "type": "number",
+              "const": 2
+            },
+            {
+              "type": "number",
+              "const": 4
+            },
+            {
+              "type": "number",
+              "const": 8
+            }
+          ]
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "title": "StatusListImportDto"
+    }
+  }
+}

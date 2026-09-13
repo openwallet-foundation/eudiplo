@@ -1,6 +1,7 @@
 import { randomInt } from "node:crypto";
 import {
     ConflictException,
+    BadRequestException,
     Injectable,
     Logger,
     NotFoundException,
@@ -1354,25 +1355,31 @@ export class StatusListService {
             }
         }
 
-        let needsJwtRegeneration = false;
-
-        if (updates.credentialConfigurationId !== undefined) {
-            list.credentialConfigurationId = updates.credentialConfigurationId;
-        }
-
+        // Update bindings only. Saving the previously read entity could overwrite
+        // status changes or allocations made while the certificate was validated.
+        const changes: Partial<StatusListEntity> = {};
+        if (updates.credentialConfigurationId !== undefined)
+            changes.credentialConfigurationId =
+                updates.credentialConfigurationId;
         if (updates.keyChainId !== undefined) {
-            list.keyChainId = updates.keyChainId;
-            needsJwtRegeneration = true;
+            changes.keyChainId = updates.keyChainId;
+            changes.jwt = null as any;
+            changes.cwt = null as any;
+            changes.expiresAt = null as any;
         }
-
-        const savedList = await this.statusListRepository.save(list);
-
-        // Regenerate JWT if the certificate changed
-        if (needsJwtRegeneration) {
-            return this.regenerateListTokens(tenantId, listId);
+        if (Object.keys(changes).length) {
+            const result = await this.statusListRepository.update(
+                { tenantId, id: listId, version: list.version },
+                changes,
+            );
+            if (result.affected !== 1)
+                throw new ConflictException(
+                    "Status list changed concurrently; retry the update",
+                );
         }
-
-        return savedList;
+        return updates.keyChainId !== undefined
+            ? this.regenerateListTokens(tenantId, listId)
+            : this.getListById(tenantId, listId);
     }
 
     /**
@@ -1394,24 +1401,6 @@ export class StatusListService {
                     });
                     return existing !== null;
                 },
-                deleteExisting: async (tid, data) => {
-                    // Check if the list has any mappings before deleting
-                    const mappingsCount =
-                        await this.statusMappingRepository.countBy({
-                            tenantId: tid,
-                            statusListId: data.id,
-                        });
-                    if (mappingsCount > 0) {
-                        this.logger.warn(
-                            `[${tid}] Cannot reimport status list ${data.id}: ${mappingsCount} credentials are using it`,
-                        );
-                        return;
-                    }
-                    await this.statusListRepository.delete({
-                        id: data.id,
-                        tenantId: tid,
-                    });
-                },
                 processItem: async (tid, config) => {
                     await this.processStatusListConfig(tid, config);
                 },
@@ -1426,6 +1415,26 @@ export class StatusListService {
         tenantId: string,
         config: StatusListImportDto,
     ) {
+        const existing = await this.statusListRepository.findOneBy({
+            tenantId,
+            id: config.id,
+        });
+        if (existing) {
+            if (
+                (config.capacity !== undefined &&
+                    config.capacity !== existing.elements.length) ||
+                (config.bits !== undefined && config.bits !== existing.bits)
+            ) {
+                throw new BadRequestException(
+                    "An existing status list cannot change capacity or bits; create a new list ID instead",
+                );
+            }
+            await this.updateList(tenantId, config.id, {
+                credentialConfigurationId: config.credentialConfigurationId,
+                keyChainId: config.keyChainId,
+            });
+            return;
+        }
         // Get effective size and bits (from config, tenant defaults, or global defaults)
         const size =
             config.capacity ?? (await this.getEffectiveCapacity(tenantId));
@@ -1453,7 +1462,7 @@ export class StatusListService {
         }
 
         // Save with the provided ID
-        const entry = await this.statusListRepository.save({
+        await this.statusListRepository.insert({
             id: config.id,
             tenantId,
             credentialConfigurationId: config.credentialConfigurationId ?? null,
@@ -1463,6 +1472,6 @@ export class StatusListService {
             bits,
         });
 
-        await this.regenerateListTokens(entry.tenantId, entry.id);
+        await this.regenerateListTokens(tenantId, config.id);
     }
 }

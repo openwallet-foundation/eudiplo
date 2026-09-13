@@ -1,10 +1,5 @@
-import {
-    existsSync,
-    mkdirSync,
-    readFileSync,
-    rmSync,
-    writeFileSync,
-} from "node:fs";
+import { atomicWriteFileSync } from "../../../shared/config-format/config-io.js";
+import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -38,7 +33,9 @@ export class KmsTenantConfigService {
                   payload,
                   "kms",
               );
-        if (document.kind !== "KmsConfig") {
+        if (
+            this.configMigrationService.normalize(document).kind !== "KmsConfig"
+        ) {
             throw new Error(`Expected KmsConfig in ${path}`);
         }
         const upgraded = this.configMigrationService.upgrade(document);
@@ -69,10 +66,9 @@ export class KmsTenantConfigService {
         const validatedConfig = this.validateConfig(config);
 
         mkdirSync(dirname(path), { recursive: true });
-        writeFileSync(
+        atomicWriteFileSync(
             path,
             `${JSON.stringify(validatedConfig, null, 4)}\n`,
-            "utf8",
         );
 
         this.refreshTenantConfig(tenantId);

@@ -2,35 +2,35 @@ import { describe, expect, it } from "vitest";
 import { upgradeDocument } from "./migrations.js";
 
 describe("offline configuration migrations", () => {
-    it("matches the sequential issuance migration used by the API", () => {
+    it("upgrades a v1 document without retaining metadata.id", () => {
         const result = upgradeDocument({
-            apiVersion: "eudiplo.io/issuance-config/v1",
-            kind: "IssuanceConfig",
-            metadata: { id: "issuance", generation: 1 },
+            $schema:
+                "https://eudiplo.dev/schemas/v1/IssuanceConfigFile.schema.json",
+            metadata: { generation: 1 },
             spec: {
-                walletProviderTrustLists: ["https://example.com/trust-list"],
+                authorizationServers: [{ id: "issuer", type: "built-in" }],
+                walletProviderTrustLists: [
+                    { url: "https://example.com/trust-list" },
+                ],
             },
         });
 
-        expect(result.document.apiVersion).toBe(
-            "eudiplo.io/issuance-config/v2",
+        expect(result.document.$schema).toBe(
+            "https://eudiplo.dev/schemas/v1/IssuanceConfigFile.schema.json",
         );
         expect(result.document.spec.walletProviderTrustLists).toEqual([
             { url: "https://example.com/trust-list" },
         ]);
-        expect(result.migrations).toEqual(["IssuanceConfig/1-to-2"]);
-        expect(result.issues[0]).toMatchObject({
-            severity: "required-input",
-            code: "TRUST_LIST_VERIFIER_REQUIRED",
-        });
+        expect(result.migrations).toEqual([]);
+        expect(result.issues).toEqual([]);
     });
 
     it("refuses to guess when a document is newer than the CLI", () => {
         expect(() =>
             upgradeDocument({
-                apiVersion: "eudiplo.io/presentation-config/v99",
-                kind: "PresentationConfig",
-                metadata: { id: "future" },
+                $schema:
+                    "https://eudiplo.dev/schemas/v99/PresentationConfigFile.schema.json",
+                metadata: {},
                 spec: {},
             }),
         ).toThrow("newer than supported");

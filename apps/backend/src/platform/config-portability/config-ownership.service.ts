@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { type EntityManager, Repository } from "typeorm";
 import type {
     ConfigOwnership,
     ConfigResourceKind,
@@ -83,20 +83,27 @@ export class ConfigOwnershipService {
         });
     }
 
-    async markApplied(options: {
-        tenantId: string;
-        kind: ConfigResourceKind;
-        resourceId: string;
-        ownership: ConfigOwnership;
-        generation?: number;
-        source?: string;
-        sourceHash?: string;
-    }): Promise<ConfigResourceMetadataEntity> {
-        const current = await this.get(
-            options.tenantId,
-            options.kind,
-            options.resourceId,
-        );
+    async markApplied(
+        options: {
+            tenantId: string;
+            kind: ConfigResourceKind;
+            resourceId: string;
+            ownership: ConfigOwnership;
+            generation?: number;
+            source?: string;
+            sourceHash?: string;
+        },
+        manager?: EntityManager,
+    ): Promise<ConfigResourceMetadataEntity> {
+        const repository =
+            manager?.getRepository(ConfigResourceMetadataEntity) ??
+            this.repository;
+        const current =
+            (await repository.findOneBy({
+                tenantId: options.tenantId,
+                kind: options.kind,
+                resourceId: options.resourceId,
+            })) ?? repository.create({ ...options, generation: 1 });
         if (
             options.ownership === "file-managed" &&
             options.generation !== undefined &&
@@ -106,7 +113,7 @@ export class ConfigOwnershipService {
                 `${options.kind} '${options.resourceId}' has stale generation ${options.generation}; stored generation is ${current.generation}.`,
             );
         }
-        return this.repository.save({
+        return repository.save({
             ...current,
             ...options,
             generation: options.generation ?? current.generation ?? 1,

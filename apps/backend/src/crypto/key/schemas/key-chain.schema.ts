@@ -170,6 +170,10 @@ const PortableKeyChainSpecSchema = z
         usageType: z.enum(KeyUsageType),
         keySource: PortableKeySourceSchema,
         crt: z.array(z.string()).optional(),
+        activeCertificate: z
+            .string()
+            .optional()
+            .describe("Active certificate for an internal key chain."),
         kmsProvider: z.string().optional(),
         rotationPolicy: PortableRotationPolicySchema.optional(),
     })
@@ -177,22 +181,20 @@ const PortableKeyChainSpecSchema = z
 
 const ConfigDocumentMetadataSchema = z
     .object({
-        id: z.string(),
-        generation: z.number().optional(),
+        generation: z.number().int().min(1).optional(),
         ownership: z.enum(["unmanaged", "file-managed"]).optional(),
     })
     .strict();
 
 export const KeyChainConfigFileSchema = z.union([
+    z.strictObject({
+        $schema: z.literal(
+            "https://eudiplo.dev/schemas/v1/KeyChainConfigFile.schema.json",
+        ),
+        metadata: ConfigDocumentMetadataSchema,
+        spec: PortableKeyChainSpecSchema,
+    }),
     KeyChainImportSchema,
-    z
-        .object({
-            apiVersion: z.literal("eudiplo.io/key-chain/v2"),
-            kind: z.literal("KeyChain"),
-            metadata: ConfigDocumentMetadataSchema,
-            spec: PortableKeyChainSpecSchema,
-        })
-        .strict(),
 ]);
 
 export const RotationPolicyUpdateSchema = z

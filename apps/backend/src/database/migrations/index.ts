@@ -47,3 +47,5 @@ export { AddMissingSessionColumns1778000000000 } from "./1778000000000-AddMissin
 export { AddActiveCredentialSlot1779000000000 } from "./1779000000000-AddActiveCredentialSlot.js";
 export { AddOutcomeToSession1779000000000 } from "./1779000000000-AddOutcomeToSession.js";
 export { AddIssuanceSetIdToDeferredTransaction1780000000000 } from "./1780000000000-AddIssuanceSetIdToDeferredTransaction.js";
+
+export { AddConfigImportRun1781000000000 } from "./1781000000000-AddConfigImportRun.js";

@@ -3,6 +3,8 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { Injectable, Logger, Optional } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { resourceId } from "../../shared/config-format/config-format.js";
+import { resolveConfigVariables } from "../../shared/config-format/config-values.js";
 import { ConfigMigrationService } from "../config-portability/config-migration.service.js";
 import { ConfigOwnershipService } from "../config-portability/config-ownership.service.js";
 import { ConfigResourceRegistry } from "../config-portability/config-resource.registry.js";
@@ -92,7 +94,9 @@ export class ConfigImportService {
                     this.migrationService &&
                     file.endsWith(".json")
                 ) {
-                    const payload = JSON.parse(raw) as Record<string, unknown>;
+                    const payload = this.replacePlaceholders(
+                        JSON.parse(raw),
+                    ) as Record<string, unknown>;
                     const fileId = file.replace(/\.json$/i, "");
                     const wrapped = this.migrationService.isDocument(payload)
                         ? payload
@@ -115,6 +119,10 @@ export class ConfigImportService {
                                 .join("; ")}`,
                         );
                     }
+                    if (upgraded.document.kind !== resourceKind)
+                        throw new Error(
+                            `Expected ${resourceKind} configuration`,
+                        );
                     portableDocument = upgraded.document;
                     data = this.migrationService.unwrapForLegacyImporter(
                         upgraded.document,
@@ -127,7 +135,7 @@ export class ConfigImportService {
                 }
 
                 // Replace placeholders like ${ENV_VAR} or ${ENV_VAR:default}
-                data = this.replacePlaceholders(data);
+                if (!portableDocument) data = this.replacePlaceholders(data);
 
                 // Validate if validation schema is provided
                 if (options.validationSchema) {
@@ -164,7 +172,7 @@ export class ConfigImportService {
                     const stored = await this.ownershipService.get(
                         tenantId,
                         resourceKind,
-                        portableDocument.metadata.id,
+                        resourceId(portableDocument),
                     );
                     const incomingGeneration =
                         portableDocument.metadata.generation ?? 1;
@@ -228,7 +236,7 @@ export class ConfigImportService {
         await this.ownershipService!.markApplied({
             tenantId,
             kind,
-            resourceId: document.metadata.id,
+            resourceId: resourceId(document),
             ownership: "file-managed",
             generation: document.metadata.generation ?? 1,
             source: filePath,
@@ -242,67 +250,24 @@ export class ConfigImportService {
      * ${VAR:default} -> replaced with env value if defined, otherwise with "default".
      */
     replacePlaceholders<T>(input: T): T {
-        const seen = new WeakSet();
-        const isObject = (val: any) =>
-            val && typeof val === "object" && !Array.isArray(val);
-        const strictConfigInner = this.configService.get<any>(
+        const configured = this.configService.get<any>(
             "CONFIG_VARIABLE_STRICT",
         );
-        const strictMode =
-            strictConfigInner === true
-                ? "skip"
-                : strictConfigInner === false || strictConfigInner === undefined
-                  ? "ignore"
-                  : (strictConfigInner as string);
-
-        const processString = (str: string): string => {
-            const pattern = /\$\{([A-Z0-9_]+)(?::([^}]*))?\}/g;
-            return str.replaceAll(
-                pattern,
-                (fullMatch, varName: string, defVal: string) => {
-                    const envVal = process.env[varName];
-                    if (envVal !== undefined && envVal !== "") {
-                        return envVal;
-                    }
-                    if (defVal !== undefined) {
-                        return defVal;
-                    }
-                    if (
-                        strictMode === "abort" ||
-                        strictMode === "skip" ||
-                        strictMode === "true"
-                    ) {
-                        // abort -> will bubble up and stop the whole process via outer catch
-                        // skip/true -> outer catch will log and continue with next file
-                        throw new Error(
-                            `Missing required environment variable ${varName} for placeholder ${fullMatch}`,
-                        );
-                    }
-                    // ignore/false/undefined: keep placeholder and warn
-                    this.logger.warn(
-                        `Environment variable ${varName} not set and no default provided (placeholder kept)`,
-                    );
-                    return fullMatch; // keep original placeholder
-                },
+        const strict =
+            configured === true ||
+            configured === "true" ||
+            configured === "abort" ||
+            configured === "skip";
+        const result = resolveConfigVariables(input, process.env);
+        if (strict && result.issues.length)
+            throw new Error(
+                result.issues
+                    .map((issue) => `${issue.path}: ${issue.message}`)
+                    .join("; "),
             );
-        };
-
-        const recurse = (val: any): any => {
-            if (typeof val === "string") return processString(val);
-            if (Array.isArray(val)) return val.map(recurse);
-            if (Buffer.isBuffer(val)) return val; // skip binary
-            if (isObject(val)) {
-                if (seen.has(val)) return val; // avoid circular refs
-                seen.add(val);
-                for (const key of Object.keys(val)) {
-                    val[key] = recurse(val[key]);
-                }
-                return val;
-            }
-            return val;
-        };
-
-        return recurse(input);
+        for (const issue of result.issues)
+            this.logger.warn(`${issue.path}: ${issue.message}`);
+        return result.value;
     }
 
     private resolveMode():
