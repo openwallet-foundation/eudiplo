@@ -107,51 +107,57 @@ export class ConfigFolderBundleService {
 
         for (const resource of FOLDER_RESOURCES) {
             for (const filePath of this.resourceFiles(tenantRoot, resource)) {
-                const rawPayload = JSON.parse(
-                    readFileSync(filePath, "utf8"),
-                ) as Record<string, unknown>;
-                const payload =
-                    this.configImportService.replacePlaceholders(rawPayload);
-                const fileId = filePath
-                    .split(/[\\/]/)
-                    .pop()!
-                    .replace(/\.json$/i, "");
-                const singletonId = this.resourceRegistry.get(
-                    resource.kind,
-                ).singletonId;
-                const id = String(
-                    (payload.metadata as Record<string, unknown> | undefined)
-                        ?.id ??
-                        singletonId ??
-                        payload.id ??
-                        payload.clientId ??
-                        fileId,
-                );
-                const input = this.migrationService.isDocument(payload)
-                    ? payload
-                    : this.migrationService.wrapLegacy(
-                          resource.kind,
-                          payload,
-                          id,
-                      );
-                const result = this.migrationService.upgrade(input);
-                if (result.document.kind !== resource.kind) {
-                    throw new Error(
-                        `${filePath} contains ${result.document.kind}, expected ${resource.kind}`,
+                try {
+                    const rawPayload = JSON.parse(
+                        readFileSync(filePath, "utf8"),
+                    ) as Record<string, unknown>;
+                    const payload =
+                        this.configImportService.replacePlaceholders(rawPayload);
+                    const fileId = filePath
+                        .split(/[\\/]/)
+                        .pop()!
+                        .replace(/\.json$/i, "");
+                    const singletonId = this.resourceRegistry.get(
+                        resource.kind,
+                    ).singletonId;
+                    const id = String(
+                        (payload.metadata as Record<string, unknown> | undefined)
+                            ?.id ??
+                            singletonId ??
+                            payload.id ??
+                            payload.clientId ??
+                            fileId,
                     );
-                }
-                const blocking = result.issues.filter(
-                    (issue) => issue.severity !== "warning",
-                );
-                if (blocking.length > 0) {
-                    throw new Error(
-                        `${filePath} requires input: ${blocking
-                            .map((issue) => `${issue.path}: ${issue.message}`)
-                            .join("; ")}`,
+                    const input = this.migrationService.isDocument(payload)
+                        ? payload
+                        : this.migrationService.wrapLegacy(
+                              resource.kind,
+                              payload,
+                              id,
+                          );
+                    const result = this.migrationService.upgrade(input);
+                    if (result.document.kind !== resource.kind) {
+                        throw new Error(
+                            `contains ${result.document.kind}, expected ${resource.kind}`,
+                        );
+                    }
+                    const blocking = result.issues.filter(
+                        (issue) => issue.severity !== "warning",
                     );
+                    if (blocking.length > 0) {
+                        throw new Error(
+                            `requires input: ${blocking
+                                .map((issue) => `${issue.path}: ${issue.message}`)
+                                .join("; ")}`,
+                        );
+                    }
+                    documents.push(result.document);
+                    warnings.push(...result.issues);
+                } catch (error) {
+                    const message =
+                        error instanceof Error ? error.message : String(error);
+                    throw new Error(`${filePath}: ${message}`, { cause: error });
                 }
-                documents.push(result.document);
-                warnings.push(...result.issues);
             }
         }
 
