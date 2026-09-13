@@ -60,6 +60,9 @@ jobs:
       - name: Build SDK
         run: pnpm --filter @eudiplo/sdk-core build
 
+      - name: Build config format
+        run: pnpm --filter @eudiplo/config-format build
+
       - name: Build CLI
         run: pnpm --filter @eudiplo/cli build
 
@@ -254,6 +257,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm --filter @eudiplo/cli... install --frozen-lockfile
+
+      - name: Build config format
+        run: pnpm --filter @eudiplo/config-format build
 
       - name: Build CLI
         shell: bash

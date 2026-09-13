@@ -1,6 +1,6 @@
-import { atomicWriteFileSync } from "@eudiplo/config-format/config-io.js";
 import { existsSync, mkdirSync, readFileSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { atomicWriteFileSync } from "@eudiplo/config-format/config-io.js";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { ConfigMigrationService } from "../../../platform/config-portability/config-migration.service.js";

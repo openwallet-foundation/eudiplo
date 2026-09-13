@@ -10,6 +10,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM build AS build-backend
 # Build backend only
+RUN pnpm --filter @eudiplo/config-format build
 RUN pnpm --filter @eudiplo/backend build
 RUN pnpm deploy --filter=@eudiplo/backend --prod /prod/backend
 
