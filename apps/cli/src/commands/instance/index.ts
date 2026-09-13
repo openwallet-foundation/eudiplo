@@ -70,8 +70,19 @@ export function createInstanceCommand(
         .command("add <name>")
         .description("Register an existing EUDIPLO deployment")
         .requiredOption("--url <url>", "EUDIPLO API URL")
-        .option("--target <compose|external>", "deployment target", "external")
+        .option(
+            "--target <compose|external|kubernetes>",
+            "deployment target",
+            "external",
+        )
         .option("--client-url <url>", "optional web client URL")
+        .option("--context <name>", "Kubernetes context")
+        .option("--namespace <name>", "Kubernetes namespace")
+        .option(
+            "--workload <service=kind/name,...>",
+            "Kubernetes workloads, for example backend=deployment/eudiplo",
+        )
+        .option("--read-only", "refuse commands that change the deployment")
         .action(async (name, options) => {
             const { configPath, config } = await loadCliState(context);
             setExitCode(

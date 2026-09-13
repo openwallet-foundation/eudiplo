@@ -6,6 +6,12 @@ import {
     upsertInstance,
 } from "../../services/cli-config.js";
 import { parseTarget } from "../../services/deployment-target.js";
+import {
+    assertContextName,
+    assertNamespace,
+    defaultWorkloads,
+    parseWorkloadMap,
+} from "../../services/kubectl.js";
 import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
 
 export async function runInstanceAdd(
@@ -28,7 +34,16 @@ export async function runInstanceAdd(
         readStringFlag(parsed.flags, "target") ?? "external",
     );
     const clientUrl = readStringFlag(parsed.flags, "client-url");
-    const nextConfig = upsertInstance(config, name, { target, url, clientUrl });
+    const kubernetes =
+        target === "kubernetes"
+            ? readKubernetesOptions(parsed.flags)
+            : undefined;
+    const nextConfig = upsertInstance(config, name, {
+        target,
+        url,
+        clientUrl,
+        ...kubernetes,
+    });
     await saveConfig(configPath, nextConfig);
     context.stdout.write(`Added ${target} instance ${name}.\n`);
     return 0;
@@ -78,7 +93,47 @@ export function runInstanceShow(
     writeOptionalList(context, "Compose profiles", instance.composeProfiles);
     writeOptionalValue(context, "Environment file", instance.envFile);
     writeOptionalValue(context, "Project name", instance.projectName);
+    writeOptionalValue(context, "Context", instance.context);
+    writeOptionalValue(context, "Namespace", instance.namespace);
+    if (instance.workloads) {
+        const workloads = Object.entries(instance.workloads)
+            .sort(([left], [right]) => left.localeCompare(right))
+            .map(([service, reference]) => `${service}=${reference}`);
+        writeOptionalList(context, "Workloads", workloads);
+    }
+    if (instance.readOnly === true) {
+        context.stdout.write("Read-only: yes\n");
+    }
     return 0;
+}
+
+function readKubernetesOptions(flags: ParsedArgs["flags"]): {
+    context: string;
+    namespace: string;
+    workloads: Record<string, string>;
+    readOnly?: true;
+} {
+    const kubeContext = readStringFlag(flags, "context");
+    if (!kubeContext) {
+        throw new Error("--context is required for kubernetes instances.");
+    }
+    const namespace = readStringFlag(flags, "namespace");
+    if (!namespace) {
+        throw new Error("--namespace is required for kubernetes instances.");
+    }
+    const workload = readStringFlag(flags, "workload");
+
+    assertContextName(kubeContext, "--context");
+    assertNamespace(namespace, "--namespace");
+
+    return {
+        context: kubeContext,
+        namespace,
+        workloads: workload
+            ? parseWorkloadMap(workload)
+            : { ...defaultWorkloads },
+        readOnly: flags["read-only"] === true ? true : undefined,
+    };
 }
 
 export async function runInstanceUse(
