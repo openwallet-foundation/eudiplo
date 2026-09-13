@@ -159,17 +159,29 @@ export function normalizeDocument(input: unknown): ConfigDocument {
     const metadata = input.metadata ?? {};
     if (!object(metadata) || !object(input.spec))
         throw new Error("An object spec and valid metadata are required");
+    const unknownMetadataKeys = Object.keys(metadata).filter(
+        (key) => !["generation", "ownership"].includes(key),
+    );
+    if (unknownMetadataKeys.length > 0)
+        throw new Error(
+            `Invalid configuration metadata: unsupported propert${unknownMetadataKeys.length === 1 ? "y" : "ies"} ${unknownMetadataKeys.join(", ")}`,
+        );
     if (
-        Object.keys(metadata).some(
-            (key) => !["generation", "ownership"].includes(key),
-        ) ||
-        (metadata.generation !== undefined &&
-            (!Number.isSafeInteger(metadata.generation) ||
-                (metadata.generation as number) < 1)) ||
-        (metadata.ownership !== undefined &&
-            !["unmanaged", "file-managed"].includes(String(metadata.ownership)))
+        metadata.generation !== undefined &&
+        (typeof metadata.generation !== "number" ||
+            !Number.isSafeInteger(metadata.generation) ||
+            metadata.generation < 1)
     )
-        throw new Error("Invalid configuration metadata");
+        throw new Error(
+            "Invalid configuration metadata: generation must be a positive integer",
+        );
+    if (
+        metadata.ownership !== undefined &&
+        !["unmanaged", "file-managed"].includes(String(metadata.ownership))
+    )
+        throw new Error(
+            "Invalid configuration metadata: ownership must be unmanaged or file-managed",
+        );
     const spec = structuredClone(input.spec);
     const canonicalMetadata = structuredClone(metadata);
     resourceId({ $schema: schemaUrl(kind, version), spec });

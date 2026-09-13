@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
+import { schemaUrl } from "../../shared/config-format/config-format.js";
 import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import { ConfigResourceRegistry } from "./config-resource.registry.js";
-import { schemaUrl } from "../../shared/config-format/config-format.js";
 
 describe("ConfigDocumentValidationService", () => {
     const migrations = new ConfigMigrationService(new ConfigResourceRegistry());

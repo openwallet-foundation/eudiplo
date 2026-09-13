@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
+import { schemaUrl } from "../../shared/config-format/config-format.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
 import type {
     ConfigBundle,
     ConfigImportPlan,
 } from "./config-resource.types.js";
-import { schemaUrl } from "../../shared/config-format/config-format.js";
 
 describe("ConfigBundleApplyService", () => {
     it("does not apply or claim ownership of resources skipped in create mode", async () => {

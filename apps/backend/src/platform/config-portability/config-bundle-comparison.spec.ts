@@ -1,10 +1,10 @@
 import { hash } from "bcrypt";
 import { describe, expect, it } from "vitest";
+import { schemaUrl } from "../../shared/config-format/config-format.js";
 import { ConfigBundleService } from "./config-bundle.service.js";
 import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
 import { ConfigResourceRegistry } from "./config-resource.registry.js";
 import type { ConfigDocument } from "./config-resource.types.js";
-import { schemaUrl } from "../../shared/config-format/config-format.js";
 
 function service(current: Record<string, unknown>) {
     const result = Object.create(ConfigBundleService.prototype) as any;
