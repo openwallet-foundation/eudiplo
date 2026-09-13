@@ -10,7 +10,7 @@ import {
     resolveConfigIdentity,
     resourceId,
 } from "./config-format.js";
-export interface ConfigBundleResource {
+interface ConfigBundleResource {
     kind: ConfigResourceKind;
     id: string;
     $schema: string;
@@ -35,7 +35,7 @@ export interface ConfigBundleAsset {
     data: string;
 }
 
-export interface ConfigBundleManifest {
+interface ConfigBundleManifest {
     format: "eudiplo.config-bundle";
     formatVersion: 1 | 2;
     sourceVersion: string;
@@ -274,7 +274,7 @@ export class ConfigBundleCodec {
     }
 }
 
-export function assertSafeBundlePath(path: unknown): asserts path is string {
+function assertSafeBundlePath(path: unknown): asserts path is string {
     if (
         typeof path !== "string" ||
         !path ||

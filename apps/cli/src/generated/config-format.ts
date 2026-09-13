@@ -47,8 +47,8 @@ export type ConfigResourceKind = keyof typeof CONFIG_FORMATS;
 export const CONFIG_RESOURCE_KINDS = Object.keys(
     CONFIG_FORMATS,
 ) as ConfigResourceKind[];
-export const SCHEMA_BASE = "https://eudiplo.dev/schemas/";
-export interface ConfigMetadata {
+const SCHEMA_BASE = "https://eudiplo.dev/schemas/";
+interface ConfigMetadata {
     generation?: number;
     ownership?: "unmanaged" | "file-managed";
 }
@@ -109,7 +109,7 @@ export interface ConfigMigration {
     };
 }
 // The first published format is v1. Register migrations when a later version ships.
-export const CONFIG_MIGRATIONS: readonly ConfigMigration[] = [];
+const CONFIG_MIGRATIONS: readonly ConfigMigration[] = [];
 export function schemaUrl(
     kind: ConfigResourceKind,
     version: number = CONFIG_FORMATS[kind].version,

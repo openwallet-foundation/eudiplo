@@ -1,20 +1,20 @@
-import { resolveConfigVariables } from "../../../generated/config-values.js";
+import { existsSync } from "node:fs";
+import { readdir, readFile } from "node:fs/promises";
+import { basename, join } from "node:path";
+import type { ErrorObject, ValidateFunction } from "ajv";
+import Ajv2020Module from "ajv/dist/2020.js";
+import addFormatsModule from "ajv-formats";
 import {
     CONFIG_FORMATS,
     CONFIG_RESOURCE_KINDS,
     CONFIG_SINGLETON_IDS,
     isConfigDocument,
     migrateDocument,
-    serializeDocument,
     schemaUrl,
+    serializeDocument,
 } from "../../../generated/config-format.js";
 import { validateConfigDocument } from "../../../generated/config-validator.js";
-import { existsSync } from "node:fs";
-import { readdir, readFile } from "node:fs/promises";
-import { basename, join } from "node:path";
-import Ajv2020Module from "ajv/dist/2020.js";
-import type { ErrorObject, ValidateFunction } from "ajv";
-import addFormatsModule from "ajv-formats";
+import { resolveConfigVariables } from "../../../generated/config-values.js";
 import { CLI_VALIDATED_REGISTRY } from "./registry.js";
 import type {
     DirectoryResourceDefinition,
