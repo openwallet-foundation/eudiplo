@@ -59,6 +59,7 @@ export class ConfigMigrationService {
             spec[kind === "Client" ? "clientId" : "id"] = resourceId;
         return {
             $schema: schemaUrl(kind, version),
+            kind,
             metadata: { generation: 1 },
             spec,
         };

@@ -1012,6 +1012,7 @@ export class ConfigBundleService {
         }
         documents.push({
             $schema: schemaUrl(kind),
+            kind,
             metadata: {
                 generation: metadata.generation,
                 ownership: metadata.ownership,
