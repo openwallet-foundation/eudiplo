@@ -178,6 +178,9 @@ type TenantConfigRegistryEntry = {
  * sync with it.
  */
 async function syncVSCodeSettingsJsonSchemas(): Promise<number> {
+  // .vscode/ is excluded from Docker build contexts; skip when absent.
+  if (!existsSync(VSCODE_SETTINGS_FILE)) return 0;
+
   const registryRaw = await readFile(TENANT_CONFIG_REGISTRY_FILE, "utf8");
   const registry = JSON.parse(registryRaw) as TenantConfigRegistryEntry[];
 
