@@ -24,6 +24,10 @@ const CLIENT_SCHEMAS_FILE = join(
   ROOT,
   "apps/client/src/app/utils/schemas.json",
 );
+const CLIENT_API_SCHEMAS_FILE = join(
+  ROOT,
+  "apps/client/src/app/utils/api-schemas.json",
+);
 const TENANT_CONFIG_REGISTRY_FILE = join(
   ROOT,
   "apps/cli/src/commands/config/validate/registry.json",
@@ -119,9 +123,29 @@ async function writeSchemas(schemaEntries: SchemaEntry[]) {
 async function mergeRegistry(
   schemaEntries: SchemaEntry[],
 ): Promise<SchemaEntry[]> {
-  const currentRegistryRaw = await readFile(CLIENT_SCHEMAS_FILE, "utf8");
-  const currentRegistry = JSON.parse(currentRegistryRaw) as SchemaEntry[];
   const generatedUris = new Set(schemaEntries.map((entry) => entry.uri));
+  let currentRegistry: SchemaEntry[];
+  if (existsSync(CLIENT_API_SCHEMAS_FILE)) {
+    currentRegistry = JSON.parse(
+      await readFile(CLIENT_API_SCHEMAS_FILE, "utf8"),
+    ) as SchemaEntry[];
+  } else if (existsSync(CLIENT_SCHEMAS_FILE)) {
+    const existing = JSON.parse(
+      await readFile(CLIENT_SCHEMAS_FILE, "utf8"),
+    ) as SchemaEntry[];
+    currentRegistry = existing.filter(
+      (entry) => !generatedUris.has(entry.uri),
+    );
+    await writeGeneratedFile(
+      CLIENT_API_SCHEMAS_FILE,
+      `${JSON.stringify(currentRegistry, null, 2)}\n`,
+      "utf8",
+    );
+  } else {
+    throw new Error(
+      `Missing ${CLIENT_API_SCHEMAS_FILE}. Restore the API schema baseline before generating client schemas.`,
+    );
+  }
   const preservedRegistry = currentRegistry.filter(
     (entry) => !generatedUris.has(entry.uri),
   );
