@@ -1,13 +1,17 @@
 import { resolveConfigVariables } from "../../../generated/config-values.js";
 import {
+    CONFIG_FORMATS,
+    CONFIG_RESOURCE_KINDS,
+    CONFIG_SINGLETON_IDS,
     isConfigDocument,
     migrateDocument,
     serializeDocument,
+    schemaUrl,
 } from "../../../generated/config-format.js";
 import { validateConfigDocument } from "../../../generated/config-validator.js";
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
-import { join } from "node:path";
+import { basename, join } from "node:path";
 import Ajv2020Module from "ajv/dist/2020.js";
 import type { ErrorObject, ValidateFunction } from "ajv";
 import addFormatsModule from "ajv-formats";
@@ -259,6 +263,25 @@ async function validateResourceFile(
                 message: (error as Error).message,
             });
             return false;
+        }
+    } else {
+        const kind = CONFIG_RESOURCE_KINDS.find(
+            (candidate) => CONFIG_FORMATS[candidate].file === schemaFile.replace(/\.schema\.json$/, ""),
+        );
+        if (kind && resolved && typeof resolved === "object" && !Array.isArray(resolved)) {
+            const spec = structuredClone(resolved) as Record<string, unknown>;
+            if (kind === "KeyChain" && spec.key && !spec.keySource) {
+                spec.keySource = { type: "private-jwk", jwk: spec.key };
+                delete spec.key;
+            }
+            if (!CONFIG_SINGLETON_IDS[kind])
+                spec[kind === "Client" ? "clientId" : "id"] ??=
+                    basename(relativeFile, ".json");
+            resolved = {
+                $schema: schemaUrl(kind),
+                metadata: { generation: 1 },
+                spec,
+            };
         }
     }
     const validate = getValidator(schemaFile);

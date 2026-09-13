@@ -49,9 +49,8 @@ async function setup() {
     return { cwd, context, output };
 }
 const legacy = {
-    apiVersion: "eudiplo.dev/tenant/v1",
-    kind: "Tenant",
-    metadata: { id: "tenant", generation: 4 },
+    $schema: schemaUrl("Tenant"),
+    metadata: { generation: 4 },
     spec: { name: "Example" },
 };
 const hash = (value: string | Uint8Array) =>
@@ -66,7 +65,7 @@ function bundle() {
                 {
                     kind: "Tenant",
                     id: "tenant",
-                    apiVersion: legacy.apiVersion,
+                    $schema: legacy.$schema,
                     path: "info.json",
                     sha256: hash(JSON.stringify(legacy)),
                 },
@@ -78,7 +77,7 @@ function bundle() {
     };
 }
 describe("config upgrade", () => {
-    it("rewrites the legacy envelope offline and preserves source and generation", async () => {
+    it("keeps canonical documents unchanged offline", async () => {
         const { cwd, context } = await setup();
         const source = join(cwd, "tenant.json");
         await writeFile(source, JSON.stringify(legacy));
@@ -93,19 +92,9 @@ describe("config upgrade", () => {
         expect(JSON.parse(await readFile(source, "utf8"))).toEqual(legacy);
         expect(context.fetch).not.toHaveBeenCalled();
     });
-    it("updates legacy singleton manifest IDs along with the document", async () => {
+    it("preserves canonical singleton manifest IDs", async () => {
         const { cwd, context } = await setup();
         const input = bundle();
-        input.documents = [
-            {
-                ...legacy,
-                metadata: { ...legacy.metadata, id: "old-tenant-name" },
-            },
-        ];
-        input.manifest.resources[0].id = "old-tenant-name";
-        input.manifest.resources[0].sha256 = hash(
-            JSON.stringify(input.documents[0]),
-        );
         const source = join(cwd, "bundle.json");
         await writeFile(source, JSON.stringify(input));
         expect(await runCli(["config", "upgrade", source], context)).toBe(0);
