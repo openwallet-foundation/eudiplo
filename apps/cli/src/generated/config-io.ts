@@ -1,7 +1,15 @@
 // Generated from apps/backend/src/shared/config-format/config-io.ts. Run pnpm schemas:sync.
 import { randomUUID } from "node:crypto";
 import { open, rename, unlink } from "node:fs/promises";
-import { basename, dirname, join } from "node:path";
+import {
+    openSync,
+    writeFileSync,
+    fsyncSync,
+    closeSync,
+    renameSync,
+    unlinkSync,
+} from "node:fs";
+import { dirname, basename, join } from "node:path";
 
 /** Replace one file atomically. A failed write leaves the existing destination intact. */
 export async function atomicWriteFile(
@@ -25,5 +33,30 @@ export async function atomicWriteFile(
         await unlink(temporary).catch((error: NodeJS.ErrnoException) => {
             if (error.code !== "ENOENT") throw error;
         });
+    }
+}
+export function atomicWriteFileSync(
+    path: string,
+    data: string | Uint8Array,
+): void {
+    const temporary = join(
+        dirname(path),
+        `.${basename(path)}.${randomUUID()}.tmp`,
+    );
+    let fd: number | undefined;
+    try {
+        fd = openSync(temporary, "wx", 0o600);
+        writeFileSync(fd, data);
+        fsyncSync(fd);
+        closeSync(fd);
+        fd = undefined;
+        renameSync(temporary, path);
+    } finally {
+        if (fd !== undefined) closeSync(fd);
+        try {
+            unlinkSync(temporary);
+        } catch (error) {
+            if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
+        }
     }
 }

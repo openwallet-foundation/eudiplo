@@ -23,8 +23,6 @@ export type {
     ConfigBundle,
     ConfigBundleAsset,
     ConfigBundleRequirement,
-    
-    
 } from "../../shared/config-format/config-bundle.js";
 
 export interface ConfigImportPlanItem {
