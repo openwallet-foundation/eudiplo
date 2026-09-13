@@ -167,8 +167,7 @@ export function normalizeDocument(input: unknown): ConfigDocument {
         );
     if (
         metadata.generation !== undefined &&
-        (!Number.isSafeInteger(metadata.generation) ||
-            metadata.generation < 1)
+        (!Number.isSafeInteger(metadata.generation) || metadata.generation < 1)
     )
         throw new Error(
             "Invalid configuration metadata: generation must be a positive integer",

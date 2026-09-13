@@ -112,7 +112,9 @@ export class ConfigFolderBundleService {
                         readFileSync(filePath, "utf8"),
                     ) as Record<string, unknown>;
                     const payload =
-                        this.configImportService.replacePlaceholders(rawPayload);
+                        this.configImportService.replacePlaceholders(
+                            rawPayload,
+                        );
                     const fileId = filePath
                         .split(/[\\/]/)
                         .pop()!
@@ -121,8 +123,11 @@ export class ConfigFolderBundleService {
                         resource.kind,
                     ).singletonId;
                     const id = String(
-                        (payload.metadata as Record<string, unknown> | undefined)
-                            ?.id ??
+                        (
+                            payload.metadata as
+                                | Record<string, unknown>
+                                | undefined
+                        )?.id ??
                             singletonId ??
                             payload.id ??
                             payload.clientId ??
@@ -147,7 +152,10 @@ export class ConfigFolderBundleService {
                     if (blocking.length > 0) {
                         throw new Error(
                             `requires input: ${blocking
-                                .map((issue) => `${issue.path}: ${issue.message}`)
+                                .map(
+                                    (issue) =>
+                                        `${issue.path}: ${issue.message}`,
+                                )
                                 .join("; ")}`,
                         );
                     }
@@ -156,7 +164,9 @@ export class ConfigFolderBundleService {
                 } catch (error) {
                     const message =
                         error instanceof Error ? error.message : String(error);
-                    throw new Error(`${filePath}: ${message}`, { cause: error });
+                    throw new Error(`${filePath}: ${message}`, {
+                        cause: error,
+                    });
                 }
             }
         }
