@@ -9,10 +9,10 @@ on:
         type: string
         default: ''
 
-  workflow_run:
-    workflows: ['CI / Docker']
-    types: [completed]
+  push:
     branches: [main]
+
+permissions: {}
 
 concurrency:
   group: ${{ github.event_name == 'workflow_dispatch' && 'versioned-release' || 'npm-prerelease-main' }}
@@ -26,29 +26,55 @@ jobs:
   npm-prerelease:
     name: Publish npm Pre-release
     if: >-
-      github.event_name == 'workflow_run' &&
-      github.event.workflow_run.event == 'push' &&
-      github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.head_branch == 'main' &&
-      github.event.workflow_run.head_repository.full_name == github.repository
+      github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
-      - name: Checkout successful CI commit
-        uses: actions/checkout@v7
+      - name: Wait for successful CI
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
+          script: |
+            for (let attempt = 0; attempt < 60; attempt += 1) {
+              const response = await github.rest.actions.listWorkflowRunsForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                event: 'push',
+                head_sha: context.sha,
+                per_page: 100,
+              });
+              const ciRun = response.data.workflow_runs.find(
+                (run) => run.name === 'CI / Docker' && run.id !== context.runId
+              );
+
+              if (ciRun?.conclusion === 'success') {
+                core.info(`Using successful CI run ${ciRun.html_url}`);
+                return;
+              }
+
+              if (ciRun?.conclusion && ciRun.conclusion !== 'success') {
+                core.setFailed(`CI / Docker did not succeed: ${ciRun.conclusion}`);
+                return;
+              }
+
+              await new Promise((resolve) => setTimeout(resolve, 10000));
+            }
+
+            core.setFailed(`Timed out waiting for CI / Docker for ${context.sha}.`);
+
+      - name: Checkout CI commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
         name: Install pnpm
         with:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 26
           cache: 'pnpm'
@@ -69,7 +95,7 @@ jobs:
       - name: Set pre-release version
         working-directory: packages/eudiplo-sdk-core
         env:
-          SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+          SOURCE_SHA: ${{ github.sha }}
         run: |
           # Base the prerelease on the latest repository semver tag (e.g., v5.1.0 -> 5.1.0).
           # Fall back to package.json if tags are not available.
@@ -107,7 +133,7 @@ jobs:
       next_version: ${{ steps.version_check.outputs.next_version }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -118,7 +144,7 @@ jobs:
           exit 1
 
       - name: Verify successful CI for this commit
-        uses: actions/github-script@v9
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const { owner, repo } = context.repo;
@@ -144,13 +170,13 @@ jobs:
 
             core.info(`Releasing artifacts from ${successfulRun.html_url}`);
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
         name: Install pnpm
         with:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 26
           cache: 'pnpm'
@@ -237,15 +263,15 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
         name: Install pnpm
         with:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 26
           cache: 'pnpm'
@@ -292,7 +318,7 @@ jobs:
           fi
 
       - name: Upload packaged CLI artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: cli-${{ matrix.target }}
           path: release/*
@@ -311,14 +337,15 @@ jobs:
       actions: read
       pages: write
       id-token: write
+      attestations: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
       - name: Download packaged CLI artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: cli-*
           path: release
@@ -333,13 +360,13 @@ jobs:
           echo "Generated checksums:"
           cat release/SHA256SUMS.txt
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
         name: Install pnpm
         with:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 26
           cache: 'pnpm'
@@ -354,10 +381,10 @@ jobs:
           echo "version=${{ needs.prepare-release.outputs.next_version }}" >> "$GITHUB_OUTPUT"
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v4
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -380,6 +407,11 @@ jobs:
           test -s "release/eudiplo-v${VERSION}-macos-arm64.tar.gz"
           test -s "release/eudiplo-v${VERSION}-windows-x64.zip"
           test -s "release/SHA256SUMS.txt"
+
+      - name: Attest release artifacts
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: 'release/*'
 
       - name: Run semantic-release
         id: semantic_release

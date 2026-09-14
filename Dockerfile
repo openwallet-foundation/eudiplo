@@ -1,4 +1,4 @@
-FROM node:24 AS base
+FROM node:24@sha256:6dac556d980b7f0e5498d08f08cee0ca67798b4ad6c23964a9214920e67758d0 AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -63,7 +63,7 @@ RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD [ "node", "dist/main.js" ]
 
-FROM nginx:alpine AS client
+FROM nginx:alpine@sha256:72ba65eb42c10344912a84ff42408db7d34f2feb642204570ab8fc5ffd29f1d3 AS client
 # Copy the Angular build output into the nginx html directory.
 # The Angular output path is configured as apps/client/dist/apps/client in angular.json.
 COPY --from=build-frontend /usr/src/app/apps/client/dist/apps/client/browser /usr/share/nginx/html

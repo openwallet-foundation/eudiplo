@@ -82,7 +82,7 @@ fallback_to_npm_install() {
   echo "$reason"
   echo "Falling back to the npm package install."
   ensure_npm_fallback
-  npm install -g @eudiplo/cli
+  npm install -g "@eudiplo/cli@${TAG#v}"
   echo "Installed @eudiplo/cli via npm"
   exit 0
 }

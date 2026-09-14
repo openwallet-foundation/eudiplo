@@ -219,9 +219,33 @@ export class ConfigImportOrchestratorService implements OnApplicationBootstrap {
 
                 this.logger.log(`[${tenantId}] Import completed`);
             } catch (error: any) {
+                const response =
+                    error?.getResponse?.() ?? error?.response ?? undefined;
+                const failedOperation = response?.failedOperation;
+                const operationId = response?.operationId;
+                const planIssues = response?.plan?.issues;
+                const report = operationId
+                    ? `; operation report: GET /config-bundles/operations/${operationId}`
+                    : "";
+                const failure = failedOperation
+                    ? `; failed operation: ${failedOperation.stage}/${failedOperation.kind ?? ""}/${failedOperation.id ?? ""}`
+                    : "";
+                const issues = Array.isArray(planIssues)
+                    ? `; blocking issues: ${planIssues
+                          .filter((issue: any) => issue.severity !== "warning")
+                          .map(
+                              (issue: any) =>
+                                  `${issue.code} at ${issue.path}: ${issue.message}`,
+                          )
+                          .join(" | ")}`
+                    : "";
                 this.logger.error(
-                    { error: error.message },
-                    `[${tenantId}] Failed to import tenant: ${error.message}`,
+                    {
+                        error: error.message,
+                        ...(operationId ? { operationId } : {}),
+                        ...(failedOperation ? { failedOperation } : {}),
+                    },
+                    `[${tenantId}] Failed to import tenant: ${error.message}${failure}${issues}${report}`,
                 );
                 failedTenants.push(tenantId);
                 // Continue with next tenant

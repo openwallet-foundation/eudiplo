@@ -10,6 +10,7 @@ import {
     Inject,
     Injectable,
     InternalServerErrorException,
+    Logger,
 } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
@@ -63,8 +64,26 @@ import type {
 } from "./config-resource.types.js";
 import type { ConfigImportRunEntity } from "./entities/config-import-run.entity.js";
 
+function redactDiagnosticMessage(message: string): string {
+    return message
+        .replace(
+            /-----BEGIN [^-]+-----[\s\S]*?-----END [^-]+-----/g,
+            "[REDACTED_CERTIFICATE]",
+        )
+        .replace(
+            /\b(password|secret|token|private(?:[-_ ]key| credential))\b\s*[:=]\s*[^\s,;]+/gi,
+            "$1=[REDACTED]",
+        )
+        .replace(
+            /\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g,
+            "[REDACTED_JWT]",
+        );
+}
+
 @Injectable()
 export class ConfigBundleApplyService {
+    private readonly logger = new Logger(ConfigBundleApplyService.name);
+
     constructor(
         private readonly bundleService: ConfigBundleService,
         private readonly journal: ConfigImportJournalService,
@@ -156,6 +175,8 @@ export class ConfigBundleApplyService {
         run.planFingerprint = plan.planFingerprint ?? null;
         if (!plan.applicable) {
             throw new BadRequestException({
+                code: "CONFIG_APPLY_BLOCKED",
+                operationId: run.id,
                 message: "Configuration bundle has blocking issues",
                 plan,
             });
@@ -305,12 +326,23 @@ export class ConfigBundleApplyService {
                 await tasks[index]();
                 operations[index].status = "completed";
                 await this.journal.checkpoint(run);
-            } catch {
+            } catch (error) {
                 // A failing service may already have changed external state. Never claim rollback.
                 operations[index].status = "failed";
+                const reason =
+                    error instanceof Error ? error.message : String(error);
+                this.logger?.error(
+                    `[${tenantId}] Config operation failed: ${operations[index].stage}/${operations[index].kind ?? ""}/${operations[index].id ?? ""}: ${redactDiagnosticMessage(reason)}`,
+                    error instanceof Error ? error.stack : undefined,
+                );
                 throw new InternalServerErrorException({
                     code: "CONFIG_APPLY_FAILED",
                     operationId: run.id,
+                    failedOperation: {
+                        stage: operations[index].stage,
+                        kind: operations[index].kind,
+                        id: operations[index].id,
+                    },
                     message:
                         "Configuration apply stopped. Completed operations remain applied; the failed operation may have partial effects. Inspect the report and run plan again before retrying.",
                     tenantId,
