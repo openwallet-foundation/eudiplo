@@ -7,6 +7,7 @@
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=security_rating)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=openwallet-foundation_eudiplo&metric=alert_status)](https://sonarcloud.io/project/overview?id=openwallet-foundation_eudiplo)
 [![Join our Discord](https://img.shields.io/discord/1022962884864643214?label=Join%20our%20Discord&logo=discord&color=7289DA&labelColor=2C2F33)](https://discord.gg/58ys8XfXDu)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/openwallet-foundation/eudiplo/badge)](https://scorecard.dev/viewer/?uri=github.com/openwallet-foundation/eudiplo)
 
 # Your Diplomatic Layer for EUDI Wallet Integration
 
