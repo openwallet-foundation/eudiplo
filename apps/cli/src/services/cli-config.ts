@@ -1,6 +1,11 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { dirname, isAbsolute, join, resolve } from "node:path";
 import { homedir } from "node:os";
+import {
+    assertContextName,
+    assertNamespace,
+    assertWorkloadReference,
+} from "./kubectl.js";
 import type { CliConfig, InstanceConfig } from "../types.js";
 
 const emptyConfig = (): CliConfig => ({ instances: {} });
@@ -129,7 +134,11 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
     if (!isRecord(value)) {
         throw new Error(`Instance ${name} must be an object.`);
     }
-    if (value.target !== "compose" && value.target !== "external") {
+    if (
+        value.target !== "compose" &&
+        value.target !== "external" &&
+        value.target !== "kubernetes"
+    ) {
         throw new Error(
             `Instance ${name} has unsupported target ${String(value.target)}.`,
         );
@@ -147,6 +156,25 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
         throw new Error(`Instance ${name} projectDirectory must be absolute.`);
     }
 
+    const workloads = validateWorkloads(name, value.workloads);
+    if (value.target === "kubernetes") {
+        if (typeof value.context !== "string") {
+            throw new Error(`Instance ${name} must define a context.`);
+        }
+        if (typeof value.namespace !== "string") {
+            throw new Error(`Instance ${name} must define a namespace.`);
+        }
+        if (!workloads) {
+            throw new Error(`Instance ${name} must define workloads.`);
+        }
+    }
+    if (typeof value.context === "string") {
+        assertContextName(value.context, `Instance ${name} context`);
+    }
+    if (typeof value.namespace === "string") {
+        assertNamespace(value.namespace, `Instance ${name} namespace`);
+    }
+
     return {
         target: value.target,
         url: value.url,
@@ -160,7 +188,42 @@ function validateInstanceConfig(name: string, value: unknown): InstanceConfig {
         envFile: optionalString(value.envFile),
         projectName: optionalString(value.projectName),
         projectDirectory: optionalString(value.projectDirectory),
+        context: optionalString(value.context),
+        namespace: optionalString(value.namespace),
+        workloads,
+        readOnly: value.readOnly === true ? true : undefined,
     };
+}
+
+function validateWorkloads(
+    name: string,
+    value: unknown,
+): Record<string, string> | undefined {
+    if (value === undefined) {
+        return undefined;
+    }
+    if (!isRecord(value)) {
+        throw new Error(`Instance ${name} workloads must be an object.`);
+    }
+
+    const workloads: Record<string, string> = {};
+    for (const [service, reference] of Object.entries(value)) {
+        if (typeof reference !== "string") {
+            throw new Error(
+                `Instance ${name} workload ${service} must be a string.`,
+            );
+        }
+        assertWorkloadReference(
+            reference,
+            `Instance ${name} workload ${service}`,
+        );
+        workloads[service] = reference;
+    }
+
+    if (Object.keys(workloads).length === 0) {
+        throw new Error(`Instance ${name} must define at least one workload.`);
+    }
+    return workloads;
 }
 
 function optionalString(value: unknown): string | undefined {

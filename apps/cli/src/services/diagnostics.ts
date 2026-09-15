@@ -1,17 +1,16 @@
-import type { CommandContext, InstanceConfig } from "../types.js";
+import type {
+    CheckStatus,
+    CommandContext,
+    DoctorCheck,
+    InstanceConfig,
+} from "../types.js";
 
-type CheckStatus = "pass" | "warn" | "fail";
-
-export interface DoctorCheck {
-    name: string;
-    status: CheckStatus;
-    message: string;
-}
+export type { DoctorCheck } from "../types.js";
 
 export async function runDoctor(
     instance: InstanceConfig,
     context: CommandContext,
-    driverDiagnostics: string[],
+    driverDiagnostics: DoctorCheck[],
 ): Promise<DoctorCheck[]> {
     const checks: DoctorCheck[] = [];
     const baseUrl = parseUrl(instance.url);
@@ -67,13 +66,7 @@ export async function runDoctor(
         });
     }
 
-    for (const diagnostic of driverDiagnostics) {
-        checks.push({
-            name: "driver diagnostics",
-            status: "warn",
-            message: diagnostic,
-        });
-    }
+    checks.push(...driverDiagnostics);
 
     return checks;
 }

@@ -63,6 +63,7 @@ export async function runDemo(
                 projectDirectory,
             },
             args: ["--volumes", "--remove-orphans"],
+            flags: {},
             context,
         });
     }
@@ -81,6 +82,7 @@ export async function runDemo(
             instanceName: "local",
             instance,
             args: [],
+            flags: {},
             context,
         })) ?? 1;
 

@@ -109,6 +109,7 @@ export async function runInit(
                     instanceName: name,
                     instance: nextConfig.instances[name],
                     args: [],
+                    flags: {},
                     context,
                 })) ?? 1
             );

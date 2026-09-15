@@ -1,4 +1,4 @@
-export type DeploymentTarget = "compose" | "external";
+export type DeploymentTarget = "compose" | "external" | "kubernetes";
 type CliInstallationMethod = "npm" | "standalone";
 
 export interface InstanceConfig {
@@ -11,6 +11,10 @@ export interface InstanceConfig {
     envFile?: string;
     projectName?: string;
     projectDirectory?: string;
+    context?: string;
+    namespace?: string;
+    workloads?: Record<string, string>;
+    readOnly?: boolean;
 }
 
 export interface CliConfig {
@@ -33,7 +37,16 @@ export interface DriverCommandOptions {
     instanceName: string;
     instance: InstanceConfig;
     args: string[];
+    flags: Record<string, string | boolean>;
     context: CommandContext;
+}
+
+export type CheckStatus = "pass" | "warn" | "fail";
+
+export interface DoctorCheck {
+    name: string;
+    status: CheckStatus;
+    message: string;
 }
 
 export interface DeploymentDriver {
@@ -41,10 +54,12 @@ export interface DeploymentDriver {
     diagnostics(
         instance: InstanceConfig,
         context: CommandContext,
-    ): Promise<string[]>;
+    ): Promise<DoctorCheck[]>;
     up?(options: DriverCommandOptions): Promise<number>;
     down?(options: DriverCommandOptions): Promise<number>;
     logs?(options: DriverCommandOptions): Promise<number>;
+    ps?(options: DriverCommandOptions): Promise<number>;
+    restart?(options: DriverCommandOptions): Promise<number>;
 }
 
 export interface ParsedArgs {
