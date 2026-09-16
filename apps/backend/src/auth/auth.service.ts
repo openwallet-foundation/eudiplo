@@ -122,10 +122,13 @@ export class AuthService {
     getOidcDiscovery(): OidcDiscoveryDto {
         const publicUrl = this.configService.getOrThrow<string>("PUBLIC_URL");
         const oidc = this.configService.get<string>("OIDC");
+        const tokenEndpoint = oidc
+            ? `${oidc}/protocol/openid-connect/token`
+            : `${publicUrl}/api/oauth2/token`;
 
         return {
             issuer: oidc ?? publicUrl,
-            token_endpoint: `${publicUrl}/api/oauth2/token`,
+            token_endpoint: tokenEndpoint,
             jwks_uri: `${publicUrl}/.well-known/jwks.json`,
             response_types_supported: ["token"],
             grant_types_supported: ["client_credentials"],

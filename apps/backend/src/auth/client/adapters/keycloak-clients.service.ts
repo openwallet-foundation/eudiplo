@@ -480,12 +480,31 @@ export class KeycloakClientsProvider
         updateClientDto: UpdateClientDto,
     ) {
         const client = await this.getClient(tenantId, clientId);
-
         // Get service account user
         const kcClient = (await this.kc.clients.find({ clientId }))[0];
+        if (!kcClient?.id) {
+            this.logger.warn(
+                `Client '${clientId}' exists in the local mirror but not in Keycloak; recreating it.`,
+            );
+            await this.clientRepo.delete({
+                clientId,
+                tenant: { id: tenantId },
+            });
+            return this.addClient(tenantId, {
+                clientId,
+                description: updateClientDto.description ?? client.description,
+                roles: updateClientDto.roles ?? client.roles,
+                allowedPresentationConfigs:
+                    updateClientDto.allowedPresentationConfigs ??
+                    client.allowedPresentationConfigs,
+                allowedIssuanceConfigs:
+                    updateClientDto.allowedIssuanceConfigs ??
+                    client.allowedIssuanceConfigs,
+            });
+        }
         this.ensureTenantOwnership(tenantId, kcClient, "updated");
         const svcUser = await this.kc.clients.getServiceAccountUser({
-            id: kcClient.id!,
+            id: kcClient.id,
         });
 
         // Get all realm roles
@@ -525,7 +544,7 @@ export class KeycloakClientsProvider
 
         // Update client in Keycloak
         await this.kc.clients.update(
-            { id: kcClient.id! },
+            { id: kcClient.id },
             {
                 description: updateClientDto.description ?? client.description,
             },
