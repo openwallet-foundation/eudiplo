@@ -348,9 +348,10 @@ export class ApiService {
     baseUrl?: string;
     tokenEndpoint?: string;
   }): string | undefined {
-    return oauthConfig.tokenEndpoint ?? (oauthConfig.baseUrl
-      ? `${oauthConfig.baseUrl}/api/oauth2/token`
-      : undefined);
+    return (
+      oauthConfig.tokenEndpoint ??
+      (oauthConfig.baseUrl ? `${oauthConfig.baseUrl}/api/oauth2/token` : undefined)
+    );
   }
 
   /**
