@@ -148,6 +148,7 @@ const sidebars: SidebarsConfig = {
       label: '🔄 Migration',
       link: {type: 'doc', id: 'migration/index'},
       items: [
+        'migration/7.x-to-8.0',
         'migration/6.x-to-7.0',
         'migration/5.x-to-6.0',
         'migration/4.x-to-5.0',
