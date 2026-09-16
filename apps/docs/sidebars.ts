@@ -65,6 +65,7 @@ const sidebars: SidebarsConfig = {
         'administration/tenants',
         'administration/authentication',
         'administration/keycloak',
+        'administration/keycloak-chained-as',
         'administration/database',
         'administration/kms',
         'administration/monitoring',
