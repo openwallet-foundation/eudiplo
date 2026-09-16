@@ -79,22 +79,33 @@ export class ApiService {
       return;
     }
 
-    const oidcUrl = discovery.issuer;
-
-    await this.loginWithClientCredentials(clientId, clientSecret, baseUrl, oidcUrl);
+    await this.loginWithClientCredentials(
+      clientId,
+      clientSecret,
+      baseUrl,
+      discovery.issuer,
+      discovery.token_endpoint
+    );
   }
 
   async loginWithClientCredentials(
     clientId: string,
     clientSecret: string,
     baseUrl: string,
-    issuerUrl?: string
+    issuerUrl?: string,
+    tokenEndpoint?: string
   ) {
-    const oidcUrl = issuerUrl ?? (await this.fetchDiscovery(baseUrl)).issuer;
+    const discovery = tokenEndpoint ? undefined : await this.fetchDiscovery(baseUrl);
+    const oidcUrl = issuerUrl ?? discovery?.issuer;
+    const resolvedTokenEndpoint = tokenEndpoint ?? discovery?.token_endpoint;
+
+    if (!oidcUrl || !resolvedTokenEndpoint) {
+      throw new Error('OIDC discovery response is missing an issuer or token endpoint.');
+    }
 
     this.oauth2Client = new OAuth2Client({
       discoveryEndpoint: `${oidcUrl}/.well-known/oauth-authorization-server`,
-      tokenEndpoint: `${baseUrl}/api/oauth2/token`,
+      tokenEndpoint: resolvedTokenEndpoint,
       clientId,
       clientSecret,
     });
@@ -103,6 +114,7 @@ export class ApiService {
       server: oidcUrl,
       clientId,
       baseUrl: baseUrl,
+      tokenEndpoint: resolvedTokenEndpoint,
     };
     // Persist oauth config (without secret) for rehydration
     try {
@@ -161,9 +173,7 @@ export class ApiService {
           if (storedSecret && oauthConfig?.server && oauthConfig?.clientId) {
             this.oauth2Client = new OAuth2Client({
               discoveryEndpoint: `${oauthConfig.server}/.well-known/oauth-authorization-server`,
-              tokenEndpoint: oauthConfig.baseUrl
-                ? `${oauthConfig.baseUrl}/api/oauth2/token`
-                : undefined,
+              tokenEndpoint: this.getStoredTokenEndpoint(oauthConfig),
               clientId: oauthConfig.clientId,
               clientSecret: storedSecret,
             });
@@ -317,7 +327,12 @@ export class ApiService {
   /**
    * Gets the current OAuth configuration for display purposes
    */
-  getOAuthConfiguration(): { server?: string; clientId?: string; baseUrl?: string } | null {
+  getOAuthConfiguration(): {
+    server?: string;
+    clientId?: string;
+    baseUrl?: string;
+    tokenEndpoint?: string;
+  } | null {
     const storedConfig = localStorage.getItem('oauth_config');
     if (storedConfig) {
       try {
@@ -327,6 +342,16 @@ export class ApiService {
       }
     }
     return null;
+  }
+
+  private getStoredTokenEndpoint(oauthConfig: {
+    baseUrl?: string;
+    tokenEndpoint?: string;
+  }): string | undefined {
+    return (
+      oauthConfig.tokenEndpoint ??
+      (oauthConfig.baseUrl ? `${oauthConfig.baseUrl}/api/oauth2/token` : undefined)
+    );
   }
 
   /**

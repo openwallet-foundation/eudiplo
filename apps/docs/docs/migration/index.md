@@ -40,6 +40,7 @@ The `main` branch image tracks active development and **does not guarantee compl
 | 5.0     | **Current stable** | Field-based credential configuration model (v2), improved UX for config creation.                                                                                     |
 | 6.0     | Planned            | Authorization server model migration to `authorizationServers` and related issuance config updates.                                                                   |
 | 7.0     | Planned            | Strict trust-list integrity for wallet-provider trust lists (`walletProviderTrustLists`) requiring verifier material.                                                 |
+| 8.0     | Planned            | Portable configuration resources now use canonical `$schema` envelopes; legacy `apiVersion`/`kind` envelopes are no longer accepted.                                |
 
 ## Migration Guides
 
@@ -50,6 +51,7 @@ The `main` branch image tracks active development and **does not guarantee compl
 | 4.x  | 5.0 | [Migration Guide](./4.x-to-5.0.md) — Field-based credential configuration (v2)                            |
 | 5.x  | 6.0 | [Migration Guide](./5.x-to-6.0.md) — Authorization server model (`authorizationServers`)                  |
 | 6.x  | 7.0 | [Migration Guide](./6.x-to-7.0.md) — Strict trust-list verifier requirements (`walletProviderTrustLists`) |
+| 7.x  | 8.0 | [Migration Guide](./7.x-to-8.0.md) — Canonical portable configuration envelopes                           |
 
 ## What Can Break Between Versions
 
