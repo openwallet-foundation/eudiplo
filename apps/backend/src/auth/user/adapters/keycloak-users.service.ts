@@ -33,6 +33,7 @@ export class KeycloakUsersProvider extends UsersProvider {
         };
 
         await this.kc.auth(creds);
+        await this.ensureTenantOwnershipAttribute();
         const accessToken = await this.kc.getAccessToken();
         const payload = decodeJwt(accessToken!);
         const refreshMs =
@@ -100,6 +101,11 @@ export class KeycloakUsersProvider extends UsersProvider {
                 `User '${dto.username}' creation did not return an id`,
             );
         }
+
+        await this.kc.users.update(
+            { id: userId },
+            { attributes: { tenant_id: [tenantId] } },
+        );
 
         const temporaryPassword = this.generateTemporaryPassword();
 
@@ -183,6 +189,30 @@ export class KeycloakUsersProvider extends UsersProvider {
         }
 
         return undefined;
+    }
+
+    private async ensureTenantOwnershipAttribute(): Promise<void> {
+        const profile = await this.kc.users.getProfile();
+        if (
+            profile.attributes?.some(
+                (attribute) => attribute.name === "tenant_id",
+            )
+        ) {
+            return;
+        }
+
+        await this.kc.users.updateProfile({
+            ...profile,
+            attributes: [
+                ...(profile.attributes ?? []),
+                {
+                    name: "tenant_id",
+                    displayName: "Tenant ID",
+                    multivalued: false,
+                    permissions: { view: ["admin"], edit: ["admin"] },
+                },
+            ],
+        });
     }
 
     private ensureTenantOwnership(
