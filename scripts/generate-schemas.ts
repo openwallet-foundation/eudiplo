@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+/// <reference types="node" />
 import {
   CONFIG_FORMATS,
   CONFIG_SINGLETON_IDS,
@@ -8,7 +9,7 @@ import "reflect-metadata";
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { z } from "zod";
+import { z, type ZodType } from "zod";
 import { editorSchemaBundles } from "../apps/backend/src/platform/editor-schema.registry";
 
 type SchemaEntry = {
@@ -23,10 +24,6 @@ const SCHEMAS_DIR = join(ROOT, "schemas");
 const CLIENT_SCHEMAS_FILE = join(
   ROOT,
   "apps/client/src/app/utils/schemas.json",
-);
-const CLIENT_API_SCHEMAS_FILE = join(
-  ROOT,
-  "apps/client/src/app/utils/api-schemas.json",
 );
 const TENANT_CONFIG_REGISTRY_FILE = join(
   ROOT,
@@ -60,7 +57,7 @@ function getIdBase(): string {
 
 const ID_BASE = getIdBase();
 
-function emitSchema(name: string, schema: z.ZodTypeAny): SchemaEntry {
+function emitSchema(name: string, schema: ZodType): SchemaEntry {
   const generated = z.toJSONSchema(schema, {
     target: "draft-2020-12",
   }) as Record<string, unknown>;
@@ -124,28 +121,10 @@ async function mergeRegistry(
   schemaEntries: SchemaEntry[],
 ): Promise<SchemaEntry[]> {
   const generatedUris = new Set(schemaEntries.map((entry) => entry.uri));
-  let currentRegistry: SchemaEntry[];
-  if (existsSync(CLIENT_API_SCHEMAS_FILE)) {
-    currentRegistry = JSON.parse(
-      await readFile(CLIENT_API_SCHEMAS_FILE, "utf8"),
-    ) as SchemaEntry[];
-  } else if (existsSync(CLIENT_SCHEMAS_FILE)) {
-    const existing = JSON.parse(
-      await readFile(CLIENT_SCHEMAS_FILE, "utf8"),
-    ) as SchemaEntry[];
-    currentRegistry = existing.filter(
-      (entry) => !generatedUris.has(entry.uri),
-    );
-    await writeGeneratedFile(
-      CLIENT_API_SCHEMAS_FILE,
-      `${JSON.stringify(currentRegistry, null, 2)}\n`,
-      "utf8",
-    );
-  } else {
-    throw new Error(
-      `Missing ${CLIENT_API_SCHEMAS_FILE}. Restore the API schema baseline before generating client schemas.`,
-    );
-  }
+  const currentRegistry = existsSync(CLIENT_SCHEMAS_FILE)
+    ? (JSON.parse(await readFile(CLIENT_SCHEMAS_FILE, "utf8")) as SchemaEntry[])
+    : [];
+
   const preservedRegistry = currentRegistry.filter(
     (entry) => !generatedUris.has(entry.uri),
   );
@@ -201,100 +180,137 @@ async function syncVSCodeSettingsJsonSchemas(): Promise<number> {
   return jsonSchemas.length;
 }
 
-async function main() {
-  const schemaEntries = editorSchemaBundles.flatMap((bundle) =>
+function collectSchemaEntries(): SchemaEntry[] {
+  return editorSchemaBundles.flatMap((bundle) =>
     bundle.schemas.map((definition) =>
       emitSchema(definition.name, definition.schema),
     ),
   );
+}
 
-  // Publish one canonical envelope so configuration identity always comes from $schema.
-  for (const [kind, format] of Object.entries(CONFIG_FORMATS)) {
-    const name = format.file;
-    const uri = `./${name}.schema.json`;
-    const generated = schemaEntries.find((entry) => entry.uri === uri);
-    const schema =
-      generated?.schema ??
-      JSON.parse(
-        await readFile(join(SCHEMAS_DIR, `${name}.schema.json`), "utf8"),
-      );
-    const alternatives = (schema.oneOf ?? schema.anyOf) as Record<
+async function readStoredSchema(path: string): Promise<Record<string, unknown>> {
+  return JSON.parse(await readFile(path, "utf8")) as Record<string, unknown>;
+}
+
+function getLegacyConfigSchema(
+  schema: Record<string, unknown>,
+): Record<string, any> | undefined {
+  const alternatives = (schema.oneOf ?? schema.anyOf) as Record<string, any>[];
+  return alternatives.find((item) => item.properties?.apiVersion);
+}
+
+function getCanonicalConfigSchemaEntries(
+  format: { file: string; version: number },
+  schemaEntries: SchemaEntry[],
+): { name: string; uri: string } {
+  const name = format.file;
+  const uri = `./${name}.schema.json`;
+
+  if (schemaEntries.some((entry) => entry.uri === uri)) {
+    return { name, uri };
+  }
+
+  return { name, uri };
+}
+
+async function normalizeConfigSchema(
+  kind: string,
+  format: { file: string; version: number },
+  schemaEntries: SchemaEntry[],
+): Promise<void> {
+  const { name, uri } = getCanonicalConfigSchemaEntries(format, schemaEntries);
+  const generated = schemaEntries.find((entry) => entry.uri === uri);
+
+  const storedSchema = generated?.schema ??
+    (await readStoredSchema(join(SCHEMAS_DIR, `${name}.schema.json`)));
+
+  const legacy = getLegacyConfigSchema(storedSchema);
+  if (!legacy) {
+    const alternatives = ((storedSchema.oneOf ?? storedSchema.anyOf ?? []) as Record<
       string,
       any
-    >[];
-    const legacy = alternatives.find((item) => item.properties?.apiVersion);
-    if (!legacy) {
-      schema.description = "Configuration file identified by its $schema URL.";
-      schema.oneOf = alternatives.filter((item) => item.properties?.$schema);
-      if (generated) generated.schema = schema;
-      continue;
-    }
-    const url = schemaUrl(kind as keyof typeof CONFIG_FORMATS);
-    delete legacy.properties.$schema;
-    const metadataSource = legacy.properties.metadata.$ref
-      ? (schemaEntries.find(
-          (entry) => entry.uri === legacy.properties.metadata.$ref,
-        )?.schema ??
-        JSON.parse(
-          await readFile(
-            join(SCHEMAS_DIR, legacy.properties.metadata.$ref),
-            "utf8",
-          ),
-        ))
-      : legacy.properties.metadata;
-    const metadata = structuredClone(metadataSource);
-    delete metadata.$id;
-    delete metadata.$schema;
-    delete metadata.title;
-    delete metadata.properties.id;
-    metadata.required = (metadata.required ?? []).filter(
-      (field: string) => field !== "id",
+    >[]);
+    storedSchema.description = "Configuration file identified by its $schema URL.";
+    storedSchema.oneOf = alternatives.filter(
+      (item: Record<string, any>) => item.properties?.$schema,
     );
-    if (!metadata.required.length) delete metadata.required;
-    const idField = kind === "Client" ? "clientId" : "id";
-    const spec = CONFIG_SINGLETON_IDS[kind as keyof typeof CONFIG_FORMATS]
-      ? legacy.properties.spec
-      : {
-          allOf: [
-            legacy.properties.spec,
-            {
-              type: "object",
-              required: [idField],
-              properties: { [idField]: { type: "string", minLength: 1 } },
-            },
-          ],
-        };
-    const historical = [];
-    for (let version = 1; version < format.version; version++)
-      historical.push(
-        JSON.parse(
-          await readFile(
-            join(SCHEMAS_DIR, `v${version}`, `${name}.schema.json`),
-            "utf8",
-          ),
-        ),
-      );
-    const canonical = {
-      type: "object",
-      properties: {
-        $schema: { type: "string", const: url },
-        metadata,
-        spec,
-      },
-      required: ["$schema", "spec"],
-      additionalProperties: false,
-    };
-    delete schema.anyOf;
-    delete schema.oneOf;
-    schema.oneOf = [canonical, ...historical];
-    schema.description = "Configuration file identified by its $schema URL.";
-    if (generated) generated.schema = schema;
-    else
-      schemaEntries.push({
-        uri,
-        fileMatch: [`a://b/${name}*.schema.json`],
-        schema,
-      });
+    if (generated) generated.schema = storedSchema;
+    return;
+  }
+
+  const url = schemaUrl(kind as keyof typeof CONFIG_FORMATS);
+  delete legacy.properties.$schema;
+
+  const metadataSource = legacy.properties.metadata.$ref
+    ? (schemaEntries.find(
+        (entry) => entry.uri === legacy.properties.metadata.$ref,
+      )?.schema ??
+      await readStoredSchema(
+        join(SCHEMAS_DIR, legacy.properties.metadata.$ref),
+      ))
+    : legacy.properties.metadata;
+
+  const metadata = structuredClone(metadataSource);
+  delete metadata.$id;
+  delete metadata.$schema;
+  delete metadata.title;
+  delete metadata.properties.id;
+  metadata.required = (metadata.required ?? []).filter(
+    (field: string) => field !== "id",
+  );
+  if (!metadata.required.length) delete metadata.required;
+
+  const idField = kind === "Client" ? "clientId" : "id";
+  const spec = CONFIG_SINGLETON_IDS[kind as keyof typeof CONFIG_FORMATS]
+    ? legacy.properties.spec
+    : {
+        allOf: [
+          legacy.properties.spec,
+          {
+            type: "object",
+            required: [idField],
+            properties: { [idField]: { type: "string", minLength: 1 } },
+          },
+        ],
+      };
+
+  const historical = [] as Record<string, unknown>[];
+  for (let version = 1; version < format.version; version++) {
+    historical.push(
+      await readStoredSchema(join(SCHEMAS_DIR, `v${version}`, `${name}.schema.json`)),
+    );
+  }
+
+  const canonical = {
+    type: "object",
+    properties: {
+      $schema: { type: "string", const: url },
+      metadata,
+      spec,
+    },
+    required: ["$schema", "spec"],
+    additionalProperties: false,
+  };
+
+  delete storedSchema.anyOf;
+  delete storedSchema.oneOf;
+  storedSchema.oneOf = [canonical, ...historical];
+  storedSchema.description = "Configuration file identified by its $schema URL.";
+
+  if (generated) generated.schema = storedSchema;
+  else
+    schemaEntries.push({
+      uri,
+      fileMatch: [`a://b/${name}*.schema.json`],
+      schema: storedSchema,
+    });
+}
+
+async function main() {
+  const schemaEntries = collectSchemaEntries();
+
+  for (const [kind, format] of Object.entries(CONFIG_FORMATS)) {
+    await normalizeConfigSchema(kind, format, schemaEntries);
   }
 
   assertNoDuplicateSchemaNamesAndIds(schemaEntries);
