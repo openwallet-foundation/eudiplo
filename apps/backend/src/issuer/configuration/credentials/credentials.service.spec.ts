@@ -89,7 +89,7 @@ describe("CredentialsService proof_types_supported generation", () => {
         });
     });
 
-    it("advertises an empty key_attestations_required when attestation is enabled without constraints", async () => {
+    it("advertises an empty key_attestations_required for attestation without constraints", async () => {
         const proofTypes = await getProofTypes(
             buildEntity({
                 proofTypesSupported: [
@@ -100,7 +100,9 @@ describe("CredentialsService proof_types_supported generation", () => {
         );
 
         expect(proofTypes.attestation.key_attestations_required).toEqual({});
-        expect(proofTypes.jwt.key_attestations_required).toEqual({});
+        // jwt must stay free of the member, otherwise wallets are forced to
+        // attach a key attestation to plain JWT proofs
+        expect(proofTypes.jwt).not.toHaveProperty("key_attestations_required");
     });
 
     it("applies configured constraints to both proof types", async () => {

@@ -190,19 +190,18 @@ export class CredentialsService {
      *
      * The `attestation` proof type is only valid with `key_attestations_required`,
      * so an empty constraint object is advertised when nothing specific is configured.
+     * The `jwt` proof type only carries the member when constraints are configured,
+     * otherwise wallets would be forced to attach a key attestation to plain JWT proofs.
      */
     private buildProofTypesSupported(
         config: IssuerMetadataCredentialConfig,
         algs: string[],
     ): BuildCredentialConfigOptions["proofTypesSupported"] {
         const supportedProofTypes = this.resolveConfiguredProofTypes(config);
-        const attestationSupported = supportedProofTypes.includes(
-            CredentialProofType.ATTESTATION,
-        );
         const configuredKeyAttestations = config.keyAttestationsRequired;
         const proofTypesSupported: Record<string, Record<string, unknown>> = {};
 
-        if (attestationSupported) {
+        if (supportedProofTypes.includes(CredentialProofType.ATTESTATION)) {
             proofTypesSupported.attestation = {
                 proof_signing_alg_values_supported: algs,
                 key_attestations_required: configuredKeyAttestations
@@ -212,17 +211,14 @@ export class CredentialsService {
         }
 
         if (supportedProofTypes.includes(CredentialProofType.JWT)) {
-            const jwtProofType: Record<string, unknown> = {
+            proofTypesSupported.jwt = {
                 proof_signing_alg_values_supported: algs,
+                ...(configuredKeyAttestations && {
+                    key_attestations_required: {
+                        ...configuredKeyAttestations,
+                    },
+                }),
             };
-            if (configuredKeyAttestations) {
-                jwtProofType.key_attestations_required = {
-                    ...configuredKeyAttestations,
-                };
-            } else if (attestationSupported) {
-                jwtProofType.key_attestations_required = {};
-            }
-            proofTypesSupported.jwt = jwtProofType;
         }
 
         return proofTypesSupported as BuildCredentialConfigOptions["proofTypesSupported"];
