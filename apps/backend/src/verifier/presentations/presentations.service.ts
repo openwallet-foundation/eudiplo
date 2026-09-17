@@ -400,7 +400,7 @@ export class PresentationsService {
             }
             // @peculiar/x509 returns keyId as a lowercase hex string;
             // convert to bytes and base64url-encode per OID4VP spec.
-            const skiBytes = Buffer.from(keyId.replace(/:/g, ""), "hex");
+            const skiBytes = Buffer.from(keyId.replaceAll(":", ""), "hex");
             return base64url.encode(skiBytes);
         } catch {
             return undefined;

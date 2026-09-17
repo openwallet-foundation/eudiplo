@@ -18,6 +18,15 @@ import { KeyChainEntity, KeyUsage } from "./entities/key-chain.entity.js";
 import type { KmsAdapter, KmsKeyRef } from "./kms/kms-adapter.js";
 import { KmsProviderRegistry } from "./kms/kms-provider.registry.js";
 
+// Avoids a backtracking-prone `=+$` regex by trimming padding with a bounded loop.
+function stripTrailingPadding(value: string): string {
+    let end = value.length;
+    while (end > 0 && value[end - 1] === "=") {
+        end -= 1;
+    }
+    return value.slice(0, end);
+}
+
 /**
  * Handles config-driven key-chain import and the config-import lifecycle hook.
  *
@@ -293,8 +302,8 @@ export class KeyChainImportService {
             }
 
             // Ensure the string was valid base64 before PEM wrapping.
-            const canonical = der.toString("base64").replace(/=+$/, "");
-            if (canonical !== normalized.replace(/=+$/, "")) {
+            const canonical = stripTrailingPadding(der.toString("base64"));
+            if (canonical !== stripTrailingPadding(normalized)) {
                 throw new Error("input is not valid base64 DER");
             }
 

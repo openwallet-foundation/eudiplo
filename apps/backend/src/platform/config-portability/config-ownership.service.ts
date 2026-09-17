@@ -68,7 +68,10 @@ export class ConfigOwnershipService {
                     entry.source === source,
             );
         }
-        const folder = source.slice("folder:".length).replace(/[\\/]+$/, "");
+        let folder = source.slice("folder:".length);
+        while (folder.endsWith("/") || folder.endsWith("\\")) {
+            folder = folder.slice(0, -1);
+        }
         return managed.filter((entry) => {
             if (entry.ownership !== "file-managed" || !entry.source) {
                 return false;

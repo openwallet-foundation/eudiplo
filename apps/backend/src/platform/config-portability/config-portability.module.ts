@@ -1,5 +1,3 @@
-import { ConfigImportJournalService } from "./config-import-journal.service.js";
-import { ConfigImportRunEntity } from "./entities/config-import-run.entity.js";
 import { Global, Module } from "@nestjs/common";
 import { APP_INTERCEPTOR } from "@nestjs/core";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -25,15 +23,18 @@ import { PresentationsModule } from "../../verifier/presentations/presentations.
 import { ConfigBundleService } from "./config-bundle.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service.js";
+import { ConfigBundleRepositories } from "./config-bundle-repositories.service.js";
 import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
 import { ConfigFolderBundleService } from "./config-folder-bundle.service.js";
 import { ConfigGenerationInterceptor } from "./config-generation.interceptor.js";
+import { ConfigImportJournalService } from "./config-import-journal.service.js";
 import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
 import { ConfigOwnershipService } from "./config-ownership.service.js";
 import { ConfigOwnershipBootstrapService } from "./config-ownership-bootstrap.service.js";
 import { ConfigPortabilityController } from "./config-portability.controller.js";
 import { ConfigResourceCoreModule } from "./config-resource-core.module.js";
 import { ConfigResourceRouteService } from "./config-resource-route.service.js";
+import { ConfigImportRunEntity } from "./entities/config-import-run.entity.js";
 import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadata.entity.js";
 
 @Global()
@@ -66,6 +67,7 @@ import { ConfigResourceMetadataEntity } from "./entities/config-resource-metadat
     ],
     controllers: [ConfigPortabilityController],
     providers: [
+        ConfigBundleRepositories,
         ConfigDocumentValidationService,
         ConfigImportJournalService,
         ConfigOwnershipService,

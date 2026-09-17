@@ -253,7 +253,7 @@ describe("reviewed plans and replacement failures", () => {
         const service = Object.create(
             ConfigBundleApplyService.prototype,
         ) as any;
-        service.keyChains = { delete: vi.fn(), save: vi.fn() };
+        service.repos = { keyChains: { delete: vi.fn(), save: vi.fn() } };
         service.keyChainService = {
             importKeyChain: vi
                 .fn()
@@ -268,8 +268,8 @@ describe("reviewed plans and replacement failures", () => {
                 spec: { keySource: { type: "private-jwk", jwk: {} } },
             }),
         ).rejects.toThrow("invalid replacement");
-        expect(service.keyChains.delete).not.toHaveBeenCalled();
-        expect(service.keyChains.save).not.toHaveBeenCalled();
+        expect(service.repos.keyChains.delete).not.toHaveBeenCalled();
+        expect(service.repos.keyChains.save).not.toHaveBeenCalled();
     });
     it("uploads only assets marked as changed by the plan", async () => {
         const { service, bundle, plan } = setupApply([]);

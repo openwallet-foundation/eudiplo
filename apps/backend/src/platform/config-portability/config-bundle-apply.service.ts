@@ -5,6 +5,10 @@ import {
     X509Certificate,
 } from "node:crypto";
 import {
+    normalizeDocument,
+    resourceId,
+} from "@eudiplo/config-format/config-format.js";
+import {
     BadRequestException,
     ConflictException,
     Inject,
@@ -12,43 +16,26 @@ import {
     InternalServerErrorException,
     Logger,
 } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
 import {
     CLIENTS_PROVIDER,
     ClientsProvider,
 } from "../../auth/client/client.provider.js";
-import { ClientEntity } from "../../auth/client/entities/client.entity.js";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
 import { KeyChainType } from "../../crypto/key/dto/key-chain-create.dto.js";
-import {
-    KeyChainEntity,
-    KeyUsage,
-} from "../../crypto/key/entities/key-chain.entity.js";
+import { KeyUsage } from "../../crypto/key/entities/key-chain.entity.js";
 import { KeyChainService } from "../../crypto/key/key-chain.service.js";
 import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service.js";
 import { AttributeProviderService } from "../../issuer/configuration/attribute-provider/attribute-provider.service.js";
-import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity.js";
 import { CredentialConfigService } from "../../issuer/configuration/credentials/credential-config/credential-config.service.js";
-import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity.js";
-import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity.js";
 import { IssuanceService } from "../../issuer/configuration/issuance/issuance.service.js";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
 import { WebhookEndpointService } from "../../issuer/configuration/webhook-endpoint/webhook-endpoint.service.js";
-import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
 import { StatusListService } from "../../issuer/status-list/status-list.service.js";
-import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
 import { TrustListService } from "../../issuer/trust-list/trustlist.service.js";
-import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
 import { RegistrarConfigService } from "../../registrar/registrar-config.service.js";
-import {
-    normalizeDocument,
-    resourceId,
-} from "@eudiplo/config-format/config-format.js";
 import { FilesService } from "../../storage/files.service.js";
-import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
 import { PresentationsService } from "../../verifier/presentations/presentations.service.js";
 import { ConfigBundleService } from "./config-bundle.service.js";
+import { ConfigBundleRepositories } from "./config-bundle-repositories.service.js";
 import { ConfigImportJournalService } from "./config-import-journal.service.js";
 import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
@@ -104,29 +91,42 @@ export class ConfigBundleApplyService {
         private readonly statusListService: StatusListService,
         @Inject(CLIENTS_PROVIDER)
         private readonly clientsProvider: ClientsProvider,
-        @InjectRepository(TenantEntity)
-        private readonly tenants: Repository<TenantEntity>,
-        @InjectRepository(ClientEntity)
-        private readonly clients: Repository<ClientEntity>,
-        @InjectRepository(KeyChainEntity)
-        private readonly keyChains: Repository<KeyChainEntity>,
-        @InjectRepository(RegistrarConfigEntity)
-        private readonly registrarConfigs: Repository<RegistrarConfigEntity>,
-        @InjectRepository(IssuanceConfig)
-        private readonly issuanceConfigs: Repository<IssuanceConfig>,
-        @InjectRepository(CredentialConfig)
-        private readonly credentialConfigs: Repository<CredentialConfig>,
-        @InjectRepository(PresentationConfig)
-        private readonly presentationConfigs: Repository<PresentationConfig>,
-        @InjectRepository(AttributeProviderEntity)
-        private readonly attributeProviders: Repository<AttributeProviderEntity>,
-        @InjectRepository(WebhookEndpointEntity)
-        private readonly webhookEndpoints: Repository<WebhookEndpointEntity>,
-        @InjectRepository(TrustList)
-        private readonly trustLists: Repository<TrustList>,
-        @InjectRepository(StatusListEntity)
-        private readonly statusLists: Repository<StatusListEntity>,
+        private readonly repos: ConfigBundleRepositories,
     ) {}
+
+    private get tenants() {
+        return this.repos.tenants;
+    }
+    private get clients() {
+        return this.repos.clients;
+    }
+    private get keyChains() {
+        return this.repos.keyChains;
+    }
+    private get registrarConfigs() {
+        return this.repos.registrarConfigs;
+    }
+    private get issuanceConfigs() {
+        return this.repos.issuanceConfigs;
+    }
+    private get credentialConfigs() {
+        return this.repos.credentialConfigs;
+    }
+    private get presentationConfigs() {
+        return this.repos.presentationConfigs;
+    }
+    private get attributeProviders() {
+        return this.repos.attributeProviders;
+    }
+    private get webhookEndpoints() {
+        return this.repos.webhookEndpoints;
+    }
+    private get trustLists() {
+        return this.repos.trustLists;
+    }
+    private get statusLists() {
+        return this.repos.statusLists;
+    }
 
     async apply(
         tenantId: string,

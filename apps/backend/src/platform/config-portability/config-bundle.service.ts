@@ -1,24 +1,4 @@
 import { createHash } from "node:crypto";
-import {
-    BadRequestException,
-    ConflictException,
-    Injectable,
-} from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { InjectRepository } from "@nestjs/typeorm";
-import { compare as compareSecret } from "bcrypt";
-import { Repository } from "typeorm";
-import { ClientEntity } from "../../auth/client/entities/client.entity.js";
-import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
-import { KeyChainEntity } from "../../crypto/key/entities/key-chain.entity.js";
-import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service.js";
-import { AttributeProviderEntity } from "../../issuer/configuration/attribute-provider/entities/attribute-provider.entity.js";
-import { CredentialConfig } from "../../issuer/configuration/credentials/entities/credential.entity.js";
-import { IssuanceConfig } from "../../issuer/configuration/issuance/entities/issuance-config.entity.js";
-import { WebhookEndpointEntity } from "../../issuer/configuration/webhook-endpoint/entities/webhook-endpoint.entity.js";
-import { StatusListEntity } from "../../issuer/status-list/entities/status-list.entity.js";
-import { TrustList } from "../../issuer/trust-list/entities/trust-list.entity.js";
-import { RegistrarConfigEntity } from "../../registrar/entities/registrar-config.entity.js";
 import { assertConfigBundle } from "@eudiplo/config-format/config-bundle.js";
 import {
     CONFIG_SINGLETON_IDS,
@@ -31,9 +11,19 @@ import {
     configChanges,
     stableConfigJson,
 } from "@eudiplo/config-format/config-values.js";
+import {
+    BadRequestException,
+    ConflictException,
+    Injectable,
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { InjectRepository } from "@nestjs/typeorm";
+import { compare as compareSecret } from "bcrypt";
+import { Repository } from "typeorm";
+import { KmsTenantConfigService } from "../../crypto/key/kms/kms-tenant-config.service.js";
 import { FileEntity } from "../../storage/entities/files.entity.js";
 import { FilesService } from "../../storage/files.service.js";
-import { PresentationConfig } from "../../verifier/presentations/entities/presentation-config.entity.js";
+import { ConfigBundleRepositories } from "./config-bundle-repositories.service.js";
 import { ConfigDocumentValidationService } from "./config-document-validation.service.js";
 import { ConfigKmsReferenceService } from "./config-kms-reference.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
@@ -100,35 +90,15 @@ function placeholder(
 ): string {
     return `${kind}_${id}_${path}`
         .replaceAll(/[^A-Za-z0-9]+/g, "_")
-        .replaceAll(/^_+|_+$/g, "")
+        .replace(/^_+/, "")
+        .replace(/_+$/, "")
         .toUpperCase();
 }
 
 @Injectable()
 export class ConfigBundleService {
     constructor(
-        @InjectRepository(TenantEntity)
-        private readonly tenants: Repository<TenantEntity>,
-        @InjectRepository(ClientEntity)
-        private readonly clients: Repository<ClientEntity>,
-        @InjectRepository(KeyChainEntity)
-        private readonly keyChains: Repository<KeyChainEntity>,
-        @InjectRepository(RegistrarConfigEntity)
-        private readonly registrarConfigs: Repository<RegistrarConfigEntity>,
-        @InjectRepository(IssuanceConfig)
-        private readonly issuanceConfigs: Repository<IssuanceConfig>,
-        @InjectRepository(CredentialConfig)
-        private readonly credentialConfigs: Repository<CredentialConfig>,
-        @InjectRepository(PresentationConfig)
-        private readonly presentationConfigs: Repository<PresentationConfig>,
-        @InjectRepository(AttributeProviderEntity)
-        private readonly attributeProviders: Repository<AttributeProviderEntity>,
-        @InjectRepository(WebhookEndpointEntity)
-        private readonly webhookEndpoints: Repository<WebhookEndpointEntity>,
-        @InjectRepository(TrustList)
-        private readonly trustLists: Repository<TrustList>,
-        @InjectRepository(StatusListEntity)
-        private readonly statusLists: Repository<StatusListEntity>,
+        private readonly repos: ConfigBundleRepositories,
         @InjectRepository(FileEntity)
         private readonly files: Repository<FileEntity>,
         private readonly filesService: FilesService,
@@ -140,6 +110,40 @@ export class ConfigBundleService {
         private readonly ownershipService: ConfigOwnershipService,
         private readonly configService: ConfigService,
     ) {}
+
+    private get tenants() {
+        return this.repos.tenants;
+    }
+    private get clients() {
+        return this.repos.clients;
+    }
+    private get keyChains() {
+        return this.repos.keyChains;
+    }
+    private get registrarConfigs() {
+        return this.repos.registrarConfigs;
+    }
+    private get issuanceConfigs() {
+        return this.repos.issuanceConfigs;
+    }
+    private get credentialConfigs() {
+        return this.repos.credentialConfigs;
+    }
+    private get presentationConfigs() {
+        return this.repos.presentationConfigs;
+    }
+    private get attributeProviders() {
+        return this.repos.attributeProviders;
+    }
+    private get webhookEndpoints() {
+        return this.repos.webhookEndpoints;
+    }
+    private get trustLists() {
+        return this.repos.trustLists;
+    }
+    private get statusLists() {
+        return this.repos.statusLists;
+    }
 
     async exportBundle(tenantId: string): Promise<ConfigBundle> {
         const tenant = await this.tenants.findOneByOrFail({ id: tenantId });
@@ -398,7 +402,7 @@ export class ConfigBundleService {
                 requirements,
                 warnings,
             },
-            documents: documents.map(serializeDocument),
+            documents: documents.map((document) => serializeDocument(document)),
             assets,
         };
     }

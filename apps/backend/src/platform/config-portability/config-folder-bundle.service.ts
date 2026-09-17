@@ -1,13 +1,13 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { extname, join, resolve } from "node:path";
-import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
 import {
     resourceId,
     schemaUrl,
     serializeDocument,
 } from "@eudiplo/config-format/config-format.js";
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { ConfigImportService } from "../config-import/config-import.service.js";
 import { ConfigImportOrchestratorService } from "../config-import/config-import-orchestrator.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
@@ -108,59 +108,12 @@ export class ConfigFolderBundleService {
         for (const resource of FOLDER_RESOURCES) {
             for (const filePath of this.resourceFiles(tenantRoot, resource)) {
                 try {
-                    const rawPayload = JSON.parse(
-                        readFileSync(filePath, "utf8"),
-                    ) as Record<string, unknown>;
-                    const payload =
-                        this.configImportService.replacePlaceholders(
-                            rawPayload,
-                        );
-                    const fileId = filePath
-                        .split(/[\\/]/)
-                        .pop()!
-                        .replace(/\.json$/i, "");
-                    const singletonId = this.resourceRegistry.get(
-                        resource.kind,
-                    ).singletonId;
-                    const id = String(
-                        (
-                            payload.metadata as
-                                | Record<string, unknown>
-                                | undefined
-                        )?.id ??
-                            singletonId ??
-                            payload.id ??
-                            payload.clientId ??
-                            fileId,
+                    const { document, issues } = this.loadResourceDocument(
+                        resource,
+                        filePath,
                     );
-                    const input = this.migrationService.isDocument(payload)
-                        ? payload
-                        : this.migrationService.wrapLegacy(
-                              resource.kind,
-                              payload,
-                              id,
-                          );
-                    const result = this.migrationService.upgrade(input);
-                    if (result.document.kind !== resource.kind) {
-                        throw new Error(
-                            `contains ${result.document.kind}, expected ${resource.kind}`,
-                        );
-                    }
-                    const blocking = result.issues.filter(
-                        (issue) => issue.severity !== "warning",
-                    );
-                    if (blocking.length > 0) {
-                        throw new Error(
-                            `requires input: ${blocking
-                                .map(
-                                    (issue) =>
-                                        `${issue.path}: ${issue.message}`,
-                                )
-                                .join("; ")}`,
-                        );
-                    }
-                    documents.push(result.document);
-                    warnings.push(...result.issues);
+                    documents.push(document);
+                    warnings.push(...issues);
                 } catch (error) {
                     const message =
                         error instanceof Error ? error.message : String(error);
@@ -197,9 +150,55 @@ export class ConfigFolderBundleService {
                 requirements: [],
                 warnings,
             },
-            documents: documents.map(serializeDocument),
+            documents: documents.map((document) => serializeDocument(document)),
             assets,
         };
+    }
+
+    private loadResourceDocument(
+        resource: FolderResource,
+        filePath: string,
+    ): { document: ConfigDocument; issues: ConfigMigrationIssue[] } {
+        const rawPayload = JSON.parse(readFileSync(filePath, "utf8")) as Record<
+            string,
+            unknown
+        >;
+        const payload =
+            this.configImportService.replacePlaceholders(rawPayload);
+        const fileId = filePath
+            .split(/[\\/]/)
+            .pop()!
+            .replace(/\.json$/i, "");
+        const singletonId = this.resourceRegistry.get(
+            resource.kind,
+        ).singletonId;
+        const id = String(
+            (payload.metadata as Record<string, unknown> | undefined)?.id ??
+                singletonId ??
+                payload.id ??
+                payload.clientId ??
+                fileId,
+        );
+        const input = this.migrationService.isDocument(payload)
+            ? payload
+            : this.migrationService.wrapLegacy(resource.kind, payload, id);
+        const result = this.migrationService.upgrade(input);
+        if (result.document.kind !== resource.kind) {
+            throw new Error(
+                `contains ${result.document.kind}, expected ${resource.kind}`,
+            );
+        }
+        const blocking = result.issues.filter(
+            (issue) => issue.severity !== "warning",
+        );
+        if (blocking.length > 0) {
+            throw new Error(
+                `requires input: ${blocking
+                    .map((issue) => `${issue.path}: ${issue.message}`)
+                    .join("; ")}`,
+            );
+        }
+        return { document: result.document, issues: result.issues };
     }
 
     private resourceFiles(
@@ -217,7 +216,7 @@ export class ConfigFolderBundleService {
         return readdirSync(directory, { withFileTypes: true })
             .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
             .map((entry) => join(directory, entry.name))
-            .sort();
+            .sort((left, right) => left.localeCompare(right));
     }
 
     private loadAssets(tenantRoot: string): ConfigBundleAsset[] {
