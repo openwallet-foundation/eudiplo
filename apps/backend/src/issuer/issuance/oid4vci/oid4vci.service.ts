@@ -431,8 +431,38 @@ export class Oid4vciService {
             sessionId,
         );
         return new Oauth2ResourceServer({
-            callbacks,
+            callbacks: {
+                ...callbacks,
+                getJwks: (jwksUri) => this.resolveLocalJwks(tenantId, jwksUri),
+            },
         });
+    }
+
+    /**
+     * Resolves the JWK set of the built-in authorization server from the local
+     * key chain, so no loopback HTTP call to our own JWKS endpoint is needed.
+     * Returns undefined for foreign JWKS URIs so the library fetches them.
+     */
+    private async resolveLocalJwks(tenantId: string, jwksUri: string) {
+        if (!jwksUri.endsWith(`/.well-known/jwks.json/issuers/${tenantId}`)) {
+            return undefined;
+        }
+
+        const issuanceConfig = await this.issuanceService
+            .getIssuanceConfiguration(tenantId)
+            .catch(() => null);
+        const signingKeyId =
+            issuanceConfig?.signingKeyId ||
+            (await this.cryptoService.keyChainService.getKid(tenantId));
+        const publicJwk = await this.cryptoService.keyChainService.getPublicKey(
+            "jwk",
+            tenantId,
+            signingKeyId,
+        );
+
+        return {
+            keys: [{ ...publicJwk, kid: publicJwk.kid ?? signingKeyId } as Jwk],
+        };
     }
 
     private async assertFederationTrustForAuthorizationServer(

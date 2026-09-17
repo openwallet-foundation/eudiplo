@@ -24,6 +24,7 @@ import {
 import { MdocIssuerService } from "./issuer/mdoc-issuer/mdoc-issuer.service.js";
 import { SdjwtvcIssuerService } from "./issuer/sdjwtvc-issuer/sdjwtvc-issuer.service.js";
 import {
+    type BuildCredentialConfigOptions,
     buildMsoMdocConfig,
     buildSdJwtDcConfig,
     MSO_MDOC_FORMAT,
@@ -184,6 +185,49 @@ export class CredentialsService {
         );
     }
 
+    /**
+     * Builds `proof_types_supported` for a credential configuration.
+     *
+     * The `attestation` proof type is only valid with `key_attestations_required`,
+     * so an empty constraint object is advertised when nothing specific is configured.
+     */
+    private buildProofTypesSupported(
+        config: IssuerMetadataCredentialConfig,
+        algs: string[],
+    ): BuildCredentialConfigOptions["proofTypesSupported"] {
+        const supportedProofTypes = this.resolveConfiguredProofTypes(config);
+        const attestationSupported = supportedProofTypes.includes(
+            CredentialProofType.ATTESTATION,
+        );
+        const configuredKeyAttestations = config.keyAttestationsRequired;
+        const proofTypesSupported: Record<string, Record<string, unknown>> = {};
+
+        if (attestationSupported) {
+            proofTypesSupported.attestation = {
+                proof_signing_alg_values_supported: algs,
+                key_attestations_required: configuredKeyAttestations
+                    ? { ...configuredKeyAttestations }
+                    : {},
+            };
+        }
+
+        if (supportedProofTypes.includes(CredentialProofType.JWT)) {
+            const jwtProofType: Record<string, unknown> = {
+                proof_signing_alg_values_supported: algs,
+            };
+            if (configuredKeyAttestations) {
+                jwtProofType.key_attestations_required = {
+                    ...configuredKeyAttestations,
+                };
+            } else if (attestationSupported) {
+                jwtProofType.key_attestations_required = {};
+            }
+            proofTypesSupported.jwt = jwtProofType;
+        }
+
+        return proofTypesSupported as BuildCredentialConfigOptions["proofTypesSupported"];
+    }
+
     private buildCredentialMetadata(
         entity: CredentialConfig,
     ): Record<string, unknown> | undefined {
@@ -236,35 +280,12 @@ export class CredentialsService {
         // Build credential_metadata with display and claims
         const credentialMetadata = this.buildCredentialMetadata(entity);
 
-        // Build proof_types_supported with optional key_attestations_required
-        const keyAttestationsRequired = entity.config.keyAttestationsRequired;
-        const jwtProofType = {
-            proof_signing_alg_values_supported:
-                this.cryptoImplementationService.getAlgs(
-                    CredentialFormat.SD_JWT_VC,
-                ) as string[],
-            ...(keyAttestationsRequired && {
-                key_attestations_required: { ...keyAttestationsRequired },
-            }),
-        };
-        const attestationProofType = {
-            proof_signing_alg_values_supported:
-                this.cryptoImplementationService.getAlgs(
-                    CredentialFormat.SD_JWT_VC,
-                ) as string[],
-        };
-
-        const supportedProofTypes = this.resolveConfiguredProofTypes(
+        const proofTypesSupported = this.buildProofTypesSupported(
             entity.config,
+            this.cryptoImplementationService.getAlgs(
+                CredentialFormat.SD_JWT_VC,
+            ) as string[],
         );
-        const proofTypesSupported = {
-            ...(supportedProofTypes.includes(CredentialProofType.ATTESTATION)
-                ? { attestation: attestationProofType }
-                : {}),
-            ...(supportedProofTypes.includes(CredentialProofType.JWT)
-                ? { jwt: jwtProofType }
-                : {}),
-        };
 
         const config = buildMsoMdocConfig(
             doctype,
@@ -312,29 +333,10 @@ export class CredentialsService {
         // Build credential_metadata with display and claims
         const credentialMetadata = this.buildCredentialMetadata(entity);
 
-        // Build proof_types_supported with optional key_attestations_required
-        const keyAttestationsRequired = entity.config.keyAttestationsRequired;
-        const jwtProofType = {
-            proof_signing_alg_values_supported: algs,
-            ...(keyAttestationsRequired && {
-                key_attestations_required: { ...keyAttestationsRequired },
-            }),
-        };
-        const attestationProofType = {
-            proof_signing_alg_values_supported: algs,
-        };
-
-        const supportedProofTypes = this.resolveConfiguredProofTypes(
+        const proofTypesSupported = this.buildProofTypesSupported(
             entity.config,
+            algs,
         );
-        const proofTypesSupported = {
-            ...(supportedProofTypes.includes(CredentialProofType.ATTESTATION)
-                ? { attestation: attestationProofType }
-                : {}),
-            ...(supportedProofTypes.includes(CredentialProofType.JWT)
-                ? { jwt: jwtProofType }
-                : {}),
-        };
 
         const config = buildSdJwtDcConfig(
             vct,
