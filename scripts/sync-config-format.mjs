@@ -21,7 +21,8 @@ const generated = `// Generated from schemas/v*/. Run pnpm schemas:sync.\nexport
 function emit(path, text) {
   const file = resolve(root, path);
   if (check) {
-    if (readFileSync(file, "utf8") !== text)
+    const existing = readFileSync(file, "utf8").replace(/\r\n?/g, "\n");
+    if (existing !== text)
       throw new Error(`${path} is stale. Run pnpm schemas:sync.`);
   } else {
     mkdirSync(resolve(file, ".."), { recursive: true });
