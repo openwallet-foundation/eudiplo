@@ -188,10 +188,8 @@ export class CredentialsService {
     /**
      * Builds `proof_types_supported` for a credential configuration.
      *
-     * The `attestation` proof type is only valid with `key_attestations_required`,
-     * so an empty constraint object is advertised when nothing specific is configured.
-     * The `jwt` proof type only carries the member when constraints are configured,
-     * otherwise wallets would be forced to attach a key attestation to plain JWT proofs.
+     * Both proof types only carry `key_attestations_required` when constraints are
+     * configured, otherwise wallets are not required to attach a key attestation.
      */
     private buildProofTypesSupported(
         config: IssuerMetadataCredentialConfig,
@@ -204,9 +202,11 @@ export class CredentialsService {
         if (supportedProofTypes.includes(CredentialProofType.ATTESTATION)) {
             proofTypesSupported.attestation = {
                 proof_signing_alg_values_supported: algs,
-                key_attestations_required: configuredKeyAttestations
-                    ? { ...configuredKeyAttestations }
-                    : {},
+                ...(configuredKeyAttestations && {
+                    key_attestations_required: {
+                        ...configuredKeyAttestations,
+                    },
+                }),
             };
         }
 

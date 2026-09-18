@@ -89,7 +89,7 @@ describe("CredentialsService proof_types_supported generation", () => {
         });
     });
 
-    it("advertises an empty key_attestations_required for attestation without constraints", async () => {
+    it("omits key_attestations_required for attestation without constraints", async () => {
         const proofTypes = await getProofTypes(
             buildEntity({
                 proofTypesSupported: [
@@ -99,9 +99,9 @@ describe("CredentialsService proof_types_supported generation", () => {
             }),
         );
 
-        expect(proofTypes.attestation.key_attestations_required).toEqual({});
-        // jwt must stay free of the member, otherwise wallets are forced to
-        // attach a key attestation to plain JWT proofs
+        expect(proofTypes.attestation).not.toHaveProperty(
+            "key_attestations_required",
+        );
         expect(proofTypes.jwt).not.toHaveProperty("key_attestations_required");
     });
 
@@ -129,7 +129,7 @@ describe("CredentialsService proof_types_supported generation", () => {
         );
     });
 
-    it("never emits an attestation proof type without key_attestations_required", async () => {
+    it("omits key_attestations_required for unconstrained attestation proofs", async () => {
         const entities = [
             buildEntity({}),
             buildEntity({
@@ -148,8 +148,8 @@ describe("CredentialsService proof_types_supported generation", () => {
         for (const entity of entities) {
             const proofTypes = await getProofTypes(entity);
             expect(proofTypes.attestation).toBeDefined();
-            expect(proofTypes.attestation.key_attestations_required).toEqual(
-                expect.any(Object),
+            expect(proofTypes.attestation).not.toHaveProperty(
+                "key_attestations_required",
             );
         }
     });
