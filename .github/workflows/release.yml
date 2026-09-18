@@ -375,6 +375,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build config format
+        run: pnpm --filter @eudiplo/config-format build
+
       - name: Set release version
         id: release_version
         run: |
