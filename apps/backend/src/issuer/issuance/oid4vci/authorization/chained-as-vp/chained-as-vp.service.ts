@@ -19,6 +19,9 @@ import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/cha
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
 import {
     assertTokenRequestSessionValid,
+    buildAccessTokenPayload,
+    buildAuthorizationCodeRedirect,
+    buildAuthorizationErrorRedirect,
     buildAuthorizationServerMetadata,
     buildJwksResponse,
     buildWalletAttestationMetadata,
@@ -241,23 +244,6 @@ export class ChainedAsVpService {
         return `openid4vp://?${offer.uri}`;
     }
 
-    private buildErrorRedirect(
-        redirectUri: string,
-        error: string,
-        errorDescription?: string,
-        walletState?: string,
-    ): string {
-        const redirectUrl = new URL(redirectUri);
-        redirectUrl.searchParams.set("error", error);
-        if (errorDescription) {
-            redirectUrl.searchParams.set("error_description", errorDescription);
-        }
-        if (walletState) {
-            redirectUrl.searchParams.set("state", walletState);
-        }
-        return redirectUrl.toString();
-    }
-
     async handleVerifierCallback(
         tenantId: string,
         chainedAsSessionId: string,
@@ -282,7 +268,7 @@ export class ChainedAsVpService {
         if (error) {
             session.status = ChainedAsSessionStatus.EXPIRED;
             await this.sessionRepository.save(session);
-            return this.buildErrorRedirect(
+            return buildAuthorizationErrorRedirect(
                 session.redirectUri,
                 error,
                 errorDescription,
@@ -298,7 +284,7 @@ export class ChainedAsVpService {
         ) {
             session.status = ChainedAsSessionStatus.EXPIRED;
             await this.sessionRepository.save(session);
-            return this.buildErrorRedirect(
+            return buildAuthorizationErrorRedirect(
                 session.redirectUri,
                 "invalid_request",
                 "OID4VP verification did not complete successfully",
@@ -320,46 +306,12 @@ export class ChainedAsVpService {
         );
         await this.sessionRepository.save(session);
 
-        const redirectUrl = new URL(session.redirectUri);
-        redirectUrl.searchParams.set("code", authorizationCode);
-        redirectUrl.searchParams.set(
-            "iss",
+        return buildAuthorizationCodeRedirect(
+            session.redirectUri,
+            authorizationCode,
+            session.walletState,
             this.getChainedAsVpBaseUrl(tenantId),
         );
-        if (session.walletState) {
-            redirectUrl.searchParams.set("state", session.walletState);
-        }
-        return redirectUrl.toString();
-    }
-
-    private buildTokenPayload(
-        tenantId: string,
-        session: ChainedAsSessionEntity,
-        tokenLifetime: number,
-        jti: string,
-        dpopJkt?: string,
-    ): Record<string, unknown> {
-        const now = Math.floor(Date.now() / 1000);
-        const payload: Record<string, unknown> = {
-            iss: this.getChainedAsVpBaseUrl(tenantId),
-            sub: session.clientId,
-            aud: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`,
-            iat: now,
-            exp: now + tokenLifetime,
-            jti,
-            issuer_state: session.issuerState,
-            client_id: session.clientId,
-        };
-        if (dpopJkt) {
-            payload.cnf = { jkt: dpopJkt };
-        }
-        if (
-            Array.isArray(session.authorizationDetails) &&
-            session.authorizationDetails.length > 0
-        ) {
-            payload.authorization_details = session.authorizationDetails;
-        }
-        return payload;
     }
 
     async handleToken(
@@ -415,13 +367,14 @@ export class ChainedAsVpService {
 
         const tokenLifetime = config.token?.lifetimeSeconds || 3600;
         const jti = v4();
-        const tokenPayload = this.buildTokenPayload(
-            tenantId,
+        const tokenPayload = buildAccessTokenPayload({
+            issuer: this.getChainedAsVpBaseUrl(tenantId),
+            audience: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`,
             session,
             tokenLifetime,
             jti,
             dpopJkt,
-        );
+        });
 
         const signingKeyId =
             config.token?.signingKeyId ||

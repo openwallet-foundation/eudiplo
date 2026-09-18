@@ -25,6 +25,9 @@ import type { ChainedAsConfig } from "../../../../configuration/issuance/dto/cha
 import { IssuanceService } from "../../../../configuration/issuance/issuance.service.js";
 import {
     assertTokenRequestSessionValid,
+    buildAccessTokenPayload,
+    buildAuthorizationCodeRedirect,
+    buildAuthorizationErrorRedirect,
     buildAuthorizationServerMetadata,
     buildJwksResponse,
     buildWalletAttestationMetadata,
@@ -523,23 +526,6 @@ export class ChainedAsService {
     /**
      * Build error redirect URL for wallet.
      */
-    private buildErrorRedirect(
-        redirectUri: string,
-        error: string,
-        errorDescription?: string,
-        walletState?: string,
-    ): string {
-        const redirectUrl = new URL(redirectUri);
-        redirectUrl.searchParams.set("error", error);
-        if (errorDescription) {
-            redirectUrl.searchParams.set("error_description", errorDescription);
-        }
-        if (walletState) {
-            redirectUrl.searchParams.set("state", walletState);
-        }
-        return redirectUrl.toString();
-    }
-
     /**
      * Handle upstream OIDC error in callback.
      */
@@ -556,7 +542,7 @@ export class ChainedAsService {
         if (session) {
             session.status = ChainedAsSessionStatus.EXPIRED;
             await this.sessionRepository.save(session);
-            return this.buildErrorRedirect(
+            return buildAuthorizationErrorRedirect(
                 session.redirectUri,
                 error,
                 errorDescription,
@@ -680,7 +666,7 @@ export class ChainedAsService {
             this.logger.error("Failed to exchange code at upstream", err);
             session.status = ChainedAsSessionStatus.EXPIRED;
             await this.sessionRepository.save(session);
-            return this.buildErrorRedirect(
+            return buildAuthorizationErrorRedirect(
                 session.redirectUri,
                 "server_error",
                 "Failed to exchange code with upstream provider",
@@ -701,12 +687,11 @@ export class ChainedAsService {
             `Upstream auth completed for session ${session.id}, redirecting to wallet`,
         );
 
-        const redirectUrl = new URL(session.redirectUri);
-        redirectUrl.searchParams.set("code", authorizationCode);
-        if (session.walletState) {
-            redirectUrl.searchParams.set("state", session.walletState);
-        }
-        return redirectUrl.toString();
+        return buildAuthorizationCodeRedirect(
+            session.redirectUri,
+            authorizationCode,
+            session.walletState,
+        );
     }
 
     /**
@@ -719,32 +704,17 @@ export class ChainedAsService {
         jti: string,
         dpopJkt?: string,
     ): Record<string, unknown> {
-        const now = Math.floor(Date.now() / 1000);
-        const payload: Record<string, unknown> = {
-            iss: this.getChainedAsBaseUrl(tenantId),
-            sub: session.clientId,
-            aud: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`,
-            iat: now,
-            exp: now + tokenLifetime,
+        const payload = buildAccessTokenPayload({
+            issuer: this.getChainedAsBaseUrl(tenantId),
+            audience: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/issuers/${tenantId}`,
+            session,
+            tokenLifetime,
             jti,
-            issuer_state: session.issuerState,
-            client_id: session.clientId,
-        };
-        if (dpopJkt) {
-            payload.cnf = { jkt: dpopJkt };
-        }
+            dpopJkt,
+        });
         if (session.upstreamIdTokenClaims) {
             payload.upstream_sub = session.upstreamIdTokenClaims.sub;
             payload.upstream_iss = session.upstreamIdTokenClaims.iss;
-        }
-        // Bind the access token to the Credential(s) the Wallet is
-        // authorized to request, per OID4VCI Section 6. The resource server
-        // enforces this when handling the Credential Request.
-        if (
-            Array.isArray(session.authorizationDetails) &&
-            session.authorizationDetails.length > 0
-        ) {
-            payload.authorization_details = session.authorizationDetails;
         }
         return payload;
     }

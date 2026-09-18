@@ -7,6 +7,20 @@ export interface PredefinedConfig {
   config: CredentialConfigCreate;
 }
 
+type CredentialField = CredentialConfigCreate['fields'][number];
+
+const field = (
+  definition: Omit<CredentialField, 'display'>,
+  englishName: string,
+  germanName: string
+): CredentialField => ({
+  ...definition,
+  display: [
+    { locale: 'en-US', name: englishName },
+    { locale: 'de-DE', name: germanName },
+  ],
+});
+
 export const configs: PredefinedConfig[] = [
   {
     name: 'PID (Personal Identity Document)',
@@ -35,74 +49,50 @@ export const configs: PredefinedConfig[] = [
         ],
       },
       fields: [
-        {
-          path: ['address', 'country'],
-          type: 'string',
-          defaultValue: 'DE',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Country',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Land',
-            },
-          ],
-        },
-        {
-          path: ['address', 'locality'],
-          type: 'string',
-          defaultValue: 'KÖLN',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'City',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Ort',
-            },
-          ],
-        },
-        {
-          path: ['address', 'postal_code'],
-          type: 'string',
-          defaultValue: '51147',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Postal Code',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Postleitzahl',
-            },
-          ],
-        },
-        {
-          path: ['address', 'street_address'],
-          type: 'string',
-          defaultValue: 'HEIDESTRAẞE 17',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Street Address',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Strasse und Hausnummer',
-            },
-          ],
-        },
+        field(
+          {
+            path: ['address', 'country'],
+            type: 'string',
+            defaultValue: 'DE',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Country',
+          'Land'
+        ),
+        field(
+          {
+            path: ['address', 'locality'],
+            type: 'string',
+            defaultValue: 'KÖLN',
+            mandatory: true,
+            disclosable: true,
+          },
+          'City',
+          'Ort'
+        ),
+        field(
+          {
+            path: ['address', 'postal_code'],
+            type: 'string',
+            defaultValue: '51147',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Postal Code',
+          'Postleitzahl'
+        ),
+        field(
+          {
+            path: ['address', 'street_address'],
+            type: 'string',
+            defaultValue: 'HEIDESTRAẞE 17',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Street Address',
+          'Strasse und Hausnummer'
+        ),
         {
           path: ['address'],
           type: 'object',
@@ -141,108 +131,72 @@ export const configs: PredefinedConfig[] = [
             },
           ],
         },
-        {
-          path: ['age_equal_or_over', '12'],
-          type: 'boolean',
-          defaultValue: true,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 12 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 12 oder aelter',
-            },
-          ],
-        },
-        {
-          path: ['age_equal_or_over', '14'],
-          type: 'boolean',
-          defaultValue: true,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 14 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 14 oder aelter',
-            },
-          ],
-        },
-        {
-          path: ['age_equal_or_over', '16'],
-          type: 'boolean',
-          defaultValue: true,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 16 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 16 oder aelter',
-            },
-          ],
-        },
-        {
-          path: ['age_equal_or_over', '18'],
-          type: 'boolean',
-          defaultValue: true,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 18 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 18 oder aelter',
-            },
-          ],
-        },
-        {
-          path: ['age_equal_or_over', '21'],
-          type: 'boolean',
-          defaultValue: true,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 21 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 21 oder aelter',
-            },
-          ],
-        },
-        {
-          path: ['age_equal_or_over', '65'],
-          type: 'boolean',
-          defaultValue: false,
-          mandatory: true,
-          disclosable: false,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Age 65 or Over',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Alter 65 oder aelter',
-            },
-          ],
-        },
+        field(
+          {
+            path: ['age_equal_or_over', '12'],
+            type: 'boolean',
+            defaultValue: true,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 12 or Over',
+          'Alter 12 oder aelter'
+        ),
+        field(
+          {
+            path: ['age_equal_or_over', '14'],
+            type: 'boolean',
+            defaultValue: true,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 14 or Over',
+          'Alter 14 oder aelter'
+        ),
+        field(
+          {
+            path: ['age_equal_or_over', '16'],
+            type: 'boolean',
+            defaultValue: true,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 16 or Over',
+          'Alter 16 oder aelter'
+        ),
+        field(
+          {
+            path: ['age_equal_or_over', '18'],
+            type: 'boolean',
+            defaultValue: true,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 18 or Over',
+          'Alter 18 oder aelter'
+        ),
+        field(
+          {
+            path: ['age_equal_or_over', '21'],
+            type: 'boolean',
+            defaultValue: true,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 21 or Over',
+          'Alter 21 oder aelter'
+        ),
+        field(
+          {
+            path: ['age_equal_or_over', '65'],
+            type: 'boolean',
+            defaultValue: false,
+            mandatory: true,
+            disclosable: false,
+          },
+          'Age 65 or Over',
+          'Alter 65 oder aelter'
+        ),
         {
           path: ['age_equal_or_over'],
           type: 'object',
@@ -300,77 +254,53 @@ export const configs: PredefinedConfig[] = [
             },
           ],
           constraints: {
-            pattern: '^\\d{4}-\\d{2}-\\d{2}$',
+            pattern: String.raw`^\d{4}-\d{2}-\d{2}$`,
           },
         },
-        {
-          path: ['family_name'],
-          type: 'string',
-          defaultValue: 'MUSTERMANN',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Family Name',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Nachname',
-            },
-          ],
-        },
-        {
-          path: ['given_name'],
-          type: 'string',
-          defaultValue: 'ERIKA',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Given Name',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Vorname',
-            },
-          ],
-        },
-        {
-          path: ['issuing_authority'],
-          type: 'string',
-          defaultValue: 'DE',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Issuing Authority',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Ausstellende Behoerde',
-            },
-          ],
-        },
-        {
-          path: ['issuing_country'],
-          type: 'string',
-          defaultValue: 'DE',
-          mandatory: true,
-          disclosable: true,
-          display: [
-            {
-              locale: 'en-US',
-              name: 'Issuing Country',
-            },
-            {
-              locale: 'de-DE',
-              name: 'Ausstellungsland',
-            },
-          ],
-        },
+        field(
+          {
+            path: ['family_name'],
+            type: 'string',
+            defaultValue: 'MUSTERMANN',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Family Name',
+          'Nachname'
+        ),
+        field(
+          {
+            path: ['given_name'],
+            type: 'string',
+            defaultValue: 'ERIKA',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Given Name',
+          'Vorname'
+        ),
+        field(
+          {
+            path: ['issuing_authority'],
+            type: 'string',
+            defaultValue: 'DE',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Issuing Authority',
+          'Ausstellende Behoerde'
+        ),
+        field(
+          {
+            path: ['issuing_country'],
+            type: 'string',
+            defaultValue: 'DE',
+            mandatory: true,
+            disclosable: true,
+          },
+          'Issuing Country',
+          'Ausstellungsland'
+        ),
         {
           path: ['nationalities', 0],
           type: 'string',

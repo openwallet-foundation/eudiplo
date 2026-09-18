@@ -13,6 +13,80 @@ export interface RefreshTokenIssuanceConfig {
     refreshTokenExpiresInSeconds?: number;
 }
 
+export function buildAuthorizationErrorRedirect(
+    redirectUri: string,
+    error: string,
+    errorDescription?: string,
+    walletState?: string,
+): string {
+    const redirectUrl = new URL(redirectUri);
+    redirectUrl.searchParams.set("error", error);
+    if (errorDescription) {
+        redirectUrl.searchParams.set("error_description", errorDescription);
+    }
+    if (walletState) {
+        redirectUrl.searchParams.set("state", walletState);
+    }
+    return redirectUrl.toString();
+}
+
+export function buildAuthorizationCodeRedirect(
+    redirectUri: string,
+    authorizationCode: string,
+    walletState?: string,
+    issuer?: string,
+): string {
+    const redirectUrl = new URL(redirectUri);
+    redirectUrl.searchParams.set("code", authorizationCode);
+    if (issuer) {
+        redirectUrl.searchParams.set("iss", issuer);
+    }
+    if (walletState) {
+        redirectUrl.searchParams.set("state", walletState);
+    }
+    return redirectUrl.toString();
+}
+
+export function buildAccessTokenPayload({
+    issuer,
+    audience,
+    session,
+    tokenLifetime,
+    jti,
+    dpopJkt,
+}: {
+    issuer: string;
+    audience: string;
+    session: ChainedAsSessionEntity;
+    tokenLifetime: number;
+    jti: string;
+    dpopJkt?: string;
+}): Record<string, unknown> {
+    const now = Math.floor(Date.now() / 1000);
+    const payload: Record<string, unknown> = {
+        iss: issuer,
+        sub: session.clientId,
+        aud: audience,
+        iat: now,
+        exp: now + tokenLifetime,
+        jti,
+        issuer_state: session.issuerState,
+        client_id: session.clientId,
+    };
+
+    if (dpopJkt) {
+        payload.cnf = { jkt: dpopJkt };
+    }
+    if (
+        Array.isArray(session.authorizationDetails) &&
+        session.authorizationDetails.length > 0
+    ) {
+        payload.authorization_details = session.authorizationDetails;
+    }
+
+    return payload;
+}
+
 export async function resolveSessionForTokenRequest(
     sessionRepository: Repository<ChainedAsSessionEntity>,
     tenantId: string,
