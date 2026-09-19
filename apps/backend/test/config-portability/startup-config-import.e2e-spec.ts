@@ -9,9 +9,15 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import {
+    CONFIG_SINGLETON_IDS,
+    normalizeDocument,
+    resourceId,
+} from "@eudiplo/config-format/config-format.js";
 import type { INestApplication } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
+import request from "supertest";
 import { DataSource } from "typeorm";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { TenantEntity } from "../../src/auth/tenant/entities/tenant.entity.js";
@@ -21,11 +27,6 @@ import { ConfigBundleApplyService } from "../../src/platform/config-portability/
 import { ConfigBundleArchiveService } from "../../src/platform/config-portability/config-bundle-archive.service.js";
 import { ConfigFolderBundleService } from "../../src/platform/config-portability/config-folder-bundle.service.js";
 import { ConfigOwnershipService } from "../../src/platform/config-portability/config-ownership.service.js";
-import {
-    CONFIG_SINGLETON_IDS,
-    normalizeDocument,
-    resourceId,
-} from "@eudiplo/config-format/config-format.js";
 
 describe("startup configuration reconciliation", () => {
     let app: INestApplication;
@@ -71,6 +72,101 @@ describe("startup configuration reconciliation", () => {
             originalEnvironment.CONFIG_IMPORT_MODE,
         );
         restoreEnvironment("FOLDER", originalEnvironment.FOLDER);
+    });
+
+    it("rejects bundle imports that assign tenant-scoped administrators the global tenant-manager role", async () => {
+        const appConfig = app.get(ConfigService);
+        const rootClientId = appConfig.getOrThrow<string>("AUTH_CLIENT_ID");
+        const rootClientSecret =
+            appConfig.getOrThrow<string>("AUTH_CLIENT_SECRET");
+
+        const bootstrap = await request(app.getHttpServer())
+            .post("/api/oauth2/token")
+            .send({
+                grant_type: "client_credentials",
+                client_id: rootClientId,
+                client_secret: rootClientSecret,
+            })
+            .expect(201);
+
+        const attackerTenant = await request(app.getHttpServer())
+            .post("/tenant")
+            .set("Authorization", `Bearer ${bootstrap.body.access_token}`)
+            .send({
+                id: "bundle-role-check-tenant",
+                name: "Bundle role check tenant",
+                roles: ["tenant:admin"],
+            })
+            .expect(201);
+
+        const attackerToken = await request(app.getHttpServer())
+            .post("/api/oauth2/token")
+            .send({
+                grant_type: "client_credentials",
+                client_id: attackerTenant.body.client.clientId,
+                client_secret: attackerTenant.body.client.clientSecret,
+            })
+            .expect(201);
+
+        const bundle = {
+            manifest: {
+                format: "eudiplo.config-bundle",
+                formatVersion: 2,
+                sourceVersion: "bundle-role-check",
+                exportedAt: new Date(0).toISOString(),
+                tenant: "bundle-role-check-tenant",
+                resources: [
+                    {
+                        kind: "Client",
+                        id: "bundle-escalated-client",
+                        $schema:
+                            "https://eudiplo.dev/schemas/v2/Client.schema.json",
+                        path: "clients/bundle-escalated-client.json",
+                        sha256: createHash("sha256")
+                            .update(
+                                JSON.stringify({
+                                    $schema:
+                                        "https://eudiplo.dev/schemas/v2/Client.schema.json",
+                                    metadata: { generation: 1 },
+                                    spec: {
+                                        clientId: "bundle-escalated-client",
+                                        secret: "bundle-escalated-secret",
+                                        roles: ["tenants:manage"],
+                                    },
+                                }),
+                            )
+                            .digest("hex"),
+                        ownership: "unmanaged",
+                        generation: 1,
+                    },
+                ],
+                assets: [],
+                requirements: [],
+                warnings: [],
+            },
+            documents: [
+                {
+                    $schema:
+                        "https://eudiplo.dev/schemas/v2/Client.schema.json",
+                    metadata: { generation: 1 },
+                    spec: {
+                        clientId: "bundle-escalated-client",
+                        secret: "bundle-escalated-secret",
+                        roles: ["tenants:manage"],
+                    },
+                },
+            ],
+            assets: [],
+        };
+
+        await request(app.getHttpServer())
+            .post("/config-bundles/plan?mode=upsert")
+            .set("Authorization", `Bearer ${attackerToken.body.access_token}`)
+            .send(bundle)
+            .expect(403)
+            .expect((response) => {
+                expect(response.body.message).toContain("tenant:manage");
+            });
     });
 
     it("imports the demo folder through the versioned plan/apply pipeline", async () => {

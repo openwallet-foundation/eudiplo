@@ -1,9 +1,9 @@
-import { ConfigImportJournalService } from "./config-import-journal.service.js";
 import { serializeDocument } from "@eudiplo/config-format/config-format.js";
 import {
     BadRequestException,
     Body,
     Controller,
+    ForbiddenException,
     Get,
     Param,
     Post,
@@ -14,7 +14,7 @@ import {
     UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiConsumes, ApiOperation, ApiTags, ApiQuery } from "@nestjs/swagger";
+import { ApiConsumes, ApiOperation, ApiQuery, ApiTags } from "@nestjs/swagger";
 import type { Request, Response } from "express";
 import { AuditLogService } from "../../audit-log/audit-log.service.js";
 import {
@@ -28,6 +28,7 @@ import { Token, TokenPayload } from "../../auth/token.decorator.js";
 import { ConfigBundleService } from "./config-bundle.service.js";
 import { ConfigBundleApplyService } from "./config-bundle-apply.service.js";
 import { ConfigBundleArchiveService } from "./config-bundle-archive.service.js";
+import { ConfigImportJournalService } from "./config-import-journal.service.js";
 import { ConfigMigrationService } from "./config-migration.service.js";
 import { ConfigOwnershipService } from "./config-ownership.service.js";
 import type {
@@ -39,14 +40,7 @@ import type {
 import { CONFIG_RESOURCE_KINDS } from "./config-resource.types.js";
 
 @ApiTags("Configuration portability")
-@Secured([
-    Role.Tenants,
-    Role.TenantAdmin,
-    Role.Issuances,
-    Role.Presentations,
-    Role.Clients,
-    Role.Registrar,
-])
+@Secured([Role.Tenants, Role.TenantAdmin])
 @Controller("config-bundles")
 export class ConfigPortabilityController {
     constructor(
@@ -59,8 +53,7 @@ export class ConfigPortabilityController {
         private readonly journal: ConfigImportJournalService,
     ) {}
 
-    @Get("export")
-    @Secured([Role.Tenants, Role.TenantAdmin])
+    @Get("export")    
     @ApiOperation({ summary: "Export the current tenant configuration" })
     async export(
         @Token() token: TokenPayload,
@@ -105,6 +98,7 @@ export class ConfigPortabilityController {
         @Query("mode") mode: ConfigImportMode = "upsert",
     ) {
         this.assertMode(mode);
+        this.assertBundlePrivilegedRoleAuthorization(token, bundle);
         return this.bundleService.plan(
             requireTenantContext(token),
             bundle,
@@ -126,9 +120,11 @@ export class ConfigPortabilityController {
         this.assertMode(mode);
         if (!file?.buffer)
             throw new BadRequestException("bundle file is required");
+        const bundle = this.archiveService.decode(file.buffer);
+        this.assertBundlePrivilegedRoleAuthorization(token, bundle);
         return this.bundleService.plan(
             requireTenantContext(token),
-            this.archiveService.decode(file.buffer),
+            bundle,
             mode,
         );
     }
@@ -140,7 +136,6 @@ export class ConfigPortabilityController {
         description: "Fingerprint from the reviewed plan",
     })
     @Post("import")
-    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Apply a validated tenant configuration bundle" })
     async import(
         @Token() token: TokenPayload,
@@ -167,7 +162,6 @@ export class ConfigPortabilityController {
         description: "Fingerprint from the reviewed plan",
     })
     @Post("import/archive")
-    @Secured([Role.Tenants, Role.TenantAdmin])
     @UseInterceptors(
         FileInterceptor("bundle", { limits: { fileSize: 50 * 1024 * 1024 } }),
     )
@@ -183,14 +177,41 @@ export class ConfigPortabilityController {
     ) {
         if (!file?.buffer)
             throw new BadRequestException("bundle file is required");
+        const bundle = this.archiveService.decode(file.buffer);
+        this.assertBundlePrivilegedRoleAuthorization(token, bundle);
         return this.applyAndAudit(
             token,
             request,
-            this.archiveService.decode(file.buffer),
+            bundle,
             mode,
             confirmReplace,
             planFingerprint,
         );
+    }
+
+    private assertBundlePrivilegedRoleAuthorization(
+        token: TokenPayload,
+        bundle: ConfigBundle,
+    ) {
+        if (token.roles.includes(Role.Tenants)) return;
+
+        const privilegedRoles = new Set([Role.Tenants, Role.TenantAdmin]);
+        for (const document of bundle.documents ?? []) {
+            const roles = Array.isArray(document?.spec?.roles)
+                ? document.spec.roles
+                : [];
+            if (
+                roles.some(
+                    (role) =>
+                        typeof role === "string" &&
+                        privilegedRoles.has(role as Role),
+                )
+            ) {
+                throw new ForbiddenException(
+                    "Cannot assign tenant:manage role without having tenant:manage privileges",
+                );
+            }
+        }
     }
 
     private async applyAndAudit(
@@ -202,6 +223,7 @@ export class ConfigPortabilityController {
         planFingerprint?: string,
     ) {
         this.assertMode(mode);
+        this.assertBundlePrivilegedRoleAuthorization(token, bundle);
         if (mode === "replace" && confirmReplace !== "true") {
             throw new BadRequestException(
                 "replace mode requires confirmReplace=true",
@@ -249,21 +271,18 @@ export class ConfigPortabilityController {
     }
 
     @Get("operations")
-    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "List recent configuration operations" })
     operations(@Token() token: TokenPayload) {
         return this.journal.list(requireTenantContext(token));
     }
 
     @Get("operations/:id")
-    @Secured([Role.Tenants, Role.TenantAdmin])
     @ApiOperation({ summary: "Read a durable configuration operation report" })
     operation(@Token() token: TokenPayload, @Param("id") id: string) {
         return this.journal.get(requireTenantContext(token), id);
     }
 
-    @Post("operations/:id/acknowledge-interruption")
-    @Secured([Role.Tenants, Role.TenantAdmin])
+    @Post("operations/:id/acknowledge-interruption")    
     @ApiOperation({
         summary:
             "Release an interrupted operation after its worker has been stopped",
@@ -296,8 +315,7 @@ export class ConfigPortabilityController {
         return this.ownershipService.list(requireTenantContext(token));
     }
 
-    @Post("resources/:kind/:id/detach")
-    @Secured([Role.Tenants, Role.TenantAdmin])
+    @Post("resources/:kind/:id/detach")    
     @ApiOperation({ summary: "Detach a resource from file provisioning" })
     async detach(
         @Token() token: TokenPayload,
