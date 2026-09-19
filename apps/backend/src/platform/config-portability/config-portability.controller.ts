@@ -53,7 +53,7 @@ export class ConfigPortabilityController {
         private readonly journal: ConfigImportJournalService,
     ) {}
 
-    @Get("export")    
+    @Get("export")
     @ApiOperation({ summary: "Export the current tenant configuration" })
     async export(
         @Token() token: TokenPayload,
@@ -282,7 +282,7 @@ export class ConfigPortabilityController {
         return this.journal.get(requireTenantContext(token), id);
     }
 
-    @Post("operations/:id/acknowledge-interruption")    
+    @Post("operations/:id/acknowledge-interruption")
     @ApiOperation({
         summary:
             "Release an interrupted operation after its worker has been stopped",
@@ -315,7 +315,7 @@ export class ConfigPortabilityController {
         return this.ownershipService.list(requireTenantContext(token));
     }
 
-    @Post("resources/:kind/:id/detach")    
+    @Post("resources/:kind/:id/detach")
     @ApiOperation({ summary: "Detach a resource from file provisioning" })
     async detach(
         @Token() token: TokenPayload,
