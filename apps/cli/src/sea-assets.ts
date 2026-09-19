@@ -3,6 +3,25 @@ import { getAsset, isSea } from "node:sea";
 
 type CliAssetFallback = URL | (() => URL);
 
+/**
+ * Base URL for the `templates/` directory, computed relative to this module.
+ *
+ * This file lives at the same directory depth as `index.ts` (the CLI entry
+ * point), so its `import.meta.url` stays stable whether the build preserves
+ * the original `src/` folder structure (`pnpm build`) or bundles everything
+ * into a single `dist/index.js` (`build:publish` / `build:sea`): esbuild
+ * rewrites every bundled module's `import.meta.url` to the output file's URL,
+ * which sits at the same depth. Consumers must derive template asset URLs
+ * from this constant rather than computing their own relative path from
+ * `import.meta.url`, since their original source depth is not preserved once
+ * bundled.
+ */
+const templatesBaseUrl = new URL("../templates/", import.meta.url);
+
+export function templateAssetUrl(relativePath: string): URL {
+    return new URL(relativePath, templatesBaseUrl);
+}
+
 export async function readCliTextAsset(
     assetKey: string,
     fileUrl: CliAssetFallback,

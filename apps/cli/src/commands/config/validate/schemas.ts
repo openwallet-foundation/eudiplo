@@ -1,4 +1,4 @@
-import { readCliTextAsset } from "../../../sea-assets.js";
+import { readCliTextAsset, templateAssetUrl } from "../../../sea-assets.js";
 import { requiredSchemaFiles } from "./registry.js";
 
 const manifestAssetKey = "templates/schemas.manifest.json";
@@ -33,11 +33,7 @@ export async function loadBundledConfigSchemaTexts(): Promise<
     for (const schemaFile of manifest) {
         const text = await readCliTextAsset(
             `templates/schemas/${schemaFile}`,
-            () =>
-                new URL(
-                    `../../../../templates/schemas/${schemaFile}`,
-                    import.meta.url,
-                ),
+            () => templateAssetUrl(`schemas/${schemaFile}`),
         );
         schemas.set(schemaFile, text);
     }
@@ -48,11 +44,7 @@ export async function loadBundledConfigSchemaTexts(): Promise<
 async function readSchemaManifest(): Promise<string[]> {
     const text = await readCliTextAsset(
         manifestAssetKey,
-        () =>
-            new URL(
-                "../../../../templates/schemas.manifest.json",
-                import.meta.url,
-            ),
+        () => templateAssetUrl("schemas.manifest.json"),
     );
     const parsed = JSON.parse(text);
     if (
