@@ -35,6 +35,7 @@
         "src/tracing.ts",
         "src/database/data-source.ts",
         "src/database/migrations/*.ts",
+        "src/**/*.spec.ts",
         "test/**/*.e2e-spec.ts"
       ],
       "ignore": [
@@ -74,7 +75,11 @@
       ]
     },
     "apps/webhook": {},
-    "packages/eudiplo-config-format": {},
+    "packages/eudiplo-config-format": {
+      "entry": [
+        "src/**/*.spec.ts"
+      ]
+    },
     "packages/eudiplo-sdk-core": {}
   }
 }

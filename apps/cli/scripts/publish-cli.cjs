@@ -18,6 +18,20 @@ const npmBinary = join(
     process.platform === "win32" ? "npm.cmd" : "npm",
 );
 
+const buildResult = spawnSync("pnpm", ["build:publish"], {
+    cwd: cliDirectory,
+    stdio: "inherit",
+});
+
+if (buildResult.error) {
+    console.error(`Failed to build @eudiplo/cli: ${buildResult.error.message}`);
+    process.exit(1);
+}
+
+if (buildResult.status !== 0) {
+    process.exit(buildResult.status ?? 1);
+}
+
 const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf8"));
 delete packageJson.dependencies?.["@eudiplo/config-format"];
 writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 4)}\n`);
@@ -26,7 +40,15 @@ let result;
 try {
     result = spawnSync(
         npmBinary,
-        ["publish", "--tag", tag, "--access", "public", "--provenance"],
+        [
+            "publish",
+            "--ignore-scripts",
+            "--tag",
+            tag,
+            "--access",
+            "public",
+            "--provenance",
+        ],
         {
             cwd: cliDirectory,
             stdio: "inherit",
