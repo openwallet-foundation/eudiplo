@@ -149,6 +149,30 @@ jobs:
       - name: Smoke test standalone CLI
         run: ./apps/cli/dist-sea/eudiplo --help
 
+      - name: Build CLI npm bundle
+        run: pnpm --filter @eudiplo/cli build:publish
+
+      - name: Pack CLI as it would be published to npm
+        working-directory: apps/cli
+        run: npm pack --ignore-scripts --pack-destination "$RUNNER_TEMP"
+
+      - name: Smoke test packed CLI outside the workspace
+        # Extracts the exact tarball npm would publish and runs it from
+        # outside the repo/pnpm workspace so relative template asset paths
+        # can't accidentally resolve against files that only exist locally.
+        run: |
+          set -euo pipefail
+          extract_dir="$RUNNER_TEMP/cli-pack-test"
+          rm -rf "$extract_dir"
+          mkdir -p "$extract_dir"
+          tar -xzf "$RUNNER_TEMP"/eudiplo-cli-*.tgz -C "$extract_dir"
+          cd "$extract_dir/package"
+          node dist/index.js --help
+          init_dir="$RUNNER_TEMP/cli-init-test"
+          rm -rf "$init_dir"
+          node dist/index.js init "$init_dir" --target compose --no-interactive --yes --demo-tenant --demo --no-client
+          node dist/index.js config validate tenant "$init_dir/config/demo"
+
   build-backend:
     name: Build Backend
     permissions:

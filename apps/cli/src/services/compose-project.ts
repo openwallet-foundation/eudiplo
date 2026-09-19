@@ -1,7 +1,11 @@
 import { randomBytes } from "node:crypto";
 import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
-import { readCliBinaryAsset, readCliTextAsset } from "../sea-assets.js";
+import {
+    readCliBinaryAsset,
+    readCliTextAsset,
+    templateAssetUrl,
+} from "../sea-assets.js";
 
 export const defaultComposeFileName = "eudiplo.compose.yaml";
 export const defaultComposeOverrideFileName = "eudiplo.compose.override.yaml";
@@ -164,7 +168,7 @@ export function resolveImageTag(imageTagOverride?: string): string {
 export async function createComposeFile(): Promise<string> {
     return readCliTextAsset(
         "templates/docker-compose.yml",
-        new URL("../../templates/docker-compose.yml", import.meta.url),
+        templateAssetUrl("docker-compose.yml"),
     );
 }
 
@@ -197,10 +201,7 @@ export async function copyBundledDemoConfig(
             });
             const contents = await readCliBinaryAsset(
                 `templates/demo-config/${normalized}`,
-                new URL(
-                    `../../templates/demo-config/${normalized}`,
-                    import.meta.url,
-                ),
+                templateAssetUrl(`demo-config/${normalized}`),
             );
             await writeFile(destinationPath, contents, { mode: 0o600 });
         }
@@ -231,10 +232,7 @@ async function readDemoConfigManifest(): Promise<string[] | undefined> {
     try {
         const manifestText = await readCliTextAsset(
             demoConfigManifestAssetKey,
-            new URL(
-                "../../templates/demo-config.manifest.json",
-                import.meta.url,
-            ),
+            templateAssetUrl("demo-config.manifest.json"),
         );
         const parsed = JSON.parse(manifestText);
         if (
@@ -246,10 +244,7 @@ async function readDemoConfigManifest(): Promise<string[] | undefined> {
     } catch {
         try {
             const localManifest = await readFile(
-                new URL(
-                    "../../templates/demo-config.manifest.json",
-                    import.meta.url,
-                ),
+                templateAssetUrl("demo-config.manifest.json"),
                 "utf8",
             );
             const parsed = JSON.parse(localManifest);
