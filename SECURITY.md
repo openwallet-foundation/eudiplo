@@ -2,8 +2,8 @@
 
 ## Supported Versions
 
-We take security seriously and provide security updates for the following
-versions:
+We release security patches and updates for actively maintained versions. The
+table below outlines supported versions:
 
 | Version  | Supported          |
 | -------- | ------------------ |
@@ -12,40 +12,58 @@ versions:
 
 ## Reporting a Vulnerability
 
-We appreciate your efforts to responsibly disclose security vulnerabilities. If
-you discover a security vulnerability in this project, please follow these
-steps:
+If you discover a potential security vulnerability in this project, please
+report it responsibly and privately.
 
-### How to Report
+Please do **not** disclose security vulnerabilities through public GitHub issues,
+discussions, or pull requests.
 
-1. **DO NOT** create a public GitHub issue for security vulnerabilities
-2. Send an email to: **mirkomollik@gmail.com**
-3. Include the following information in your report:
-    - Description of the vulnerability
-    - Steps to reproduce the issue
-    - Potential impact of the vulnerability
-    - Any suggested fixes or mitigations
-    - Your contact information (optional, but helpful for follow-up)
+### Preferred Reporting Channels
+
+1. **GitHub Private Vulnerability Reporting**: Submit a confidential advisory
+   directly via
+   [GitHub Security Advisories](https://github.com/openwallet-foundation/eudiplo/security/advisories/new).
+2. **Email**: Send an encrypted or confidential email to the OpenWallet
+   Foundation security team:
+   - Recipient: [security@openwallet.foundation](mailto:security@openwallet.foundation)
+   - Subject: `[SECURITY] eudiplo: <brief description>`
+
+### Information to Include
+
+To help us triage and resolve the report quickly, please include as much detail
+as possible:
+
+- Type and severity of the vulnerability (for example, authentication bypass,
+  injection, cryptographic flaw, or credential disclosure)
+- Affected package, application, and version(s)
+- Location of the affected code (tag, branch, commit, or direct file link)
+- Clear step-by-step instructions to reproduce the issue
+- Minimal proof-of-concept code or sample inputs, when appropriate
+- Potential impact and exploitation scenarios
+- Any suggested fixes or mitigations
+- Your contact information, if you would like follow-up
 
 ### What to Expect
 
-- **Acknowledgment**: We will acknowledge receipt of your vulnerability report
-  within 48 hours
-- **Initial Assessment**: We will provide an initial assessment within 5
-  business days
-- **Regular Updates**: We will keep you informed of our progress at least every
-  7 days
-- **Resolution Timeline**: We aim to resolve critical vulnerabilities within 30
-  days
-- **Disclosure**: We will coordinate with you on the timing of public disclosure
+- **Initial Acknowledgment**: Within 3 business days of receipt
+- **Triage and Assessment**: Within 10 business days, including preliminary
+  severity assessment and reproduction verification
+- **Regular Updates**: We will keep you informed of our progress as remediation
+  proceeds
+- **Remediation and Patch**: Fix development and testing will be prioritized
+  based on severity
+- **Coordinated Disclosure**: Fixes will be released alongside a published
+  GitHub security advisory and CVE identifier, where applicable
 
 ### Vulnerability Handling Process
 
 1. **Triage**: We evaluate the severity and impact of the reported vulnerability
 2. **Investigation**: Our team investigates and confirms the vulnerability
-3. **Fix Development**: We develop and test a fix for the vulnerability
+3. **Fix Development**: We develop and test a fix in private, when appropriate
 4. **Release**: We release a security update
-5. **Disclosure**: We coordinate responsible disclosure with the reporter
+5. **Advisory Publication**: We publish a GitHub security advisory with impact,
+   affected versions, and mitigation or upgrade steps
+6. **Disclosure**: We coordinate responsible disclosure with the reporter
 
 ### Security Best Practices
 
@@ -86,7 +104,10 @@ of our project. With your permission, we will:
 
 For security-related questions or concerns, please contact:
 
-- **Security Contact**: mirkomollik@gmail.com
-- **Response Time**: Within 48 hours
+- **Preferred Contact**:
+  [GitHub Security Advisories](https://github.com/openwallet-foundation/eudiplo/security/advisories/new)
+- **Security Email**:
+  [security@openwallet.foundation](mailto:security@openwallet.foundation)
+- **Response Time**: Within 3 business days
 
 Thank you for helping keep our project and community safe!
