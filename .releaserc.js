@@ -67,6 +67,10 @@ module.exports = {
                     path: 'release/SHA256SUMS.txt',
                     label: 'SHA256 checksums',
                 },
+                {
+                    path: 'release/provenance.sigstore.json',
+                    label: 'Signed build provenance (Sigstore bundle)',
+                },
             ],
             addReleases: 'bottom',
             successComment: '🎉 This PR is included in version ${nextRelease.version}',

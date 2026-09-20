@@ -23,15 +23,22 @@ jobs:
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: '22'
+          node-version: '26'
+
+      - uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v5.0.0
+        with:
+          run_install: false
 
       - name: Check for stale overrides
         id: check
         run: |
-          # Extract overrides from package.json
+          # Read effective pnpm configuration, including pnpm-workspace.yaml.
+          pnpm config get overrides --json > "$RUNNER_TEMP/pnpm-overrides.json"
+          if [ ! -s "$RUNNER_TEMP/pnpm-overrides.json" ]; then
+            echo '{}' > "$RUNNER_TEMP/pnpm-overrides.json"
+          fi
           OVERRIDES=$(node -e "
-            const pkg = require('./package.json');
-            const overrides = pkg.pnpm?.overrides || {};
+            const overrides = require(process.env.RUNNER_TEMP + '/pnpm-overrides.json') || {};
             Object.entries(overrides).forEach(([name, version]) => {
               console.log(name + '@' + version);
             });
@@ -46,7 +53,7 @@ jobs:
           echo "has_overrides=true" >> $GITHUB_OUTPUT
           echo "## Current pnpm.overrides" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "The following overrides are pinned in package.json:" >> $GITHUB_STEP_SUMMARY
+          echo "The following overrides are configured in pnpm-workspace.yaml:" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "$OVERRIDES" >> $GITHUB_STEP_SUMMARY
@@ -54,15 +61,14 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Action Required" >> $GITHUB_STEP_SUMMARY
           echo "Check if parent packages have been updated to use fixed versions of these dependencies." >> $GITHUB_STEP_SUMMARY
-          echo "If so, remove the override from \`package.json\` and run \`pnpm install\`." >> $GITHUB_STEP_SUMMARY
+          echo "If so, remove the override from \`pnpm-workspace.yaml\` and run \`pnpm install\`." >> $GITHUB_STEP_SUMMARY
 
       - name: Create issue if overrides exist
         if: steps.check.outputs.has_overrides == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const pkg = require('./package.json');
-            const overrides = pkg.pnpm?.overrides || {};
+            const overrides = require(process.env.RUNNER_TEMP + '/pnpm-overrides.json') || {};
 
             if (Object.keys(overrides).length === 0) return;
 
@@ -86,7 +92,7 @@ jobs:
             const body = [
               '## Stale Override Check',
               '',
-              'The following subdependency overrides are configured in `package.json`:',
+              'The following subdependency overrides are configured in `pnpm-workspace.yaml`:',
               '',
               overrideList,
               '',
@@ -94,7 +100,7 @@ jobs:
               '',
               '1. Check if the parent packages have been updated to include fixed versions',
               '2. Remove any overrides that are no longer needed:',
-              '   - Edit `package.json` and remove the override from `pnpm.overrides`',
+              '   - Edit `pnpm-workspace.yaml` and remove the entry from `overrides`',
               '   - Run `pnpm install` to update the lockfile',
               '   - Verify the vulnerability is resolved with `pnpm audit`',
               '',

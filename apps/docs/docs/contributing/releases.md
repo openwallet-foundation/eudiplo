@@ -87,6 +87,32 @@ When introducing a breaking change, ensure:
 - [ ] The `.env.example` is updated if environment variables changed
 - [ ] The PR has the `breaking-change` label
 
+## Verifying Release Artifacts
+
+CLI release archives and `SHA256SUMS.txt` are covered by a signed GitHub build
+provenance attestation. Starting with releases that include
+`provenance.sigstore.json`, the same Sigstore bundle is also attached to the
+release for verification after downloading it.
+
+Download the archive for your platform and `provenance.sigstore.json` from the
+same release, then verify the archive with the GitHub CLI:
+
+```bash
+gh attestation verify ./eudiplo-vX.Y.Z-linux-x64.tar.gz \
+  --repo openwallet-foundation/eudiplo \
+  --signer-workflow openwallet-foundation/eudiplo/.github/workflows/release.yml \
+  --bundle ./provenance.sigstore.json
+```
+
+Replace `vX.Y.Z` and the platform with the archive you downloaded. For v8.0.1,
+omit `--bundle` to retrieve its existing attestation from GitHub. Earlier
+releases were published before build attestations were enabled.
+
+The attestation authenticates the artifact and its producing workflow; checksums
+alone only detect changes relative to the checksum file. OpenSSF Scorecard looks
+for signature files attached to the last five releases, so older releases will
+continue affecting that check until they leave its evaluation window.
+
 ## Signed Commits
 
 **All commits must be signed** to pass GitHub's verification checks.

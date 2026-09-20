@@ -68,6 +68,12 @@ syncInjectedDepsAfterScripts:
 minimumReleaseAge: 0
 
 overrides:
+  # Security fixes for transitive build/documentation dependencies. Restrict each
+  # override to the affected range so newer upstream versions remain untouched.
+  esbuild@>=0.27.3 <0.28.1: ^0.28.2
+  image-size@<=2.0.2: ^2.0.3
+  js-yaml@>=4.0.0 <4.3.2: ^4.3.2
+  sharp@<0.35.4: ^0.35.4
   dompurify@<3.4.9: ^3.4.9
   dompurify@<=3.4.10: ^3.4.11
   dompurify@<=3.4.11: ^3.4.12
