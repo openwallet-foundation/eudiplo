@@ -137,3 +137,62 @@ input[readonly] {
     font-size: 12px;
   }
 }
+
+:host {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+:host > div {
+  width: 100%;
+  min-width: 0;
+}
+form,
+.settings-header,
+.header-actions {
+  min-width: 0;
+  max-width: 100%;
+}
+.settings-header,
+.header-actions,
+.form-actions {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.setup-guide {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  background: var(--mat-sys-surface-container);
+}
+.setup-guide p {
+  margin-bottom: 0;
+}
+.step-error {
+  color: var(--mat-sys-error);
+}
+.trust-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.review-summary {
+  max-width: 900px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 700px) {
+  .settings-header,
+  .setup-guide {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .header-actions {
+    flex-wrap: wrap !important;
+  }
+  .display-entry > div:last-child > div {
+    flex-direction: column !important;
+  }
+}

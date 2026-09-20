@@ -10,22 +10,22 @@ export interface PredefinedConfig {
 export const configs: PredefinedConfig[] = [
   {
     name: 'PID (Personal Identity Document)',
-    description: 'German Personal Identity Document configuration',
+    description: 'Request the given name from a German PID',
     icon: 'badge',
     config: {
       id: 'pid',
-      description: 'Presentation ID',
+      description: 'Request a given name from a German PID',
       dcql_query: {
         credentials: [
           {
             id: 'pid',
             format: 'dc+sd-jwt',
             meta: {
-              vct_values: ['<TENANT_URL>/credentials-metadata/vct/pid'],
+              vct_values: ['urn:eudi:pid:de:1'],
             },
             claims: [
               {
-                path: ['address', 'locality'],
+                path: ['given_name'],
               },
             ],
           },

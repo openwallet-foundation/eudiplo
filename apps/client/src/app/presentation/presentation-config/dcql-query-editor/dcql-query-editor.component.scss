@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+.query-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+fieldset {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 0 0 20px;
+  min-width: 0;
+}
+legend {
+  padding: 0 8px;
+  font-weight: 500;
+}
+.credential-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.full-width {
+  grid-column: 1 / -1;
+}
+.query-notice {
+  padding: 16px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+}
+.query-error {
+  color: var(--mat-sys-error);
+}
+@media (max-width: 600px) {
+  .credential-fields {
+    grid-template-columns: 1fr;
+  }
+}
+.claim-row,
+.requirement {
+  padding: 16px;
+  margin: 16px 0;
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 8px;
+}
+.row-fields {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.row-fields > mat-form-field {
+  flex: 1;
+  min-width: 0;
+}
+.row-fields > h4 {
+  flex: 1;
+}
+.option-fields {
+  display: grid;
+  gap: 16px;
+  padding-top: 16px;
+}
+.path-segments {
+  flex: 1;
+  min-width: 0;
+}
+.query-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 16px 0;
+}
+.field-hint {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+}
+.trust-summary,
+.trust-reference {
+  overflow-wrap: anywhere;
+}
+.trust-panel {
+  margin-top: 24px;
+}
+.trust-reference {
+  margin-bottom: 20px;
+}
+.credential-combinations {
+  margin-top: 32px;
+}
+.alternative-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.bulk-claims {
+  margin-top: 16px;
+}
+.bulk-claims mat-form-field,
+details > mat-form-field {
+  display: block;
+  margin-top: 16px;
+}
+@media (max-width: 600px) {
+  .row-fields {
+    flex-wrap: wrap;
+  }
+  .row-fields > mat-form-field {
+    flex-basis: 100%;
+  }
+  .claim-row,
+  .requirement {
+    padding: 12px;
+  }
+}

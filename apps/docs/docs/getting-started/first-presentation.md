@@ -22,51 +22,28 @@ Credential presentation enables verifiers to:
 
 ## Step 1: Create a Presentation Configuration
 
-1. Navigate to **Presentation** → **Presentation Configs** in the sidebar
-2. Click **+ Create**
-3. Fill in:
-    - **ID**: `age-verification`
-    - **Description**: `Verify age over 18`
-4. Configure the DCQL query to request the credential:
+This walkthrough requests one claim from a credential already in your wallet.
 
-    ```json
-    {
-        "credentials": [
-            {
-                "id": "pid",
-                "format": "dc+sd-jwt",
-                "meta": {
-                    "vct_values": ["urn:eudi:pid:1"]
-                },
-                "claims": [
-                    {
-                        "path": ["age_over_18"]
-                    },
-                    {
-                        "path": ["given_name"]
-                    },
-                    {
-                        "path": ["family_name"]
-                    }
-                ]
-            }
-        ]
-    }
-    ```
+1. Navigate to **Credential Verification** → **Verification Configs** and click **Create**.
+2. In **Name**, enter:
+    - **ID**: `name-verification`
+    - **Description**: `Request a given name`
+3. Click **Continue** to open **Credentials**.
+4. Click **Import from Issuer**, enter the credential issuer URL for the credential in your wallet, and click **Fetch Credentials**.
+5. Select that credential and select only its `given_name` claim. Deselect other claims, then click **Insert DCQL**. If your credential uses a different claim name, select the corresponding name claim shown by the issuer.
+6. Check the selected type and claim in the visual builder, then click **Continue**.
+7. In **Settings**, keep the 300-second lifetime and strict status checks. Verify that an access key chain with an active certificate is available. If the editor shows a setup reminder, complete [access key setup](../trust/key-chains.md) before testing a request. Configure a registration certificate if your wallet ecosystem requires one.
+8. Click **Continue**, review the requested claim, and click **Create Configuration**.
 
-5. Click **Save**
-
-:::tip[DCQL Queries]
-DCQL (Digital Credentials Query Language) lets you precisely define which credentials and claims you want to request. See [DCQL](../presentation/dcql.md) for detailed query syntax.
+:::tip[No JSON required for the common path]
+The importer uses the issuer's actual credential type and claim paths. For a custom request, use **Add credential**. Advanced DCQL remains available through **Edit DCQL JSON**; see the [configuration guide](../presentation/presentation-configuration.md#visual-query-builder-and-json) for supported visual features.
 :::
 
 ## Step 2: Create a Presentation Request
 
-1. Navigate to **Presentation** → **Sessions**
-2. Click **+ New Request**
-3. Select your presentation configuration: `age-verification`
-4. Click **Create Request**
-5. A **QR code** appears—scan it with your wallet that contains the credential
+1. On the saved configuration, click **Create offer**.
+2. Create the request using your new presentation configuration.
+3. Scan the resulting **QR code** with the wallet containing the selected credential.
 
 ## Step 3: Present the Credential
 
@@ -79,19 +56,19 @@ DCQL (Digital Credentials Query Language) lets you precisely define which creden
 
 After the wallet presents the credential:
 
-1. Return to the **Presentation** → **Sessions** page
+1. Return to the **Sessions** → **All Sessions** page
 2. Find your session in the list
 3. Click on it to see the verified claims:
 
     ```json
     {
         "pid": {
-            "age_over_18": true,
-            "given_name": "John",
-            "family_name": "Doe"
+            "given_name": "John"
         }
     }
     ```
+
+    The credential query ID and name value depend on the credential you selected.
 
 :::tip[Programmatic Access]
 In production, you'll typically configure a [webhook](../architecture/extension-points/webhooks.md) to receive verified claims automatically. See [Handling Results](../presentation/handling-results.md) for details.

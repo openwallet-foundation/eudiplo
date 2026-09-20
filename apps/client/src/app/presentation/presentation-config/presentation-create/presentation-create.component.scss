@@ -1,0 +1,98 @@
+.presentation-editor {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.editor-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+h2 {
+  margin: 0 0 8px;
+}
+p {
+  line-height: 1.6;
+}
+.editor-actions,
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.flow-hint {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  padding: 14px 20px;
+  border-radius: 12px;
+}
+.form-section {
+  padding: 24px 4px;
+}
+.field-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 16px;
+}
+.import-actions {
+  margin: 24px 0;
+}
+.settings-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  background: var(--mat-sys-surface-container);
+  padding: 24px;
+  border-radius: 12px;
+}
+dt {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin-bottom: 8px;
+}
+dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.setup-notice {
+  border-left: 3px solid var(--mat-sys-primary);
+  padding: 12px 16px;
+  background: var(--mat-sys-surface-container);
+}
+.credential-summary {
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  overflow-wrap: anywhere;
+}
+.form-actions {
+  border-top: 1px solid var(--mat-sys-outline-variant);
+  padding: 20px 0;
+}
+.action-spacer {
+  flex: 1;
+}
+.form-error {
+  color: var(--mat-sys-error);
+}
+.tab-content {
+  padding: 20px 0;
+}
+.option-description,
+.menu-description {
+  font-size: 0.8rem;
+}
+@media (max-width: 600px) {
+  .settings-summary {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  mat-panel-description {
+    display: none;
+  }
+}

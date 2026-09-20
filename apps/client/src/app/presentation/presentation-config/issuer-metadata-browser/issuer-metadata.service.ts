@@ -267,8 +267,7 @@ export class IssuerMetadataService {
           for (const [namespace, nsClaims] of namespaceMap) {
             for (const claim of nsClaims) {
               cred.claims.push({
-                namespace,
-                claim_name: claim.path[claim.path.length - 1],
+                path: [namespace, claim.path[claim.path.length - 1]],
               });
             }
           }

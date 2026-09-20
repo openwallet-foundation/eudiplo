@@ -1,0 +1,546 @@
+<div class="query-toolbar">
+  <p>Request only the information you need from the wallet.</p>
+  <button
+    mat-stroked-button
+    type="button"
+    (click)="setJsonMode(!jsonMode)"
+    [disabled]="jsonMode && !supported"
+  >
+    <mat-icon>{{ jsonMode ? 'list_alt' : 'code' }}</mat-icon
+    >{{ jsonMode ? 'Use visual builder' : 'Edit DCQL JSON' }}
+  </button>
+</div>
+@if (!supported) {
+  <p class="query-notice" role="status">
+    This query uses options outside the visual builder. Continue editing JSON; all query settings
+    are preserved.
+  </p>
+}
+@if (jsonMode) {
+  <app-editor [formControl]="control" [schema]="schema" [errors]="control.errors" />
+} @else {
+  @for (credential of credentials; track credential; let i = $index) {
+    <fieldset [disabled]="control.disabled" class="credential-card">
+      <legend>Credential {{ i + 1 }}</legend>
+      <div class="credential-fields">
+        <mat-form-field>
+          <mat-label>Query ID</mat-label>
+          <input
+            matInput
+            [ngModel]="credential.id"
+            (ngModelChange)="renameCredential(credential, $event)"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <mat-hint>A unique name used in credential combinations below</mat-hint>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Credential format</mat-label>
+          <mat-select
+            [disabled]="control.disabled"
+            [ngModel]="credential.format"
+            (ngModelChange)="changeFormat(credential, $event)"
+            [ngModelOptions]="{ standalone: true }"
+          >
+            <mat-option value="dc+sd-jwt">SD-JWT VC</mat-option
+            ><mat-option value="mso_mdoc">mDOC</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="full-width">
+          <mat-label>{{
+            credential.format === 'dc+sd-jwt' ? 'Credential type (VCT)' : 'Document type'
+          }}</mat-label>
+          <input
+            matInput
+            [ngModel]="credential.type"
+            (ngModelChange)="credential.type = $event; updateQuery()"
+            [ngModelOptions]="{ standalone: true }"
+          />
+          <mat-hint
+            >Must match the type issued to the wallet. Import from an issuer if unsure.</mat-hint
+          >
+        </mat-form-field>
+      </div>
+      <h4>Claims to request</h4>
+      @for (claim of credential.claims; track claim; let j = $index) {
+        <div class="claim-row">
+          <div class="row-fields">
+            @if (!usesSegments(claim, credential)) {
+              @if (credential.format === 'mso_mdoc') {
+                <mat-form-field
+                  ><mat-label>Namespace</mat-label>
+                  <input
+                    matInput
+                    [ngModel]="claim.path[0]"
+                    (ngModelChange)="claim.path[0] = $event; updateQuery()"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="org.iso.18013.5.1"
+                  />
+                </mat-form-field>
+                <mat-form-field
+                  ><mat-label>Claim name</mat-label>
+                  <input
+                    matInput
+                    [ngModel]="claim.path[1]"
+                    (ngModelChange)="claim.path[1] = $event; updateQuery()"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="family_name"
+                  />
+                </mat-form-field>
+              } @else {
+                <mat-form-field
+                  ><mat-label>Claim path</mat-label>
+                  <input
+                    matInput
+                    [ngModel]="claim.path.join('.')"
+                    (ngModelChange)="setClaimPath(claim, $event)"
+                    [ngModelOptions]="{ standalone: true }"
+                    placeholder="given_name"
+                  />
+                  <mat-hint>Use dots for nesting, e.g. address.locality.</mat-hint>
+                </mat-form-field>
+              }
+            } @else {
+              <div class="path-segments">
+                <p>Path segments <small>Keep property names and array indexes distinct.</small></p>
+                @for (part of claim.path; track $index; let k = $index) {
+                  <div class="row-fields">
+                    <mat-form-field
+                      ><mat-label>Segment type</mat-label>
+                      <mat-select
+                        [disabled]="control.disabled"
+                        [ngModel]="typeof part === 'number' ? 'index' : 'property'"
+                        (ngModelChange)="setSegmentKind(claim, k, $event)"
+                        [ngModelOptions]="{ standalone: true }"
+                      >
+                        <mat-option value="property">Property name</mat-option
+                        ><mat-option value="index">Array index</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field
+                      ><mat-label>{{
+                        typeof part === 'number' ? 'Array index' : 'Property name'
+                      }}</mat-label>
+                      @if (typeof part === 'number') {
+                        <input
+                          matInput
+                          type="number"
+                          min="0"
+                          step="1"
+                          [ngModel]="part"
+                          (ngModelChange)="setArrayIndex(claim, k, $event)"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      } @else {
+                        <input
+                          matInput
+                          [ngModel]="part"
+                          (ngModelChange)="claim.path[k] = $event; updateQuery()"
+                          [ngModelOptions]="{ standalone: true }"
+                        />
+                      }
+                    </mat-form-field>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="claim.path.splice(k, 1); updateQuery()"
+                      [attr.aria-label]="'Remove path segment ' + (k + 1)"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+                <button mat-button type="button" (click)="claim.path.push(''); updateQuery()">
+                  Add path segment
+                </button>
+              </div>
+            }
+            <button
+              mat-icon-button
+              type="button"
+              (click)="removeClaim(credential, j)"
+              [attr.aria-label]="'Remove claim ' + (j + 1) + ' from ' + credential.id"
+            >
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+          @if (control.touched && claimError(claim, credential.format); as error) {
+            <p class="query-error" role="alert">{{ error }}</p>
+          }
+          <details
+            [open]="
+              claim.id !== undefined ||
+              claim.values !== undefined ||
+              claim.intent_to_retain !== undefined
+            "
+          >
+            <summary>Claim options</summary>
+            <div class="option-fields">
+              @if (!usesSegments(claim, credential)) {
+                <button mat-button type="button" (click)="useSegments(claim)">
+                  Edit individual path segments
+                </button>
+              }
+              <mat-form-field
+                ><mat-label>Claim ID (optional)</mat-label>
+                <input
+                  matInput
+                  [ngModel]="claim.id || ''"
+                  (ngModelChange)="setClaimId(claim, $event)"
+                  [ngModelOptions]="{ standalone: true }"
+                />
+                <mat-hint>Only needed when referencing this claim in advanced rules.</mat-hint>
+              </mat-form-field>
+              <div>
+                <p>Allowed values (text)</p>
+                <p class="field-hint">
+                  Leave unrestricted to accept any value. The wallet uses these hints when selecting
+                  claims; your application must still check the returned values.
+                </p>
+                @for (value of claim.values; track $index; let k = $index) {
+                  <div class="row-fields">
+                    <mat-form-field
+                      ><mat-label>Allowed value</mat-label>
+                      <input
+                        matInput
+                        [ngModel]="value"
+                        (ngModelChange)="claim.values![k] = $event; updateQuery()"
+                        [ngModelOptions]="{ standalone: true }"
+                      />
+                    </mat-form-field>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="removeAllowedValue(claim, k)"
+                      [attr.aria-label]="'Remove allowed value ' + (k + 1)"
+                    >
+                      <mat-icon>close</mat-icon>
+                    </button>
+                  </div>
+                }
+                <button mat-button type="button" (click)="addAllowedValue(claim)">
+                  Add allowed value
+                </button>
+                @if (claim.values?.length === 0) {
+                  <button mat-button type="button" (click)="removeAllowedValue(claim, 0)">
+                    Remove value constraint
+                  </button>
+                }
+              </div>
+              @if (credential.format === 'mso_mdoc' || claim.intent_to_retain !== undefined) {
+                <mat-form-field
+                  ><mat-label>Retain this claim</mat-label>
+                  <mat-select
+                    [disabled]="control.disabled"
+                    [ngModel]="claim.intent_to_retain ?? null"
+                    (ngModelChange)="setRetention(claim, $event)"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    <mat-option [value]="null">Not specified</mat-option
+                    ><mat-option [value]="true">Yes</mat-option
+                    ><mat-option [value]="false">No</mat-option>
+                  </mat-select>
+                  <mat-hint>For mDOC credentials only.</mat-hint>
+                </mat-form-field>
+              }
+            </div>
+          </details>
+        </div>
+      } @empty {
+        <p>No claims added yet.</p>
+      }
+      <div class="query-actions">
+        <button mat-stroked-button type="button" (click)="addClaim(credential)">
+          <mat-icon>add</mat-icon>Add claim
+        </button>
+      </div>
+      @if (credential.format === 'dc+sd-jwt') {
+        <details class="bulk-claims">
+          <summary>Paste multiple claims</summary>
+          <mat-form-field class="full-width"
+            ><mat-label>Claim paths to paste</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              [ngModel]="pastedClaims.get(credential) || ''"
+              (ngModelChange)="pastedClaims.set(credential, $event)"
+              [ngModelOptions]="{ standalone: true }"
+              placeholder="given_name&#10;address.locality"
+            ></textarea>
+            <mat-hint>One path per line. Existing claim options are preserved.</mat-hint>
+          </mat-form-field>
+          <button mat-button type="button" (click)="pasteClaims(credential)">
+            Add pasted claims
+          </button>
+          @if (pasteErrors.get(credential); as error) {
+            <p class="query-error" role="alert">{{ error }}</p>
+          }
+        </details>
+      }
+      <mat-expansion-panel
+        class="trust-panel"
+        [expanded]="!!credential.trustedAuthorities?.length"
+        (opened)="loadTrustLists()"
+      >
+        <mat-expansion-panel-header
+          ><mat-panel-title>Issuer trust</mat-panel-title></mat-expansion-panel-header
+        >
+        <p>
+          Choose the authorities or trust lists accepted for this credential. A credential may match
+          any listed authority.
+        </p>
+        @if (loadingTrustLists) {
+          <p role="status">Loading managed trust lists…</p>
+        }
+        @if (trustListsError) {
+          <p role="status">{{ trustListsError }}</p>
+          <button mat-button type="button" (click)="loadTrustLists()">
+            Retry loading trust lists
+          </button>
+        }
+        @for (authority of credential.trustedAuthorities; track authority; let a = $index) {
+          <div class="trust-authority">
+            @if (authority.type === 'etsi_tl') {
+              @for (ref of authority.values; track $index; let r = $index) {
+                <div class="trust-reference">
+                  <div class="row-fields">
+                    @if (ref.trustListId !== undefined) {
+                      <mat-form-field
+                        ><mat-label>Managed trust list</mat-label>
+                        <mat-select
+                          [disabled]="control.disabled"
+                          [ngModel]="ref.trustListId"
+                          (ngModelChange)="selectTrustList(authority, r, $event)"
+                          [ngModelOptions]="{ standalone: true }"
+                        >
+                          @if (ref.trustListId && !hasTrustList(ref.trustListId)) {
+                            <mat-option [value]="ref.trustListId"
+                              >{{ ref.trustListId }} (not in loaded lists)</mat-option
+                            >
+                          }
+                          @for (list of trustLists; track list.id) {
+                            <mat-option [value]="list.id"
+                              >{{ list.description || list.id }} ({{ list.id }})</mat-option
+                            >
+                          }
+                        </mat-select>
+                        <mat-hint
+                          >The tenant resolves this list's URL and verification
+                          certificate.</mat-hint
+                        >
+                      </mat-form-field>
+                    } @else {
+                      <mat-form-field
+                        ><mat-label>External trust-list URL</mat-label>
+                        <input
+                          matInput
+                          [ngModel]="ref.url || ''"
+                          (ngModelChange)="ref.url = $event; updateQuery()"
+                          [ngModelOptions]="{ standalone: true }"
+                          placeholder="https://trust.example/list"
+                        />
+                      </mat-form-field>
+                    }
+                    <button
+                      mat-icon-button
+                      type="button"
+                      (click)="removeTrust(credential, a, r)"
+                      aria-label="Remove trust reference"
+                    >
+                      <mat-icon>delete_outline</mat-icon>
+                    </button>
+                  </div>
+                  @if (ref.trustListId === undefined) {
+                    <details [open]="!!ref.verifierX509Der || !!ref.verifierKey">
+                      <summary>Trust-list verification material</summary>
+                      <mat-form-field class="full-width"
+                        ><mat-label>Verification certificate (base64 DER)</mat-label>
+                        <textarea
+                          matInput
+                          rows="3"
+                          [ngModel]="ref.verifierX509Der || ''"
+                          (ngModelChange)="ref.verifierX509Der = $event; updateQuery()"
+                          [ngModelOptions]="{ standalone: true }"
+                        ></textarea>
+                      </mat-form-field>
+                      @if (ref.verifierKey) {
+                        <p>
+                          A custom verification key is configured and will be preserved. Use DCQL
+                          JSON to change it.
+                        </p>
+                      }
+                    </details>
+                  }
+                </div>
+              }
+            } @else {
+              @for (value of authority.values; track $index; let r = $index) {
+                <div class="row-fields">
+                  <mat-form-field
+                    ><mat-label>Federation authority URL</mat-label>
+                    <input
+                      matInput
+                      [ngModel]="value"
+                      (ngModelChange)="authority.values[r] = $event; updateQuery()"
+                      [ngModelOptions]="{ standalone: true }"
+                      placeholder="https://trustanchor.example"
+                    />
+                  </mat-form-field>
+                  <button
+                    mat-icon-button
+                    type="button"
+                    (click)="removeTrust(credential, a, r)"
+                    aria-label="Remove federation authority"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+                </div>
+              }
+            }
+            @if (!authority.values.length) {
+              <button mat-button type="button" (click)="removeAuthority(credential, a)">
+                Remove empty authority
+              </button>
+            }
+          </div>
+        }
+        <div class="query-actions">
+          <button mat-stroked-button type="button" (click)="addTrust(credential, 'managed')">
+            Add managed trust list
+          </button>
+          <button mat-button type="button" (click)="addTrust(credential, 'external')">
+            Add external trust list
+          </button>
+          <button mat-button type="button" (click)="addTrust(credential, 'federation')">
+            Add federation authority
+          </button>
+        </div>
+        @if (control.touched && trustError(credential.trustedAuthorities); as error) {
+          <p class="query-error" role="alert">{{ error }}</p>
+        }
+      </mat-expansion-panel>
+      <p class="field-hint trust-summary">{{ trustSummary(credential.trustedAuthorities) }}</p>
+      <button
+        mat-button
+        type="button"
+        (click)="removeCredential(i)"
+        [attr.aria-label]="'Remove credential ' + (i + 1)"
+      >
+        Remove credential
+      </button>
+    </fieldset>
+  } @empty {
+    <p>Import a credential above to select its claims, or add one manually.</p>
+  }
+  <button mat-stroked-button type="button" (click)="addCredential()" [disabled]="control.disabled">
+    <mat-icon>add</mat-icon>Add credential
+  </button>
+  @if (credentials.length) {
+    <fieldset class="credential-combinations" [disabled]="control.disabled">
+      <legend>Accepted credential combinations</legend>
+      <mat-form-field class="full-width"
+        ><mat-label>Which credentials are needed?</mat-label>
+        <mat-select
+          [disabled]="control.disabled"
+          [ngModel]="query.credentialSets !== undefined"
+          (ngModelChange)="configureAlternatives($event)"
+          [ngModelOptions]="{ standalone: true }"
+        >
+          <mat-option [value]="false">Require all selected credentials</mat-option
+          ><mat-option [value]="true">Configure alternatives and optional requirements</mat-option>
+        </mat-select>
+      </mat-form-field>
+      @if (query.credentialSets !== undefined) {
+        <p>
+          Every required group must be satisfied. Within a group, the wallet can provide any one
+          alternative. All credentials selected in an alternative are needed together.
+        </p>
+        @for (set of query.credentialSets; track set; let s = $index) {
+          <div class="requirement">
+            <div class="row-fields">
+              <h4>Requirement {{ s + 1 }}</h4>
+              <mat-form-field
+                ><mat-label>Requirement {{ s + 1 }} availability</mat-label>
+                <mat-select
+                  [disabled]="control.disabled"
+                  [ngModel]="set.required !== false"
+                  (ngModelChange)="set.required = $event; updateQuery()"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <mat-option [value]="true">Required</mat-option
+                  ><mat-option [value]="false">Optional</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <button
+                mat-icon-button
+                type="button"
+                (click)="removeRequirement(s)"
+                [attr.aria-label]="'Remove requirement ' + (s + 1)"
+              >
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+            @for (option of set.options; track $index; let o = $index) {
+              @if (o > 0) {
+                <p class="alternative-label">OR</p>
+              }
+              <div class="row-fields">
+                <mat-form-field
+                  ><mat-label>Requirement {{ s + 1 }}, alternative {{ o + 1 }}</mat-label>
+                  <mat-select
+                    multiple
+                    [disabled]="control.disabled"
+                    [ngModel]="option"
+                    (ngModelChange)="set.options[o] = $event; updateQuery()"
+                    [ngModelOptions]="{ standalone: true }"
+                  >
+                    @for (credential of credentials; track credential) {
+                      <mat-option [value]="credential.id"
+                        >{{ credential.id }} ·
+                        {{ credential.type || credential.format }}</mat-option
+                      >
+                    }
+                    @for (id of missingIds(option); track $index) {
+                      <mat-option [value]="id">Missing credential: {{ id }}</mat-option>
+                    }
+                  </mat-select>
+                  <mat-hint>Select credentials that must be presented together.</mat-hint>
+                </mat-form-field>
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeOption(set, o)"
+                  [attr.aria-label]="
+                    'Remove alternative ' + (o + 1) + ' from requirement ' + (s + 1)
+                  "
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+            <button mat-button type="button" (click)="addOption(set)">Add alternative</button>
+          </div>
+        }
+        <button mat-stroked-button type="button" (click)="addRequirement()">Add requirement</button>
+        @if (unreferencedIds().length) {
+          <p class="query-notice">
+            Not included in a requirement: {{ unreferencedIds().join(', ') }}. These credentials
+            will not be requested.
+          </p>
+        }
+      } @else {
+        <p>The wallet must provide every credential listed above.</p>
+      }
+    </fieldset>
+  }
+}
+@if (control.invalid && (control.touched || control.dirty)) {
+  <p class="query-error" role="alert">
+    {{
+      control.errors?.['simpleQuery'] ||
+        control.errors?.['invalidReference'] ||
+        (control.errors?.['required']
+          ? 'Choose at least one credential to request.'
+          : 'The query is invalid. Check the credential types, claims and JSON syntax.')
+    }}
+  </p>
+}

@@ -4,6 +4,17 @@ title: Issuance Configuration
 
 Issuance configurations define runtime behavior for issuing credentials, such as authorization, token behavior, and trust-related requirements.
 
+## Guided setup in the Web Client
+
+New issuance configurations start with four steps:
+
+1. **Identity** — enter the issuer display name(s), locale, and optional logo.
+2. **Wallet access** — configure authorization servers. Expand **Issuance behavior (advanced)** to change batch size, DPoP requirement, and credential request/response encryption.
+3. **Trust** — review trust requirements, including wallet provider trust lists and registration certificates.
+4. **Review** — check the resulting configuration before creating it.
+
+Press Enter in a single-line field or choose **Continue** to advance. Missing fields are highlighted when you continue. **Show all settings** enables direct tab navigation; existing configurations open this way. Both modes use the same form and preserve your changes.
+
 ## Basic Structure
 
 **Example Issuance Configuration:**

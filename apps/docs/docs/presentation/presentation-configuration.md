@@ -6,6 +6,33 @@ This guide covers how to create, manage, and configure presentation requests in 
 
 For creating request payloads and runtime overrides, see [Presentation Requests](presentation-requests.md).
 
+## Guided setup in the Web Client
+
+Open **Credential Verification → Verification Configs → Create**. New configurations use four steps:
+
+1. **Name** — enter a unique ID and a description for your reusable request.
+2. **Credentials** — use **Import from Issuer** to choose credentials and claims, **Import from Schema** to start from schema metadata, or **Add credential** to enter a type and claim names yourself.
+3. **Settings** — review the default request lifetime (300 seconds), strict credential status checks, and tenant default access key chain. Expand the relevant section for registration certificates, application integration, transaction data, or verification overrides.
+4. **Review** — check the requested information and settings, then create the configuration. Use **Create offer** on the saved configuration to test it with a wallet.
+
+An access key chain with an active certificate is needed to create a request. The editor shows a reminder if it cannot find one. Registration-certificate requirements depend on the wallet ecosystem you are integrating with.
+
+### Visual query builder and JSON
+
+For SD-JWT VC, enter the credential type (VCT) and add a field for each requested claim. You can also paste a list of claim paths. Use dots for nested paths, such as `address.locality`. For mDOC, enter the document type, namespace, and claim names. The type and paths must match the credential in the wallet; importing from its issuer avoids guessing these values.
+
+Each claim has optional settings for its ID, allowed text values, and mDOC retention intent. Path segments support array indexes and property names containing dots.
+
+Under **Issuer trust**, select a managed trust list, reference an external list, or add an OpenID Federation authority. EUDIPLO resolves trust-list references before sending the request to the wallet.
+
+**Accepted credential combinations** defaults to requiring all credentials. Configure alternatives when the wallet may choose one option: credentials within an option are required together, while options in a requirement are alternatives. Each requirement can be required or optional.
+
+Use **Edit DCQL JSON** for additional query rules such as claim sets or multiple credential instances. Imported queries with unsupported visual features automatically stay in JSON so those rules are preserved.
+
+**Switch to editor** allows direct navigation between sections. Existing configurations open in this mode. **Use guided setup** restores step-by-step navigation; both modes share the same form and retain your changes. Configured optional settings open automatically so you can see existing overrides.
+
+For a complete first request, follow [Request Your First Presentation](../getting-started/first-presentation.md).
+
 ## Configuration Structure
 
 **Example Presentation Configuration (PID):**

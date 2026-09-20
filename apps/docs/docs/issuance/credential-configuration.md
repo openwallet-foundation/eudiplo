@@ -4,6 +4,18 @@ title: Credential Configuration
 
 Credential configurations define the structure and behavior of individual credentials. Each credential type has its own configuration.
 
+## Guided setup in the Web Client
+
+New credential configurations start with five steps:
+
+1. **Basics** — enter the ID, description, format, and credential type (VCT or mDOC document type).
+2. **Claims** — add the fields you will issue, including their types and mDOC namespaces. Defaults follow the field type: enter plain text for strings, `true` or `false` for booleans, numbers for numeric types, and JSON for objects or arrays.
+3. **Appearance** — choose the wallet display name, description, and locale. Colors and images are optional.
+4. **Settings** — review the lifetime, signing key, holder binding, status management, and proof defaults. Expand a section to change signing, trust, reuse policies, authorization actions, or integrations.
+5. **Review** — check the resulting configuration before creating it.
+
+Press Enter in a single-line field or choose **Continue** to advance. Missing fields are highlighted when you continue. **Show all settings** enables direct tab navigation; existing configurations open this way. Both modes use the same form, preserve your changes, and support templates and JSON editing.
+
 ## Basic Structure
 
 Each credential configuration is a JSON object that defines how a specific credential type should be issued. The configuration includes metadata, display information, field definitions (`fields[]`), and optional features like key binding and status management.

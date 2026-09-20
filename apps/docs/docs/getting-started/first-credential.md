@@ -82,29 +82,39 @@ Client secrets are securely hashed and cannot be retrieved later. If you lose th
 
 ## Step 3: Create a Credential Configuration
 
-Now define what your credential will contain and how it looks.
+Now define what your credential will contain and how it looks. The wizard walks you through five steps: **Basics**, **Claims**, **Appearance**, **Settings**, and **Review**.
 
 1. Navigate to **Issuance** → **Credential Configs** in the sidebar
 2. Click **+ Create**
-3. Click **Load Template** (top-right corner) and select a template like `PID (SD-JWT VC)`
+3. Click **Templates** (top-right corner) and select a template like `PID (SD-JWT VC)`
 
 :::tip[Templates save time]
 Templates provide pre-configured credential types with proper claims, display settings, and formats. They're the fastest way to get started!
 :::
 
-1. Review and adjust the configuration as needed
-2. Click **Save**
+1. In **Basics**, review the ID, description, format, and credential type (VCT or mDOC document type), then click **Continue**
+2. In **Claims**, review the fields to issue and click **Continue**
+3. In **Appearance**, review the wallet display name and locale, then click **Continue**
+4. In **Settings**, keep the defaults for lifetime, signing key, and status management, then click **Continue**
+5. In **Review**, check the resulting configuration and click **Create Configuration**
+
+:::tip[Guided vs. full editor]
+Use **Show all settings** to switch to a single form with direct tab navigation. Existing configurations always open this way. Both modes share the same form and preserve your changes.
+:::
 
 ## Step 4: Configure Issuance Settings
 
-The issuance configuration defines how your issuer presents itself to wallets.
+The issuance configuration defines how your issuer presents itself to wallets. This wizard has four steps: **Identity**, **Wallet access**, **Trust**, and **Review**.
 
 1. Navigate to **Issuance** → **Issuance Config**
-2. Configure:
-    - **Display Name**: `My Issuer`
+2. In **Identity**, enter a **Name** (e.g. `My Issuer`) and **Locale**, then click **Continue**
+3. In **Wallet access**, keep the built-in authorization server, expand **Issuance behavior (advanced)**, and set:
     - **DPoP Required**: **Disabled** ⚠️
     - **Batch Size**: `1`
-3. Click **Save**
+
+    Click **Continue**
+4. In **Trust**, review the trust requirements summary and click **Continue**
+5. In **Review**, check the configuration and click **Create Configuration**
 
 :::warning[DPoP Compatibility]
 Keep **DPoP Required** disabled for maximum wallet compatibility. Many wallets don't support DPoP yet. You can enable it later for additional security once you've verified your target wallets support it.

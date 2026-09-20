@@ -54,6 +54,7 @@ import {
 } from '../../../utils/schemas';
 import { EditorComponent, extractSchema } from '../../../utils/editor/editor.component';
 import { ImageFieldComponent } from '../../../utils/image-field/image-field.component';
+import { schemaFormValidator } from '../../../utils/schema-form-validator';
 import { getApiErrorMessage } from '../../../utils/error-message';
 
 @Component({
@@ -100,6 +101,85 @@ export class CredentialConfigCreateComponent implements OnInit {
   public create = true;
   public loading = false;
   public submitAttempted = false;
+  guidedMode = true;
+  activeStep = 0;
+  furthestStep = 0;
+  stepError = '';
+  settingsExpanded = false;
+  expandedFields = new Set<AbstractControl>();
+  expandedAppearance = new Set<AbstractControl>();
+  readonly stepNames = ['Basics', 'Claims', 'Appearance', 'Settings', 'Review'];
+
+  private stepControls(step: number): string[] {
+    const basics = ['id', 'description', 'format', 'vct', 'vctString', 'docType'];
+    if (step === 0) return basics;
+    if (step === 1) return ['fields'];
+    if (step === 2) return ['displayConfigs'];
+    return Object.keys(this.form.controls).filter(
+      (name) => ![...basics, 'fields', 'displayConfigs'].includes(name)
+    );
+  }
+
+  private validateStep(step: number): boolean {
+    const invalid = this.stepControls(step).filter((name) => this.form.get(name)?.invalid);
+    if (!invalid.length) return true;
+    invalid.forEach((name) => this.form.get(name)?.markAllAsTouched());
+    this.submitAttempted = true;
+    if (step === 3) this.settingsExpanded = true;
+    if (step === 2)
+      this.displayConfigs.controls
+        .filter((display) => display.invalid)
+        .forEach((display) => this.expandedAppearance.add(display));
+    if (step === 1)
+      this.fields.controls
+        .filter((field) => field.invalid)
+        .forEach((field) => this.expandedFields.add(field));
+    this.stepError = `Check the highlighted fields in ${this.stepNames[step]} before continuing.`;
+    this.activeStep = step;
+    return false;
+  }
+
+  nextStep(): void {
+    this.stepError = '';
+    if (this.loading || !this.validateStep(this.activeStep)) return;
+    if (this.activeStep === 3) {
+      for (let step = 0; step < 3; step++) if (!this.validateStep(step)) return;
+    }
+    this.activeStep = Math.min(4, this.activeStep + 1);
+    this.furthestStep = Math.max(this.furthestStep, this.activeStep);
+  }
+
+  previousStep(): void {
+    this.activeStep = Math.max(0, this.activeStep - 1);
+    this.stepError = '';
+  }
+
+  toggleGuidedMode(): void {
+    this.guidedMode = !this.guidedMode;
+    this.activeStep = 0;
+    this.furthestStep = 0;
+    this.stepError = '';
+  }
+
+  onInputEnter(event: Event): void {
+    const key = event as KeyboardEvent;
+    if (key.isComposing || key.altKey || key.ctrlKey || key.metaKey || key.shiftKey) return;
+    key.preventDefault();
+    key.stopPropagation();
+    this.submitCredential();
+  }
+
+  submitCredential(): void {
+    if (this.loading) return;
+    if (this.guidedMode && this.activeStep < 4) this.nextStep();
+    else this.onSubmit();
+  }
+
+  get settingsSummary(): string {
+    const value = this.form.getRawValue();
+    return `Lifetime: ${this.formatLifetime(value.lifeTime)} · Signing: ${value.keyChainId || 'Default key chain'} · Holder binding: ${value.keyBinding ? 'On' : 'Off'} · Status management: ${value.statusManagement ? 'On' : 'Off'} · Trust: ${this.isMdocFormat ? 'mDOC certificate chain' : value.sdJwtTrustFormat} · Proofs: ${value.proofTypesSupported.join(', ')} · Credential reuse: ${value.credentialReusePolicyEnabled ? value.credentialReusePolicyDetails.join(', ') : 'Not configured'}`;
+  }
+
   keyChains: KeyChainResponseDto[] = [];
   presentationConfigs: PresentationConfig[] = [];
   attributeProviders: AttributeProviderEntity[] = [];
@@ -138,6 +218,7 @@ export class CredentialConfigCreateComponent implements OnInit {
     { label: 'ISO 18045 Moderate', value: 'iso_18045_moderate' },
   ];
 
+  private readonly validateVct = schemaFormValidator(vctSchema);
   vctSchema = vctSchema;
   embeddedDisclosurePolicySchema = embeddedDisclosurePolicySchema;
 
@@ -185,14 +266,19 @@ export class CredentialConfigCreateComponent implements OnInit {
       statusManagement: new FormControl(true, [Validators.required]),
       activeCredentialsEnabled: new FormControl(false),
       // SD-JWT specific fields
-      vct: new FormControl(''),
+      vct: new FormControl('', (control) =>
+        control.parent?.get('format')?.value === 'mso_mdoc' ? null : this.validateVct(control)
+      ),
       vctString: new FormControl(''),
       sdJwtTrustFormat: new FormControl('x5c'),
       // mDOC specific fields
       docType: new FormControl(''),
       fields: new FormArray([]),
       displayConfigs: new FormArray([this.createDisplayConfigGroup()]),
-      embeddedDisclosurePolicy: new FormControl(''),
+      embeddedDisclosurePolicy: new FormControl(
+        '',
+        schemaFormValidator(embeddedDisclosurePolicySchema)
+      ),
       attributeProviderId: new FormControl(''),
       webhookEndpointId: new FormControl(''),
       iaeActions: new FormArray([]),
@@ -219,6 +305,9 @@ export class CredentialConfigCreateComponent implements OnInit {
 
     // Listen for format changes to update validators
     this.form.get('format')?.valueChanges.subscribe((format) => {
+      this.form.get('vct')?.updateValueAndValidity();
+      this.form.get('docType')?.setValidators(format === 'mso_mdoc' ? [Validators.required] : []);
+      this.form.get('docType')?.updateValueAndValidity();
       const vctStringControl = this.form.get('vctString');
       if (format === 'mso_mdoc') {
         // mDOC doesn't need vctString - clear validators
@@ -234,6 +323,7 @@ export class CredentialConfigCreateComponent implements OnInit {
 
     if (this.route.snapshot.params['id']) {
       this.create = false;
+      this.guidedMode = false;
     }
   }
   ngOnInit() {
@@ -299,7 +389,10 @@ export class CredentialConfigCreateComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.loading) return;
     this.submitAttempted = true;
+    this.stepError = '';
+    for (let step = 0; step < 4; step++) if (!this.validateStep(step)) return;
 
     if (this.form.invalid) {
       this.markFormGroupTouched();
@@ -383,27 +476,20 @@ export class CredentialConfigCreateComponent implements OnInit {
   }
 
   private metadataInvalidCount(): number {
-    const base = ['id', 'description', 'format', 'lifeTime'].reduce(
+    return this.stepControls(0).reduce(
       (sum, name) => sum + this.countInvalidControls(this.form.get(name)),
       0
     );
-
-    const isMdoc = this.form.get('format')?.value === 'mso_mdoc';
-    if (!isMdoc && this.vctMode === 'string') {
-      return base + this.countInvalidControls(this.form.get('vctString'));
-    }
-
-    return base;
   }
-
   private businessInvalidCount(): number {
-    return this.countInvalidControls(this.form.get('iaeActions'));
+    return this.stepControls(3).reduce(
+      (sum, name) => sum + this.countInvalidControls(this.form.get(name)),
+      0
+    );
   }
-
   private visualInvalidCount(): number {
     return this.countInvalidControls(this.form.get('displayConfigs'));
   }
-
   private fieldsInvalidCount(): number {
     return this.countInvalidControls(this.form.get('fields'));
   }
@@ -741,15 +827,86 @@ export class CredentialConfigCreateComponent implements OnInit {
     );
     const namespace = this.getFieldNamespaceForForm(field);
 
-    return new FormGroup({
+    const group = new FormGroup({
       path: new FormControl(this.normalizeFieldPathForForm(field), [Validators.required]),
       namespace: new FormControl(namespace),
       type: new FormControl(field?.type || 'string', [Validators.required]),
-      defaultValue: new FormControl(this.stringifyField(field?.defaultValue)),
+      defaultValue: new FormControl(
+        typeof field?.defaultValue === 'string' && field.type === 'string'
+          ? field.defaultValue
+          : field?.defaultValue === undefined
+            ? ''
+            : JSON.stringify(field.defaultValue, null, 2)
+      ),
       mandatory: new FormControl(!!field?.mandatory),
       disclosable: new FormControl(field?.disclosable ?? true),
       display,
     });
+    group.controls.defaultValue.addValidators((control) => {
+      try {
+        this.parseClaimDefault(control.value, group.controls.type.value || 'string');
+        return null;
+      } catch (error) {
+        return { defaultValueType: (error as Error).message };
+      }
+    });
+    group.controls.type.valueChanges.subscribe(() =>
+      group.controls.defaultValue.updateValueAndValidity()
+    );
+    group.controls.defaultValue.updateValueAndValidity();
+    return group;
+  }
+
+  claimDefaultHint(type: string): string {
+    switch (type) {
+      case 'string':
+        return 'Plain text, e.g. Max. No quotes needed. Leave empty for no default.';
+      case 'boolean':
+        return 'Enter true or false. Leave empty for no default.';
+      case 'number':
+        return 'Enter a number, e.g. 42 or 3.14. Leave empty for no default.';
+      case 'integer':
+        return 'Enter a whole number, e.g. 42. Leave empty for no default.';
+      case 'object':
+        return 'Enter a JSON object, e.g. {"city":"Berlin"}. Leave empty for no default.';
+      default:
+        return 'Enter a JSON array, e.g. ["one", "two"]. Leave empty for no default.';
+    }
+  }
+
+  private parseClaimDefault(
+    value: string | null | undefined,
+    type: string
+  ): ClaimFieldDefinitionDto['defaultValue'] {
+    if (value == null || value === '') return undefined;
+    if (type === 'string') return value;
+    const text = value.trim();
+    if (!text) return undefined;
+    const messages: Record<string, string> = {
+      boolean: 'Enter true or false.',
+      number: 'Enter a finite number, e.g. 42 or 3.14.',
+      integer: 'Enter a whole number, e.g. 42.',
+      object: 'Enter a valid JSON object, e.g. {"city":"Berlin"}.',
+      array: 'Enter a valid JSON array, e.g. ["one", "two"].',
+    };
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(text);
+    } catch {
+      throw new Error(messages[type]);
+    }
+    const valid =
+      type === 'boolean'
+        ? typeof parsed === 'boolean'
+        : type === 'number'
+          ? typeof parsed === 'number' && Number.isFinite(parsed)
+          : type === 'integer'
+            ? typeof parsed === 'number' && Number.isInteger(parsed)
+            : type === 'object'
+              ? parsed !== null && typeof parsed === 'object' && !Array.isArray(parsed)
+              : type === 'array' && Array.isArray(parsed);
+    if (!valid) throw new Error(messages[type]);
+    return parsed as ClaimFieldDefinitionDto['defaultValue'];
   }
 
   get fields(): FormArray {
@@ -765,7 +922,9 @@ export class CredentialConfigCreateComponent implements OnInit {
   }
 
   addField(): void {
-    this.fields.push(this.createFieldGroup());
+    const field = this.createFieldGroup();
+    this.fields.push(field);
+    this.expandedFields.add(field);
   }
 
   removeField(index: number): void {
@@ -1039,7 +1198,7 @@ export class CredentialConfigCreateComponent implements OnInit {
     const flatFields = rawFields
       .map((rawField: any) => {
         const path = this.parseFieldPath(rawField['path']);
-        const defaultValueRaw = rawField['defaultValue']?.trim();
+        const defaultValue = this.parseClaimDefault(rawField['defaultValue'], rawField['type']);
         const namespace = rawField['namespace']?.trim() || undefined;
 
         const field: ClaimFieldDefinitionDto = {
@@ -1050,8 +1209,8 @@ export class CredentialConfigCreateComponent implements OnInit {
           ...(namespace ? { namespace } : {}),
         };
 
-        if (defaultValueRaw) {
-          field.defaultValue = JSON.parse(defaultValueRaw);
+        if (defaultValue !== undefined) {
+          field.defaultValue = defaultValue;
         }
 
         const display = (rawField['display'] || [])

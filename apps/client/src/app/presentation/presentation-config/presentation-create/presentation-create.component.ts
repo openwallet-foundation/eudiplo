@@ -26,6 +26,8 @@ import { SchemaBrowserComponent } from '../schema-browser/schema-browser.compone
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { configs } from './pre-config';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { EditorComponent, extractSchema } from '../../../utils/editor/editor.component';
@@ -42,6 +44,14 @@ import { CredentialIdsComponent } from '../../credential-ids/credential-ids.comp
 import { RegistrarService } from '../../../registrar/registrar.service';
 import { ConfigOwnershipDirective } from '../../../config-portability/config-ownership.directive';
 import { ConfigOwnershipNoticeComponent } from '../../../config-portability/config-ownership-notice.component';
+import { DcqlQueryEditorComponent } from '../dcql-query-editor/dcql-query-editor.component';
+import {
+  dcqlReferenceError,
+  parseDcql,
+  readSimpleDcql,
+  trustSummary,
+} from '../dcql-query-editor/simple-dcql';
+import { schemaFormValidator } from '../../../utils/schema-form-validator';
 
 @Component({
   selector: 'app-presentation-create',
@@ -60,6 +70,9 @@ import { ConfigOwnershipNoticeComponent } from '../../../config-portability/conf
     MatMenuModule,
     MatDividerModule,
     MatTabsModule,
+    MatExpansionModule,
+    MatTooltipModule,
+    DcqlQueryEditorComponent,
     MonacoEditorModule,
     EditorComponent,
     CredentialIdsComponent,
@@ -99,8 +112,19 @@ export class PresentationCreateComponent implements OnInit {
   public registrationCertTabIndex = 0;
   public registrationCertCache: any = null;
   public reissuing = false;
-
-  DCQLSchema = DCQLSchema;
+  public guided = true;
+  public activeStep = 0;
+  public furthestStep = 0;
+  public showSettingsErrors = false;
+  public validationMessage = '';
+  public saving = false;
+  public keyChainsLoaded = false;
+  readonly stepDescriptions = [
+    'Name your reusable request',
+    'Choose credentials and claims',
+    'Review defaults and optional settings',
+    'Check the configuration before saving',
+  ];
 
   transactionDataArraySchema = transactionDataArraySchema;
 
@@ -150,7 +174,14 @@ export class PresentationCreateComponent implements OnInit {
       description: new FormControl(undefined, [Validators.required]),
       redirectUri: new FormControl(undefined),
       accessKeyChainId: new FormControl(undefined),
-      dcql_query: new FormControl(undefined, [Validators.required]),
+      dcql_query: new FormControl(undefined, [
+        Validators.required,
+        schemaFormValidator(DCQLSchema),
+        (control) => {
+          const error = dcqlReferenceError(control.value);
+          return error ? { invalidReference: error } : null;
+        },
+      ]),
       lifeTime: new FormControl(300, [Validators.required, Validators.min(1)]),
       statusCheckMode: new FormControl<'strict' | 'best_effort' | 'disabled'>('strict'),
       registrationCertImportJwt: new FormControl(undefined),
@@ -159,19 +190,24 @@ export class PresentationCreateComponent implements OnInit {
       registrationCertBodySupportUri: new FormControl(undefined),
       registrationCertBodyIntermediary: new FormControl(undefined),
       registrationCertBodyPurpose: new FormArray([]),
-      transaction_data: new FormControl(undefined), // Optional transaction data
+      transaction_data: new FormControl(undefined, [
+        schemaFormValidator(transactionDataArraySchema),
+      ]),
       attached: new FormArray([]),
       webhookEndpointId: new FormControl(''), // Predefined webhook endpoint selector
     });
   }
 
   ngOnInit(): void {
+    this.guided = !this.route.snapshot.params['id'];
     this.loadRegistrarDefaults();
 
     // Load key chains for the select dropdown (filter by access usage type)
     keyChainControllerGetAll({}).then(
-      (res) =>
-        (this.keyChains = res.data.filter((keyChain) => keyChain.usageType === 'access') || []),
+      (res) => {
+        this.keyChains = (res.data || []).filter((keyChain) => keyChain.usageType === 'access');
+        this.keyChainsLoaded = true;
+      },
       (error) => {
         console.error('Failed to load key chains:', error);
         this.snackBar.open('Failed to load key chains', 'Close', {
@@ -247,6 +283,177 @@ export class PresentationCreateComponent implements OnInit {
     }
   }
 
+  get queryControl(): FormControl {
+    return this.form.get('dcql_query') as FormControl;
+  }
+
+  toggleGuided(): void {
+    this.guided = !this.guided;
+    this.furthestStep = Math.max(this.furthestStep, this.activeStep);
+  }
+
+  private stepFields(step: number): string[] {
+    if (step === 0) return ['id', 'description'];
+    if (step === 1) return ['dcql_query'];
+    return Object.keys(this.form.controls).filter(
+      (key) => !['id', 'description', 'dcql_query'].includes(key)
+    );
+  }
+
+  private validateStep(step: number): boolean {
+    const controls = this.stepFields(step).map((key) => this.form.controls[key]);
+    controls.forEach((control) => control.markAllAsTouched());
+    if (step === 2 && this.integrationReferenceError) {
+      this.validationMessage = this.integrationReferenceError;
+      this.showSettingsErrors = true;
+      return false;
+    }
+    if (controls.some((control) => control.invalid)) {
+      this.validationMessage = `Check the highlighted fields in ${['Name', 'Credentials', 'Settings'][step]}.`;
+      if (step === 2) this.showSettingsErrors = true;
+      return false;
+    }
+    this.validationMessage = '';
+    return true;
+  }
+
+  nextStep(): void {
+    if (this.activeStep >= 3 || !this.validateStep(this.activeStep)) return;
+    this.furthestStep = Math.max(this.furthestStep, this.activeStep + 1);
+    this.activeStep++;
+  }
+
+  submitPresentation(): void {
+    if (this.guided && this.activeStep < 3) {
+      this.nextStep();
+      return;
+    }
+    this.createOrUpdatePresentation();
+  }
+
+  get hasRequestOverrides(): boolean {
+    const value = this.form.getRawValue();
+    return (
+      value.lifeTime !== 300 ||
+      value.statusCheckMode !== 'strict' ||
+      !!value.accessKeyChainId ||
+      !!value.redirectUri
+    );
+  }
+
+  get hasRegistrationCertificate(): boolean {
+    return !!this.buildRegistrationCertFromForm();
+  }
+
+  get hasIntegrationOptions(): boolean {
+    return !!this.form.get('webhookEndpointId')?.value || this.getFormArray('attached').length > 0;
+  }
+
+  get accessSetupMessage(): string | null {
+    if (!this.keyChainsLoaded) return null;
+    const selected = this.form.get('accessKeyChainId')?.value;
+    const chains = selected
+      ? this.keyChains.filter((chain) => chain.id === selected)
+      : this.keyChains;
+    return chains.some((chain) => chain.activeCertificate?.pem)
+      ? null
+      : 'An access key chain with an active certificate is needed to create presentation requests.';
+  }
+
+  get hasAdvancedQuery(): boolean {
+    return readSimpleDcql(this.queryControl.value) === null;
+  }
+
+  get querySummary(): {
+    id: string;
+    format: string;
+    type: string;
+    claims: string[];
+    trust: string;
+  }[] {
+    const query = parseDcql(this.queryControl.value) as any;
+    if (!Array.isArray(query?.credentials)) return [];
+    return query.credentials
+      .filter((credential: any) => credential && typeof credential === 'object')
+      .map((credential: any) => ({
+        id: credential.id,
+        format: credential.format,
+        trust:
+          Array.isArray(credential.trusted_authorities) &&
+          credential.trusted_authorities.every(
+            (authority: any) =>
+              ['etsi_tl', 'openid_federation'].includes(authority?.type) &&
+              Array.isArray(authority?.values) &&
+              authority.values.every((value: any) =>
+                authority.type === 'openid_federation'
+                  ? typeof value === 'string'
+                  : value && typeof value === 'object'
+              )
+          )
+            ? trustSummary(credential.trusted_authorities)
+            : credential.trusted_authorities
+              ? 'Review issuer trust in DCQL JSON'
+              : 'No issuer trust constraint configured',
+        type: Array.isArray(credential.meta?.vct_values)
+          ? credential.meta.vct_values.join(', ')
+          : typeof credential.meta?.doctype_value === 'string'
+            ? credential.meta.doctype_value
+            : '',
+        claims: Array.isArray(credential.claims)
+          ? credential.claims.map((claim: any) =>
+              Array.isArray(claim?.path)
+                ? claim.path
+                    .map((part: unknown) => (typeof part === 'number' ? `[${part}]` : String(part)))
+                    .join(' › ') +
+                  (Array.isArray(claim.values)
+                    ? ` — allowed values: ${claim.values.map((value: unknown) => JSON.stringify(value)).join(', ')}`
+                    : '') +
+                  (typeof claim.intent_to_retain === 'boolean'
+                    ? ` — retain: ${claim.intent_to_retain ? 'yes' : 'no'}`
+                    : '')
+                : 'Invalid claim path'
+            )
+          : [],
+      }));
+  }
+
+  get credentialRequirements(): { required: boolean; options: string[] }[] | null {
+    const query = parseDcql(this.queryControl.value) as any;
+    if (!Array.isArray(query?.credential_sets)) return null;
+    return query.credential_sets.map((set: any) => ({
+      required: set?.required !== false,
+      options: Array.isArray(set?.options)
+        ? set.options.map((option: any) =>
+            Array.isArray(option) ? option.join(' + ') : 'Invalid alternative'
+          )
+        : [],
+    }));
+  }
+
+  /** Renamed/deleted query IDs must also be repaired in integration settings before saving. */
+  get integrationReferenceError(): string | null {
+    const query = parseDcql(this.queryControl.value) as any;
+    const ids = new Set(
+      Array.isArray(query?.credentials) ? query.credentials.map((entry: any) => entry?.id) : []
+    );
+    const transactions = parseDcql(this.form.get('transaction_data')?.value);
+    const entries = [
+      ...this.getFormArray('attached')
+        .getRawValue()
+        .map((entry: any) => ({ entry, section: 'Attachments' })),
+      ...(Array.isArray(transactions)
+        ? transactions.map((entry) => ({ entry, section: 'Transaction data' }))
+        : []),
+    ];
+    for (const { entry, section } of entries) {
+      if (!Array.isArray(entry?.credential_ids)) continue;
+      const missing = entry.credential_ids.find((id: unknown) => !ids.has(id));
+      if (missing !== undefined)
+        return `${section} references missing credential "${missing}". Update its credential IDs in Settings.`;
+    }
+    return null;
+  }
+
   private async loadRegistrarDefaults(): Promise<void> {
     try {
       const config = await this.registrarService.getConfig();
@@ -320,29 +527,15 @@ export class PresentationCreateComponent implements OnInit {
   }
 
   createOrUpdatePresentation(): void {
-    // Parse the JSON string to an object for dcql_query
-    const formValue = { ...this.form.value };
-
-    if (
-      formValue.statusCheckMode !== 'strict' &&
-      formValue.statusCheckMode !== 'best_effort' &&
-      formValue.statusCheckMode !== 'disabled'
-    ) {
-      formValue.statusCheckMode = 'strict';
-    }
-
-    // Convert dcql_query from string to object
-    if (formValue.dcql_query) {
-      try {
-        formValue.dcql_query = extractSchema(formValue.dcql_query);
-        formValue.transaction_data = extractSchema(formValue.transaction_data);
-      } catch (error) {
-        console.error('Error parsing DCQL Query JSON:', error);
+    if (this.saving) return;
+    for (let step = 0; step < 3; step++) {
+      if (!this.validateStep(step)) {
+        this.furthestStep = Math.max(this.furthestStep, step);
+        this.activeStep = step;
         return;
       }
     }
-
-    formValue.registration_cert = this.buildRegistrationCertFromForm();
+    const formValue = this.getCompleteConfiguration(false);
 
     // Clean up webhookEndpointId - use null to clear (PATCH semantics)
     formValue.webhookEndpointId = formValue.webhookEndpointId?.trim() || null;
@@ -360,33 +553,39 @@ export class PresentationCreateComponent implements OnInit {
       formValue.id = this.route.snapshot.params['id'];
     }
 
+    this.saving = true;
     if (this.create) {
-      this.presentationService.createConfiguration(formValue).then(
-        (res: any) => {
-          // In copy mode, navigate up two levels (past :id/copy), otherwise one level
-          const navigatePath = this.copyMode ? ['../../', res.id] : ['../', res.id];
-          this.router.navigate(navigatePath, { relativeTo: this.route });
-          this.snackBar.open('Presentation created successfully', 'Close', {
-            duration: 3000,
-          });
-        },
-        (err: any) => this.snackBar.open(err.message, 'Close')
-      );
+      this.presentationService
+        .createConfiguration(formValue)
+        .then(
+          (res: any) => {
+            // In copy mode, navigate up two levels (past :id/copy), otherwise one level
+            const navigatePath = this.copyMode ? ['../../', res.id] : ['../', res.id];
+            this.router.navigate(navigatePath, { relativeTo: this.route });
+            this.snackBar.open('Presentation created successfully', 'Close', {
+              duration: 3000,
+            });
+          },
+          (err: any) => this.snackBar.open(err.message, 'Close')
+        )
+        .finally(() => (this.saving = false));
     } else {
       presentationManagementControllerUpdateConfiguration({
         body: formValue,
         path: { id: formValue.id },
-      }).then(
-        () => {
-          this.router.navigate(['../'], { relativeTo: this.route });
-          this.snackBar.open('Presentation updated successfully', 'Close', {
-            duration: 3000,
-          });
-        },
-        (err: any) => {
-          this.snackBar.open(err.message, 'Close');
-        }
-      );
+      })
+        .then(
+          () => {
+            this.router.navigate(['../'], { relativeTo: this.route });
+            this.snackBar.open('Presentation updated successfully', 'Close', {
+              duration: 3000,
+            });
+          },
+          (err: any) => {
+            this.snackBar.open(err.message, 'Close');
+          }
+        )
+        .finally(() => (this.saving = false));
     }
   }
 
@@ -432,7 +631,7 @@ export class PresentationCreateComponent implements OnInit {
   /**
    * Get the complete config object from form values
    */
-  private getCompleteConfiguration(): any {
+  private getCompleteConfiguration(forExport = true): any {
     const formValue = { ...this.form.getRawValue() };
 
     this.ensureValidStatusCheckMode(formValue);
@@ -461,7 +660,9 @@ export class PresentationCreateComponent implements OnInit {
       }
     }
 
-    formValue.registration_cert = this.getExportRegistrationCert();
+    formValue.registration_cert = forExport
+      ? this.getExportRegistrationCert()
+      : this.buildRegistrationCertFromForm();
     if (!formValue.webhook?.url) {
       formValue.webhook = undefined;
     }
@@ -469,11 +670,11 @@ export class PresentationCreateComponent implements OnInit {
       formValue.registration_cert = undefined; // Remove registrationCert if not provided
     }
 
-    if (!formValue.redirectUri) {
+    if (forExport && !formValue.redirectUri) {
       formValue.redirectUri = undefined;
     }
 
-    if (!formValue.accessKeyChainId) {
+    if (forExport && !formValue.accessKeyChainId) {
       formValue.accessKeyChainId = undefined;
     }
 
@@ -486,7 +687,7 @@ export class PresentationCreateComponent implements OnInit {
     }
 
     // Clean up empty optional fields
-    if (formValue.attached?.length === 0) {
+    if (forExport && formValue.attached?.length === 0) {
       formValue.attached = undefined;
     }
     return formValue;
@@ -551,8 +752,10 @@ export class PresentationCreateComponent implements OnInit {
    * Load a predefined configuration
    */
   loadPredefinedConfig(configTemplate: any): void {
-    console.log(configTemplate);
     const config = structuredClone(configTemplate.config); // Deep clone
+    // Choosing a starting point in step two must not replace the name from step one.
+    config.id = this.form.get('id')?.value || config.id;
+    config.description = this.form.get('description')?.value || config.description;
 
     this.loadConfigurationFromJson(config);
 
@@ -586,12 +789,20 @@ export class PresentationCreateComponent implements OnInit {
       if (formData.dcql_query) {
         formData.dcql_query = extractSchema(formData.dcql_query);
       }
-      if (formData.registration_cert) {
-        this.loadRegistrationCertIntoForm(extractSchema(formData.registration_cert));
-        delete formData.registration_cert;
-      }
-
+      const registrationCert = formData.registration_cert
+        ? extractSchema(formData.registration_cert)
+        : null;
+      delete formData.registration_cert;
+      const existingId = this.form.get('id')?.value;
+      this.getFormArray('attached').clear();
+      this.registrationCertPurposeArray.clear();
+      this.form.reset({ lifeTime: 300, statusCheckMode: 'strict', webhookEndpointId: '' });
+      this.registrationCertTabIndex = 0;
+      this.loadRegistrationCertIntoForm(registrationCert);
+      (formData.attached || []).forEach(() => this.addAttachment());
       this.form.patchValue(formData);
+      if (!this.create) this.form.get('id')?.setValue(existingId);
+      this.form.markAsDirty();
       this.snackBar.open('Configuration loaded from JSON successfully', 'OK', {
         duration: 3000,
       });

@@ -3,7 +3,7 @@
     <app-config-ownership-notice kind="IssuanceConfig" resourceId="issuance" />
     <!-- Header -->
     <div fxLayout="row" fxLayoutAlign="space-between center">
-      <h2>Issuance Configuration</h2>
+      <h2>Issuer Settings</h2>
       <div>
         <button mat-icon-button [routerLink]="['../']" matTooltip="Back to list">
           <mat-icon>arrow_back</mat-icon>
@@ -24,6 +24,18 @@
       </div>
     </div>
 
+    <div fxLayout="row wrap" fxLayoutGap="12px">
+      <a
+        mat-stroked-button
+        [routerLink]="['edit']"
+        [queryParams]="{ setup: true }"
+        appConfigManaged
+        managedKind="IssuanceConfig"
+        managedResourceId="issuance"
+        >Use guided setup</a
+      >
+      <a mat-stroked-button routerLink="/credential-config/create">Configure a credential type</a>
+    </div>
     <mat-tab-group animationDuration="200ms">
       <mat-tab>
         <ng-template mat-tab-label>

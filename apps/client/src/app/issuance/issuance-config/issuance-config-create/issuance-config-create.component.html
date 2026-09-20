@@ -1,11 +1,16 @@
 <div fxLayout="column" fxFlex fxLayoutGap="24px">
   <app-config-ownership-notice kind="IssuanceConfig" resourceId="issuance" />
   <!-- Header -->
-  <div fxLayout="row" fxLayoutAlign="space-between center">
-    <h2>Edit Issuance Configuration</h2>
-    <div fxLayout="row" fxLayoutAlign="end center">
+  <div class="settings-header" fxLayout="row" fxLayoutAlign="space-between center">
+    <h2>Issuer Settings</h2>
+    <div class="header-actions" fxLayout="row" fxLayoutAlign="end center">
       <!-- JSON View Button -->
-      <button mat-stroked-button (click)="viewAsJson()" matTooltip="View/Edit as JSON">
+      <button
+        mat-stroked-button
+        (click)="viewAsJson()"
+        [disabled]="loadingConfig || !!loadError"
+        matTooltip="View/Edit as JSON"
+      >
         <mat-icon>code</mat-icon>
         JSON View
       </button>
@@ -24,315 +29,201 @@
     </div>
   </div>
 
-  <!-- Main Form -->
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-tab-group animationDuration="200ms">
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">info</mat-icon>
-          Metadata
-        </ng-template>
+  @if (loadingConfig) {
+    <p role="status">Loading issuer settings…</p>
+  }
+  @if (loadError) {
+    <p role="alert">{{ loadError }}</p>
+    <button mat-stroked-button type="button" (click)="loadConfigForEdit()">Retry loading</button>
+  }
+  @if (!loadingConfig && !loadError) {
+    <div class="setup-guide">
+      <div>
+        <strong>{{
+          guidedMode ? 'Set up your issuer, step by step' : 'Configure your issuer'
+        }}</strong>
+        <p>
+          Start with identity and wallet access, then review the trust requirements for your
+          ecosystem.
+        </p>
+      </div>
+      <button mat-stroked-button type="button" (click)="toggleGuidedMode()">
+        {{ guidedMode ? 'Show all settings' : 'Use guided setup' }}
+      </button>
+    </div>
+    @if (guidedMode) {
+      <p aria-live="polite">Step {{ activeStep + 1 }} of 4 · {{ stepNames[activeStep] }}</p>
+    }
+    @if (stepError) {
+      <p class="step-error" role="alert">{{ stepError }}</p>
+    }
+    <!-- Main Form -->
+    <form [formGroup]="form" (ngSubmit)="submitSettings()">
+      <mat-tab-group
+        animationDuration="0ms"
+        [selectedIndex]="activeStep"
+        (selectedIndexChange)="activeStep = $event"
+        ><mat-tab [disabled]="guidedMode && furthestStep < 0">
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">info</mat-icon>
+            Identity
+          </ng-template>
 
-        <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-          <!-- Basic Information Card -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>settings</mat-icon>
-                Basic Information
-              </mat-card-title>
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <!-- Batch Size -->
-              <mat-form-field>
-                <mat-label>Batch Size</mat-label>
-                <input matInput type="number" formControlName="batchSize" placeholder="1" min="1" />
-                <mat-icon matSuffix>batch_prediction</mat-icon>
-                <mat-hint>Number of credentials issued in a single batch (default: 1)</mat-hint>
-                @if (form.get('batchSize')?.invalid && form.get('batchSize')?.touched) {
-                  <mat-error>Batch size must be at least 1</mat-error>
-                }
-              </mat-form-field>
-              <mat-slide-toggle formControlName="dPopRequired">
-                <div fxLayout="column">
-                  <span><strong>DPoP Required</strong></span>
-                  <span class="toggle-description"
-                    >Enable DPoP (Demonstrated Proof of Possession) for sender-constrained tokens.
-                    Disable if your wallet doesn't support DPoP.</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              <mat-slide-toggle formControlName="credentialResponseEncryption">
-                <div fxLayout="column">
-                  <span><strong>Advertise Credential Response Encryption</strong></span>
-                  <span class="toggle-description"
-                    >Advertise `credential_response_encryption` (ECDH-ES, A128GCM/A256GCM) in the
-                    credential issuer metadata so wallets MAY request encrypted credential
-                    responses. Some wallets reject metadata advertising encryption they do not
-                    support — leave disabled unless you need it.</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              <mat-slide-toggle formControlName="credentialRequestEncryption">
-                <div fxLayout="column">
-                  <span><strong>Require Credential Request Encryption</strong></span>
-                  <span class="toggle-description"
-                    >Advertise `credential_request_encryption` in the credential issuer metadata.
-                    When enabled, wallets MUST send encrypted credential requests (JWE). Leave
-                    disabled unless your conformance profile requires it.</span
-                  >
-                </div>
-              </mat-slide-toggle>
-
-              <mat-slide-toggle formControlName="notificationEndpointEnabled">
-                <div fxLayout="column">
-                  <span><strong>Enable Notification Endpoint</strong></span>
-                  <span class="toggle-description"
-                    >Advertise the issuer notification endpoint in metadata and accept notification
-                    callbacks. Disable this when the issuer does not support push-style credential
-                    status notifications.</span
-                  >
-                </div>
-              </mat-slide-toggle>
-            </mat-card-content>
-          </mat-card>
-
-          <!-- Display Configurations Card -->
-          <mat-card>
-            <mat-card-header>
-              <mat-card-title>
-                <mat-icon>view_carousel</mat-icon>
-                Display Configurations
-              </mat-card-title>
-              <mat-card-subtitle
-                >Configure how credentials are displayed to users</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content fxLayout="column" fxLayoutGap="16px">
-              <div formArrayName="display">
-                @for (display of displays.controls; track $index; let i = $index) {
-                  <div [formGroupName]="i" class="mat-elevation-z2 display-entry">
-                    <div
-                      fxLayout="row"
-                      fxLayoutAlign="space-between center"
-                      class="display-entry-header"
-                    >
-                      <h3>Display Entry {{ i + 1 }}</h3>
-                      @if (displays.length > 1) {
-                        <button
-                          matIconButton
-                          type="button"
-                          color="warn"
-                          (click)="removeDisplay(i)"
-                          matTooltip="Remove this display configuration"
-                        >
-                          <mat-icon>delete</mat-icon>
-                        </button>
-                      }
-                    </div>
-                    <div fxLayout="column" fxLayoutGap="16px">
-                      <div fxLayout="row" fxLayoutGap="16px">
-                        <mat-form-field fxFlex>
-                          <mat-label>Name</mat-label>
-                          <input
-                            matInput
-                            formControlName="name"
-                            placeholder="Enter display name"
-                            required
-                          />
-                          <mat-icon matSuffix>badge</mat-icon>
-                        </mat-form-field>
-                        <mat-form-field fxFlex>
-                          <mat-label>Locale</mat-label>
-                          <mat-select formControlName="locale" required>
-                            <mat-option value="en-US">English (US)</mat-option>
-                            <mat-option value="en-GB">English (UK)</mat-option>
-                            <mat-option value="de-DE">German</mat-option>
-                            <mat-option value="fr-FR">French</mat-option>
-                            <mat-option value="es-ES">Spanish</mat-option>
-                            <mat-option value="it-IT">Italian</mat-option>
-                          </mat-select>
-                          <mat-icon matSuffix>language</mat-icon>
-                        </mat-form-field>
-                      </div>
-                      <app-image-field
-                        [field]="getControl(display.get('logo.uri'))"
-                        label="Logo URL"
-                      ></app-image-field>
-                    </div>
-                  </div>
-                }
-              </div>
-              <div fxLayout="row" fxLayoutAlign="center center">
-                <button mat-raised-button type="button" (click)="addDisplay()">
-                  <mat-icon>add</mat-icon> Add Display
-                </button>
-              </div>
-            </mat-card-content>
-          </mat-card>
-        </div>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">manage_accounts</mat-icon>
-          Authorize User
-        </ng-template>
-
-        <ng-template matTabContent>
           <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-            <!-- Authorization Servers Card -->
+            <!-- Issuer identity Card -->
             <mat-card>
               <mat-card-header>
                 <mat-card-title>
-                  <mat-icon>dns</mat-icon>
-                  Authorization Servers
+                  <mat-icon>view_carousel</mat-icon>
+                  Issuer identity
                 </mat-card-title>
                 <mat-card-subtitle
-                  >Configure external, hosted, chained, and built-in authorization servers in one
-                  place. The first enabled server in this list is treated as the default (preferred)
-                  server.</mat-card-subtitle
+                  >Choose the issuer name and logo wallets show to users</mat-card-subtitle
                 >
               </mat-card-header>
               <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-divider></mat-divider>
+                <div formArrayName="display">
+                  @for (display of displays.controls; track $index; let i = $index) {
+                    <div [formGroupName]="i" class="mat-elevation-z2 display-entry">
+                      <div
+                        fxLayout="row"
+                        fxLayoutAlign="space-between center"
+                        class="display-entry-header"
+                      >
+                        <h3>Language {{ i + 1 }}</h3>
+                        @if (displays.length > 1) {
+                          <button
+                            matIconButton
+                            type="button"
+                            color="warn"
+                            (click)="removeDisplay(i)"
+                            matTooltip="Remove this display configuration"
+                          >
+                            <mat-icon>delete</mat-icon>
+                          </button>
+                        }
+                      </div>
+                      <div fxLayout="column" fxLayoutGap="16px">
+                        <div fxLayout="row" fxLayoutGap="16px">
+                          <mat-form-field fxFlex>
+                            <mat-label>Name</mat-label>
+                            <input
+                              (keydown.enter)="onInputEnter($event)"
+                              matInput
+                              formControlName="name"
+                              placeholder="Enter display name"
+                              required
+                            />
+                            <mat-icon matSuffix>badge</mat-icon
+                            ><mat-error>Enter an issuer name</mat-error>
+                          </mat-form-field>
+                          <mat-form-field fxFlex>
+                            <mat-label>Locale</mat-label>
+                            <mat-select formControlName="locale" required>
+                              <mat-option value="en-US">English (US)</mat-option>
+                              <mat-option value="en-GB">English (UK)</mat-option>
+                              <mat-option value="de-DE">German</mat-option>
+                              <mat-option value="fr-FR">French</mat-option>
+                              <mat-option value="es-ES">Spanish</mat-option>
+                              <mat-option value="it-IT">Italian</mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix>language</mat-icon>
+                          </mat-form-field>
+                        </div>
+                        <app-image-field
+                          [field]="getControl(display.get('logo.uri'))"
+                          label="Logo URL (optional)"
+                          [required]="false"
+                        ></app-image-field>
+                      </div>
+                    </div>
+                  }
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center center">
+                  <button mat-raised-button type="button" (click)="addDisplay()">
+                    <mat-icon>add</mat-icon> Add language
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          </div> </mat-tab
+        ><mat-tab [disabled]="guidedMode && furthestStep < 1">
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">manage_accounts</mat-icon>
+            Wallet access
+          </ng-template>
 
-                <div formArrayName="authorizationServers">
-                  <mat-accordion>
-                    @for (server of authorizationServers.controls; track $index; let i = $index) {
-                      <mat-expansion-panel [formGroupName]="i">
-                        <mat-expansion-panel-header>
-                          <mat-panel-title>
-                            @if (server.get('type')?.value === 'external') {
-                              {{
-                                server.get('label')?.value ||
-                                  server.get('issuer')?.value ||
-                                  'External Authorization Server ' + (i + 1)
-                              }}
-                            } @else {
-                              {{
-                                server.get('label')?.value ||
-                                  server.get('id')?.value ||
-                                  'Authorization Server ' + (i + 1)
-                              }}
-                            }
-                          </mat-panel-title>
-                          <mat-panel-description>
-                            {{ server.get('type')?.value || 'oid4vp' }}
-                          </mat-panel-description>
-                        </mat-expansion-panel-header>
+          <ng-template matTabContent>
+            <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+              <p>
+                Choose how people authorize issuance. The built-in server supports pre-authorized
+                offers; use a hosted presentation flow, an upstream login, or an external
+                authorization server when your use case needs it.
+              </p>
+              <p>
+                The first enabled server is preferred. Review each server before changing its order.
+              </p>
+              <!-- Authorization Servers Card -->
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>dns</mat-icon>
+                    Authorization Servers
+                  </mat-card-title>
+                  <mat-card-subtitle
+                    >Configure external, hosted, chained, and built-in authorization servers in one
+                    place. The first enabled server in this list is treated as the default
+                    (preferred) server.</mat-card-subtitle
+                  >
+                </mat-card-header>
+                <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                  <mat-divider></mat-divider>
 
-                        @if (server.get('type')?.value === 'external') {
-                          <div fxLayout="column" fxLayoutGap="16px">
-                            <mat-form-field>
-                              <mat-label>ID</mat-label>
-                              <input
-                                matInput
-                                id="external-auth-server-id-{{ i }}"
-                                formControlName="id"
-                                placeholder="external-auth"
-                              />
-                              <mat-hint>Unique identifier for this authorization server</mat-hint>
-                            </mat-form-field>
-
-                            <mat-form-field>
-                              <mat-label>Type</mat-label>
-                              <mat-select
-                                formControlName="type"
-                                (selectionChange)="onAuthorizationServerTypeChange(i, $event.value)"
-                              >
-                                <mat-option value="external">External</mat-option>
-                                <mat-option value="oid4vp">OID4VP</mat-option>
-                                <mat-option value="chained">Chained</mat-option>
-                                <mat-option
-                                  value="built-in"
-                                  [disabled]="
-                                    server.get('type')?.value !== 'built-in' &&
-                                    hasBuiltInAuthorizationServer(i)
-                                  "
-                                >
-                                  Built-in
-                                </mat-option>
-                              </mat-select>
-                            </mat-form-field>
-
-                            <mat-form-field>
-                              <mat-label>External Authorization Server URL</mat-label>
-                              <input
-                                matInput
-                                formControlName="issuer"
-                                placeholder="https://auth.example.com"
-                                type="url"
-                              />
-                              <mat-icon matSuffix>link</mat-icon>
-                              @if (server.get('issuer')?.invalid && server.get('issuer')?.touched) {
-                                <mat-error>Please enter a valid URL</mat-error>
+                  <div formArrayName="authorizationServers">
+                    <mat-accordion>
+                      @for (server of authorizationServers.controls; track $index; let i = $index) {
+                        <mat-expansion-panel
+                          [formGroupName]="i"
+                          [expanded]="expandedServers.has(server)"
+                          (opened)="expandedServers.add(server)"
+                          (closed)="expandedServers.delete(server)"
+                        >
+                          <mat-expansion-panel-header>
+                            <mat-panel-title>
+                              @if (server.get('type')?.value === 'external') {
+                                {{
+                                  server.get('label')?.value ||
+                                    server.get('issuer')?.value ||
+                                    'External Authorization Server ' + (i + 1)
+                                }}
+                              } @else {
+                                {{
+                                  server.get('label')?.value ||
+                                    server.get('id')?.value ||
+                                    'Authorization Server ' + (i + 1)
+                                }}
                               }
-                            </mat-form-field>
+                            </mat-panel-title>
+                            <mat-panel-description>
+                              {{ server.get('type')?.value || 'oid4vp' }}
+                            </mat-panel-description>
+                          </mat-expansion-panel-header>
 
-                            <mat-form-field>
-                              <mat-label>Label (optional)</mat-label>
-                              <input matInput formControlName="label" placeholder="Friendly name" />
-                            </mat-form-field>
-
-                            <div fxLayout="row" fxLayoutAlign="end center">
-                              <button
-                                matIconButton
-                                type="button"
-                                (click)="moveAuthorizationServer(i, 'up')"
-                                [disabled]="i === 0"
-                                matTooltip="Move up"
-                              >
-                                <mat-icon>arrow_upward</mat-icon>
-                              </button>
-                              <button
-                                matIconButton
-                                type="button"
-                                (click)="moveAuthorizationServer(i, 'down')"
-                                [disabled]="i === authorizationServers.length - 1"
-                                matTooltip="Move down"
-                              >
-                                <mat-icon>arrow_downward</mat-icon>
-                              </button>
-                              <button
-                                matIconButton
-                                type="button"
-                                color="warn"
-                                (click)="removeAuthorizationServer(i)"
-                                matTooltip="Remove this authorization server"
-                              >
-                                <mat-icon>delete</mat-icon>
-                              </button>
-                            </div>
-                          </div>
-                        } @else {
-                          <div fxLayout="column" fxLayoutGap="16px">
-                            <div fxLayout="row" fxLayoutGap="16px">
-                              <mat-form-field fxFlex>
+                          @if (server.get('type')?.value === 'external') {
+                            <div fxLayout="column" fxLayoutGap="16px">
+                              <mat-form-field>
                                 <mat-label>ID</mat-label>
                                 <input
+                                  (keydown.enter)="onInputEnter($event)"
                                   matInput
-                                  id="managed-auth-server-id-{{ i }}"
+                                  id="external-auth-server-id-{{ i }}"
                                   formControlName="id"
-                                  placeholder="auth-server-id"
+                                  placeholder="external-auth"
                                 />
                                 <mat-hint>Unique identifier for this authorization server</mat-hint>
                               </mat-form-field>
-                              <mat-form-field fxFlex>
-                                <mat-label>Label</mat-label>
-                                <input
-                                  matInput
-                                  id="managed-auth-server-label-{{ i }}"
-                                  formControlName="label"
-                                  placeholder="Authorization Server"
-                                />
-                              </mat-form-field>
-                            </div>
 
-                            <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
-                              <mat-form-field fxFlex>
+                              <mat-form-field>
                                 <mat-label>Type</mat-label>
                                 <mat-select
                                   formControlName="type"
@@ -354,767 +245,1055 @@
                                   </mat-option>
                                 </mat-select>
                               </mat-form-field>
-                              <mat-slide-toggle formControlName="enabled">Enabled</mat-slide-toggle>
-                              <mat-slide-toggle formControlName="requireDPoP"
-                                >Require DPoP</mat-slide-toggle
-                              >
+
                               <mat-form-field>
-                                <mat-label>Wallet Attestation</mat-label>
-                                <mat-select formControlName="walletAttestationRequired">
-                                  <mat-option value="inherit">Use issuer default</mat-option>
-                                  <mat-option [value]="true">Required</mat-option>
-                                  <mat-option [value]="false">Optional</mat-option>
-                                </mat-select>
-                              </mat-form-field>
-                            </div>
-
-                            <mat-slide-toggle formControlName="inheritWalletProviderTrustLists">
-                              Use shared wallet provider trust lists
-                            </mat-slide-toggle>
-                            <p class="section-hint">
-                              These settings authenticate the wallet at this authorization server.
-                              Key attestations at the credential endpoint use the shared trust
-                              lists.
-                            </p>
-                            @if (!server.get('inheritWalletProviderTrustLists')?.value) {
-                              <div
-                                formArrayName="walletProviderTrustLists"
-                                fxLayout="column"
-                                fxLayoutGap="12px"
-                                class="trust-lists-section"
-                              >
-                                @for (
-                                  trustList of getAuthorizationServerWalletProviderTrustLists(i)
-                                    .controls;
-                                  track $index;
-                                  let j = $index
+                                <mat-label>External Authorization Server URL</mat-label>
+                                <input
+                                  (keydown.enter)="onInputEnter($event)"
+                                  matInput
+                                  formControlName="issuer"
+                                  placeholder="https://auth.example.com"
+                                  type="url"
+                                />
+                                <mat-icon matSuffix>link</mat-icon>
+                                @if (
+                                  server.get('issuer')?.invalid && server.get('issuer')?.touched
                                 ) {
-                                  <div
-                                    [formGroupName]="j"
-                                    fxLayout="column"
-                                    fxLayoutGap="8px"
-                                    class="trust-list-entry"
-                                  >
-                                    <div
-                                      fxLayout="row"
-                                      fxLayoutAlign="start center"
-                                      fxLayoutGap="8px"
-                                    >
-                                      <mat-form-field fxFlex>
-                                        <mat-label>Trust List URL {{ j + 1 }}</mat-label>
-                                        <input
-                                          matInput
-                                          [id]="'auth-server-' + i + '-wallet-trust-url-' + j"
-                                          formControlName="url"
-                                          placeholder="https://trust-list.example.com/wallet-providers"
-                                          type="url"
-                                        />
-                                        <mat-icon matSuffix>security</mat-icon>
-                                      </mat-form-field>
-                                      <button
-                                        matIconButton
-                                        type="button"
-                                        color="warn"
-                                        (click)="
-                                          removeAuthorizationServerWalletProviderTrustList(i, j)
-                                        "
-                                        matTooltip="Remove this trust list"
-                                      >
-                                        <mat-icon>delete</mat-icon>
-                                      </button>
-                                    </div>
-
-                                    <mat-form-field>
-                                      <mat-label>Verifier Key (JWK JSON)</mat-label>
-                                      <textarea
-                                        matInput
-                                        [id]="'auth-server-' + i + '-wallet-trust-jwk-' + j"
-                                        formControlName="verifierKey"
-                                        rows="4"
-                                        placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
-                                      ></textarea>
-                                      <mat-icon matSuffix>vpn_key</mat-icon>
-                                      @if (
-                                        trustList.get('verifierKey')?.invalid &&
-                                        trustList.get('verifierKey')?.touched
-                                      ) {
-                                        <mat-error>Please enter a valid JWK JSON object.</mat-error>
-                                      }
-                                    </mat-form-field>
-
-                                    <mat-form-field>
-                                      <mat-label>Verifier Certificate (Base64 DER)</mat-label>
-                                      <input
-                                        matInput
-                                        [id]="'auth-server-' + i + '-wallet-trust-der-' + j"
-                                        formControlName="verifierX509Der"
-                                        placeholder="MIIB..."
-                                        type="text"
-                                      />
-                                      <mat-icon matSuffix>verified</mat-icon>
-                                    </mat-form-field>
-
-                                    @if (
-                                      trustList.hasError('missingVerifier') && trustList.touched
-                                    ) {
-                                      <p class="trust-list-error">
-                                        Provide at least one verifier method: JWK or DER
-                                        certificate.
-                                      </p>
-                                    }
-                                  </div>
+                                  <mat-error>Please enter a valid URL</mat-error>
                                 }
+                              </mat-form-field>
 
-                                <div fxLayout="row" fxLayoutAlign="center center">
-                                  <button
-                                    mat-raised-button
-                                    type="button"
-                                    (click)="addAuthorizationServerWalletProviderTrustList(i)"
-                                  >
-                                    <mat-icon>add</mat-icon> Add Trust List
-                                  </button>
-                                </div>
+                              <mat-form-field>
+                                <mat-label>Label (optional)</mat-label>
+                                <input
+                                  (keydown.enter)="onInputEnter($event)"
+                                  matInput
+                                  formControlName="label"
+                                  placeholder="Friendly name"
+                                />
+                              </mat-form-field>
+
+                              <div fxLayout="row" fxLayoutAlign="end center">
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  (click)="moveAuthorizationServer(i, 'up')"
+                                  [disabled]="i === 0"
+                                  matTooltip="Move up"
+                                >
+                                  <mat-icon>arrow_upward</mat-icon>
+                                </button>
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  (click)="moveAuthorizationServer(i, 'down')"
+                                  [disabled]="i === authorizationServers.length - 1"
+                                  matTooltip="Move down"
+                                >
+                                  <mat-icon>arrow_downward</mat-icon>
+                                </button>
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  color="warn"
+                                  (click)="removeAuthorizationServer(i)"
+                                  matTooltip="Remove this authorization server"
+                                >
+                                  <mat-icon>delete</mat-icon>
+                                </button>
                               </div>
-                            }
+                            </div>
+                          } @else {
+                            <div fxLayout="column" fxLayoutGap="16px">
+                              <div fxLayout="row" fxLayoutGap="16px">
+                                <mat-form-field fxFlex>
+                                  <mat-label>ID</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    id="managed-auth-server-id-{{ i }}"
+                                    formControlName="id"
+                                    placeholder="auth-server-id"
+                                  />
+                                  <mat-hint
+                                    >Unique identifier for this authorization server</mat-hint
+                                  >
+                                </mat-form-field>
+                                <mat-form-field fxFlex>
+                                  <mat-label>Label</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    id="managed-auth-server-label-{{ i }}"
+                                    formControlName="label"
+                                    placeholder="Authorization Server"
+                                  />
+                                </mat-form-field>
+                              </div>
 
-                            @if (server.get('type')?.value === 'oid4vp') {
-                              <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
-                                <mat-form-field>
-                                  <mat-label>Presentation Configuration ID</mat-label>
-                                  <mat-select formControlName="presentationConfigId">
-                                    @if (availablePresentationConfigIds.length === 0) {
-                                      <mat-option disabled value="">
-                                        No presentation configurations found
-                                      </mat-option>
-                                    }
-                                    @for (
-                                      configId of availablePresentationConfigIds;
-                                      track configId
-                                    ) {
-                                      <mat-option [value]="configId">{{ configId }}</mat-option>
-                                    }
+                              <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="start center">
+                                <mat-form-field fxFlex>
+                                  <mat-label>Type</mat-label>
+                                  <mat-select
+                                    formControlName="type"
+                                    (selectionChange)="
+                                      onAuthorizationServerTypeChange(i, $event.value)
+                                    "
+                                  >
+                                    <mat-option value="external">External</mat-option>
+                                    <mat-option value="oid4vp">OID4VP</mat-option>
+                                    <mat-option value="chained">Chained</mat-option>
+                                    <mat-option
+                                      value="built-in"
+                                      [disabled]="
+                                        server.get('type')?.value !== 'built-in' &&
+                                        hasBuiltInAuthorizationServer(i)
+                                      "
+                                    >
+                                      Built-in
+                                    </mat-option>
                                   </mat-select>
                                 </mat-form-field>
-
-                                <mat-slide-toggle formControlName="immediateWalletRedirect">
-                                  Immediately redirect to wallet
-                                </mat-slide-toggle>
-                              </div>
-                            }
-
-                            @if (server.get('type')?.value === 'chained') {
-                              <div formGroupName="chained" fxLayout="column" fxLayoutGap="16px">
+                                <mat-slide-toggle formControlName="enabled"
+                                  >Enabled</mat-slide-toggle
+                                >
+                                <mat-slide-toggle formControlName="requireDPoP"
+                                  >Require DPoP</mat-slide-toggle
+                                >
                                 <mat-form-field>
-                                  <mat-label>Upstream Issuer URL</mat-label>
-                                  <input
-                                    matInput
-                                    formControlName="issuer"
-                                    placeholder="https://keycloak.example.com/realms/my-realm"
-                                    type="url"
-                                  />
+                                  <mat-label>Wallet Attestation</mat-label>
+                                  <mat-select formControlName="walletAttestationRequired">
+                                    <mat-option value="inherit">Use issuer default</mat-option>
+                                    <mat-option [value]="true">Required</mat-option>
+                                    <mat-option [value]="false">Optional</mat-option>
+                                  </mat-select>
                                 </mat-form-field>
-
-                                <div fxLayout="row" fxLayoutGap="16px">
-                                  <mat-form-field fxFlex>
-                                    <mat-label>Client ID</mat-label>
-                                    <input
-                                      matInput
-                                      formControlName="clientId"
-                                      placeholder="eudiplo-client"
-                                    />
-                                  </mat-form-field>
-                                  <mat-form-field fxFlex>
-                                    <mat-label>Client Secret</mat-label>
-                                    <input
-                                      matInput
-                                      formControlName="clientSecret"
-                                      type="password"
-                                      placeholder="••••••••"
-                                    />
-                                  </mat-form-field>
-                                </div>
                               </div>
-                            }
 
-                            @if (server.get('type')?.value === 'built-in') {
-                              <div class="m-doc-hint">
-                                <mat-icon>info</mat-icon>
-                                <span>
-                                  Built-in AS uses issuer-local authorization endpoints and is only
-                                  included when explicitly configured.
-                                </span>
-                              </div>
-                            }
-
-                            <div formGroupName="token" fxLayout="row" fxLayoutGap="16px">
-                              <mat-form-field fxFlex>
-                                <mat-label>Token Lifetime (seconds)</mat-label>
-                                <input
-                                  matInput
-                                  id="managed-auth-server-lifetime-{{ i }}"
-                                  type="number"
-                                  formControlName="lifetimeSeconds"
-                                  min="60"
-                                  placeholder="3600"
-                                />
-                              </mat-form-field>
-                              <mat-form-field fxFlex>
-                                <mat-label>Signing Key ID (optional)</mat-label>
-                                <input
-                                  matInput
-                                  id="managed-auth-server-signing-key-{{ i }}"
-                                  formControlName="signingKeyId"
-                                  placeholder="Leave empty for default"
-                                />
-                              </mat-form-field>
-                            </div>
-
-                            <div formGroupName="token" fxLayout="column" fxLayoutGap="16px">
-                              <mat-slide-toggle formControlName="refreshTokenEnabled">
-                                <div fxLayout="column">
-                                  <span><strong>Issue Refresh Tokens</strong></span>
-                                  <span class="toggle-description"
-                                    >Allow wallets to exchange refresh tokens for new access
-                                    tokens.</span
-                                  >
-                                </div>
+                              <mat-slide-toggle formControlName="inheritWalletProviderTrustLists">
+                                Use shared wallet provider trust lists
                               </mat-slide-toggle>
+                              <p class="section-hint">
+                                These settings authenticate the wallet at this authorization server.
+                                Key attestations at the credential endpoint use the shared trust
+                                lists.
+                              </p>
+                              @if (!server.get('inheritWalletProviderTrustLists')?.value) {
+                                <div
+                                  formArrayName="walletProviderTrustLists"
+                                  fxLayout="column"
+                                  fxLayoutGap="12px"
+                                  class="trust-lists-section"
+                                >
+                                  @for (
+                                    trustList of getAuthorizationServerWalletProviderTrustLists(i)
+                                      .controls;
+                                    track $index;
+                                    let j = $index
+                                  ) {
+                                    <div
+                                      [formGroupName]="j"
+                                      fxLayout="column"
+                                      fxLayoutGap="8px"
+                                      class="trust-list-entry"
+                                    >
+                                      <div
+                                        fxLayout="row"
+                                        fxLayoutAlign="start center"
+                                        fxLayoutGap="8px"
+                                      >
+                                        <mat-form-field fxFlex>
+                                          <mat-label>Trust List URL {{ j + 1 }}</mat-label>
+                                          <input
+                                            (keydown.enter)="onInputEnter($event)"
+                                            matInput
+                                            [id]="'auth-server-' + i + '-wallet-trust-url-' + j"
+                                            formControlName="url"
+                                            placeholder="https://trust-list.example.com/wallet-providers"
+                                            type="url"
+                                          />
+                                          <mat-icon matSuffix>security</mat-icon>
+                                        </mat-form-field>
+                                        <button
+                                          matIconButton
+                                          type="button"
+                                          color="warn"
+                                          (click)="
+                                            removeAuthorizationServerWalletProviderTrustList(i, j)
+                                          "
+                                          matTooltip="Remove this trust list"
+                                        >
+                                          <mat-icon>delete</mat-icon>
+                                        </button>
+                                      </div>
 
-                              @if (server.get('token.refreshTokenEnabled')?.value) {
-                                <mat-form-field>
-                                  <mat-label>Refresh Token Lifetime (seconds)</mat-label>
-                                  <input
-                                    matInput
-                                    type="number"
-                                    formControlName="refreshTokenExpiresInSeconds"
-                                    min="1"
-                                    placeholder="2592000"
-                                  />
-                                  <mat-icon matSuffix>timelapse</mat-icon>
-                                  <mat-hint>Default: 2592000 seconds (30 days)</mat-hint>
-                                </mat-form-field>
+                                      <mat-form-field>
+                                        <mat-label>Verifier Key (JWK JSON)</mat-label>
+                                        <textarea
+                                          matInput
+                                          [id]="'auth-server-' + i + '-wallet-trust-jwk-' + j"
+                                          formControlName="verifierKey"
+                                          rows="4"
+                                          placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
+                                        ></textarea>
+                                        <mat-icon matSuffix>vpn_key</mat-icon>
+                                        @if (
+                                          trustList.get('verifierKey')?.invalid &&
+                                          trustList.get('verifierKey')?.touched
+                                        ) {
+                                          <mat-error
+                                            >Please enter a valid JWK JSON object.</mat-error
+                                          >
+                                        }
+                                      </mat-form-field>
+
+                                      <mat-form-field>
+                                        <mat-label>Verifier Certificate (Base64 DER)</mat-label>
+                                        <input
+                                          (keydown.enter)="onInputEnter($event)"
+                                          matInput
+                                          [id]="'auth-server-' + i + '-wallet-trust-der-' + j"
+                                          formControlName="verifierX509Der"
+                                          placeholder="MIIB..."
+                                          type="text"
+                                        />
+                                        <mat-icon matSuffix>verified</mat-icon>
+                                      </mat-form-field>
+
+                                      @if (
+                                        trustList.hasError('missingVerifier') && trustList.touched
+                                      ) {
+                                        <p class="trust-list-error">
+                                          Provide at least one verifier method: JWK or DER
+                                          certificate.
+                                        </p>
+                                      }
+                                    </div>
+                                  }
+
+                                  <div fxLayout="row" fxLayoutAlign="center center">
+                                    <button
+                                      mat-raised-button
+                                      type="button"
+                                      (click)="addAuthorizationServerWalletProviderTrustList(i)"
+                                    >
+                                      <mat-icon>add</mat-icon> Add Trust List
+                                    </button>
+                                  </div>
+                                </div>
                               }
+
+                              @if (server.get('type')?.value === 'oid4vp') {
+                                <div formGroupName="oid4vp" fxLayout="column" fxLayoutGap="16px">
+                                  <mat-form-field>
+                                    <mat-label>Presentation Configuration ID</mat-label>
+                                    <mat-select formControlName="presentationConfigId">
+                                      @if (availablePresentationConfigIds.length === 0) {
+                                        <mat-option disabled value="">
+                                          No presentation configurations found
+                                        </mat-option>
+                                      }
+                                      @for (
+                                        configId of availablePresentationConfigIds;
+                                        track configId
+                                      ) {
+                                        <mat-option [value]="configId">{{ configId }}</mat-option>
+                                      }
+                                    </mat-select>
+                                  </mat-form-field>
+
+                                  <mat-slide-toggle formControlName="immediateWalletRedirect">
+                                    Immediately redirect to wallet
+                                  </mat-slide-toggle>
+                                </div>
+                              }
+
+                              @if (server.get('type')?.value === 'chained') {
+                                <div formGroupName="chained" fxLayout="column" fxLayoutGap="16px">
+                                  <mat-form-field>
+                                    <mat-label>Upstream Issuer URL</mat-label>
+                                    <input
+                                      (keydown.enter)="onInputEnter($event)"
+                                      matInput
+                                      formControlName="issuer"
+                                      placeholder="https://keycloak.example.com/realms/my-realm"
+                                      type="url"
+                                    />
+                                  </mat-form-field>
+
+                                  <div fxLayout="row" fxLayoutGap="16px">
+                                    <mat-form-field fxFlex>
+                                      <mat-label>Client ID</mat-label>
+                                      <input
+                                        (keydown.enter)="onInputEnter($event)"
+                                        matInput
+                                        formControlName="clientId"
+                                        placeholder="eudiplo-client"
+                                      />
+                                    </mat-form-field>
+                                    <mat-form-field fxFlex>
+                                      <mat-label>Client Secret</mat-label>
+                                      <input
+                                        (keydown.enter)="onInputEnter($event)"
+                                        matInput
+                                        formControlName="clientSecret"
+                                        type="password"
+                                        placeholder="••••••••"
+                                      />
+                                    </mat-form-field>
+                                  </div>
+                                </div>
+                              }
+
+                              @if (server.get('type')?.value === 'built-in') {
+                                <div class="m-doc-hint">
+                                  <mat-icon>info</mat-icon>
+                                  <span>
+                                    Built-in AS uses issuer-local authorization endpoints and is
+                                    only included when explicitly configured.
+                                  </span>
+                                </div>
+                              }
+
+                              <div formGroupName="token" fxLayout="row" fxLayoutGap="16px">
+                                <mat-form-field fxFlex>
+                                  <mat-label>Token Lifetime (seconds)</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    id="managed-auth-server-lifetime-{{ i }}"
+                                    type="number"
+                                    formControlName="lifetimeSeconds"
+                                    min="60"
+                                    placeholder="3600"
+                                  />
+                                </mat-form-field>
+                                <mat-form-field fxFlex>
+                                  <mat-label>Signing Key ID (optional)</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    id="managed-auth-server-signing-key-{{ i }}"
+                                    formControlName="signingKeyId"
+                                    placeholder="Leave empty for default"
+                                  />
+                                </mat-form-field>
+                              </div>
+
+                              <div formGroupName="token" fxLayout="column" fxLayoutGap="16px">
+                                <mat-slide-toggle formControlName="refreshTokenEnabled">
+                                  <div fxLayout="column">
+                                    <span><strong>Issue Refresh Tokens</strong></span>
+                                    <span class="toggle-description"
+                                      >Allow wallets to exchange refresh tokens for new access
+                                      tokens.</span
+                                    >
+                                  </div>
+                                </mat-slide-toggle>
+
+                                @if (server.get('token.refreshTokenEnabled')?.value) {
+                                  <mat-form-field>
+                                    <mat-label>Refresh Token Lifetime (seconds)</mat-label>
+                                    <input
+                                      (keydown.enter)="onInputEnter($event)"
+                                      matInput
+                                      type="number"
+                                      formControlName="refreshTokenExpiresInSeconds"
+                                      min="1"
+                                      placeholder="2592000"
+                                    />
+                                    <mat-icon matSuffix>timelapse</mat-icon>
+                                    <mat-hint>Default: 2592000 seconds (30 days)</mat-hint>
+                                  </mat-form-field>
+                                }
+                              </div>
+
+                              <div fxLayout="row" fxLayoutAlign="end center">
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  (click)="moveAuthorizationServer(i, 'up')"
+                                  [disabled]="i === 0"
+                                  matTooltip="Move up"
+                                >
+                                  <mat-icon>arrow_upward</mat-icon>
+                                </button>
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  (click)="moveAuthorizationServer(i, 'down')"
+                                  [disabled]="i === authorizationServers.length - 1"
+                                  matTooltip="Move down"
+                                >
+                                  <mat-icon>arrow_downward</mat-icon>
+                                </button>
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  color="warn"
+                                  (click)="removeAuthorizationServer(i)"
+                                  matTooltip="Remove this authorization server"
+                                >
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </div>
                             </div>
-
-                            <div fxLayout="row" fxLayoutAlign="end center">
-                              <button
-                                matIconButton
-                                type="button"
-                                (click)="moveAuthorizationServer(i, 'up')"
-                                [disabled]="i === 0"
-                                matTooltip="Move up"
-                              >
-                                <mat-icon>arrow_upward</mat-icon>
-                              </button>
-                              <button
-                                matIconButton
-                                type="button"
-                                (click)="moveAuthorizationServer(i, 'down')"
-                                [disabled]="i === authorizationServers.length - 1"
-                                matTooltip="Move down"
-                              >
-                                <mat-icon>arrow_downward</mat-icon>
-                              </button>
-                              <button
-                                matIconButton
-                                type="button"
-                                color="warn"
-                                (click)="removeAuthorizationServer(i)"
-                                matTooltip="Remove this authorization server"
-                              >
-                                <mat-icon>delete</mat-icon>
-                              </button>
-                            </div>
-                          </div>
-                        }
-                      </mat-expansion-panel>
-                    }
-                  </mat-accordion>
-                </div>
-
-                <div fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
-                  <button
-                    mat-raised-button
-                    color="primary"
-                    type="button"
-                    (click)="addAuthorizationServer()"
-                  >
-                    <mat-icon>add</mat-icon> Add Authorization Server
-                  </button>
-                </div>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">security</mat-icon>
-          Security
-        </ng-template>
-
-        <ng-template matTabContent>
-          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-            <!-- tx_code Brute-Force Protection Card -->
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon>pin</mat-icon>
-                  Transaction Code (tx_code) Protection
-                </mat-card-title>
-                <mat-card-subtitle
-                  >Limit failed PIN/OTP attempts in the pre-authorized code flow</mat-card-subtitle
-                >
-              </mat-card-header>
-              <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-form-field>
-                  <mat-label>Max Failed tx_code Attempts</mat-label>
-                  <input
-                    matInput
-                    type="number"
-                    formControlName="txCodeMaxAttempts"
-                    placeholder="5"
-                    min="1"
-                  />
-                  <mat-icon matSuffix>lock</mat-icon>
-                  <mat-hint>
-                    Maximum number of wrong PIN/OTP attempts before the pre-authorized code is
-                    invalidated. Leave empty to use the default (5). Set higher only if you have a
-                    specific need.
-                  </mat-hint>
-                  @if (
-                    form.get('txCodeMaxAttempts')?.invalid && form.get('txCodeMaxAttempts')?.touched
-                  ) {
-                    <mat-error>Must be at least 1</mat-error>
-                  }
-                </mat-form-field>
-              </mat-card-content>
-            </mat-card>
-
-            <!-- Wallet Attestation Card -->
-            <mat-card>
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon>verified_user</mat-icon>
-                  Wallet Provider Trust and Defaults
-                </mat-card-title>
-                <mat-card-subtitle
-                  >Shared provider trust for key attestations and wallet
-                  authentication</mat-card-subtitle
-                >
-              </mat-card-header>
-              <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-slide-toggle formControlName="walletAttestationRequired">
-                  <div fxLayout="column">
-                    <span><strong>Require Wallet Attestation by Default</strong></span>
-                    <span class="toggle-description"
-                      >When enabled, wallets must provide OAuth-Client-Attestation headers at PAR
-                      and token endpoints unless an authorization server overrides this
-                      default.</span
-                    >
-                  </div>
-                </mat-slide-toggle>
-
-                <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
-                  <p class="section-hint">
-                    <mat-icon>info</mat-icon>
-                    These lists validate key attestations during issuance and are the default for
-                    wallet authentication at managed authorization servers. Each list requires a URL
-                    and either a verifier JWK or a DER-encoded X.509 certificate.
-                  </p>
-                  <div formArrayName="walletProviderTrustLists">
-                    @for (
-                      trustList of walletProviderTrustLists.controls;
-                      track $index;
-                      let i = $index
-                    ) {
-                      <div
-                        [formGroupName]="i"
-                        fxLayout="column"
-                        fxLayoutGap="8px"
-                        class="trust-list-entry"
-                      >
-                        <mat-form-field>
-                          <mat-label>Managed trust-list ID</mat-label>
-                          <input
-                            matInput
-                            formControlName="trustListId"
-                            placeholder="wallet-providers"
-                          />
-                          <mat-hint
-                            >For a list in this tenant, the URL and verifier below are resolved
-                            automatically.</mat-hint
-                          >
-                        </mat-form-field>
-                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Trust List URL {{ i + 1 }}</mat-label>
-                            <input
-                              matInput
-                              [id]="'wallet-trust-url-' + i"
-                              formControlName="url"
-                              placeholder="https://trust-list.example.com/wallet-providers"
-                              type="url"
-                            />
-                            <mat-icon matSuffix>security</mat-icon>
-                            @if (trustList.get('url')?.invalid && trustList.get('url')?.touched) {
-                              <mat-error>Please enter a valid URL</mat-error>
-                            }
-                          </mat-form-field>
-                          <button
-                            matIconButton
-                            type="button"
-                            color="warn"
-                            (click)="removeWalletProviderTrustList(i)"
-                            matTooltip="Remove this trust list"
-                          >
-                            <mat-icon>delete</mat-icon>
-                          </button>
-                        </div>
-
-                        <mat-form-field>
-                          <mat-label>Verifier Key (JWK JSON)</mat-label>
-                          <textarea
-                            matInput
-                            [id]="'wallet-trust-jwk-' + i"
-                            formControlName="verifierKey"
-                            rows="4"
-                            placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
-                          ></textarea>
-                          <mat-icon matSuffix>vpn_key</mat-icon>
-                          @if (
-                            trustList.get('verifierKey')?.invalid &&
-                            trustList.get('verifierKey')?.touched
-                          ) {
-                            <mat-error>Please enter a valid JWK JSON object.</mat-error>
                           }
-                        </mat-form-field>
-
-                        <mat-form-field>
-                          <mat-label>Verifier Certificate (Base64 DER)</mat-label>
-                          <input
-                            matInput
-                            [id]="'wallet-trust-der-' + i"
-                            formControlName="verifierX509Der"
-                            placeholder="MIIB..."
-                            type="text"
-                          />
-                          <mat-icon matSuffix>verified</mat-icon>
-                        </mat-form-field>
-
-                        @if (trustList.hasError('missingVerifier') && trustList.touched) {
-                          <p class="trust-list-error">
-                            Provide at least one verifier method: JWK or DER certificate.
-                          </p>
-                        }
-                      </div>
-                    }
+                        </mat-expansion-panel>
+                      }
+                    </mat-accordion>
                   </div>
-                  <div fxLayout="row" fxLayoutAlign="center center">
-                    <button mat-raised-button type="button" (click)="addWalletProviderTrustList()">
-                      <mat-icon>add</mat-icon> Add Trust List
+
+                  <div fxLayout="row" fxLayoutGap="12px" fxLayoutAlign="start center">
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      type="button"
+                      (click)="addAuthorizationServer()"
+                    >
+                      <mat-icon>add</mat-icon> Add Authorization Server
                     </button>
                   </div>
-                  @if (walletProviderTrustLists.length === 0) {
-                    <p class="warning-hint">
-                      <mat-icon>warning</mat-icon>
-                      No shared trust lists configured. Key attestations will be rejected. Wallet
-                      attestations require trust lists here or on their authorization server.
-                    </p>
-                  }
-                </div>
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </ng-template>
-      </mat-tab>
-
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">security</mat-icon>
-          Federation
-        </ng-template>
-
-        <ng-template matTabContent>
-          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-            <!-- OpenID Federation Card -->
-            <mat-card formGroupName="federation">
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon>security</mat-icon>
-                  OpenID Federation
-                </mat-card-title>
-                <mat-card-subtitle
-                  >Enable federation-based trust evaluation for credential verification and issuer
-                  authentication</mat-card-subtitle
-                >
-              </mat-card-header>
-              <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-slide-toggle formControlName="enabled">
-                  <div fxLayout="column">
-                    <span><strong>Enable OpenID Federation</strong></span>
-                    <span class="toggle-description"
-                      >When enabled, uses federation trust anchors for entity validation</span
-                    >
-                  </div>
-                </mat-slide-toggle>
-
-                @if (federationEnabled) {
-                  <!-- Entity Role -->
+                </mat-card-content>
+              </mat-card>
+            </div>
+            <mat-expansion-panel
+              [expanded]="expandedSections.has('behavior')"
+              (opened)="expandedSections.add('behavior')"
+              (closed)="expandedSections.delete('behavior')"
+              ><mat-expansion-panel-header
+                ><mat-panel-title
+                  >Issuance behavior (advanced)</mat-panel-title
+                ></mat-expansion-panel-header
+              >
+              <!-- Issuance behavior Card -->
+              <mat-card>
+                <mat-card-header>
+                  <mat-card-title>
+                    <mat-icon>settings</mat-icon>
+                    Issuance behavior
+                  </mat-card-title>
+                </mat-card-header>
+                <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                  <!-- Batch Size -->
                   <mat-form-field>
-                    <mat-label>Entity Role</mat-label>
-                    <mat-select formControlName="role">
-                      <mat-option value="trust_anchor">Trust Anchor</mat-option>
-                      <mat-option value="intermediate">Intermediate</mat-option>
-                      <mat-option value="leaf">Leaf (default)</mat-option>
-                    </mat-select>
-                    <mat-icon matSuffix>category</mat-icon>
-                    <mat-hint>This entity's role in the federation topology</mat-hint>
-                  </mat-form-field>
-
-                  <!-- Trust Mode -->
-                  <mat-form-field>
-                    <mat-label>Trust Decision Mode</mat-label>
-                    <mat-select formControlName="mode">
-                      <mat-option value="federation-only">Federation Only</mat-option>
-                      <mat-option value="hybrid">Hybrid (default)</mat-option>
-                    </mat-select>
-                    <mat-icon matSuffix>merge</mat-icon>
-                    <mat-hint
-                      >How to combine federation and LoTE trust decisions. In hybrid mode,
-                      federation is authoritative with LoTE fallback.</mat-hint
-                    >
-                  </mat-form-field>
-
-                  <!-- Entity ID -->
-                  <mat-form-field>
-                    <mat-label>Entity ID (optional)</mat-label>
+                    <mat-label>Batch Size</mat-label>
                     <input
-                      matInput
-                      formControlName="entityId"
-                      placeholder="https://issuer.example.org"
-                      type="url"
-                    />
-                    <mat-icon matSuffix>link</mat-icon>
-                    <mat-hint>This issuer's unique identifier in the federation</mat-hint>
-                  </mat-form-field>
-
-                  <!-- Cache TTL -->
-                  <mat-form-field>
-                    <mat-label>Cache TTL (seconds)</mat-label>
-                    <input
+                      (keydown.enter)="onInputEnter($event)"
                       matInput
                       type="number"
-                      formControlName="cacheTtlSeconds"
-                      placeholder="300"
-                      min="60"
+                      formControlName="batchSize"
+                      placeholder="1"
+                      min="1"
                     />
-                    <mat-icon matSuffix>schedule</mat-icon>
-                    <mat-hint
-                      >Cache expiry for federation trust decisions (default: 300 seconds)</mat-hint
-                    >
+                    <mat-icon matSuffix>batch_prediction</mat-icon>
+                    <mat-hint>Number of credentials issued in a single batch (default: 1)</mat-hint>
+                    @if (form.get('batchSize')?.invalid && form.get('batchSize')?.touched) {
+                      <mat-error>Batch size must be at least 1</mat-error>
+                    }
                   </mat-form-field>
-
-                  <!-- Enforce Signing Policy -->
-                  <mat-slide-toggle formControlName="enforceSigningPolicy">
+                  <mat-slide-toggle formControlName="dPopRequired">
                     <div fxLayout="column">
-                      <span><strong>Enforce Signing Policy</strong></span>
+                      <span><strong>DPoP Required</strong></span>
                       <span class="toggle-description"
-                        >Require federation trust checks to pass for upstream metadata and signing
-                        decisions</span
+                        >Enable DPoP (Demonstrated Proof of Possession) for sender-constrained
+                        tokens. Disable if your wallet doesn't support DPoP.</span
                       >
                     </div>
                   </mat-slide-toggle>
 
-                  <!-- Trust Anchors -->
-                  <div formArrayName="trustAnchors">
-                    <h4>
-                      <mat-icon>account_tree</mat-icon>
-                      Federation Trust Anchors
-                    </h4>
-                    @for (anchor of trustAnchors.controls; track $index; let i = $index) {
-                      <div
-                        [formGroupName]="i"
-                        fxLayout="column"
-                        fxLayoutGap="16px"
-                        class="trust-anchor-entry"
+                  <mat-slide-toggle formControlName="credentialResponseEncryption">
+                    <div fxLayout="column">
+                      <span><strong>Advertise Credential Response Encryption</strong></span>
+                      <span class="toggle-description"
+                        >Advertise `credential_response_encryption` (ECDH-ES, A128GCM/A256GCM) in
+                        the credential issuer metadata so wallets MAY request encrypted credential
+                        responses. Some wallets reject metadata advertising encryption they do not
+                        support — leave disabled unless you need it.</span
                       >
-                        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
-                          <mat-form-field fxFlex>
-                            <mat-label>Trust Anchor {{ i + 1 }} Entity ID</mat-label>
-                            <input
-                              matInput
-                              formControlName="entityId"
-                              placeholder="https://ta.example.org"
-                              type="url"
-                            />
-                            <mat-icon matSuffix>link</mat-icon>
-                            <mat-hint>The trust anchor's entity ID</mat-hint>
-                          </mat-form-field>
-                          <button
-                            mat-icon-button
-                            type="button"
-                            (click)="removeTrustAnchor(i)"
-                            matTooltip="Remove trust anchor"
+                    </div>
+                  </mat-slide-toggle>
+
+                  <mat-slide-toggle formControlName="credentialRequestEncryption">
+                    <div fxLayout="column">
+                      <span><strong>Require Credential Request Encryption</strong></span>
+                      <span class="toggle-description"
+                        >Advertise `credential_request_encryption` in the credential issuer
+                        metadata. When enabled, wallets MUST send encrypted credential requests
+                        (JWE). Leave disabled unless your conformance profile requires it.</span
+                      >
+                    </div>
+                  </mat-slide-toggle>
+
+                  <mat-slide-toggle formControlName="notificationEndpointEnabled">
+                    <div fxLayout="column">
+                      <span><strong>Enable Notification Endpoint</strong></span>
+                      <span class="toggle-description"
+                        >Advertise the issuer notification endpoint in metadata and accept
+                        notification callbacks. Disable this when the issuer does not support
+                        push-style credential status notifications.</span
+                      >
+                    </div>
+                  </mat-slide-toggle>
+                </mat-card-content>
+              </mat-card>
+            </mat-expansion-panel>
+          </ng-template> </mat-tab
+        ><mat-tab [disabled]="guidedMode && furthestStep < 2" label="Trust"
+          ><ng-template matTabContent
+            ><div class="tab-content trust-sections">
+              <h3>Review trust requirements</h3>
+              <p>
+                These settings depend on your wallet ecosystem. Open a section to configure its
+                requirements.
+              </p>
+              <p>{{ trustSummary }}</p>
+              <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+                <!-- tx_code Brute-Force Protection Card -->
+                <mat-expansion-panel
+                  [expanded]="expandedSections.has('wallet')"
+                  (opened)="expandedSections.add('wallet')"
+                  (closed)="expandedSections.delete('wallet')"
+                  ><mat-expansion-panel-header
+                    ><mat-panel-title
+                      >Transaction Code (tx_code) Protection</mat-panel-title
+                    ></mat-expansion-panel-header
+                  ><mat-card>
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>pin</mat-icon>
+                        Transaction Code (tx_code) Protection
+                      </mat-card-title>
+                      <mat-card-subtitle
+                        >Limit failed PIN/OTP attempts in the pre-authorized code
+                        flow</mat-card-subtitle
+                      >
+                    </mat-card-header>
+                    <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                      <mat-form-field>
+                        <mat-label>Max Failed tx_code Attempts</mat-label>
+                        <input
+                          (keydown.enter)="onInputEnter($event)"
+                          matInput
+                          type="number"
+                          formControlName="txCodeMaxAttempts"
+                          placeholder="5"
+                          min="1"
+                        />
+                        <mat-icon matSuffix>lock</mat-icon>
+                        <mat-hint>
+                          Maximum number of wrong PIN/OTP attempts before the pre-authorized code is
+                          invalidated. Leave empty to use the default (5). Set higher only if you
+                          have a specific need.
+                        </mat-hint>
+                        @if (
+                          form.get('txCodeMaxAttempts')?.invalid &&
+                          form.get('txCodeMaxAttempts')?.touched
+                        ) {
+                          <mat-error>Must be at least 1</mat-error>
+                        }
+                      </mat-form-field>
+                    </mat-card-content>
+                  </mat-card></mat-expansion-panel
+                >
+
+                <!-- Wallet Attestation Card -->
+                <mat-expansion-panel
+                  [expanded]="expandedSections.has('wallet')"
+                  (opened)="expandedSections.add('wallet')"
+                  (closed)="expandedSections.delete('wallet')"
+                  ><mat-expansion-panel-header
+                    ><mat-panel-title
+                      >Wallet Provider Trust and Defaults</mat-panel-title
+                    ></mat-expansion-panel-header
+                  ><mat-card>
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>verified_user</mat-icon>
+                        Wallet Provider Trust and Defaults
+                      </mat-card-title>
+                      <mat-card-subtitle
+                        >Shared provider trust for key attestations and wallet
+                        authentication</mat-card-subtitle
+                      >
+                    </mat-card-header>
+                    <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                      <mat-slide-toggle formControlName="walletAttestationRequired">
+                        <div fxLayout="column">
+                          <span><strong>Require Wallet Attestation by Default</strong></span>
+                          <span class="toggle-description"
+                            >When enabled, wallets must provide OAuth-Client-Attestation headers at
+                            PAR and token endpoints unless an authorization server overrides this
+                            default.</span
                           >
-                            <mat-icon>delete</mat-icon>
+                        </div>
+                      </mat-slide-toggle>
+
+                      <div fxLayout="column" fxLayoutGap="16px" class="trust-lists-section">
+                        <p class="section-hint">
+                          <mat-icon>info</mat-icon>
+                          These lists validate key attestations during issuance and are the default
+                          for wallet authentication at managed authorization servers. Each list
+                          requires a URL and either a verifier JWK or a DER-encoded X.509
+                          certificate.
+                        </p>
+                        <div formArrayName="walletProviderTrustLists">
+                          @for (
+                            trustList of walletProviderTrustLists.controls;
+                            track $index;
+                            let i = $index
+                          ) {
+                            <div
+                              [formGroupName]="i"
+                              fxLayout="column"
+                              fxLayoutGap="8px"
+                              class="trust-list-entry"
+                            >
+                              <mat-form-field>
+                                <mat-label>Managed trust-list ID</mat-label>
+                                <input
+                                  (keydown.enter)="onInputEnter($event)"
+                                  matInput
+                                  formControlName="trustListId"
+                                  placeholder="wallet-providers"
+                                />
+                                <mat-hint
+                                  >For a list in this tenant, the URL and verifier below are
+                                  resolved automatically.</mat-hint
+                                >
+                              </mat-form-field>
+                              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+                                <mat-form-field fxFlex>
+                                  <mat-label>Trust List URL {{ i + 1 }}</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    [id]="'wallet-trust-url-' + i"
+                                    formControlName="url"
+                                    placeholder="https://trust-list.example.com/wallet-providers"
+                                    type="url"
+                                  />
+                                  <mat-icon matSuffix>security</mat-icon>
+                                  @if (
+                                    trustList.get('url')?.invalid && trustList.get('url')?.touched
+                                  ) {
+                                    <mat-error>Please enter a valid URL</mat-error>
+                                  }
+                                </mat-form-field>
+                                <button
+                                  matIconButton
+                                  type="button"
+                                  color="warn"
+                                  (click)="removeWalletProviderTrustList(i)"
+                                  matTooltip="Remove this trust list"
+                                >
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </div>
+
+                              <mat-form-field>
+                                <mat-label>Verifier Key (JWK JSON)</mat-label>
+                                <textarea
+                                  matInput
+                                  [id]="'wallet-trust-jwk-' + i"
+                                  formControlName="verifierKey"
+                                  rows="4"
+                                  placeholder='{"kty":"EC","crv":"P-256","x":"...","y":"...","alg":"ES256"}'
+                                ></textarea>
+                                <mat-icon matSuffix>vpn_key</mat-icon>
+                                @if (
+                                  trustList.get('verifierKey')?.invalid &&
+                                  trustList.get('verifierKey')?.touched
+                                ) {
+                                  <mat-error>Please enter a valid JWK JSON object.</mat-error>
+                                }
+                              </mat-form-field>
+
+                              <mat-form-field>
+                                <mat-label>Verifier Certificate (Base64 DER)</mat-label>
+                                <input
+                                  (keydown.enter)="onInputEnter($event)"
+                                  matInput
+                                  [id]="'wallet-trust-der-' + i"
+                                  formControlName="verifierX509Der"
+                                  placeholder="MIIB..."
+                                  type="text"
+                                />
+                                <mat-icon matSuffix>verified</mat-icon>
+                              </mat-form-field>
+
+                              @if (trustList.hasError('missingVerifier') && trustList.touched) {
+                                <p class="trust-list-error">
+                                  Provide at least one verifier method: JWK or DER certificate.
+                                </p>
+                              }
+                            </div>
+                          }
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="center center">
+                          <button
+                            mat-raised-button
+                            type="button"
+                            (click)="addWalletProviderTrustList()"
+                          >
+                            <mat-icon>add</mat-icon> Add Trust List
                           </button>
                         </div>
+                        @if (walletProviderTrustLists.length === 0) {
+                          <p class="warning-hint">
+                            <mat-icon>warning</mat-icon>
+                            No shared trust lists configured. Key attestations will be rejected.
+                            Wallet attestations require trust lists here or on their authorization
+                            server.
+                          </p>
+                        }
+                      </div>
+                    </mat-card-content>
+                  </mat-card></mat-expansion-panel
+                >
+              </div>
+              <mat-expansion-panel
+                [expanded]="expandedSections.has('federation')"
+                (opened)="expandedSections.add('federation')"
+                (closed)="expandedSections.delete('federation')"
+                ><mat-expansion-panel-header
+                  ><mat-panel-title>OpenID Federation</mat-panel-title></mat-expansion-panel-header
+                >
+                <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+                  <!-- OpenID Federation Card -->
+                  <mat-card formGroupName="federation">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>security</mat-icon>
+                        OpenID Federation
+                      </mat-card-title>
+                      <mat-card-subtitle
+                        >Enable federation-based trust evaluation for credential verification and
+                        issuer authentication</mat-card-subtitle
+                      >
+                    </mat-card-header>
+                    <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                      <mat-slide-toggle formControlName="enabled">
+                        <div fxLayout="column">
+                          <span><strong>Enable OpenID Federation</strong></span>
+                          <span class="toggle-description"
+                            >When enabled, uses federation trust anchors for entity validation</span
+                          >
+                        </div>
+                      </mat-slide-toggle>
 
-                        <mat-form-field fxFull>
-                          <mat-label>Entity Configuration URI</mat-label>
+                      @if (federationEnabled) {
+                        <!-- Entity Role -->
+                        <mat-form-field>
+                          <mat-label>Entity Role</mat-label>
+                          <mat-select formControlName="role">
+                            <mat-option value="trust_anchor">Trust Anchor</mat-option>
+                            <mat-option value="intermediate">Intermediate</mat-option>
+                            <mat-option value="leaf">Leaf (default)</mat-option>
+                          </mat-select>
+                          <mat-icon matSuffix>category</mat-icon>
+                          <mat-hint>This entity's role in the federation topology</mat-hint>
+                        </mat-form-field>
+
+                        <!-- Trust Mode -->
+                        <mat-form-field>
+                          <mat-label>Trust Decision Mode</mat-label>
+                          <mat-select formControlName="mode">
+                            <mat-option value="federation-only">Federation Only</mat-option>
+                            <mat-option value="hybrid">Hybrid (default)</mat-option>
+                          </mat-select>
+                          <mat-icon matSuffix>merge</mat-icon>
+                          <mat-hint
+                            >How to combine federation and LoTE trust decisions. In hybrid mode,
+                            federation is authoritative with LoTE fallback.</mat-hint
+                          >
+                        </mat-form-field>
+
+                        <!-- Entity ID -->
+                        <mat-form-field>
+                          <mat-label>Entity ID (optional)</mat-label>
                           <input
+                            (keydown.enter)="onInputEnter($event)"
                             matInput
-                            formControlName="entityConfigurationUri"
-                            placeholder="https://ta.example.org/.well-known/openid-federation"
+                            formControlName="entityId"
+                            placeholder="https://issuer.example.org"
                             type="url"
                           />
-                          <mat-icon matSuffix>language</mat-icon>
-                          <mat-hint>Federation endpoint URL for this trust anchor</mat-hint>
+                          <mat-icon matSuffix>link</mat-icon>
+                          <mat-hint>This issuer's unique identifier in the federation</mat-hint>
                         </mat-form-field>
-                      </div>
-                    }
 
-                    <div fxLayout="row" fxLayoutAlign="center center">
-                      <button mat-raised-button type="button" (click)="addTrustAnchor()">
-                        <mat-icon>add</mat-icon>
-                        Add Trust Anchor
-                      </button>
-                    </div>
-                  </div>
-                }
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </ng-template>
-      </mat-tab>
+                        <!-- Cache TTL -->
+                        <mat-form-field>
+                          <mat-label>Cache TTL (seconds)</mat-label>
+                          <input
+                            (keydown.enter)="onInputEnter($event)"
+                            matInput
+                            type="number"
+                            formControlName="cacheTtlSeconds"
+                            placeholder="300"
+                            min="60"
+                          />
+                          <mat-icon matSuffix>schedule</mat-icon>
+                          <mat-hint
+                            >Cache expiry for federation trust decisions (default: 300
+                            seconds)</mat-hint
+                          >
+                        </mat-form-field>
 
-      <mat-tab>
-        <ng-template mat-tab-label>
-          <mat-icon class="tab-icon">badge</mat-icon>
-          Registration Certificate
-        </ng-template>
+                        <!-- Enforce Signing Policy -->
+                        <mat-slide-toggle formControlName="enforceSigningPolicy">
+                          <div fxLayout="column">
+                            <span><strong>Enforce Signing Policy</strong></span>
+                            <span class="toggle-description"
+                              >Require federation trust checks to pass for upstream metadata and
+                              signing decisions</span
+                            >
+                          </div>
+                        </mat-slide-toggle>
 
-        <ng-template matTabContent>
-          <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
-            <mat-card formGroupName="registrationCertificate">
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon>verified</mat-icon>
-                  Issuer Registration Certificate
-                </mat-card-title>
-                <mat-card-subtitle
-                  >Configure `issuer_info` registration certificate advertisement in issuer
-                  metadata</mat-card-subtitle
+                        <!-- Trust Anchors -->
+                        <div formArrayName="trustAnchors">
+                          <h4>
+                            <mat-icon>account_tree</mat-icon>
+                            Federation Trust Anchors
+                          </h4>
+                          @for (anchor of trustAnchors.controls; track $index; let i = $index) {
+                            <div
+                              [formGroupName]="i"
+                              fxLayout="column"
+                              fxLayoutGap="16px"
+                              class="trust-anchor-entry"
+                            >
+                              <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px">
+                                <mat-form-field fxFlex>
+                                  <mat-label>Trust Anchor {{ i + 1 }} Entity ID</mat-label>
+                                  <input
+                                    (keydown.enter)="onInputEnter($event)"
+                                    matInput
+                                    formControlName="entityId"
+                                    placeholder="https://ta.example.org"
+                                    type="url"
+                                  />
+                                  <mat-icon matSuffix>link</mat-icon>
+                                  <mat-hint>The trust anchor's entity ID</mat-hint>
+                                </mat-form-field>
+                                <button
+                                  mat-icon-button
+                                  type="button"
+                                  (click)="removeTrustAnchor(i)"
+                                  matTooltip="Remove trust anchor"
+                                >
+                                  <mat-icon>delete</mat-icon>
+                                </button>
+                              </div>
+
+                              <mat-form-field fxFull>
+                                <mat-label>Entity Configuration URI</mat-label>
+                                <input
+                                  (keydown.enter)="onInputEnter($event)"
+                                  matInput
+                                  formControlName="entityConfigurationUri"
+                                  placeholder="https://ta.example.org/.well-known/openid-federation"
+                                  type="url"
+                                />
+                                <mat-icon matSuffix>language</mat-icon>
+                                <mat-hint>Federation endpoint URL for this trust anchor</mat-hint>
+                              </mat-form-field>
+                            </div>
+                          }
+
+                          <div fxLayout="row" fxLayoutAlign="center center">
+                            <button mat-raised-button type="button" (click)="addTrustAnchor()">
+                              <mat-icon>add</mat-icon>
+                              Add Trust Anchor
+                            </button>
+                          </div>
+                        </div>
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                </div> </mat-expansion-panel
+              ><mat-expansion-panel
+                [expanded]="expandedSections.has('registration')"
+                (opened)="expandedSections.add('registration')"
+                (closed)="expandedSections.delete('registration')"
+                ><mat-expansion-panel-header
+                  ><mat-panel-title
+                    >Issuer registration certificate</mat-panel-title
+                  ></mat-expansion-panel-header
                 >
-              </mat-card-header>
-
-              <mat-card-content fxLayout="column" fxLayoutGap="16px">
-                <mat-slide-toggle formControlName="enabled">
-                  <div fxLayout="column">
-                    <span><strong>Enable Registration Certificate in Issuer Metadata</strong></span>
-                    <span class="toggle-description"
-                      >When enabled, a `registration_cert` entry is included in `issuer_info`.</span
-                    >
-                  </div>
-                </mat-slide-toggle>
-
-                @if (registrationCertificateEnabled) {
-                  <mat-form-field>
-                    <mat-label>Mode</mat-label>
-                    <mat-select formControlName="mode">
-                      <mat-option value="import">Import existing JWT</mat-option>
-                      <mat-option value="generate">Generate from credential configs</mat-option>
-                    </mat-select>
-                    <mat-icon matSuffix>tune</mat-icon>
-                  </mat-form-field>
-
-                  @if (registrationCertificateMode === 'import') {
-                    <mat-form-field>
-                      <mat-label>Registration Certificate JWT</mat-label>
-                      <textarea
-                        matInput
-                        id="registration-cert-jwt"
-                        aria-label="Registration certificate JWT"
-                        formControlName="jwt"
-                        placeholder="eyJ..."
-                        rows="7"
-                      ></textarea>
-                      <mat-icon matSuffix>key</mat-icon>
-                      <mat-hint>Paste an existing registration certificate JWT.</mat-hint>
-                    </mat-form-field>
-                  }
-
-                  @if (registrationCertificateMode === 'generate') {
-                    <mat-hint>
-                      Provides attestations are derived automatically from credential configs with
-                      schema.
-                    </mat-hint>
-
-                    <div>
-                      <button
-                        mat-stroked-button
-                        type="button"
-                        (click)="applyRegistrarDefaultsFromRegistrar()"
+                <div fxLayout="column" fxLayoutGap="24px" class="tab-content">
+                  <mat-card formGroupName="registrationCertificate">
+                    <mat-card-header>
+                      <mat-card-title>
+                        <mat-icon>verified</mat-icon>
+                        Issuer Registration Certificate
+                      </mat-card-title>
+                      <mat-card-subtitle
+                        >Configure `issuer_info` registration certificate advertisement in issuer
+                        metadata</mat-card-subtitle
                       >
-                        <mat-icon>sync</mat-icon>
-                        Use Registrar Defaults
-                      </button>
-                    </div>
+                    </mat-card-header>
 
-                    <mat-form-field>
-                      <mat-label>Privacy Policy URL (optional)</mat-label>
-                      <input
-                        matInput
-                        type="url"
-                        id="registration-cert-privacy-policy"
-                        aria-label="Registration certificate privacy policy URL"
-                        formControlName="privacyPolicy"
-                        placeholder="https://issuer.example/privacy"
-                      />
-                      <mat-icon matSuffix>privacy_tip</mat-icon>
-                    </mat-form-field>
+                    <mat-card-content fxLayout="column" fxLayoutGap="16px">
+                      <mat-slide-toggle formControlName="enabled">
+                        <div fxLayout="column">
+                          <span
+                            ><strong
+                              >Enable Registration Certificate in Issuer Metadata</strong
+                            ></span
+                          >
+                          <span class="toggle-description"
+                            >When enabled, a `registration_cert` entry is included in
+                            `issuer_info`.</span
+                          >
+                        </div>
+                      </mat-slide-toggle>
 
-                    <mat-form-field>
-                      <mat-label>Support URI (optional)</mat-label>
-                      <input
-                        matInput
-                        id="registration-cert-support-uri"
-                        aria-label="Registration certificate support URI"
-                        formControlName="supportUri"
-                        placeholder="mailto:support@issuer.example"
-                      />
-                      <mat-icon matSuffix>support_agent</mat-icon>
-                    </mat-form-field>
-                  }
-                }
-              </mat-card-content>
-            </mat-card>
-          </div>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
+                      @if (registrationCertificateEnabled) {
+                        <mat-form-field>
+                          <mat-label>Mode</mat-label>
+                          <mat-select formControlName="mode">
+                            <mat-option value="import">Import existing JWT</mat-option>
+                            <mat-option value="generate"
+                              >Generate from credential configs</mat-option
+                            >
+                          </mat-select>
+                          <mat-icon matSuffix>tune</mat-icon>
+                        </mat-form-field>
 
-    <!-- Action Buttons -->
-    <div fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="end center">
-      <button mat-button type="button" [routerLink]="['../']">Cancel</button>
-      <button
-        mat-flat-button
-        type="submit"
-        [disabled]="form.invalid || loading"
-        appConfigManaged
-        managedKind="IssuanceConfig"
-        managedResourceId="issuance"
+                        @if (registrationCertificateMode === 'import') {
+                          <mat-form-field>
+                            <mat-label>Registration Certificate JWT</mat-label>
+                            <textarea
+                              matInput
+                              id="registration-cert-jwt"
+                              aria-label="Registration certificate JWT"
+                              formControlName="jwt"
+                              placeholder="eyJ..."
+                              rows="7"
+                            ></textarea>
+                            <mat-icon matSuffix>key</mat-icon>
+                            <mat-hint>Paste an existing registration certificate JWT.</mat-hint>
+                          </mat-form-field>
+                        }
+
+                        @if (registrationCertificateMode === 'generate') {
+                          <mat-hint>
+                            Provides attestations are derived automatically from credential configs
+                            with schema.
+                          </mat-hint>
+
+                          <div>
+                            <button
+                              mat-stroked-button
+                              type="button"
+                              (click)="applyRegistrarDefaultsFromRegistrar()"
+                            >
+                              <mat-icon>sync</mat-icon>
+                              Use Registrar Defaults
+                            </button>
+                          </div>
+
+                          <mat-form-field>
+                            <mat-label>Privacy Policy URL (optional)</mat-label>
+                            <input
+                              (keydown.enter)="onInputEnter($event)"
+                              matInput
+                              type="url"
+                              id="registration-cert-privacy-policy"
+                              aria-label="Registration certificate privacy policy URL"
+                              formControlName="privacyPolicy"
+                              placeholder="https://issuer.example/privacy"
+                            />
+                            <mat-icon matSuffix>privacy_tip</mat-icon>
+                          </mat-form-field>
+
+                          <mat-form-field>
+                            <mat-label>Support URI (optional)</mat-label>
+                            <input
+                              (keydown.enter)="onInputEnter($event)"
+                              matInput
+                              id="registration-cert-support-uri"
+                              aria-label="Registration certificate support URI"
+                              formControlName="supportUri"
+                              placeholder="mailto:support@issuer.example"
+                            />
+                            <mat-icon matSuffix>support_agent</mat-icon>
+                          </mat-form-field>
+                        }
+                      }
+                    </mat-card-content>
+                  </mat-card>
+                </div>
+              </mat-expansion-panel>
+            </div></ng-template
+          ></mat-tab
+        ><mat-tab [disabled]="guidedMode && furthestStep < 3" label="Review"
+          ><ng-template matTabContent
+            ><div class="tab-content review-summary">
+              <h3>Review issuer settings</h3>
+              <h4>Issuer identity</h4>
+              @for (display of displays.controls; track display) {
+                <p>{{ display.get('name')?.value }} ({{ display.get('locale')?.value }})</p>
+              }
+              @if (!displays.length) {
+                <p>No issuer display information configured.</p>
+              }
+              <h4>Wallet access</h4>
+              @for (server of authorizationServers.controls; track server) {
+                <p>
+                  {{ server.get('label')?.value || server.get('id')?.value }} ·
+                  {{ server.get('type')?.value }} ·
+                  {{ server.get('enabled')?.value === false ? 'Disabled' : 'Enabled' }}
+                </p>
+              }
+              <p>{{ behaviorSummary }}</p>
+              <h4>Trust</h4>
+              <p>{{ trustSummary }}</p>
+              <p>
+                Credential signing keys are selected per credential configuration. Check
+                <a routerLink="/keys" target="_blank" rel="noopener">Keys</a> for the keys and
+                certificates required by your deployment.
+              </p>
+              <p>
+                After saving,
+                <a routerLink="/credential-config/create" target="_blank" rel="noopener"
+                  >configure a credential type</a
+                >
+                to define what you issue.
+              </p>
+            </div></ng-template
+          ></mat-tab
+        ></mat-tab-group
       >
-        @if (loading) {
-          <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+
+      <!-- Action Buttons -->
+      <div class="form-actions" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="end center">
+        <button mat-button type="button" [routerLink]="['../']">Cancel</button>
+        @if (guidedMode && activeStep > 0) {
+          <button mat-stroked-button type="button" (click)="previousStep()" [disabled]="loading">
+            Back
+          </button>
         }
-        @if (!loading) {
-          <mat-icon>save</mat-icon>
-        }
-        Save Configuration
-      </button>
-    </div>
-  </form>
+        <button
+          mat-flat-button
+          type="submit"
+          [disabled]="loading"
+          appConfigManaged
+          managedKind="IssuanceConfig"
+          managedResourceId="issuance"
+        >
+          @if (loading) {
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          }
+          @if (!loading) {
+            <mat-icon>save</mat-icon>
+          }
+          {{ guidedMode && activeStep < 3 ? 'Continue' : 'Save settings' }}
+        </button>
+      </div>
+    </form>
+  }
 </div>

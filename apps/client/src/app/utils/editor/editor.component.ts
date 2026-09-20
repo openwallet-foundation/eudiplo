@@ -122,7 +122,7 @@ export class EditorComponent implements ControlValueAccessor, Validator, OnChang
     }
 
     //if only the schema is included, return null
-    if (Object.keys(parsed).length === 1 && parsed.$schema) {
+    if (parsed && Object.keys(parsed).length === 1 && parsed.$schema) {
       return null;
     }
 
