@@ -13,6 +13,7 @@ const sidebars: SidebarsConfig = {
       link: {type: 'doc', id: 'getting-started/index'},
       items: [
         'getting-started/quick-start',
+        'getting-started/wallet-registrars',
         'getting-started/first-credential',
         'getting-started/first-presentation',
         'getting-started/next-steps',

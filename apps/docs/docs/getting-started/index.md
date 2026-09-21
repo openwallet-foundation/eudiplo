@@ -16,14 +16,15 @@ flowchart LR
     E --> F[Inspect verified session]
 ```
 
-| Chapter                                               | What you do                                                                        | Checkpoint                                                           |
-| ----------------------------------------------------- | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| [1. Install and connect](quick-start.md)              | Start a minimal instance with an HTTPS address the phone can reach                 | Health endpoint works on both computer and phone                     |
-| [2. Issue your first credential](first-credential.md) | Create a tenant, keys, issuer identity, and a membership credential; send an offer | Wallet contains `Membership` with `name: Max` and `member_id: M-001` |
-| [3. Verify the credential](first-presentation.md)     | Request those same claims and approve their disclosure                             | A successful presentation session contains `Max` and `M-001`         |
-| [4. Extend the flow](next-steps.md)                   | Add application integration and deployment-specific trust                          | Choose the next capability your application needs                    |
+| Chapter                                                      | What you do                                                                        | Checkpoint                                                           |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [1. Install and connect](quick-start.md)                     | Start a minimal instance with an HTTPS address the phone can reach                 | Health endpoint works on both computer and phone                     |
+| [2. Wallet and registrar requirements](wallet-registrars.md) | Choose wallet-specific access and registration certificates                        | The target wallet's trust prerequisites are known                    |
+| [3. Issue your first credential](first-credential.md)        | Create a tenant, keys, issuer identity, and a membership credential; send an offer | Wallet contains `Membership` with `name: Max` and `member_id: M-001` |
+| [4. Verify the credential](first-presentation.md)            | Request those same claims and approve their disclosure                             | A successful presentation session contains `Max` and `M-001`         |
+| [5. Extend the flow](next-steps.md)                          | Add application integration and deployment-specific trust                          | Choose the next capability your application needs                    |
 
-Follow the chapters in order. Keep the same instance, tenant, public URL, and wallet for the whole recipe.
+Follow the chapters in order. Keep the same instance, tenant, public URL, and wallet for the whole recipe. The wallet and registrar chapter is a decision point: complete the self-signed path for a compatible test wallet, or configure the relevant registrar before issuing and verifying.
 
 ## Recipe ingredients
 

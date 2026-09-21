@@ -7,6 +7,12 @@ This is chapter 1 of the [issuance and verification cookbook](index.md). By the 
 
 ## Before you start
 
+Install the standalone `eudiplo` CLI with:
+
+```bash
+curl -fsSL https://eudiplo.dev/install.sh | bash
+```
+
 Install Docker with Docker Compose, or Podman with Podman Compose. Start the runtime before running the commands below. The standalone `eudiplo` CLI does not require Node.js; if you use the npm package instead, install Node.js 22+ and replace `eudiplo` with `npx @eudiplo/cli`. Use an empty directory so this recipe does not replace another deployment.
 
 ## Step 1: Get an HTTPS address for the backend
@@ -19,7 +25,7 @@ Set up an HTTPS tunnel to local port **3000**. For example, install and authenti
 ngrok http 3000
 ```
 
-> There may be other alternatives to ngrok, such as Cloudflare Tunnel or localtunnel. Choose the one that best fits your environment. Keep in mind some free plans may have changing URLs or limited session durations.
+> There may be other alternatives to ngrok, such as Cloudflare Tunnel or localtunnel. Choose the one that best fits your environment. Keep in mind some free plans may have changing URLs or limited session durations. Deploying on your own server with Let's Encrypt is another option for a stable HTTPS endpoint.
 
 Keep that terminal open. Copy the HTTPS forwarding URL; below, `https://YOUR-HTTPS-HOST` means that URL, without a trailing slash. A gateway error is expected until EUDIPLO starts.
 
@@ -64,7 +70,7 @@ curl https://YOUR-HTTPS-HOST/health
 
 Also open `https://YOUR-HTTPS-HOST/health` in the **phone's browser**. It must return the health response with no certificate warning, tunnel login, or HTML confirmation page. Do not proceed to QR codes until this works.
 
-Use `http://localhost:4200` only in the browser on your computer to administer EUDIPLO. The wallet must not connect to the Web Client: it communicates only with the public backend address in `PUBLIC_URL`. Do not expose port `4200` or the Web Client through the tunnel.
+Use `http://localhost:4200` only in the browser on your computer to administer EUDIPLO. The wallet must not connect to the Web Client: it communicates only with the public backend address in `PUBLIC_URL`.
 
 ## Step 4: Sign in to the Web Client
 

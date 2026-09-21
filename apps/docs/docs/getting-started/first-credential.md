@@ -1,11 +1,11 @@
 ---
 title: Issue Your First Credential
-sidebar_label: "2. Issue a membership credential"
+sidebar_label: "3. Issue a membership credential"
 ---
 
-This is chapter 2 of the [cookbook](index.md). You will create a membership credential containing `name: Max` and `member_id: M-001`, then store it in your wallet.
+This is chapter 3 of the [cookbook](index.md). You will create a membership credential containing `name: Max` and `member_id: M-001`, then store it in your wallet.
 
-Before continuing, complete [Install and Connect](quick-start.md): sign in as root and check the public health endpoint from your phone. Keep the HTTPS tunnel running.
+Before continuing, complete [Install and Connect](quick-start.md) and [Wallet and Registrar Requirements](wallet-registrars.md): sign in as root, check the public health endpoint from your phone, and prepare the certificates required by your wallet. Keep the HTTPS tunnel running.
 
 ## Step 1: Create a tenant for the recipe
 
@@ -20,12 +20,12 @@ Before continuing, complete [Install and Connect](quick-start.md): sign in as ro
 
 Open **Keys** and create these two key chains using the key wizard:
 
-| Purpose                                  | Wizard choices                                                            | Description                     |
-| ---------------------------------------- | ------------------------------------------------------------------------- | ------------------------------- |
-| Sign the issued credential               | **Credential Signing (Attestation)** → **Create Key Chain (Recommended)** | `Membership credential signing` |
-| Sign presentation requests to the wallet | **Access Certificate** → **Self-Signed Certificate**                      | `Membership verifier access`    |
+| Purpose                                  | Wizard choices                                                                              | Description                     |
+| ---------------------------------------- | ------------------------------------------------------------------------------------------- | ------------------------------- |
+| Sign the issued credential               | **Credential Signing (Attestation)** → **Create Key Chain (Recommended)**                   | `Membership credential signing` |
+| Sign presentation requests to the wallet | **Access Certificate** → **Self-Signed Certificate**, or the wallet-specific registrar path | `Membership verifier access`    |
 
-Use the `db` KMS provider from the minimal installation and keep the wizard's other generated-key defaults. Record the IDs of the resulting key chains; the wizard generates these IDs, so they may differ between installations.
+Use the `db` KMS provider from the minimal installation and keep the wizard's other generated-key defaults. For Paradym or another wallet test environment that accepts self-signed access certificates, use the self-signed choice shown above. For the EU Reference Implementation, import the access key and certificate supplied by its ecosystem operator. For a German wallet, either configure the German registrar and use **Registrar Enrollment**, or import a certificate already issued by the German registrar, as described in [Wallet and Registrar Requirements](wallet-registrars.md). Record the IDs of the resulting key chains; the wizard generates these IDs, so they may differ between installations.
 
 **Expected result:** both chains have an active key and certificate. The first is selected when defining the credential; the second is used in the verification chapter. See [Key Chains](../trust/key-chains.md) for certificate import and other provisioning choices.
 
@@ -103,13 +103,16 @@ This removes status-list provisioning and wallet-specific status-certificate req
 
 ## If something goes wrong
 
-| Symptom                                          | Check                                                                                                                                                                      |
-| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| No `membership` credential in the offer selector | Confirm you saved it in the same tenant and did not configure interactive authorization actions for this pre-authorized recipe.                                            |
-| Wallet cannot open the offer                     | Repeat the phone health check; check `PUBLIC_URL` and that the tunnel is still running. Generate a fresh offer after fixing the URL.                                       |
-| Wallet rejects the issuer or certificate         | Check wallet trust requirements. A self-signed test certificate is not accepted by every wallet.                                                                           |
-| Wallet requests attestation unexpectedly         | Check both issuer wallet-attestation settings and the credential's supported proof types. This recipe uses JWT proof and optional wallet attestation.                      |
-| Wrong claim value                                | Check the offer's claim values, which can override configuration defaults. Changing a configuration does not update a credential already in the wallet; issue another one. |
+| Symptom                                          | Check                                                                                                                                                                                                                                                 |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No `membership` credential in the offer selector | Confirm you saved it in the same tenant and did not configure interactive authorization actions for this pre-authorized recipe.                                                                                                                       |
+| Wallet cannot open the offer                     | Repeat the phone health check; check `PUBLIC_URL` and that the tunnel is still running. Generate a fresh offer after fixing the URL.                                                                                                                  |
+| Wallet rejects the issuer or certificate         | Check wallet trust requirements. A self-signed test certificate is not accepted by every wallet.                                                                                                                                                      |
+| Wallet shows an unclear error                    | Open the wallet's logs immediately after the failure and look for the rejected URL, certificate, metadata, or protocol step. The [wallet compatibility guide](../reference/wallet-compatibility.md) lists the log-export steps for supported wallets. |
+| Wallet requests attestation unexpectedly         | Check both issuer wallet-attestation settings and the credential's supported proof types. This recipe uses JWT proof and optional wallet attestation.                                                                                                 |
+| Wrong claim value                                | Check the offer's claim values, which can override configuration defaults. Changing a configuration does not update a credential already in the wallet; issue another one.                                                                            |
+
+For the EU Reference Implementation, open **Setting → Retrieve Logs**. For Paradym Wallet, open **Settings → Export Logs**. Include the relevant wallet error and the corresponding EUDIPLO session details when investigating a failure, but remove credentials, tokens, private keys, and other personal data before sharing logs.
 
 Keep the issued credential in the wallet and continue in the same tenant.
 

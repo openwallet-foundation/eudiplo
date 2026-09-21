@@ -4,7 +4,7 @@ title: Registrar
 
 # Registrar
 
-To interact with an EUDI Wallet, two types of certificates are required:
+Depending on the EUDI Wallet and its test or production ecosystem, one or both of these certificate types may be required:
 
 - **Access Certificate** — Grants access to the EUDI Wallet
 - **Registration Certificate** — Authorizes data requests from the EUDI Wallet
@@ -19,7 +19,7 @@ To see the **Registrar** menu in the client, your tenant must have the `registra
 
 ## Step 1: Configure Registrar Credentials
 
-Each tenant can configure their own registrar connection with OIDC credentials. This allows different tenants to connect to different registrar instances or use different credentials for the same registrar.
+The integrated registrar connection currently supports the German registrar. Each tenant can configure its own German registrar connection with OIDC credentials and use different credentials for each tenant. For other wallet ecosystems, obtain the required key and certificate material from the ecosystem operator and import it into EUDIPLO; do not expect the integrated enrollment API to work with those registrars.
 
 ### Via the Web UI
 
@@ -72,12 +72,16 @@ Once the registrar is configured, you can create access certificates via the Key
 5. Enter a name for the key chain
 6. Click **Create**
 
-The wizard will:
+For the integrated German registrar workflow, the wizard will:
 
 - Create a new key chain
 - Generate a signing key
 - Request an access certificate from the registrar
 - Store the certificate in the key chain
+
+### Import an Existing German Registrar Certificate
+
+If the German registrar has already issued the access key and certificate, you can use the key wizard's import option instead. Select **Access Certificate**, choose the import source, and provide the key and certificate material. Configuring the registrar connection is not required for this path.
 
 ### Via the API
 
