@@ -1,81 +1,105 @@
 ---
-title: Request Your First Presentation
+title: Verify the Membership Credential
+sidebar_label: "3. Request and verify claims"
 ---
 
-Now that you've issued a credential, let's verify it by requesting a presentation from the wallet. This guide shows you how to create a presentation configuration and request credentials from users.
+This is chapter 3 of the [cookbook](index.md). You will request the `name` and `member_id` claims from the membership credential issued in [chapter 2](first-credential.md), then inspect the verified result.
 
-:::info[Prerequisites]
+Before continuing, confirm:
 
-- Complete [Issue Your First Credential](first-credential.md)
-- Have a wallet with at least one credential from EUDIPLO
+- The wallet contains the unexpired `Membership` credential with `Max` and `M-001`.
+- You are still signed in to tenant `membership-demo`.
+- The public HTTPS URL is unchanged and reachable from the phone.
+- The access key chain from chapter 2 has an active certificate accepted by your wallet's test environment.
 
-:::
+## Step 1: Define what to request
 
-## Understanding Presentation
+Open **Credential Verification → Verification Configs** and choose **Create**.
 
-Credential presentation enables verifiers to:
+1. In **Name**, enter ID `membership-check` and description `Verify a membership name and ID`. Choose **Continue**.
+2. In **Credentials**, choose **Add credential** and enter:
 
-- **Request specific credentials** from users' wallets
-- **Verify authenticity** of presented credentials
-- **Extract required claims** for authorization or validation
-- **Maintain privacy** by requesting only necessary information
+    | Field | Value |
+    | --- | --- |
+    | Query ID | `membership` |
+    | Credential format | `dc+sd-jwt` |
+    | Credential type (VCT) | `urn:example:membership:1` |
+    | First claim path | `name` |
 
-## Step 1: Create a Presentation Configuration
+3. Choose **Add claim** and enter `member_id` in the new claim-path field.
+4. Leave claim options and issuer trust constraints unconfigured for this first exercise. Keep **Require all selected credentials** under **Accepted credential combinations**. There is only one credential in this request.
+5. Choose **Continue**.
 
-This walkthrough requests one claim from a credential already in your wallet.
+**Expected result:** the query requests exactly two claims from the same VCT you issued. The credential configuration ID alone is not enough to match a wallet credential; the VCT and claim paths must match.
 
-1. Navigate to **Credential Verification** → **Verification Configs** and click **Create**.
-2. In **Name**, enter:
-    - **ID**: `name-verification`
-    - **Description**: `Request a given name`
-3. Click **Continue** to open **Credentials**.
-4. Click **Import from Issuer**, enter the credential issuer URL for the credential in your wallet, and click **Fetch Credentials**.
-5. Select that credential and select only its `given_name` claim. Deselect other claims, then click **Insert DCQL**. If your credential uses a different claim name, select the corresponding name claim shown by the issuer.
-6. Check the selected type and claim in the visual builder, then click **Continue**.
-7. In **Settings**, keep the 300-second lifetime and strict status checks. Verify that an access key chain with an active certificate is available. If the editor shows a setup reminder, complete [access key setup](../trust/key-chains.md) before testing a request. Configure a registration certificate if your wallet ecosystem requires one.
-8. Click **Continue**, review the requested claim, and click **Create Configuration**.
+<details>
+<summary>Equivalent DCQL for API users</summary>
 
-:::tip[No JSON required for the common path]
-The importer uses the issuer's actual credential type and claim paths. For a custom request, use **Add credential**. Advanced DCQL remains available through **Edit DCQL JSON**; see the [configuration guide](../presentation/presentation-configuration.md#visual-query-builder-and-json) for supported visual features.
-:::
+The visual builder produces this query:
 
-## Step 2: Create a Presentation Request
-
-1. On the saved configuration, click **Create offer**.
-2. Create the request using your new presentation configuration.
-3. Scan the resulting **QR code** with the wallet containing the selected credential.
-
-## Step 3: Present the Credential
-
-1. Your wallet displays the presentation request
-2. Review the requested claims
-3. Approve the presentation in your wallet
-4. The wallet sends the credential to EUDIPLO
-
-## Step 4: View the Verified Claims
-
-After the wallet presents the credential:
-
-1. Return to the **Sessions** → **All Sessions** page
-2. Find your session in the list
-3. Click on it to see the verified claims:
-
-    ```json
-    {
-        "pid": {
-            "given_name": "John"
+```json
+{
+    "credentials": [
+        {
+            "id": "membership",
+            "format": "dc+sd-jwt",
+            "meta": {
+                "vct_values": ["urn:example:membership:1"]
+            },
+            "claims": [
+                { "path": ["name"] },
+                { "path": ["member_id"] }
+            ]
         }
-    }
-    ```
+    ]
+}
+```
 
-    The credential query ID and name value depend on the credential you selected.
+</details>
 
-:::tip[Programmatic Access]
-In production, you'll typically configure a [webhook](../architecture/extension-points/webhooks.md) to receive verified claims automatically. See [Handling Results](../presentation/handling-results.md) for details.
-:::
+For other credentials, **Import from Issuer** can populate the actual types and claim paths from issuer metadata. See the [visual query builder](../presentation/presentation-configuration.md#visual-query-builder-and-json) for trusted issuers, alternatives, and claim options.
 
-## What's Next?
+## Step 2: Review verification settings
 
-You've successfully verified your first credential! Continue to:
+1. In **Settings**, keep the **300-second** request lifetime and strict credential status checks. The cookbook credential has no status entry because status management was disabled at issuance.
+2. In the access-key settings, select the **access** key chain created in chapter 2, or confirm the tenant default uses that chain. Do not select the attestation key used to sign credentials.
+3. Leave registration certificates unset only if your test wallet permits this. A reminder about a missing access certificate must be resolved before generating a request.
+4. Leave redirect, webhook, attachment, transaction-data, and verification overrides unset.
+5. Choose **Continue**, confirm the review lists `name` and `member_id`, then choose **Create Configuration**.
 
-- **[Next Steps](next-steps.md)** — Explore production deployment, trust management, and advanced features
+**Expected result:** `membership-check` is saved with one credential query and two requested claims. No issuer trust constraint is configured: successful cryptographic verification alone is not a business policy for which issuers you accept. Add [trusted authorities](../presentation/dcql.md) before using this request for real access decisions.
+
+## Step 3: Generate and approve a request
+
+1. On the saved configuration, choose **Create offer**, or open **Credential Verification → New Verification** and select `membership-check`.
+2. Choose **Generate Request**.
+3. Scan the resulting QR code with the same wallet that received the credential.
+4. Confirm that the wallet offers your membership credential and requests its name and member ID. Approve disclosure before the request expires.
+
+**Expected result:** the wallet submits the presentation and EUDIPLO processes the response. Generating the QR code or approving in the wallet is not, by itself, proof that verification succeeded.
+
+## Step 4: Inspect the verified session
+
+Open **Sessions → All Sessions**, find the new presentation session, and open it. Confirm it completed successfully, then inspect the verified claims for query `membership`:
+
+| Claim | Expected value |
+| --- | --- |
+| `name` | `Max` |
+| `member_id` | `M-001` |
+
+The session view can include additional protocol and credential information. Check the verification outcome as well as the claim values; do not treat an unverified or failed response as successful.
+
+You have now completed the flow from installation to issuance and verification. For an application integration, use [Handling Results](../presentation/handling-results.md) and [Webhooks](../architecture/extension-points/webhooks.md) rather than manually reading the session view.
+
+## If something goes wrong
+
+| Symptom | Check |
+| --- | --- |
+| No matching credential | Compare the VCT and both claim paths with chapter 2; check the wallet holds the credential and it has not expired. |
+| Access-certificate readiness warning | Check that the selected key chain has usage `access` and an active certificate. |
+| Wallet rejects the verifier | Configure the certificate trust or registration required by that wallet ecosystem. Do not disable verification checks to bypass trust failures. |
+| Request expired | Generate a new request and approve it within 300 seconds. |
+| Wallet approved, but session failed | Inspect session details and wallet logs; verify public URL reachability, certificate trust, and the credential's validity period. |
+| Expected values changed in the editor but not the result | An existing wallet credential keeps the claims it was issued with. Issue a new credential, then generate another presentation request. |
+
+**Next: [Extend the Flow](next-steps.md).**

@@ -1,8 +1,22 @@
 ---
-title: Next Steps
+title: Extend the Flow
+sidebar_label: "4. Extend the flow"
 ---
 
-Congratulations! You've issued and verified your first credentials with EUDIPLO. Here's where to go next.
+You have completed the [membership cookbook](index.md): installation, issuer setup, issuance, and verification. Keep that working flow as your baseline and add one capability at a time.
+
+## Choose your next outcome
+
+| Outcome | Change to the recipe | Guide |
+| --- | --- | --- |
+| Accept only approved issuers | Add trusted authorities to `membership-check`; test both an accepted and an untrusted issuer | [DCQL](../presentation/dcql.md) and [Trust Lists](../trust/trust-lists.md) |
+| Issue after login | Add an authorization server and use an authorization-code offer | [Authorization](../issuance/authorization.md) |
+| Fetch real membership data | Replace the example defaults with an attribute provider | [Attribute Providers](../issuance/attribute-provider.md) |
+| Receive results in your application | Configure a webhook and handle successful and failed sessions | [Handling Results](../presentation/handling-results.md) |
+| Revoke credentials | Enable status management, issue a new credential, then test verification after revocation | [Status Management](../issuance/status-management.md) |
+| Deploy beyond a local exercise | Replace test certificate trust, the tunnel, and learning defaults with deployment-specific configuration | [Production](../deployment/production.md) |
+
+Changing a configuration does not change a credential already stored in a wallet. Reissue the credential when testing a change to its claims, type, signing key, or status settings.
 
 ## Core Capabilities
 

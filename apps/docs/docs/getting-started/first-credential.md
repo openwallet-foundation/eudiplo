@@ -1,153 +1,116 @@
 ---
 title: Issue Your First Credential
+sidebar_label: "2. Issue a membership credential"
 ---
 
-You've started EUDIPLO—now let's issue your first credential. This guide walks you through creating a credential configuration, setting up issuance, and sending a credential offer to a wallet.
+This is chapter 2 of the [cookbook](index.md). You will create a membership credential containing `name: Max` and `member_id: M-001`, then store it in your wallet.
 
-:::info[Prerequisites]
-Complete the [Quick Start](quick-start.md) guide first. You should have EUDIPLO running with both backend and client:
+Before continuing, complete [Install and Connect](quick-start.md): sign in as root and check the public health endpoint from your phone. Keep the HTTPS tunnel running.
 
-- Backend: [http://localhost:3000](http://localhost:3000)
-- Web Client: [http://localhost:4200](http://localhost:4200)
+## Step 1: Create a tenant for the recipe
 
+1. Open **Tenants** and choose **Create Tenant**.
+2. Use ID `membership-demo` and name `Membership Demo`.
+3. Enable the roles needed to manage issuance and presentation and to create offers and requests. For this isolated learning tenant, you can select all available roles.
+4. Save, copy the generated client credentials, and choose **Login as this Client**.
+
+**Expected result:** you are working inside `membership-demo`. Create all subsequent resources in this tenant, not the root account. Save the generated secret; it is not displayed again. For the access model, see [Tenants](../administration/tenants.md).
+
+## Step 2: Prepare the signing and access keys
+
+Open **Keys** and create these two key chains using the key wizard:
+
+| Purpose                                  | Wizard choices                                                            | Description                     |
+| ---------------------------------------- | ------------------------------------------------------------------------- | ------------------------------- |
+| Sign the issued credential               | **Credential Signing (Attestation)** → **Create Key Chain (Recommended)** | `Membership credential signing` |
+| Sign presentation requests to the wallet | **Access Certificate** → **Self-Signed Certificate**                      | `Membership verifier access`    |
+
+Use the `db` KMS provider from the minimal installation and keep the wizard's other generated-key defaults. Record the IDs of the resulting key chains; the wizard generates these IDs, so they may differ between installations.
+
+**Expected result:** both chains have an active key and certificate. The first is selected when defining the credential; the second is used in the verification chapter. See [Key Chains](../trust/key-chains.md) for certificate import and other provisioning choices.
+
+:::note[Test certificate trust]
+HTTPS transport certificates and credential/access certificates are different. A reachable HTTPS endpoint does not make a wallet trust a self-signed issuer or verifier. Use a wallet test environment that accepts these certificates. If your wallet requires ecosystem-issued certificates or registration, provision them through [Certificates](../trust/certificates.md) and [Registration Certificates](../trust/registration-certificates.md) before proceeding.
 :::
 
-## Understanding the Setup
+## Step 3: Set up the issuer
 
-EUDIPLO uses a hierarchical structure:
+Open **Credential Issuance → Issuer Settings → Use guided setup**.
 
-```mermaid
-flowchart TD
-    A[Root Account] -->|manages| B[Tenants]
-    B -->|contains| C[Keys & Certificates]
-    B -->|contains| D[Credential Configs]
-    B -->|contains| E[Issuance Config]
-    D -->|referenced by| E
-    C -->|used by| D
-```
+1. **Identity:** enter name `Membership Demo` and locale `en-US`. A logo is optional.
+2. **Wallet access:** keep the enabled built-in authorization server. This recipe uses a pre-authorized offer, so it does not need an external login or presentation-based authorization. Keep batch size `1`; review the DPoP default under **Issuance behavior (advanced)** and use a wallet that supports it. Leave request and response encryption off for this recipe.
+3. **Trust:** leave wallet attestation optional and federation off for this test setup. Leave the registration certificate off only if your test wallet permits it; otherwise complete the wallet's trust prerequisites before continuing.
+4. **Review:** check the identity and built-in server, then choose **Save settings**.
 
-| Concept                 | Description                                                               |
-| ----------------------- | ------------------------------------------------------------------------- |
-| **Root Account**        | The default admin account. Used to create and manage tenants.             |
-| **Tenant**              | An isolated workspace with its own keys, credentials, and configurations. |
-| **Keys & Certificates** | Cryptographic keys for signing credentials. Auto-generated on first use.  |
-| **Credential Config**   | Defines what a credential looks like (claims, format, display).           |
-| **Issuance Config**     | Groups credential configs and defines issuer metadata.                    |
+**Expected result:** the issuer overview shows `Membership Demo` and an enabled built-in authorization server. The full [issuer settings reference](../issuance/issuance-configuration.md) explains each option.
 
-## Step 1: Login as Root
+## Step 4: Define the membership credential
 
-1. Open the Web Client at **[http://localhost:4200](http://localhost:4200)**
-2. Enter:
-    - **EUDIPLO Instance**: `http://localhost:3000`
-    - **Client ID**: Your configured `AUTH_CLIENT_ID`
-    - **Client Secret**: Your configured `AUTH_CLIENT_SECRET`
-3. Click **Login**
+Open **Credential Issuance → Credential Types** and choose **Create**. Use the same values below so the next chapter can request this credential without guessing its type or claim paths.
 
-:::warning[Credentials are REQUIRED]
-You must set these environment variables before starting the service:
+### Basics
 
-```env
-AUTH_CLIENT_ID=your-client-id
-AUTH_CLIENT_SECRET=your-client-secret
-MASTER_SECRET=your-32-character-minimum-secret
-```
+| Field             | Value                                    |
+| ----------------- | ---------------------------------------- |
+| Configuration ID  | `membership`                             |
+| Description       | `Membership credential for the cookbook` |
+| Credential Format | `dc+sd-jwt`                              |
+| Host VCT Metadata | **No (Custom URI)**                      |
+| VCT URI           | `urn:example:membership:1`               |
 
-The application will fail to start without these values. See [Authentication](../administration/authentication.md) for details.
+Choose **Continue**.
+
+### Claims
+
+Use **Add Field** twice:
+
+| Path        | Type     | Default Value | Mandatory | Selectively Disclosable |
+| ----------- | -------- | ------------- | --------- | ----------------------- |
+| `name`      | `string` | `Max`         | On        | On                      |
+| `member_id` | `string` | `M-001`       | On        | On                      |
+
+Enter `Max` and `M-001` as plain text, without JSON quotes. Defaults are example data; an offer can provide different values. Choose **Continue**.
+
+### Appearance
+
+Enter **Display Name** `Membership`, **Description** `Example membership card`, and **Locale** `en-US`. Leave colors and images at their defaults. Choose **Continue**.
+
+### Settings
+
+1. Expand **Signing, lifetime and trust** and select the attestation key chain you created in step 2.
+2. Use a lifetime of **1 day** so the credential remains usable while you work through the recipe. Keep SD-JWT trust format `x5c`.
+3. In **Credential Features**, keep holder/key binding enabled, turn **Status Management** off for this short-lived test credential, and select **JWT** as the supported proof type. This avoids requiring key attestation for the first run.
+4. Leave attribute providers, webhooks, authorization actions, and reuse policy unconfigured.
+
+Choose **Continue**, check the review, and choose **Create Configuration**.
+
+**Expected result:** `membership` appears under Credential Types, with VCT `urn:example:membership:1` and the two claim fields. See [Credential Configuration](../issuance/credential-configuration.md) for other formats and advanced settings.
+
+:::note[Why status is off here]
+This removes status-list provisioning and wallet-specific status-certificate requirements from the first exercise. It is not a production recommendation. Add [Status Management](../issuance/status-management.md) once issuance and verification work.
 :::
 
-## Step 2: Create Your First Tenant
+## Step 5: Send an offer to the wallet
 
-Tenants provide isolation—each tenant has its own keys, credentials, and configurations.
+1. Open **Credential Issuance → New Issuance** (or **Sessions → All Sessions → Issuance Offer**).
+2. In **Select Flow**, choose the pre-authorized code flow and continue.
+3. In **Select Credentials**, choose `membership` and continue.
+4. Review the claims for `membership`: `name` must be `Max` and `member_id` must be `M-001`. If the offer form does not populate the configured defaults, enter these values in its claim fields.
+5. Leave the optional transaction code and webhook unset for this synthetic-data exercise, then choose **Generate Offer**.
+6. Scan the resulting QR code using the wallet's credential-offer scanner. Approve adding the credential.
 
-:::tip[Demo Configuration Available]
-EUDIPLO includes demo configuration files in `assets/config/demo/` that can be automatically imported on startup. Set `CONFIG_IMPORT_MODE=create` and `CONFIG_FOLDER` to the config directory to import keys, certificates, credential configs, and presentation configs automatically. This is useful for development and testing.
-:::
+**Expected result:** the wallet stores a `Membership` credential showing `Max` and `M-001`. Under **Sessions → All Sessions**, open the corresponding issuance session and confirm issuance completed. Generating a QR code alone does not mean the wallet received the credential.
 
-1. Navigate to **Tenants** in the sidebar
-2. Click **+ Create Tenant**
-3. Fill in:
-    - **ID**: `my-org` (unique identifier for the tenant)
-    - **Name**: `My Organization`
-    - **Description**: Optional description
-    - **Roles**: Select all roles for a full setup
-4. Click **Save**
-5. A dialog appears showing the **client credentials** for the new tenant:
-    - **Save the secret now!** It won't be shown again.
-    - Use the **Copy** buttons to save the credentials
-    - Click **Login as this Client** to switch to the new tenant immediately
+## If something goes wrong
 
-:::warning[Save your credentials!]
-Client secrets are securely hashed and cannot be retrieved later. If you lose the secret, use the **Rotate Secret** button in the client list to generate a new one.
-:::
+| Symptom                                          | Check                                                                                                                                                                      |
+| ------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| No `membership` credential in the offer selector | Confirm you saved it in the same tenant and did not configure interactive authorization actions for this pre-authorized recipe.                                            |
+| Wallet cannot open the offer                     | Repeat the phone health check; check `PUBLIC_URL` and that the tunnel is still running. Generate a fresh offer after fixing the URL.                                       |
+| Wallet rejects the issuer or certificate         | Check wallet trust requirements. A self-signed test certificate is not accepted by every wallet.                                                                           |
+| Wallet requests attestation unexpectedly         | Check both issuer wallet-attestation settings and the credential's supported proof types. This recipe uses JWT proof and optional wallet attestation.                      |
+| Wrong claim value                                | Check the offer's claim values, which can override configuration defaults. Changing a configuration does not update a credential already in the wallet; issue another one. |
 
-## Step 3: Create a Credential Configuration
+Keep the issued credential in the wallet and continue in the same tenant.
 
-Now define what your credential will contain and how it looks. The wizard walks you through five steps: **Basics**, **Claims**, **Appearance**, **Settings**, and **Review**.
-
-1. Navigate to **Issuance** → **Credential Configs** in the sidebar
-2. Click **+ Create**
-3. Click **Templates** (top-right corner) and select a template like `PID (SD-JWT VC)`
-
-:::tip[Templates save time]
-Templates provide pre-configured credential types with proper claims, display settings, and formats. They're the fastest way to get started!
-:::
-
-1. In **Basics**, review the ID, description, format, and credential type (VCT or mDOC document type), then click **Continue**
-2. In **Claims**, review the fields to issue and click **Continue**
-3. In **Appearance**, review the wallet display name and locale, then click **Continue**
-4. In **Settings**, keep the defaults for lifetime, signing key, and status management, then click **Continue**
-5. In **Review**, check the resulting configuration and click **Create Configuration**
-
-:::tip[Guided vs. full editor]
-Use **Show all settings** to switch to a single form with direct tab navigation. Existing configurations always open this way. Both modes share the same form and preserve your changes.
-:::
-
-## Step 4: Configure Issuance Settings
-
-The issuance configuration defines how your issuer presents itself to wallets. This wizard has four steps: **Identity**, **Wallet access**, **Trust**, and **Review**.
-
-1. Navigate to **Issuance** → **Issuance Config**
-2. In **Identity**, enter a **Name** (e.g. `My Issuer`) and **Locale**, then click **Continue**
-3. In **Wallet access**, keep the built-in authorization server, expand **Issuance behavior (advanced)**, and set:
-    - **DPoP Required**: **Disabled** ⚠️
-    - **Batch Size**: `1`
-
-    Click **Continue**
-4. In **Trust**, review the trust requirements summary and click **Continue**
-5. In **Review**, check the configuration and click **Create Configuration**
-
-:::warning[DPoP Compatibility]
-Keep **DPoP Required** disabled for maximum wallet compatibility. Many wallets don't support DPoP yet. You can enable it later for additional security once you've verified your target wallets support it.
-:::
-
-## Step 5: Issue Your First Credential! 🎉
-
-Now create a credential offer and send it to a wallet.
-
-1. Navigate to **Issuance** → **Sessions**
-2. Click **+ New Offer**
-3. Configure the offer:
-    - **Credential**: Select your credential configuration
-    - **Flow**: Select `Pre-authorized` (simplest flow, no user authentication)
-4. Enter the claim values:
-
-    ```json
-    {
-        "given_name": "John",
-        "family_name": "Doe",
-        "birthdate": "1990-01-15"
-    }
-    ```
-
-5. Click **Create Offer**
-6. A **QR code** appears—scan it with a compatible wallet!
-
-:::tip[Testing with a wallet]
-See [Wallet Compatibility](../reference/wallet-compatibility.md) for a list of wallets that work with EUDIPLO. The EUDI Reference Wallet and Paradym Wallet are good options for testing.
-:::
-
-## What's Next?
-
-You've successfully issued your first credential! Continue to:
-
-- **[Request Your First Presentation](first-presentation.md)** — Verify credentials from wallets
+**Next: [Verify the Membership Credential](first-presentation.md).**

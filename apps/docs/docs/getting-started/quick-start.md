@@ -1,124 +1,95 @@
 ---
-title: Quick Start
+title: Install and Connect
+sidebar_label: "1. Install and connect"
 ---
 
-Get EUDIPLO running in under 2 minutes! This guide gets you from zero to issuing your first credential.
+This is chapter 1 of the [issuance and verification cookbook](index.md). By the end, the backend and Web Client will be running, and your phone will be able to reach the backend.
 
-:::tip[New to EUDIPLO?]
-This is the fastest path to see EUDIPLO working. For production setup and advanced configuration, see the [Architecture](../architecture/index.md) and [Deployment](../deployment/index.md) sections.
-:::
+## Before you start
 
-## What You'll Need
+Install Docker with Docker Compose, or Podman with Podman Compose. Start the runtime before running the commands below. The standalone `eudiplo` CLI does not require Node.js; if you use the npm package instead, install Node.js 22+ and replace `eudiplo` with `npx @eudiplo/cli`. Use an empty directory so this recipe does not replace another deployment.
 
-- The CLI is the easiest path, but it is optional. You can also run the stack without it using Docker Compose.
-- CLI access via one of these options (optional convenience):
-    - Option A (recommended on Linux/macOS): standalone CLI via installer
-    - Option B: npm package `@eudiplo/cli` with [Node.js 22+](https://nodejs.org/)
-    - Windows: `npx @eudiplo/cli demo` (Node.js 22+) or Windows x64 release archive
-- [Docker](https://www.docker.com/get-started) installed
-- 2 minutes of your time ⏱️
+## Step 1: Get an HTTPS address for the backend
 
-## Step 1: Start the Demo with the CLI (Recommended, but not required)
+A phone cannot use your computer's `localhost`: it would connect to the phone itself. Wallets also need to retrieve issuer metadata and send protocol responses to EUDIPLO.
 
-### Linux and macOS: Standalone CLI (recommended)
+Set up an HTTPS tunnel to local port **3000**. For example, install and authenticate the ngrok agent using its [quickstart](https://ngrok.com/docs/share-localhost/quickstart), then run:
 
 ```bash
-curl -fsSL https://eudiplo.dev/install.sh | bash
-eudiplo demo
+ngrok http 3000
 ```
 
-### Already using Node.js 22+?
+> There may be other alternatives to ngrok, such as Cloudflare Tunnel or localtunnel. Choose the one that best fits your environment. Keep in mind some free plans may have changing URLs or limited session durations.
+
+Keep that terminal open. Copy the HTTPS forwarding URL; below, `https://YOUR-HTTPS-HOST` means that URL, without a trailing slash. A gateway error is expected until EUDIPLO starts.
+
+Use this exact address for `PUBLIC_URL` from the beginning. Keep it unchanged through issuance and presentation: already-issued credentials can contain URLs pointing back to the issuer. If the address changes, update the deployment and issue a fresh test credential.
+
+If you already have a reachable HTTPS backend, use that address and skip the local deployment commands. See [TLS configuration](../deployment/tls.md) for a deployment without a tunnel.
+
+## Step 2: Initialize and start EUDIPLO
+
+In another terminal:
 
 ```bash
-npx @eudiplo/cli demo
+mkdir eudiplo-cookbook
+cd eudiplo-cookbook
+eudiplo init . --target compose --preset minimal --no-demo-tenant --client --public-url https://YOUR-HTTPS-HOST --yes --start
 ```
 
-### Windows
+Replace `https://YOUR-HTTPS-HOST` before running the command. This creates a minimal deployment using SQLite, local storage, and database-backed keys, including the Web Client. It generates a root secret rather than using the predictable credentials from `demo` mode.
 
-Use Node.js 22+:
+The editable deployment files include `eudiplo.compose.yaml`, `.eudiplo.env`, and `config/kms.json`. Keep `.eudiplo.env` private: it contains `AUTH_CLIENT_ID`, `AUTH_CLIENT_SECRET`, and `MASTER_SECRET`.
 
-```powershell
-npx @eudiplo/cli demo
-```
+**Expected result:** the backend listens on port `3000` and the Web Client is available at [http://localhost:4200](http://localhost:4200).
 
-or download the Windows x64 standalone release archive and run:
+<details>
+<summary>Only want to explore the UI locally?</summary>
 
-```powershell
-eudiplo demo
-```
+Run `eudiplo demo` in a separate directory. This imports sample configuration and prints demo credentials. Keep that setup local; the cookbook uses the initialization command above so it can start without bundled tenants or predictable demo secrets.
 
-Both options run the same **EUDIPLO CLI**. The standalone CLI removes the Node.js requirement, but Docker and Docker Compose, or Podman and Podman Compose, are still required for `eudiplo demo`. Docker is preferred by default; set `EUDIPLO_CONTAINER_RUNTIME=podman` to force Podman.
+</details>
 
-If you prefer not to use the CLI, you can start the same demo stack manually with Docker Compose or the project deployment files described in the [Deployment](../deployment/index.md) docs. The CLI mainly simplifies setup and lifecycle commands; it is not a hard dependency.
+## Step 3: Check both network paths
 
-The CLI asks for a project directory and suggests `./`. Accepting the default generates editable demo files in your current directory:
-
-- `.eudiplo.demo.env`
-- `config/kms.json`
-- `config/demo/`
-
-It then starts backend and client containers using compatible image tags.
-
-:::warning[Demo mode only]
-Demo mode uses predictable onboarding credentials and loopback-bound ports. It is not suitable for production.
-:::
-
-## Step 2: Verify It's Working
-
-If you started the demo with the CLI, the easiest check is to ask the CLI itself to confirm the stack is healthy:
+From the project directory:
 
 ```bash
 eudiplo status
-# or
-npx @eudiplo/cli status
-```
-
-If you did not use the CLI, the equivalent manual check is to query the health endpoint directly:
-
-```bash
 curl http://localhost:3000/health
+curl https://YOUR-HTTPS-HOST/health
 ```
 
-**Expected response from EUDIPLO:**
+**Expected result:** the health response is JSON with `status` equal to `ok`. The exact health-check fields can vary.
 
-```json
-{
-  "status": "ok",
-  "info": {
-    "database": { "status": "up" }
-  },
-  "errors": {}
-}
-```
+Also open `https://YOUR-HTTPS-HOST/health` in the **phone's browser**. It must return the health response with no certificate warning, tunnel login, or HTML confirmation page. Do not proceed to QR codes until this works.
 
-## Step 3: Continue with the CLI (Recommended)
+Use `http://localhost:4200` only in the browser on your computer to administer EUDIPLO. The wallet must not connect to the Web Client: it communicates only with the public backend address in `PUBLIC_URL`. Do not expose port `4200` or the Web Client through the tunnel.
 
-The CLI is the primary workflow for local onboarding and lifecycle commands. Use the same mode you chose in Step 1:
+## Step 4: Sign in to the Web Client
+
+1. Open [http://localhost:4200](http://localhost:4200).
+2. Set **EUDIPLO Instance** to `http://localhost:3000`.
+3. Read `AUTH_CLIENT_ID` and `AUTH_CLIENT_SECRET` from the generated `.eudiplo.env` and enter them in **Client ID** and **Client Secret**.
+4. Click **Login**.
+
+**Expected result:** you are signed in as the root administrator and can manage tenants. The next chapter creates a tenant for the recipe.
+
+## If something goes wrong
+
+| Symptom                                | Check                                                                                                                                                      |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Containers do not start                | Start Docker or Podman; check for another process already using ports 3000 or 4200. Run `eudiplo status`.                                                  |
+| Local health works, phone health fails | Check the tunnel target is port 3000, the tunnel is still running, and HTTPS works without an interstitial page.                                           |
+| Login fails                            | Use the generated values from `.eudiplo.env`, not `root` / `root` from demo mode.                                                                          |
+| Wallet URLs contain `localhost`        | Check `PUBLIC_URL` in `.eudiplo.env`. After correcting it, recreate the backend container with the generated Compose configuration and create a new offer. |
+
+For example, after editing the environment file:
 
 ```bash
-# Stop demo stack
-eudiplo down
-
-# npm alternative
-npx @eudiplo/cli down
-
-# Reset demo data and regenerate demo config
-eudiplo demo --reset --force
-
-# npm alternative
-npx @eudiplo/cli demo --reset --force
+docker compose --env-file .eudiplo.env -f eudiplo.compose.yaml up -d --force-recreate
 ```
 
-You can still use the Web Client or Swagger API at any time for interactive exploration.
+To stop this deployment later, run `eudiplo down` from the project directory. Keep it running for the remaining chapters.
 
-For detailed CLI usage, see the [CLI Reference](../reference/cli.md).
-
-## Success
-
-EUDIPLO is now running and ready for credential issuance and verification.
-
-### What's Next?
-
-:::tip[New to EUDIPLO? Start here!]
-Follow the [Issue Your First Credential](first-credential.md) guide for a complete walkthrough of creating credential configurations and issuing to a wallet.
-:::
+**Next: [Issue Your First Credential](first-credential.md).**

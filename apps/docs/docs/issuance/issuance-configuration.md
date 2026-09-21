@@ -6,14 +6,14 @@ Issuance configurations define runtime behavior for issuing credentials, such as
 
 ## Guided setup in the Web Client
 
-New issuance configurations start with four steps:
+Open **Credential Issuance → Issuer Settings → Use guided setup**. The editor also starts in guided mode when the issuer has no display information yet. Setup uses four steps:
 
 1. **Identity** — enter the issuer display name(s), locale, and optional logo.
-2. **Wallet access** — configure authorization servers. Expand **Issuance behavior (advanced)** to change batch size, DPoP requirement, and credential request/response encryption.
-3. **Trust** — review trust requirements, including wallet provider trust lists and registration certificates.
-4. **Review** — check the resulting configuration before creating it.
+2. **Wallet access** — configure authorization servers. Expand **Issuance behavior (advanced)** to change batch size, DPoP requirement, credential request/response encryption, and notifications.
+3. **Trust** — review trust requirements, including the transaction-code attempt limit, wallet attestation defaults, wallet provider trust lists, OpenID Federation, and issuer registration certificates.
+4. **Review** — check the resulting configuration before choosing **Save settings**. Signing keys and certificates are managed under **Keys**; credential signing keys are selected in each credential configuration.
 
-Press Enter in a single-line field or choose **Continue** to advance. Missing fields are highlighted when you continue. **Show all settings** enables direct tab navigation; existing configurations open this way. Both modes use the same form and preserve your changes.
+Press Enter in a single-line field or choose **Continue** to advance. Missing fields are highlighted when you continue. **Show all settings** enables direct tab navigation; profiles with existing display information open this way unless you explicitly choose guided setup. Both modes use the same form and preserve your changes. Errors in collapsed sections open those sections for correction. After saving, use **Configure a credential type** on the issuer overview to define what you issue.
 
 ## Basic Structure
 
@@ -31,8 +31,6 @@ Press Enter in a single-line field or choose **Continue** to advance. Missing fi
     ],
     "batchSize": 1,
     "dPopRequired": true,
-    "refreshTokenEnabled": true,
-    "refreshTokenExpiresInSeconds": 2592000,
     "walletAttestationRequired": false,
     "display": [
         {
@@ -56,8 +54,8 @@ The auto generated schema reference can be found in the [API Documentation](../r
 - `batchSize` (number, optional): Value to determine the amount of credentials that are issued in a batch. Default is 1.
 - `dPopRequired` (boolean, optional): Indicates whether DPoP is required for the issuance process. Default value is true.
 - `signingKeyId` (string, optional): Key ID used for signing access tokens. If omitted, the default signing key for the tenant is used.
-- `refreshTokenEnabled` (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is `true`.
-- `refreshTokenExpiresInSeconds` (number, optional): Lifetime of issued refresh tokens in seconds. Default is `2592000` (30 days).
+- `authorizationServers[].token.refreshTokenEnabled` (boolean, optional): Controls whether the token endpoint returns a refresh token in OID4VCI token responses. Default is `true`.
+- `authorizationServers[].token.refreshTokenExpiresInSeconds` (number, optional): Lifetime of issued refresh tokens in seconds. Default is `2592000` (30 days).
 - `txCodeMaxAttempts` (number, optional): Maximum failed `tx_code` attempts before invalidating pre-authorized code flow.
 - `walletAttestationRequired` (boolean, optional): Default wallet attestation policy for EUDIPLO-managed authorization servers. Per-authorization-server values take precedence. Default value is false. See [Wallet and Key Attestation](#wallet-and-key-attestation) below.
 - `walletProviderTrustLists` (array, optional): Shared trust lists for key attestations at the credential endpoint and default wallet authentication at managed authorization servers. Per-AS overrides apply only to wallet authentication.
@@ -89,7 +87,7 @@ For complete configuration details and examples for each type, see the dedicated
 EUDIPLO can publish a registration certificate in the OID4VCI issuer metadata under `issuer_info` using:
 
 - `import` mode: use an existing JWT from configuration.
-- `generate` mode: derive provided attestations from selected schema metadata and generate via registrar.
+- `generate` mode: derive provided attestations from configured credential types and generate via the registrar.
 
 ### Example Configuration
 
@@ -98,10 +96,6 @@ EUDIPLO can publish a registration certificate in the OID4VCI issuer metadata un
     "registrationCertificate": {
         "enabled": true,
         "mode": "generate",
-        "schemaMetadataIds": [
-            "9a2f4033-f0ab-4f61-bd1d-6f4c321cb41b@1.0.0",
-            "5c53fcd0-63b4-4f5c-8674-599dbe9be2f3@1.2.0"
-        ],
         "privacyPolicy": "https://issuer.example/privacy",
         "supportUri": "mailto:support@issuer.example"
     }
@@ -127,7 +121,7 @@ It reuses cache when:
 
 It regenerates when:
 
-- `registrationCertificate` inputs change (mode, selected schema metadata, provided attestations-related values), or
+- `registrationCertificate` inputs or the derived credential-type attestation data change, or
 - cached JWT is expired or not active.
 
 ### Mode-Specific Fields
@@ -135,7 +129,8 @@ It regenerates when:
 - `import` mode:
     - `jwt` (required): existing registration certificate JWT.
 - `generate` mode:
-    - `schemaMetadataIds` (required): selected schema metadata entries (`<id>@<version>`).
+    - Attestation data is derived from configured credential types; `schemaMetadataIds` is not an issuer-settings input.
+    - Enable the registrar for the tenant and configure supported credential types before generating a certificate.
     - `privacyPolicy` / `supportUri` (optional, can also be provided via registrar defaults).
 
 ### Notes
@@ -149,12 +144,21 @@ EUDIPLO can issue refresh tokens from the OID4VCI token endpoint so wallets can 
 
 ### Configuration
 
-Use these issuance configuration fields:
+Configure refresh tokens in each managed authorization server’s `token` settings:
 
 ```json
 {
-    "refreshTokenEnabled": true,
-    "refreshTokenExpiresInSeconds": 2592000
+    "authorizationServers": [
+        {
+            "id": "issuer-built-in",
+            "type": "built-in",
+            "enabled": true,
+            "token": {
+                "refreshTokenEnabled": true,
+                "refreshTokenExpiresInSeconds": 2592000
+            }
+        }
+    ]
 }
 ```
 

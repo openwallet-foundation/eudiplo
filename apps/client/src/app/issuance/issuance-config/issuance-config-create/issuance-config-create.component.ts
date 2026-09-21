@@ -235,6 +235,9 @@ export class IssuanceConfigCreateComponent implements OnInit {
       )
         error = 'Add at least one enabled authorization server.';
       const ids = servers.map((server) => `${server.get('id')?.value || ''}`.trim());
+      if (ids.some((id) => !id)) error = 'Enter an ID for every authorization server.';
+      if (ids.some((id) => ['built-in', 'chained-as'].includes(id)))
+        error = 'The IDs built-in and chained-as are reserved. Choose another server ID.';
       if (new Set(ids).size !== ids.length) error = 'Authorization server IDs must be unique.';
       for (const server of servers) {
         const value = server.value;
@@ -805,7 +808,7 @@ export class IssuanceConfigCreateComponent implements OnInit {
 
   private buildRegistrationCertificatePayload(registrationCertificateFormValue: any): any {
     if (!registrationCertificateFormValue?.enabled) {
-      return undefined;
+      return null;
     }
 
     if (registrationCertificateFormValue.mode === 'import') {
@@ -839,14 +842,14 @@ export class IssuanceConfigCreateComponent implements OnInit {
       credentialResponseEncryption: formValue.credentialResponseEncryption ?? false,
       credentialRequestEncryption: formValue.credentialRequestEncryption ?? false,
       notificationEndpointEnabled: formValue.notificationEndpointEnabled ?? true,
-      txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? undefined,
+      txCodeMaxAttempts: formValue.txCodeMaxAttempts ?? null,
       authorizationServers:
         unifiedAuthorizationServers.length > 0 ? unifiedAuthorizationServers : [],
       walletAttestationRequired: formValue.walletAttestationRequired,
       walletProviderTrustLists: this.buildWalletProviderTrustLists(
         formValue.walletProviderTrustLists
       ),
-      federation: this.buildFederationConfig(formValue.federation) ?? undefined,
+      federation: this.buildFederationConfig(formValue.federation),
       registrationCertificate,
     };
   }

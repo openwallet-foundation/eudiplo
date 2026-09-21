@@ -22,23 +22,23 @@ special configuration needed)
 ### ✅ Compatibility Status
 
 - [ ] **Credential Issuance (OID4VCI)**
-    - [ ] Authorization Code Flow
-    - [ ] Pre-authorized Code Flow
-    - [ ] SD-JWT VC format support
-    - [ ] Proof of possession (DPoP/client attestation)
+  - [ ] Authorization Code Flow
+  - [ ] Pre-authorized Code Flow
+  - [ ] SD-JWT VC format support
+  - [ ] Proof of possession (DPoP/client attestation)
 
 - [ ] **Credential Presentation (OID4VP)**
-    - [ ] Deep link handling
-    - [ ] QR code scanning
-    - [ ] VP Token submission
-    - [ ] Selective disclosure
-    - [ ] Response mode `direct_post`
+  - [ ] Deep link handling
+  - [ ] QR code scanning
+  - [ ] VP Token submission
+  - [ ] Selective disclosure
+  - [ ] Response mode `direct_post`
 
 - [ ] **General Functionality**
-    - [ ] HTTPS endpoint communication
-    - [ ] JWT handling
-    - [ ] Cryptographic operations (ES256/EdDSA)
-    - [ ] Certificate validation
+  - [ ] HTTPS endpoint communication
+  - [ ] JWT handling
+  - [ ] Cryptographic operations (ES256/EdDSA)
+  - [ ] Certificate validation
 
 ### 🔄 Test Results
 

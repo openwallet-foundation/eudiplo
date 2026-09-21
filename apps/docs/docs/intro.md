@@ -46,6 +46,10 @@ Connecting to the EUDI Wallet ecosystem is technically demanding:
 **EUDIPLO solves these problems** by acting as a protocol abstraction layer you
 can run yourself, integrate over HTTP, and configure via JSON.
 
+## Try the complete flow
+
+Follow the [issuance and verification cookbook](getting-started/index.md) to install EUDIPLO, issue a membership credential to a wallet, and verify its claims. Each chapter includes expected results and troubleshooting.
+
 ## Three ways to approach EUDIPLO
 
 <div className="row">

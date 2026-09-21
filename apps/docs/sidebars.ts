@@ -9,7 +9,7 @@ const sidebars: SidebarsConfig = {
     'intro',
     {
       type: 'category',
-      label: '🚀 Get Started',
+      label: '🚀 End-to-End Cookbook',
       link: {type: 'doc', id: 'getting-started/index'},
       items: [
         'getting-started/quick-start',
