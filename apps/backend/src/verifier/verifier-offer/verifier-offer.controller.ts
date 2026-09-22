@@ -113,6 +113,7 @@ export class VerifierOfferController {
                 redirectUri: body.redirectUri,
                 transaction_data: body.transaction_data,
                 skewSeconds: body.skewSeconds,
+                clientIdScheme: body.clientIdScheme,
             },
             user.entity!.id,
             body.response_type === ResponseType.DC_API,
