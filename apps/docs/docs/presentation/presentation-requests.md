@@ -21,6 +21,9 @@ Use this page for request payload shape and override behavior. For defining what
 | `transaction_data` | No       | Transaction data override for this request.                           |
 | `skewSeconds`      | No       | Clock skew override in seconds for credential JWT time validation.    |
 | `expected_origin`  | No       | Browser origin for DC API flows. Falls back to the `Origin` header.   |
+| `clientIdScheme`   | No       | Client ID scheme: `x509_hash` (default) or `x509_san_dns`.            |
+
+When `clientIdScheme` is `x509_san_dns`, EUDIPLO uses the first DNS Subject Alternative Name from the active access certificate as the OID4VP client ID. The request fails if the certificate does not contain a DNS Subject Alternative Name.
 
 ## Basic Example
 
