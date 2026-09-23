@@ -3,7 +3,7 @@
 // that has happened, the HTTP auto-instrumentation can no longer patch them.
 if (!process.env.DOC_GENERATE) {
     const { otelSDK } = await import("./tracing.js");
-    await otelSDK.start();
+    otelSDK.start();
 }
 
 await import("./bootstrap.js");
