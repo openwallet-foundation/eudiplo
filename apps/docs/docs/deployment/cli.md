@@ -192,10 +192,14 @@ eudiplo down
 eudiplo ps
 eudiplo logs --service eudiplo --follow --tail 100 --since 10m
 eudiplo restart --service eudiplo-client
+eudiplo pull
+eudiplo upgrade --image-tag 8.1.0
 eudiplo demo --reset --force
 ```
 
 `ps`, `logs`, and `restart` work the same with Docker Compose and Podman Compose. `--service` must name a service defined in the project, `logs` prints and exits unless `--follow` is passed, and `restart` is refused for read-only instances.
+
+`upgrade` changes the EUDIPLO application images of a Compose deployment, not the CLI. It rewrites only the CLI-managed image tags in the env file, previews the change and links migration guides before asking for confirmation, then pulls and recreates the services. See [Upgrading: CLI vs. Application](../reference/cli.md#upgrading-cli-vs-application).
 
 When run in an interactive terminal, `init` opens a wizard for the project directory, deployment preset, database, storage, key management, public URL, authentication client, web client, and whether to start immediately. The generated environment file is created with owner-only permissions. Leaving the authentication secret empty generates a random secret.
 

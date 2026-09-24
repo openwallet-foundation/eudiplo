@@ -210,6 +210,20 @@ describe.each(["docker", "podman"] as const)(
             expect(spawnCalls.map(subcommand)).toEqual([["restart"]]);
         });
 
+        it("pulls every image or one validated service", async () => {
+            const { options } = await createOptions(runtime);
+            expect(await drivers.compose.pull?.(options)).toBe(0);
+
+            const single = await createOptions(runtime, { service: "eudiplo" });
+            expect(await drivers.compose.pull?.(single.options)).toBe(0);
+
+            expect(spawnCalls.map(subcommand)).toEqual([
+                ["pull"],
+                ["config", "--services"],
+                ["pull", "eudiplo"],
+            ]);
+        });
+
         it("refuses to restart read-only instances", async () => {
             const { options } = await createOptions(
                 runtime,

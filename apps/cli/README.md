@@ -93,6 +93,8 @@ eudiplo down
 eudiplo ps
 eudiplo logs --service eudiplo --follow --tail 100 --since 10m
 eudiplo restart --service eudiplo-client
+eudiplo pull
+eudiplo upgrade --image-tag 8.1.0
 eudiplo demo --reset --force
 ```
 

@@ -13,6 +13,7 @@ import { createInitCommand } from "./commands/init/index.js";
 import { createInstanceCommand } from "./commands/instance/index.js";
 import { createOpenCommand } from "./commands/open/index.js";
 import { createStatusCommand } from "./commands/status/index.js";
+import { createUpgradeCommand } from "./commands/upgrade/index.js";
 import { createVersionCommand, versionText } from "./commands/version/index.js";
 import type { CommandContext } from "./types.js";
 
@@ -63,6 +64,7 @@ export function createProgram(
     for (const command of createDeploymentCommands(context, setExitCode)) {
         program.addCommand(command);
     }
+    program.addCommand(createUpgradeCommand(context, setExitCode));
     program.addCommand(createOpenCommand(context, setExitCode));
     program.addCommand(createInstanceCommand(context, setExitCode));
     program.addCommand(createConfigCommand(context, setExitCode));
