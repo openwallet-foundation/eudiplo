@@ -249,4 +249,42 @@ describe('CredentialConfigCreateComponent', () => {
 
     expect(fieldGroup.get('namespace')?.value).toBe('');
   });
+
+  it('preserves array child wildcard paths when nesting and flattening field definitions', () => {
+    const payload = (component as any).buildFieldsPayload([
+      {
+        path: 'nationalities',
+        type: 'array',
+        mandatory: true,
+      },
+      {
+        path: 'nationalities.*',
+        type: 'string',
+        defaultValue: 'DE',
+      },
+    ]);
+
+    expect(payload).toEqual([
+      {
+        path: ['nationalities'],
+        type: 'array',
+        mandatory: true,
+        disclosable: false,
+        children: [
+          {
+            path: [null],
+            type: 'string',
+            defaultValue: 'DE',
+            mandatory: false,
+            disclosable: false,
+          },
+        ],
+      },
+    ]);
+
+    const flat = (component as any).flattenFieldDefinitionsForForm(payload);
+    expect(flat).toHaveLength(2);
+    expect(flat[0].path).toEqual(['nationalities']);
+    expect(flat[1].path).toEqual(['nationalities', null]);
+  });
 });

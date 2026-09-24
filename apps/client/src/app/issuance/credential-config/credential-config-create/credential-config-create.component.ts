@@ -1293,11 +1293,14 @@ export class CredentialConfigCreateComponent implements OnInit {
       }
     }
 
-    if (parentType === 'array' && childPath.length > 0) {
-      if (childPath[0] === null || typeof childPath[0] === 'number') {
-        // Keep a wildcard marker so the array item's path stays distinct from its parent's.
-        return [...parentPath, null, ...childPath.slice(1)];
+    if (parentType === 'array') {
+      if (childPath.length === 0) {
+        return [...parentPath, null];
       }
+      if (childPath[0] === null || typeof childPath[0] === 'number') {
+        return [...parentPath, childPath[0], ...childPath.slice(1)];
+      }
+      return [...parentPath, null, ...childPath];
     }
 
     return [...parentPath, ...childPath];
@@ -1394,13 +1397,7 @@ export class CredentialConfigCreateComponent implements OnInit {
           continue;
         }
 
-        let relativePath = absolutePath.slice(parent.absolutePath.length);
-
-        // For array parents, child paths are stored relative without the wildcard
-        // marker. The derive layer will inject the item step when flattening.
-        if (parent.node.type === 'array' && relativePath[0] === null) {
-          relativePath = relativePath.slice(1);
-        }
+        const relativePath = absolutePath.slice(parent.absolutePath.length);
 
         const child: MutableField = {
           ...field,
