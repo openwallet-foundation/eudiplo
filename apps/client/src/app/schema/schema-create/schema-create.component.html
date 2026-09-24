@@ -180,9 +180,47 @@
             <mat-hint>No trust lists available.</mat-hint>
           }
           @if (trustedAuthorities.length === 0) {
-            <mat-error>At least one trusted authority is required. Select a trust list.</mat-error>
+            <mat-error>At least one trusted authority is required.</mat-error>
           }
         </mat-form-field>
+        <div formArrayName="trustedAuthorities" fxLayout="column" fxLayoutGap="8px">
+          @for (authority of trustedAuthorities.controls; track authority; let index = $index) {
+            @if (authority.get('frameworkType')?.value === 'x509') {
+              <div
+                [formGroupName]="index"
+                fxLayout="row"
+                fxLayoutGap="8px"
+                fxLayoutAlign="start center"
+              >
+                <mat-form-field appearance="outline" fxFlex>
+                  <mat-label>Root certificate (base64 DER)</mat-label>
+                  <label [for]="'root-certificate-' + index" class="sr-only">
+                    Root certificate (base64 DER)
+                  </label>
+                  <textarea
+                    matInput
+                    formControlName="value"
+                    [id]="'root-certificate-' + index"
+                    rows="3"
+                    placeholder="MIIB..."
+                  ></textarea>
+                </mat-form-field>
+                <button
+                  mat-icon-button
+                  type="button"
+                  (click)="removeTrustedAuthority(index)"
+                  matTooltip="Remove root certificate"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+          }
+        </div>
+        <button mat-stroked-button type="button" (click)="addX509TrustAnchor()" class="no-shrink">
+          <mat-icon>add</mat-icon>
+          Add Root Certificate
+        </button>
       </div>
     </form>
   </mat-card-content>

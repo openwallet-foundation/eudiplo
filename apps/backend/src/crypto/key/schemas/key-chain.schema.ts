@@ -87,7 +87,14 @@ export const KeyChainImportSchema = z
             .string()
             .optional()
             .describe("Optional key chain id. If omitted, one is generated."),
-        key: EcJwkSchema.describe("Private key material in JWK format."),
+        key: EcJwkSchema.optional().describe(
+            "Private key material in JWK format.",
+        ),
+        keyPem: z
+            .string()
+            .min(1)
+            .optional()
+            .describe("PKCS#8 PEM-encoded EC private key material."),
         description: z
             .string()
             .optional()
@@ -108,6 +115,10 @@ export const KeyChainImportSchema = z
         rotationPolicy: RotationPolicyImportSchema.optional().describe(
             "Optional rotation policy for imported key chains.",
         ),
+    })
+    .refine((value) => Boolean(value.key) !== Boolean(value.keyPem), {
+        message: "Provide exactly one of key or keyPem.",
+        path: ["key"],
     })
     .describe("Payload for importing key chains from JSON configuration.")
     .strict();

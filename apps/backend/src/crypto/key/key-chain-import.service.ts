@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { JWK } from "jose";
+import { exportJWK, importPKCS8, type JWK } from "jose";
 import { Repository } from "typeorm";
 import { v4 } from "uuid";
 import { TenantEntity } from "../../auth/tenant/entities/tenant.entity.js";
@@ -91,7 +91,7 @@ export class KeyChainImportService {
         });
         const hostname = this.getHostname();
 
-        const privateKey: JWK = { ...dto.key };
+        const privateKey = await this.resolvePrivateKey(dto);
         const replacing = await this.keyChainRepository.existsBy({
             tenantId,
             id,
@@ -170,6 +170,29 @@ export class KeyChainImportService {
             `Imported key chain ${id} for tenant ${tenantId} (usage: ${dto.usageType}, provider: ${adapter.providerId})`,
         );
         return id;
+    }
+
+    private async resolvePrivateKey(dto: KeyChainImportDto): Promise<JWK> {
+        if (dto.key) {
+            return { ...dto.key };
+        }
+
+        if (!dto.keyPem) {
+            throw new BadRequestException("An import requires key or keyPem.");
+        }
+
+        try {
+            const key = await importPKCS8(dto.keyPem, "ES256", {
+                extractable: true,
+            });
+            return await exportJWK(key);
+        } catch (error) {
+            throw new BadRequestException(
+                `Invalid PKCS#8 PEM private key: ${
+                    error instanceof Error ? error.message : String(error)
+                }`,
+            );
+        }
     }
 
     private async importKeyChainWithRotation(

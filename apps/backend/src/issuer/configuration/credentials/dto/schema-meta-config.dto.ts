@@ -30,6 +30,7 @@ export enum SchemaMetaFrameworkType {
     AKI = "aki",
     ETSI_TL = "etsi_tl",
     OPENID_FEDERATION = "openid_federation",
+    X509 = "x509",
 }
 
 export enum SchemaMetadataPinMode {
@@ -141,13 +142,14 @@ export class TrustAuthorityEntry extends createZodDto(
 
     @ApiPropertyOptional({
         description:
-            "URI of the trust list or trust anchor (ignored when trustListId is set)",
+            "Trust list URI for etsi_tl or base64-encoded DER root certificate for x509 (ignored when trustListId is set)",
     })
     value?: string;
 
     @ApiPropertyOptional({
         description:
             "Optional verification material for external trusted authorities (for example a JWK). " +
+            "Required for etsi_tl and omitted for x509 root certificate anchors. " +
             "For internal trust-list URLs, EUDIPLO resolves verification material from the database.",
         oneOf: [
             {

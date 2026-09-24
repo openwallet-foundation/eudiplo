@@ -5,6 +5,9 @@ export default defineConfig({
     output: {
         path: "./src/registrar/generated",
         postProcess: ["biome:format"],
+        module: {
+            extension: ".js",
+        },
     },
     plugins: [
         {
