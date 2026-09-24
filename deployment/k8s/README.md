@@ -19,13 +19,13 @@ k8s/
 │
 ├── components/              # Optional infrastructure components
 │   ├── postgres/           # PostgreSQL database
-│   ├── minio/              # MinIO S3-compatible storage
+│   ├── rustfs/              # RustFS S3-compatible storage
 │   └── vault/              # HashiCorp Vault key management
 │
 └── overlays/               # Pre-configured deployment profiles
     ├── minimal/            # EUDIPLO only (SQLite, local storage)
-    ├── standard/           # + PostgreSQL + MinIO
-    └── full/               # + PostgreSQL + MinIO + Vault
+    ├── standard/           # + PostgreSQL + RustFS
+    └── full/               # + PostgreSQL + RustFS + Vault
 ```
 
 ## Quick Start
@@ -35,8 +35,8 @@ k8s/
 | Overlay      | Command                              | Components                 | Use Case            |
 | ------------ | ------------------------------------ | -------------------------- | ------------------- |
 | **Minimal**  | `kubectl apply -k overlays/minimal`  | EUDIPLO only               | Local dev, testing  |
-| **Standard** | `kubectl apply -k overlays/standard` | + PostgreSQL, MinIO        | Staging, small prod |
-| **Full**     | `kubectl apply -k overlays/full`     | + PostgreSQL, MinIO, Vault | Enterprise prod     |
+| **Standard** | `kubectl apply -k overlays/standard` | + PostgreSQL, RustFS        | Staging, small prod |
+| **Full**     | `kubectl apply -k overlays/full`     | + PostgreSQL, RustFS, Vault | Enterprise prod     |
 
 ### 2. Configure and Deploy
 
@@ -64,14 +64,14 @@ kubectl -n eudiplo get pods -w
 
 - **Backend API:** http://eudiplo.localtest.me
 - **Client UI:** http://eudiplo-client.localtest.me
-- **MinIO Console:** http://minio-console.localtest.me (standard/full)
+- **RustFS Console:** http://rustfs-console.localtest.me/rustfs/console/ (standard/full)
 
 ## Configuration Matrix
 
 | Component          | Minimal   | Standard   | Full       |
 | ------------------ | --------- | ---------- | ---------- |
 | **Database**       | SQLite    | PostgreSQL | PostgreSQL |
-| **File Storage**   | Local     | MinIO (S3) | MinIO (S3) |
+| **File Storage**   | Local     | RustFS (S3) | RustFS (S3) |
 | **Key Management** | DB-backed | DB-backed  | Vault      |
 
 ## Customizing Deployments
@@ -93,7 +93,7 @@ namespace: eudiplo
 components:
   - ../../components/postgres
   # Only include what you need
-  # - ../../components/minio
+  # - ../../components/rustfs
   # - ../../components/vault
 ```
 
@@ -122,7 +122,7 @@ New deployments should use the overlay system described above.
 | --------------------------- | -------------------- |
 | `namespace.yaml`            | Namespace definition |
 | `postgres-statefulset.yaml` | PostgreSQL database  |
-| `minio-statefulset.yaml`    | MinIO object storage |
+| `rustfs-statefulset.yaml`    | RustFS object storage |
 | `eudiplo-deployment.yaml`   | Backend deployment   |
 | `ingress.yaml`              | Ingress routing      |
 
@@ -154,3 +154,24 @@ automatically. Use an externally managed, initialized Vault instance with a
 restricted token for production.
 
 👉 **[Read the full documentation](https://docs.eudiplo.dev/deployment/kubernetes/)**
+
+## Migrating existing MinIO storage
+
+These templates now deploy RustFS 1.0.0 with a separate `rustfs-data` volume
+(or PVC). Existing MinIO data is not migrated automatically. Keep the old
+volumes and backups; do not mount a MinIO data directory directly into RustFS.
+
+1. Start RustFS with an empty volume alongside the existing storage service.
+2. Copy buckets and objects through the S3 API using a migration tool that
+   preserves the metadata, versions, and policies your deployment requires.
+3. Verify object counts, contents, and application reads before switching
+   `S3_ENDPOINT` to `http://rustfs:9000`.
+4. Replace `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` with `RUSTFS_ACCESS_KEY` /
+   `RUSTFS_SECRET_KEY`, and use the same values for `S3_ACCESS_KEY_ID` /
+   `S3_SECRET_ACCESS_KEY`. Bucket initialization now uses `S3_BUCKET`.
+5. Keep the old service and data available for rollback until the migration
+   is verified. Existing CLI projects need their Compose file and `.env`
+   updated as well; updating the CLI alone does not rewrite them.
+
+The bucket initialization job uses AWS CLI 2.34.0 and retains the previous
+public-download policy (`s3:GetObject`). Review that policy for private buckets.

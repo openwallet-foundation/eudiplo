@@ -120,17 +120,17 @@ function storageEnv(storage: ComposeStorage): string[] {
         return ["STORAGE_DRIVER=local", "LOCAL_STORAGE_DIR=/app/uploads"];
     }
 
-    const minioPassword = randomSecret();
+    const rustfsPassword = randomSecret();
     return [
         "STORAGE_DRIVER=s3",
-        "S3_ENDPOINT=http://minio:9000",
+        "S3_ENDPOINT=http://rustfs:9000",
         "S3_REGION=us-east-1",
-        "S3_ACCESS_KEY_ID=minioadmin",
-        `S3_SECRET_ACCESS_KEY=${minioPassword}`,
+        "S3_ACCESS_KEY_ID=rustfsadmin",
+        `S3_SECRET_ACCESS_KEY=${rustfsPassword}`,
         "S3_BUCKET=uploads",
         "S3_FORCE_PATH_STYLE=true",
-        "MINIO_ROOT_USER=minioadmin",
-        `MINIO_ROOT_PASSWORD=${minioPassword}`,
+        "RUSTFS_ACCESS_KEY=rustfsadmin",
+        `RUSTFS_SECRET_KEY=${rustfsPassword}`,
     ];
 }
 

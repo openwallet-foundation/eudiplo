@@ -51,7 +51,7 @@ STORAGE_ROOT=/app/storage
 
 ## S3 Storage
 
-Uses S3-compatible object storage (AWS S3, MinIO, Azure Blob Storage via S3 API, Google Cloud Storage with S3 interop).
+Uses S3-compatible object storage (AWS S3, RustFS, Azure Blob Storage via S3 API, Google Cloud Storage with S3 interop).
 
 **Environment Variables:**
 
@@ -62,7 +62,7 @@ S3_BUCKET=eudiplo-storage
 S3_REGION=eu-central-1
 S3_ACCESS_KEY_ID=<your-access-key>
 S3_SECRET_ACCESS_KEY=<your-secret-key>
-S3_FORCE_PATH_STYLE=false  # Set to true for MinIO
+S3_FORCE_PATH_STYLE=false  # Set to true for RustFS
 ```
 
 **Use when:** Production deployments, multi-instance horizontally scaled setups, managed cloud infrastructure.

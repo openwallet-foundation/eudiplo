@@ -12,8 +12,8 @@ This directory contains deployment configurations for EUDIPLO with multiple prof
 | Profile      | Command                                | Components                   |
 | ------------ | -------------------------------------- | ---------------------------- |
 | **Minimal**  | `docker compose up`                    | EUDIPLO only                 |
-| **Standard** | `docker compose --profile standard up` | + PostgreSQL + MinIO         |
-| **Full**     | `docker compose --profile full up`     | + PostgreSQL + MinIO + Vault |
+| **Standard** | `docker compose --profile standard up` | + PostgreSQL + RustFS         |
+| **Full**     | `docker compose --profile full up`     | + PostgreSQL + RustFS + Vault |
 
 ```bash
 cd deployment/docker-compose
@@ -26,8 +26,8 @@ docker compose --profile standard up -d
 | Overlay      | Command                              | Components                   |
 | ------------ | ------------------------------------ | ---------------------------- |
 | **Minimal**  | `kubectl apply -k overlays/minimal`  | EUDIPLO only                 |
-| **Standard** | `kubectl apply -k overlays/standard` | + PostgreSQL + MinIO         |
-| **Full**     | `kubectl apply -k overlays/full`     | + PostgreSQL + MinIO + Vault |
+| **Standard** | `kubectl apply -k overlays/standard` | + PostgreSQL + RustFS         |
+| **Full**     | `kubectl apply -k overlays/full`     | + PostgreSQL + RustFS + Vault |
 
 ```bash
 cd deployment/k8s
@@ -42,7 +42,7 @@ kubectl apply -k overlays/standard
 | Component          | Minimal          | Standard           | Full            |
 | ------------------ | ---------------- | ------------------ | --------------- |
 | **Database**       | SQLite           | PostgreSQL         | PostgreSQL      |
-| **File Storage**   | Local filesystem | MinIO (S3)         | MinIO (S3)      |
+| **File Storage**   | Local filesystem | RustFS (S3)         | RustFS (S3)      |
 | **Key Management** | DB-backed        | DB-backed          | HashiCorp Vault |
 | **Use Case**       | Dev/Testing      | Staging/Small Prod | Enterprise Prod |
 
@@ -58,7 +58,7 @@ deployment/
 │
 ├── k8s/                     # Kubernetes deployments
 │   ├── base/               # Core manifests
-│   ├── components/         # Optional components (postgres, minio, vault)
+│   ├── components/         # Optional components (postgres, rustfs, vault)
 │   └── overlays/           # Pre-configured profiles
 ```
 
@@ -79,7 +79,7 @@ After deployment, access the services at:
 | **Backend API**       | <http://localhost:3000>                 |
 | **Client Web UI**     | <http://localhost:4200>                 |
 | **API Documentation** | <http://localhost:3000/api-docs>        |
-| **MinIO Console**     | <http://localhost:9001> (standard/full) |
+| **RustFS Console**     | <http://localhost:9001/rustfs/console/> (standard/full) |
 | **Vault UI**          | <http://localhost:8200> (full)          |
 
 ## Support

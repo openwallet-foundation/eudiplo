@@ -26,13 +26,13 @@ spec:
                 name: eudiplo-client
                 port:
                   number: 80
-    - host: minio-console.localtest.me
+    - host: rustfs-console.localtest.me
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: minio
+                name: rustfs
                 port:
                   number: 9001

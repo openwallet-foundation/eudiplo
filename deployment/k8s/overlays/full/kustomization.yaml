@@ -3,7 +3,7 @@ kind: Kustomization
 
 # Full Overlay
 # Use case: Enterprise production deployments
-# Components: EUDIPLO + PostgreSQL + MinIO + HashiCorp Vault
+# Components: EUDIPLO + PostgreSQL + RustFS + HashiCorp Vault
 
 resources:
   - ../../base
@@ -12,5 +12,5 @@ namespace: eudiplo
 
 components:
   - ../../components/postgres
-  - ../../components/minio
+  - ../../components/rustfs
   - ../../components/vault

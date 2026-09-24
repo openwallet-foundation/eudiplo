@@ -212,8 +212,8 @@ All wizard choices are also available as flags for repeatable setup:
 | Preset     | Database   | Storage            | Key management  |
 | ---------- | ---------- | ------------------ | --------------- |
 | `minimal`  | SQLite     | Local filesystem   | Database-backed |
-| `standard` | PostgreSQL | S3 via local MinIO | Database-backed |
-| `full`     | PostgreSQL | S3 via local MinIO | Vault           |
+| `standard` | PostgreSQL | S3 via local RustFS | Database-backed |
+| `full`     | PostgreSQL | S3 via local RustFS | Vault           |
 
 Explicit `--database`, `--storage`, and `--kms` flags override the corresponding preset choices. Use `--yes` or `--no-interactive` to suppress the wizard. Use `--auth-client-id` and `--auth-client-secret` in automation; avoid exposing the secret in shared shell history.
 

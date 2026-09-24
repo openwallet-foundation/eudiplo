@@ -1,15 +1,15 @@
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 
-# MinIO Component
-# Adds MinIO S3-compatible object storage to the deployment
+# RustFS Component
+# Adds RustFS S3-compatible object storage to the deployment
 
 resources:
-  - minio-statefulset.yaml
-  - minio-service.yaml
-  - minio-bucket-job.yaml
+  - rustfs-statefulset.yaml
+  - rustfs-service.yaml
+  - rustfs-bucket-job.yaml
 
-# Patch ingress to add MinIO console
+# Patch ingress to add RustFS console
 patches:
   - target:
       kind: Ingress
@@ -18,17 +18,17 @@ patches:
       - op: add
         path: /spec/rules/-
         value:
-          host: minio-console.localtest.me
+          host: rustfs-console.localtest.me
           http:
             paths:
               - path: /
                 pathType: Prefix
                 backend:
                   service:
-                    name: minio
+                    name: rustfs
                     port:
                       number: 9001
-  # Patch EUDIPLO deployment to wait for MinIO and add S3 env vars
+  # Patch EUDIPLO deployment to wait for RustFS and add S3 env vars
   - target:
       kind: Deployment
       name: eudiplo
@@ -36,7 +36,7 @@ patches:
       - op: add
         path: /spec/template/spec/initContainers/-
         value:
-          name: wait-for-minio
+          name: wait-for-rustfs
           image: busybox:1.36
           securityContext:
             allowPrivilegeEscalation: false
@@ -48,8 +48,8 @@ patches:
             - sh
             - -c
             - |
-              until wget -qO- http://minio:9000/minio/health/ready >/dev/null 2>&1; do
-                echo "waiting for minio..."; sleep 3;
+              until wget -qO- http://rustfs:9000/health/ready >/dev/null 2>&1; do
+                echo "waiting for rustfs..."; sleep 3;
               done
       - op: add
         path: /spec/template/spec/containers/0/env/-
@@ -60,7 +60,7 @@ patches:
         path: /spec/template/spec/containers/0/env/-
         value:
           name: S3_ENDPOINT
-          value: "http://minio:9000"
+          value: "http://rustfs:9000"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:

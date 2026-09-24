@@ -3,7 +3,7 @@ kind: Kustomization
 
 # Standard Overlay
 # Use case: Staging environments, small production deployments
-# Components: EUDIPLO + PostgreSQL + MinIO
+# Components: EUDIPLO + PostgreSQL + RustFS
 
 resources:
   - ../../base
@@ -12,4 +12,4 @@ namespace: eudiplo
 
 components:
   - ../../components/postgres
-  - ../../components/minio
+  - ../../components/rustfs

@@ -44,6 +44,17 @@ The `main` branch image tracks active development and **does not guarantee compl
 
 ## Migration Guides
 
+### Bundled object storage: MinIO to RustFS
+
+The CLI and deployment templates now use RustFS with new service names,
+credentials, and data volumes. Existing MinIO objects must be copied through
+the S3 API before switching endpoints; reusing the old data directory is not
+supported. Follow the migration instructions for
+[Docker Compose](../deployment/docker-compose.md#migrating-existing-minio-storage)
+or [Kubernetes](../deployment/kubernetes.md#migrating-existing-minio-storage).
+
+### Application versions
+
 | From | To  | Guide                                                                                                     |
 | ---- | --- | --------------------------------------------------------------------------------------------------------- |
 | 2.x  | 3.0 | No action required — the migration system is backward compatible. Just update and start.                  |

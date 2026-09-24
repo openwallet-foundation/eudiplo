@@ -22,7 +22,7 @@ The steps below create a Compose-managed EUDIPLO project with:
 
 - EUDIPLO backend
 - optional web client
-- SQLite and local storage for the `minimal` preset, or PostgreSQL and MinIO
+- SQLite and local storage for the `minimal` preset, or PostgreSQL and RustFS
   for the `standard` preset
 - one mounted `config/` folder for tenants
 - startup config import enabled
@@ -145,7 +145,7 @@ Choose the preset based on how much infrastructure you want to run:
 | Preset     | Services                                                               | Best for                                                                   |
 | ---------- | ---------------------------------------------------------------------- | -------------------------------------------------------------------------- |
 | `minimal`  | EUDIPLO backend, optional web client, SQLite, local filesystem storage | Local evaluation, small test servers, and the fewest moving parts          |
-| `standard` | EUDIPLO backend, optional web client, PostgreSQL, MinIO                | Staging, longer-running test environments, and setups closer to production |
+| `standard` | EUDIPLO backend, optional web client, PostgreSQL, RustFS                | Staging, longer-running test environments, and setups closer to production |
 
 For the smallest local or test setup, use `minimal`:
 
@@ -155,7 +155,7 @@ cd ~/eudiplo
 eudiplo init . --preset minimal --public-url http://localhost:3000
 ```
 
-For a server with PostgreSQL and MinIO, use `standard`:
+For a server with PostgreSQL and RustFS, use `standard`:
 
 ```bash
 mkdir -p ~/eudiplo
@@ -167,9 +167,9 @@ Recommended wizard choices:
 
 | Prompt                     | Recommended value                                                 |
 | -------------------------- | ----------------------------------------------------------------- |
-| Preset                     | `minimal` for fewer services, `standard` for PostgreSQL and MinIO |
+| Preset                     | `minimal` for fewer services, `standard` for PostgreSQL and RustFS |
 | Database                   | SQLite for `minimal`, PostgreSQL for `standard`                   |
-| Storage                    | Local filesystem for `minimal`, S3 via MinIO for `standard`       |
+| Storage                    | Local filesystem for `minimal`, S3 via RustFS for `standard`       |
 | Key management             | Database-backed                                                   |
 | Web client                 | enabled, unless you only want API access                          |
 | Start after initialization | yes                                                               |
@@ -454,7 +454,7 @@ Before exposing the instance to real users:
 - Use a strong `MASTER_SECRET` and keep it stable for the lifetime of encrypted
   data.
 - Put the backend behind TLS and set `PUBLIC_URL` to the HTTPS URL.
-- Back up PostgreSQL, MinIO data, and the `config/` directory.
+- Back up PostgreSQL, RustFS data, and the `config/` directory.
 - Use Vault or another production key-management strategy when required by your
   security model.
 - Validate tenant config in CI before deploying or restarting.
