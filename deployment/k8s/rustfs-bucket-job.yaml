@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rustfs-bucket-bootstrap
+  namespace: eudiplo
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        app: rustfs-bucket-bootstrap
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-rustfs
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              until wget -qO- http://rustfs:9000/health/ready >/dev/null 2>&1; do
+                echo "Waiting for RustFS..."; sleep 3;
+              done
+      containers:
+        - name: aws-cli
+          image: amazon/aws-cli:2.34.0
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: eudiplo-env
+                  key: RUSTFS_ACCESS_KEY
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: eudiplo-env
+                  key: RUSTFS_SECRET_KEY
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: eudiplo-env
+                  key: S3_BUCKET
+            - name: AWS_DEFAULT_REGION
+              value: us-east-1
+            - name: AWS_CONFIG_FILE
+              value: /tmp/aws-config
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -eu
+              aws configure set default.s3.addressing_style path
+              s3() { aws --endpoint-url http://rustfs:9000 s3api "$@"; }
+              s3 head-bucket --bucket "$S3_BUCKET" 2>/dev/null || s3 create-bucket --bucket "$S3_BUCKET"
+              printf '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":["s3:GetObject"],"Resource":["arn:aws:s3:::%s/*"]}]}' "$S3_BUCKET" > /tmp/bucket-policy.json
+              s3 put-bucket-policy --bucket "$S3_BUCKET" --policy file:///tmp/bucket-policy.json
+              echo 'Bucket initialized successfully'

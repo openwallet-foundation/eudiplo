@@ -82,7 +82,16 @@ describe("compose template helpers", () => {
         expect(env).toContain("DB_TYPE=postgres");
         expect(env).toContain("DB_HOST=postgres");
         expect(env).toContain("STORAGE_DRIVER=s3");
-        expect(env).toContain("S3_ENDPOINT=http://minio:9000");
+        expect(env).toContain("S3_ENDPOINT=http://rustfs:9000");
+        const variables = Object.fromEntries(
+            env.split("\n").map((line) => line.split("=", 2)),
+        );
+        expect(variables.RUSTFS_ACCESS_KEY).toBe(variables.S3_ACCESS_KEY_ID);
+        expect(variables.RUSTFS_SECRET_KEY).toBeTruthy();
+        expect(variables.RUSTFS_SECRET_KEY).toBe(
+            variables.S3_SECRET_ACCESS_KEY,
+        );
+        expect(env).not.toContain("MINIO_");
         expect(env).toContain("KM_TYPE=vault");
         expect(env).toContain("VAULT_ADDR=http://vault:8200");
     });

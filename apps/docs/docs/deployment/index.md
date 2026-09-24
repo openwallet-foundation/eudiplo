@@ -18,7 +18,7 @@ EUDIPLO can be deployed in various ways depending on your needs, from local deve
 
 ### Docker Compose
 
-The fastest way to get EUDIPLO running locally with all dependencies (PostgreSQL, MinIO).
+The fastest way to get EUDIPLO running locally with all dependencies (PostgreSQL, RustFS).
 
 Perfect for:
 
@@ -59,7 +59,7 @@ docker run -d \
 ```
 
 :::warning[External Dependencies Required]
-Single container mode requires external PostgreSQL and S3-compatible storage (MinIO/AWS S3) configured via environment variables.
+Single container mode requires external PostgreSQL and S3-compatible storage (RustFS/AWS S3) configured via environment variables.
 :::
 
 ## TLS/HTTPS Configuration

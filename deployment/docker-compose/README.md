@@ -39,7 +39,7 @@ Notes:
 # Copy the appropriate environment file
 cp .env.minimal.example .env   # For minimal setup
 # OR
-cp .env.standard.example .env  # For standard setup with Postgres + MinIO
+cp .env.standard.example .env  # For standard setup with Postgres + RustFS
 # OR
 cp .env.full.example .env      # For full setup with Vault
 
@@ -106,8 +106,8 @@ You can override this behavior with:
 | Profile      | Command                                | Components                 | Use Case                  |
 | ------------ | -------------------------------------- | -------------------------- | ------------------------- |
 | **Minimal**  | `docker compose up`                    | EUDIPLO only               | Local dev, quick testing  |
-| **Standard** | `docker compose --profile standard up` | + PostgreSQL, MinIO        | Staging, small production |
-| **Full**     | `docker compose --profile full up`     | + PostgreSQL, MinIO, Vault | Enterprise production     |
+| **Standard** | `docker compose --profile standard up` | + PostgreSQL, RustFS        | Staging, small production |
+| **Full**     | `docker compose --profile full up`     | + PostgreSQL, RustFS, Vault | Enterprise production     |
 
 The component profiles `postgres`, `s3`, and `vault` can be combined directly.
 The EUDIPLO CLI uses these component profiles for custom `eudiplo init`
@@ -118,7 +118,7 @@ selections.
 | Component          | Minimal          | Standard   | Full            |
 | ------------------ | ---------------- | ---------- | --------------- |
 | **Database**       | SQLite           | PostgreSQL | PostgreSQL      |
-| **File Storage**   | Local filesystem | MinIO (S3) | MinIO (S3)      |
+| **File Storage**   | Local filesystem | RustFS (S3) | RustFS (S3)      |
 | **Key Management** | DB-backed        | DB-backed  | HashiCorp Vault |
 
 ## Environment Files
@@ -136,7 +136,7 @@ After deployment, access the services at:
 | **Backend API**       | <http://localhost:3000>                 |
 | **Client Web UI**     | <http://localhost:4200>                 |
 | **API Documentation** | <http://localhost:3000/api-docs>        |
-| **MinIO Console**     | <http://localhost:9001> (standard/full) |
+| **RustFS Console**     | <http://localhost:9001/rustfs/console/> (standard/full) |
 | **Vault UI**          | <http://localhost:8200> (full)          |
 
 ## Upgrading Between Profiles
@@ -170,6 +170,27 @@ After deployment, access the services at:
 2. **Use strong secrets**: `openssl rand -base64 32`
 3. **Configure proper Vault setup** (not dev mode)
 4. **Set up TLS/HTTPS** via reverse proxy
-5. **Configure backup strategies** for PostgreSQL and MinIO
+5. **Configure backup strategies** for PostgreSQL and RustFS
 
 For more details, see the [full documentation](https://docs.eudiplo.dev/deployment/docker-compose/).
+
+## Migrating existing MinIO storage
+
+These templates now deploy RustFS 1.0.0 with a separate `rustfs-data` volume
+(or PVC). Existing MinIO data is not migrated automatically. Keep the old
+volumes and backups; do not mount a MinIO data directory directly into RustFS.
+
+1. Start RustFS with an empty volume alongside the existing storage service.
+2. Copy buckets and objects through the S3 API using a migration tool that
+   preserves the metadata, versions, and policies your deployment requires.
+3. Verify object counts, contents, and application reads before switching
+   `S3_ENDPOINT` to `http://rustfs:9000`.
+4. Replace `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` with `RUSTFS_ACCESS_KEY` /
+   `RUSTFS_SECRET_KEY`, and use the same values for `S3_ACCESS_KEY_ID` /
+   `S3_SECRET_ACCESS_KEY`. Bucket initialization now uses `S3_BUCKET`.
+5. Keep the old service and data available for rollback until the migration
+   is verified. Existing CLI projects need their Compose file and `.env`
+   updated as well; updating the CLI alone does not rewrite them.
+
+The bucket initialization job uses AWS CLI 2.34.0 and retains the previous
+public-download policy (`s3:GetObject`). Review that policy for private buckets.

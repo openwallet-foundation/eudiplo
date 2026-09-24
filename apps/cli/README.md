@@ -112,7 +112,7 @@ Interactive `demo` runs use the same directory prompt. Pass a positional
 directory, `--directory`, or `--yes` to skip it.
 
 `init --preset minimal` writes a local `.eudiplo.env` using SQLite and local
-storage. `standard` provisions PostgreSQL and MinIO, while `full` additionally
+storage. `standard` provisions PostgreSQL and RustFS, while `full` additionally
 provisions Vault. Arbitrary combinations are supported through the component
 flags.
 

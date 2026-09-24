@@ -655,7 +655,7 @@ describe("EUDIPLO CLI", () => {
         );
     });
 
-    it("initializes the standard preset with PostgreSQL and MinIO", async () => {
+    it("initializes the standard preset with PostgreSQL and RustFS", async () => {
         const { context, cwd, configPath } = await createContext();
 
         const code = await runCli(

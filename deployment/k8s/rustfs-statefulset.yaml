@@ -1,28 +1,29 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: minio
+  name: rustfs
+  namespace: eudiplo
 spec:
-  serviceName: minio
+  serviceName: rustfs
   replicas: 1
   selector:
     matchLabels:
-      app: minio
+      app: rustfs
   template:
     metadata:
       labels:
-        app: minio
+        app: rustfs
     spec:
       automountServiceAccountToken: false
       securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
+        fsGroup: 10001
+        runAsUser: 10001
         runAsNonRoot: true
       containers:
-        - name: minio
-          image: quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z
+        - name: rustfs
+          image: rustfs/rustfs:1.0.0
           imagePullPolicy: IfNotPresent
-          args: ["server", "/data", "--console-address", ":9001"]
+          args: ["/data"]
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -33,26 +34,30 @@ spec:
             - containerPort: 9000
             - containerPort: 9001
           env:
-            - name: MINIO_ROOT_USER
+            - name: RUSTFS_CONSOLE_ENABLE
+              value: "true"
+            - name: RUSTFS_CONSOLE_ADDRESS
+              value: ":9001"
+            - name: RUSTFS_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: eudiplo-env
-                  key: MINIO_ROOT_USER
-            - name: MINIO_ROOT_PASSWORD
+                  key: RUSTFS_ACCESS_KEY
+            - name: RUSTFS_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: eudiplo-env
-                  key: MINIO_ROOT_PASSWORD
+                  key: RUSTFS_SECRET_KEY
           readinessProbe:
             httpGet:
-              path: /minio/health/ready
+              path: /health/ready
               port: 9000
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
           livenessProbe:
             httpGet:
-              path: /minio/health/live
+              path: /health/live
               port: 9000
             initialDelaySeconds: 20
             periodSeconds: 20
@@ -66,11 +71,11 @@ spec:
               cpu: "500m"
               memory: "1Gi"
           volumeMounts:
-            - name: minio-data
+            - name: rustfs-data
               mountPath: /data
   volumeClaimTemplates:
     - metadata:
-        name: minio-data
+        name: rustfs-data
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:

@@ -35,8 +35,8 @@ EUDIPLO offers three Docker Compose deployment options:
 | Preset       | Database   | Storage            | Key Management  | Production Ready |
 | ------------ | ---------- | ------------------ | --------------- | ---------------- |
 | **Minimal**  | SQLite     | Local filesystem   | Database-backed | ⚠️ Limited       |
-| **Standard** | PostgreSQL | S3 via local MinIO | Database-backed | ✅ Yes (small)   |
-| **Full**     | PostgreSQL | S3 via local MinIO | Vault           | ✅ Yes           |
+| **Standard** | PostgreSQL | S3 via local RustFS | Database-backed | ✅ Yes (small)   |
+| **Full**     | PostgreSQL | S3 via local RustFS | Vault           | ✅ Yes           |
 
 ## Environment Variables
 
@@ -65,7 +65,7 @@ AUTH_CLIENT_SECRET=your-client-secret
 
 ## Full Deployment Configuration
 
-For production deployments with PostgreSQL, MinIO, and optional Vault:
+For production deployments with PostgreSQL, RustFS, and optional Vault:
 
 ```env
 # PostgreSQL Configuration
@@ -76,9 +76,9 @@ DB_USERNAME=eudiplo_user
 DB_PASSWORD=strong-secure-password-here
 DB_DATABASE=eudiplo
 
-# MinIO (S3-compatible storage)
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin-secure-password
+# RustFS (S3-compatible storage)
+RUSTFS_ACCESS_KEY=rustfsadmin
+RUSTFS_SECRET_KEY=rustfsadmin-secure-password
 ```
 
 ## Service Management
@@ -120,3 +120,24 @@ docker compose down -v
 - [CLI Tool](./cli.md) — Deploy with EUDIPLO CLI
 - [Kubernetes Deployment](kubernetes) — Production deployment on K8s
 - [TLS Configuration](tls) — Enable HTTPS
+
+## Migrating existing MinIO storage
+
+These templates now deploy RustFS 1.0.0 with a separate `rustfs-data` volume
+(or PVC). Existing MinIO data is not migrated automatically. Keep the old
+volumes and backups; do not mount a MinIO data directory directly into RustFS.
+
+1. Start RustFS with an empty volume alongside the existing storage service.
+2. Copy buckets and objects through the S3 API using a migration tool that
+   preserves the metadata, versions, and policies your deployment requires.
+3. Verify object counts, contents, and application reads before switching
+   `S3_ENDPOINT` to `http://rustfs:9000`.
+4. Replace `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` with `RUSTFS_ACCESS_KEY` /
+   `RUSTFS_SECRET_KEY`, and use the same values for `S3_ACCESS_KEY_ID` /
+   `S3_SECRET_ACCESS_KEY`. Bucket initialization now uses `S3_BUCKET`.
+5. Keep the old service and data available for rollback until the migration
+   is verified. Existing CLI projects need their Compose file and `.env`
+   updated as well; updating the CLI alone does not rewrite them.
+
+The bucket initialization job uses AWS CLI 2.34.0 and retains the previous
+public-download policy (`s3:GetObject`). Review that policy for private buckets.

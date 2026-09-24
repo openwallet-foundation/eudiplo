@@ -16,7 +16,7 @@ The Kubernetes deployment includes:
 - **EUDIPLO Backend** — Main application service (Node.js)
 - **EUDIPLO Client** — Web UI served by nginx
 - **PostgreSQL** — Optional relational database with persistent storage
-- **MinIO** — Optional S3-compatible object storage
+- **RustFS** — Optional S3-compatible object storage
 - **Vault** — Optional development-only key and encryption-key store
 - **Ingress** — nginx HTTP routing with domain-based access
 
@@ -32,10 +32,10 @@ All components include:
 | Profile    | Components                     | Intended use                        |
 | ---------- | ------------------------------ | ----------------------------------- |
 | `minimal`  | EUDIPLO, SQLite, local storage | Local development and quick testing |
-| `standard` | EUDIPLO, PostgreSQL, MinIO     | Staging and small deployments       |
+| `standard` | EUDIPLO, PostgreSQL, RustFS     | Staging and small deployments       |
 | `full`     | Standard profile plus Vault    | Local testing of Vault integration  |
 
-Use an external managed database, object store, and Vault for production. The bundled PostgreSQL, MinIO, and Vault workloads are single-replica development deployments.
+Use an external managed database, object store, and Vault for production. The bundled PostgreSQL, RustFS, and Vault workloads are single-replica development deployments.
 
 ## Prerequisites
 
@@ -107,13 +107,14 @@ DB_USERNAME=eudiplo
 DB_PASSWORD=changeme123
 DB_DATABASE=eudiplo
 
-# MinIO Configuration
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin123
-MINIO_BUCKET=uploads
+# RustFS Configuration
+RUSTFS_ACCESS_KEY=rustfsadmin
+RUSTFS_SECRET_KEY=rustfsadmin123
+STORAGE_DRIVER=s3
+S3_FORCE_PATH_STYLE=true
 S3_REGION=us-east-1
-S3_ACCESS_KEY_ID=minioadmin
-S3_SECRET_ACCESS_KEY=minioadmin123
+S3_ACCESS_KEY_ID=rustfsadmin
+S3_SECRET_ACCESS_KEY=rustfsadmin123
 S3_BUCKET=uploads
 
 # Application Secrets
@@ -146,7 +147,7 @@ kubectl -n eudiplo create secret generic eudiplo-env --from-env-file=overlays/st
 Using Kustomize profiles (recommended):
 
 ```bash
-# Standard profile: PostgreSQL and MinIO
+# Standard profile: PostgreSQL and RustFS
 kubectl apply -k overlays/standard
 ```
 
@@ -172,9 +173,9 @@ Legacy flat manifests remain available for backwards compatibility:
 kubectl apply -f namespace.yaml
 kubectl apply -f postgres-statefulset.yaml
 kubectl apply -f postgres-service.yaml
-kubectl apply -f minio-statefulset.yaml
-kubectl apply -f minio-service.yaml
-kubectl apply -f minio-bucket-job.yaml
+kubectl apply -f rustfs-statefulset.yaml
+kubectl apply -f rustfs-service.yaml
+kubectl apply -f rustfs-bucket-job.yaml
 kubectl apply -f eudiplo-deployment.yaml
 kubectl apply -f eudiplo-service.yaml
 kubectl apply -f eudiplo-client-deployment.yaml
@@ -203,8 +204,8 @@ NAME                                  READY   STATUS      RESTARTS   AGE
 pod/eudiplo-xxxxxxxxxx-xxxxx          1/1     Running     0          2m
 pod/eudiplo-client-xxxxxxxxxx-xxxxx   1/1     Running     0          2m
 pod/postgres-0                        1/1     Running     0          3m
-pod/minio-0                           1/1     Running     0          3m
-pod/minio-mc-bootstrap-xxxxx          0/1     Completed   0          2m
+pod/rustfs-0                           1/1     Running     0          3m
+pod/rustfs-bucket-bootstrap-xxxxx          0/1     Completed   0          2m
 ```
 
 ## Managing the Deployment with the CLI
@@ -337,7 +338,7 @@ Access via domain names (works automatically with `localtest.me`):
 - **Backend API**: [http://eudiplo.localtest.me/api](http://eudiplo.localtest.me/api)
 - **Backend Health**: [http://eudiplo.localtest.me/health](http://eudiplo.localtest.me/health)
 - **Client UI**: [http://eudiplo-client.localtest.me/](http://eudiplo-client.localtest.me/)
-- **MinIO Console**: [http://minio-console.localtest.me/](http://minio-console.localtest.me/)
+- **RustFS Console**: [http://rustfs-console.localtest.me/rustfs/console/](http://rustfs-console.localtest.me/rustfs/console/)
 
 :::tip[Why localtest.me?]
 The `localtest.me` domain automatically resolves to `127.0.0.1`, eliminating the need to edit `/etc/hosts`.
@@ -354,8 +355,8 @@ kubectl -n eudiplo port-forward svc/eudiplo 3000:3000 &
 # Client UI (port 4200 → 80)
 kubectl -n eudiplo port-forward svc/eudiplo-client 4200:80 &
 
-# MinIO Console (port 9001)
-kubectl -n eudiplo port-forward svc/minio 9001:9001 &
+# RustFS Console (port 9001)
+kubectl -n eudiplo port-forward svc/rustfs 9001:9001 &
 ```
 
 Kill all port-forwards:
@@ -464,3 +465,24 @@ kubectl cluster-info
 - [Docker Compose Deployment](docker-compose) — Local development
 - [TLS Configuration](tls) — Enable HTTPS
 - [Monitoring](../administration/monitoring) — Set up observability
+
+## Migrating existing MinIO storage
+
+These templates now deploy RustFS 1.0.0 with a separate `rustfs-data` volume
+(or PVC). Existing MinIO data is not migrated automatically. Keep the old
+volumes and backups; do not mount a MinIO data directory directly into RustFS.
+
+1. Start RustFS with an empty volume alongside the existing storage service.
+2. Copy buckets and objects through the S3 API using a migration tool that
+   preserves the metadata, versions, and policies your deployment requires.
+3. Verify object counts, contents, and application reads before switching
+   `S3_ENDPOINT` to `http://rustfs:9000`.
+4. Replace `MINIO_ROOT_USER` / `MINIO_ROOT_PASSWORD` with `RUSTFS_ACCESS_KEY` /
+   `RUSTFS_SECRET_KEY`, and use the same values for `S3_ACCESS_KEY_ID` /
+   `S3_SECRET_ACCESS_KEY`. Bucket initialization now uses `S3_BUCKET`.
+5. Keep the old service and data available for rollback until the migration
+   is verified. Existing CLI projects need their Compose file and `.env`
+   updated as well; updating the CLI alone does not rewrite them.
+
+The bucket initialization job uses AWS CLI 2.34.0 and retains the previous
+public-download policy (`s3:GetObject`). Review that policy for private buckets.

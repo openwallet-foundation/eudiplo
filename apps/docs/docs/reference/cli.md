@@ -250,8 +250,8 @@ When run in an interactive terminal, `init` opens a wizard for:
 | Preset     | Database   | Storage            | Key Management  |
 | ---------- | ---------- | ------------------ | --------------- |
 | `minimal`  | SQLite     | Local filesystem   | Database-backed |
-| `standard` | PostgreSQL | S3 via local MinIO | Database-backed |
-| `full`     | PostgreSQL | S3 via local MinIO | Vault           |
+| `standard` | PostgreSQL | S3 via local RustFS | Database-backed |
+| `full`     | PostgreSQL | S3 via local RustFS | Vault           |
 
 Override preset choices with `--database`, `--storage`, and `--kms` flags.
 
