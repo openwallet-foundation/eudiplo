@@ -301,17 +301,17 @@
                   <mat-label for="external-private-key">
                     {{
                       isExternalCaChain
-                        ? 'External CA Private Key (JWK)'
-                        : 'External Private Key (JWK)'
+                        ? 'External CA Private Key (JWK or PKCS#8 PEM)'
+                        : 'External Private Key (JWK or PKCS#8 PEM)'
                     }}
                   </mat-label>
                   <textarea
                     matInput
                     id="external-private-key"
-                    aria-label="External private key in JWK format"
+                    aria-label="External private key in JWK or PKCS#8 PEM format"
                     formControlName="externalPrivateKey"
                     rows="6"
-                    placeholder="Paste the EC private JWK"
+                    placeholder="Paste an EC private JWK or -----BEGIN PRIVATE KEY----- PEM"
                   ></textarea>
                   <mat-hint>
                     Must match the public key in the supplied
@@ -320,16 +320,16 @@
                   <input
                     #privateKeyFile
                     id="external-private-key-file"
-                    aria-label="Upload external private key JWK file"
+                    aria-label="Upload external private key JWK or PEM file"
                     type="file"
-                    accept=".json,.jwk,application/json"
+                    accept=".json,.jwk,.pem,.key,application/json,application/x-pem-file"
                     hidden
                     (change)="onPrivateKeyFileSelected($event)"
                   />
                 </mat-form-field>
                 <button mat-button type="button" (click)="privateKeyFile.click()">
                   <mat-icon>upload_file</mat-icon>
-                  Load JWK File
+                  Load Key File
                 </button>
 
                 <mat-form-field appearance="outline">

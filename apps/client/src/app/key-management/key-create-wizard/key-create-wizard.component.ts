@@ -375,7 +375,7 @@ export class KeyCreateWizardComponent implements OnInit {
           this.configForm.value.externalCertificate
         );
         const importDto: KeyChainImportDto = {
-          key: externalKey,
+          ...externalKey,
           usageType: usage,
           description: description || this.getDefaultDescription(),
           kmsProvider: this.configForm.value.kmsProvider || this.defaultKmsProvider || 'db',
@@ -575,15 +575,20 @@ export class KeyCreateWizardComponent implements OnInit {
       : 'Standalone (Self-signed)';
   }
 
-  private parseExternalPrivateKey(): KeyChainImportDto['key'] {
+  private parseExternalPrivateKey(): Pick<KeyChainImportDto, 'key' | 'keyPem'> {
+    const value = this.configForm.value.externalPrivateKey.trim();
+    if (value.includes('-----BEGIN PRIVATE KEY-----')) {
+      return { keyPem: value };
+    }
+
     try {
-      const key = JSON.parse(this.configForm.value.externalPrivateKey);
+      const key = JSON.parse(value);
       if (!key || typeof key !== 'object' || !key.kty || !key.x || !key.y || !key.crv || !key.d) {
         throw new Error('Invalid private JWK');
       }
-      return key as KeyChainImportDto['key'];
+      return { key: key as NonNullable<KeyChainImportDto['key']> };
     } catch {
-      throw new Error('The external private key must be a valid EC private JWK.');
+      throw new Error('The external private key must be a valid EC private JWK or PKCS#8 PEM key.');
     }
   }
 

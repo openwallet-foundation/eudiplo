@@ -88,6 +88,7 @@ export class SchemaCreateComponent implements OnInit {
   readonly frameworkTypeOptions = [
     { value: 'etsi_tl', label: 'ETSI TL' },
     { value: 'openid_federation', label: 'OpenID Federation' },
+    { value: 'x509', label: 'X.509 Root Certificate' },
   ];
 
   readonly schemaFormatOptions = [
@@ -222,6 +223,15 @@ export class SchemaCreateComponent implements OnInit {
       imported: [true],
     });
   }
+
+  addX509TrustAnchor(): void {
+    this.trustedAuthorities.push(this.createTrustedAuthorityGroup('x509', '', false, '', false));
+  }
+
+  removeTrustedAuthority(index: number): void {
+    this.trustedAuthorities.removeAt(index);
+  }
+
   syncSchemaURIsFromSelection(): void {
     const selectedIds = this.importSchemaConfigIds.value ?? [];
     this.schemaURIs.clear();
@@ -248,6 +258,10 @@ export class SchemaCreateComponent implements OnInit {
       }
     }
 
+    const directAuthorities = this.trustedAuthorities.controls
+      .filter((group) => !group.get('trustListId')?.value)
+      .map((group) => group.getRawValue());
+
     this.trustedAuthorities.clear();
     for (const id of selectedIds) {
       const tl = this.trustLists.find((t) => t.id === id);
@@ -256,6 +270,18 @@ export class SchemaCreateComponent implements OnInit {
       const label = tl.description ? `${tl.description} (${tl.id})` : tl.id;
       const isLoTE = existingLoTE.get(id) ?? true;
       this.trustedAuthorities.push(this.createTrustListGroup(id, label, isLoTE));
+    }
+
+    for (const authority of directAuthorities) {
+      this.trustedAuthorities.push(
+        this.createTrustedAuthorityGroup(
+          authority['frameworkType'] ?? 'x509',
+          authority['value'] ?? '',
+          authority['isLoTE'] ?? false,
+          authority['verificationMethod'] ?? '',
+          false
+        )
+      );
     }
   }
 
@@ -308,15 +334,12 @@ export class SchemaCreateComponent implements OnInit {
           uri: e['uri'],
         };
       }),
-      trustedAuthorities: (raw.trustedAuthorities as Record<string, unknown>[]).map(
-        (e: Record<string, unknown>) => ({
-          trustListId: e['trustListId'],
-          frameworkType: e['frameworkType'],
-          value: e['value'],
-          isLoTE: e['isLoTE'],
-          verificationMethod: e['verificationMethod'],
-        })
-      ),
+      trustedAuthorities: (raw.trustedAuthorities as Record<string, unknown>[]).map((e) => ({
+        ...(e['trustListId'] ? { trustListId: e['trustListId'] } : {}),
+        ...(e['frameworkType'] ? { frameworkType: e['frameworkType'] } : {}),
+        ...(e['value'] ? { value: String(e['value']).replace(/\s/g, '') } : {}),
+        ...(e['verificationMethod'] ? { verificationMethod: e['verificationMethod'] } : {}),
+      })),
     };
   }
 

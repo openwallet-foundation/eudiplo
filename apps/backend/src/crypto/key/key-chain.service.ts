@@ -583,6 +583,16 @@ export class KeyChainService {
         return this.signingService.signBytes(data, tenantId, keyId);
     }
 
+    async createCertificateSigningRequest(
+        tenantId: string,
+        keyId: string,
+    ): Promise<string> {
+        return this.signingService.createCertificateSigningRequest(
+            tenantId,
+            keyId,
+        );
+    }
+
     getPublicKey(type: "jwk", tenantId: string, keyId?: string): Promise<JWK>;
     getPublicKey(
         type: "pem",

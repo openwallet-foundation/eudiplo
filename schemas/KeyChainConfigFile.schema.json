@@ -365,6 +365,7 @@
           "type": "string"
         },
         "key": {
+          "description": "Private key material in JWK format.",
           "type": "object",
           "properties": {
             "kty": {
@@ -403,8 +404,12 @@
             "crv",
             "d"
           ],
-          "additionalProperties": false,
-          "description": "Private key material in JWK format."
+          "additionalProperties": false
+        },
+        "keyPem": {
+          "description": "PKCS#8 PEM-encoded EC private key material.",
+          "type": "string",
+          "minLength": 1
         },
         "description": {
           "description": "Optional key chain description.",
@@ -460,7 +465,6 @@
         }
       },
       "required": [
-        "key",
         "usageType"
       ],
       "additionalProperties": false
