@@ -40,8 +40,6 @@ describe("OpenAPI contract", () => {
         app = moduleFixture.createNestApplication();
         app.setGlobalPrefix("api", { exclude: GLOBAL_PREFIX_EXCLUSIONS });
 
-        await app.init();
-
         const swaggerDocument = SwaggerModule.createDocument(
             app,
             new DocumentBuilder()
@@ -79,6 +77,8 @@ describe("OpenAPI contract", () => {
 
         SwaggerModule.setup("/api/docs", app, managementDocFactory);
         SwaggerModule.setup("/docs", app, protocolDocFactory);
+
+        await app.init();
     });
 
     afterAll(async () => {

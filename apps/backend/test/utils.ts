@@ -153,11 +153,19 @@ export async function prepareMdocPresentation(
     const deviceResponse = await Holder.createDeviceResponseForDeviceRequest(
         {
             deviceRequest,
-            issuerSigned: [credential],
             sessionTranscript,
-            signature: {
-                signingKey: CoseKey.fromJwk({ ...DEVICE_JWK, alg: "ES256" }),
-            },
+            documents: [
+                {
+                    docRequestIndex: 0,
+                    issuerSigned: credential,
+                    signature: {
+                        signingKey: CoseKey.fromJwk({
+                            ...DEVICE_JWK,
+                            alg: "ES256",
+                        }),
+                    },
+                },
+            ],
         },
         mdocContext,
     );
