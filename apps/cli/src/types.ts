@@ -60,6 +60,7 @@ export interface DeploymentDriver {
     logs?(options: DriverCommandOptions): Promise<number>;
     ps?(options: DriverCommandOptions): Promise<number>;
     restart?(options: DriverCommandOptions): Promise<number>;
+    pull?(options: DriverCommandOptions): Promise<number>;
 }
 
 export interface ParsedArgs {

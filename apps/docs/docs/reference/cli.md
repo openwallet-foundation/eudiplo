@@ -223,6 +223,9 @@ eudiplo logs     # Print recent logs
 eudiplo logs --service eudiplo --follow --tail 100 --since 10m
 eudiplo restart --service eudiplo-client
 eudiplo restart  # Restart every service in the project
+eudiplo pull     # Download the configured images, configuration unchanged
+eudiplo upgrade --image-tag 8.1.0        # Preview, confirm, then upgrade
+eudiplo upgrade --image-tag 8.1.0 --yes  # Skip the confirmation (automation)
 
 # Reset demo
 eudiplo demo --reset --force
@@ -275,6 +278,26 @@ Avoid exposing secrets in shared shell history when using `--auth-client-secret`
 :::note[Podman]
 `podman compose` delegates to an external provider (`docker-compose` or `podman-compose`). Flag support depends on that provider, so keep it up to date.
 :::
+
+### Upgrading: CLI vs. Application
+
+Three different things can be upgraded, and each has its own command:
+
+| What | How | Affects |
+| ---- | --- | ------- |
+| The CLI itself | Re-run the installer, or `npm install -g @eudiplo/cli@latest`. `eudiplo version` checks for a newer CLI | Only the `eudiplo` command on your machine. Running deployments are untouched |
+| The EUDIPLO application (Compose) | `eudiplo upgrade --image-tag <tag>` | The backend and web client images of the selected instance |
+| Tenant configuration files | `eudiplo config upgrade <bundle>` | Exported configuration bundles, see [Configuration Model](../architecture/configuration-model.md) |
+
+`eudiplo upgrade` only changes the two image lines the CLI manages in the instance env file (`EUDIPLO_IMAGE` and `EUDIPLO_CLIENT_IMAGE`). Everything else in the env file and all Compose files are left exactly as they are. The command:
+
+1. Shows the current and new tag for each image, and links the [migration guide](../migration/index.md) for every major version crossed. It warns about downgrades, and about tags such as `latest` that cannot be compared.
+2. Asks for confirmation, unless `--yes` is passed. Non-interactive runs require `--yes`.
+3. Updates the image tags, pulls the new images and recreates the services. If pulling fails, the previous tags are restored.
+
+If an image line has been customised (another registry, a digest, or no tag), `upgrade` refuses to touch it; update it yourself instead. Back up your database before upgrading across major versions. Database migrations run automatically when the new backend starts and cannot be undone by going back to an older tag.
+
+`pull` and `upgrade` never remove volumes or other persistent data.
 
 ### Tenant Configuration Commands
 

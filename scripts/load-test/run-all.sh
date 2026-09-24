@@ -6,7 +6,7 @@
 # Runs one or more k6 load test scenarios against an EUDIPLO backend.
 #
 # Usage:
-#   ./run-all.sh [--once] [scenario...]
+#   ./run-all.sh [--once] [--external] [scenario...]
 #
 #   If no scenario is specified all scenarios are run in sequence.
 #   Available scenarios: api-auth, pre-auth-issuance, oid4vp-presentation, status-list
@@ -14,6 +14,8 @@
 #
 # Environment variables:
 #   BASE_URL            Backend base URL          (default: http://localhost:3000)
+#   HEALTH_URL          Readiness endpoint        (default: BASE_URL/health)
+#   SKIP_HEALTH_CHECK   Skip readiness probe      (default: false)
 #   TENANT_ID           Issuer / verifier tenant  (default: demo)
 #   CLIENT_ID           OAuth2 client ID          (default: test-client)
 #   CLIENT_SECRET       OAuth2 client secret      (default: test-client-secret)
@@ -36,6 +38,9 @@
 #
 #   # Fast one-pass validation of all scenarios
 #   ./run-all.sh --once
+#
+#   # Test an already-running self-hosted deployment
+#   BASE_URL=https://issuer.example.com ./run-all.sh --external --once
 #
 #   # Load test pre-auth issuance only
 #   K6_PROFILE=load ./run-all.sh pre-auth-issuance
@@ -60,6 +65,8 @@ COMPOSE_DIR="${REPO_ROOT}/deployment/docker-compose"
 # Defaults
 # ---------------------------------------------------------------------------
 BASE_URL="${BASE_URL:-http://localhost:3000}"
+HEALTH_URL="${HEALTH_URL:-}"
+SKIP_HEALTH_CHECK="${SKIP_HEALTH_CHECK:-false}"
 TENANT_ID="${TENANT_ID:-demo}"
 CLIENT_ID="${CLIENT_ID:-test-client}"
 CLIENT_SECRET="${CLIENT_SECRET:-test-client-secret}"
@@ -77,12 +84,18 @@ ALL_SCENARIOS=(api-auth pre-auth-issuance oid4vp-presentation status-list)
 # Optional flags
 # ---------------------------------------------------------------------------
 FORCE_ONCE=false
+EXTERNAL_TARGET=false
 POSITIONAL_ARGS=()
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --once)
             FORCE_ONCE=true
+            shift
+            ;;
+        --external)
+            EXTERNAL_TARGET=true
+            START_STACK=false
             shift
             ;;
         --help|-h)
@@ -95,6 +108,26 @@ while [[ $# -gt 0 ]]; do
             ;;
     esac
 done
+
+BASE_URL="${BASE_URL%/}"
+if [[ ! "${BASE_URL}" =~ ^https?://[^[:space:]]+$ ]]; then
+    echo "ERROR: BASE_URL must be an absolute http(s) URL: ${BASE_URL}" >&2
+    exit 1
+fi
+HEALTH_URL="${HEALTH_URL:-${BASE_URL}/health}"
+
+if [[ "${EXTERNAL_TARGET}" == "true" && "${BASE_URL}" == "http://localhost:3000" ]]; then
+    echo "ERROR: --external requires an explicit BASE_URL for the self-hosted deployment." >&2
+    exit 1
+fi
+
+case "${SKIP_HEALTH_CHECK}" in
+    true|false) ;;
+    *)
+        echo "ERROR: SKIP_HEALTH_CHECK must be 'true' or 'false'." >&2
+        exit 1
+        ;;
+esac
 
 if [[ "${FORCE_ONCE}" == "true" ]]; then
     K6_PROFILE="once"
@@ -133,7 +166,12 @@ fi
 wait_for_backend() {
     local retries=60
     local interval=2
-    local health_url="${BASE_URL%/}/health"
+    if [[ "${SKIP_HEALTH_CHECK}" == "true" ]]; then
+        echo "Skipping backend health check."
+        return 0
+    fi
+
+    local health_url="${HEALTH_URL}"
 
     echo "Waiting for backend health at ${health_url}..."
     for ((i=1; i<=retries; i++)); do
@@ -153,7 +191,12 @@ ensure_backend_reachable_when_not_starting_stack() {
         return 0
     fi
 
-    local health_url="${BASE_URL%/}/health"
+    if [[ "${SKIP_HEALTH_CHECK}" == "true" ]]; then
+        echo "Skipping backend health check."
+        return 0
+    fi
+
+    local health_url="${HEALTH_URL}"
     if curl -sf "${health_url}" >/dev/null 2>&1; then
         return 0
     fi
@@ -179,7 +222,7 @@ start_stack_if_requested() {
     fi
 
     # If the backend is already healthy, reuse the running stack as-is.
-    local health_url="${BASE_URL%/}/health"
+    local health_url="${HEALTH_URL}"
     if curl -sf "${health_url}" >/dev/null 2>&1; then
         echo "Backend already healthy at ${health_url}, reusing existing stack."
         return 0
