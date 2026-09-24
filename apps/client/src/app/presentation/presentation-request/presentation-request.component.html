@@ -48,6 +48,9 @@
             <mat-slide-toggle formControlName="dcapi">
               Use DC-API instead of QR-Code
             </mat-slide-toggle>
+            <mat-slide-toggle formControlName="x509SanDns">
+              Use the certificate DNS name as the client ID
+            </mat-slide-toggle>
 
             @if (form.get('requestId')?.value && checkingReadiness) {
               <div class="readiness-hint">

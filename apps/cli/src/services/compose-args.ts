@@ -110,6 +110,19 @@ export function buildComposeLogsArgs(
     return args;
 }
 
+export function buildComposePullArgs(service: string | undefined): string[] {
+    const args = ["pull"];
+    if (service !== undefined) {
+        assertServiceName(service);
+        args.push(service);
+    }
+    return args;
+}
+
+export function buildComposeUpArgs(): string[] {
+    return ["up", "-d"];
+}
+
 export function buildComposeRestartArgs(service: string | undefined): string[] {
     const args = ["restart"];
     if (service !== undefined) {
