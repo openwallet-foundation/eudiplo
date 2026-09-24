@@ -24,13 +24,30 @@ export class BaselineMigration1740000000000 implements MigrationInterface {
         // particular, this preserves databases created before migrations were
         // introduced and databases whose migration history was not initialized
         // yet.
-        const tables = await queryRunner.getTables();
-        const migrationsTableName =
-            queryRunner.connection.options.migrationsTableName ?? "migrations";
+        const { options, driver } = queryRunner.connection;
+        // An unscoped PostgreSQL getTables() also returns pg_catalog and
+        // information_schema objects, even for a fresh application database.
+        const tables: { name: string }[] =
+            options.type === "postgres"
+                ? await queryRunner.query(
+                      `SELECT table_name AS name FROM information_schema.tables
+                       WHERE table_schema = $1 AND table_type = 'BASE TABLE'`,
+                      [
+                          options.schema ??
+                              (await queryRunner.getCurrentSchema()),
+                      ],
+                  )
+                : await queryRunner.getTables();
+        const migrationsTableName = driver.parseTableName(
+            options.migrationsTableName ?? "migrations",
+        ).tableName;
+        const metadataTableName = driver.parseTableName(
+            options.metadataTableName ?? "typeorm_metadata",
+        ).tableName;
         const applicationTables = tables.filter(
             (table) =>
                 table.name !== migrationsTableName &&
-                table.name !== "typeorm_metadata" &&
+                table.name !== metadataTableName &&
                 !table.name.startsWith("sqlite_"),
         );
 

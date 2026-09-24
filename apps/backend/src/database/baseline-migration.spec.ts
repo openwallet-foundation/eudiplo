@@ -1,6 +1,6 @@
 import { DataSource, EntitySchema } from "typeorm";
 import { afterEach, describe, expect, test } from "vitest";
-import { BaselineMigration1740000000000 } from "./1740000000000-BaselineMigration.js";
+import { BaselineMigration1740000000000 } from "./migrations/1740000000000-BaselineMigration.js";
 
 const ExampleEntity = new EntitySchema({
     name: "Example",

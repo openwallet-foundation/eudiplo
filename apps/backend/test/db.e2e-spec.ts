@@ -9,8 +9,8 @@ import {
 } from "@testcontainers/postgresql";
 import request from "supertest";
 import { App } from "supertest/types";
+import { DataSource } from "typeorm";
 import { afterAll, beforeAll, describe, expect, test, vi } from "vitest";
-import { AppModule } from "../src/app.module.js";
 
 /**
  * Boots the full NestJS app on an empty database using migrations only, then
@@ -28,6 +28,10 @@ describe("Database boot & health", () => {
             vi.stubEnv("DB_SYNCHRONIZE", "false");
             vi.stubEnv("DB_MIGRATIONS_RUN", "true");
 
+            // ConfigModule captures validated environment variables on import.
+            // Reload the application only after configuring this database.
+            vi.resetModules();
+            const { AppModule } = await import("../src/app.module.js");
             const moduleFixture: TestingModule = await Test.createTestingModule(
                 {
                     imports: [AppModule],
@@ -52,13 +56,30 @@ describe("Database boot & health", () => {
             expect(res.status).toBe(200);
             expect(res.body.status).toBe("ok");
         });
+
+        test("creates the isolated SQLite database using migrations only", async () => {
+            const dataSource = app.get(DataSource);
+            expect(dataSource.options).toMatchObject({
+                type: "better-sqlite3",
+                database: join(databaseFolder, "service.db"),
+                synchronize: false,
+                migrationsRun: true,
+            });
+            await expect(dataSource.showMigrations()).resolves.toBe(false);
+            await expect(
+                dataSource.query('SELECT * FROM "tenant_entity" LIMIT 1'),
+            ).resolves.toBeDefined();
+        });
     });
 
     describe("Postgres", () => {
         let app: INestApplication<App>;
         let postgresContainer: StartedPostgreSqlContainer;
+        let databaseFolder: string;
 
         beforeAll(async () => {
+            databaseFolder = mkdtempSync(join(tmpdir(), "eudiplo-pg-boot-"));
+            vi.stubEnv("FOLDER", databaseFolder);
             vi.stubEnv("DB_SYNCHRONIZE", "false");
             vi.stubEnv("DB_MIGRATIONS_RUN", "true");
             postgresContainer = await new PostgreSqlContainer("postgres:alpine")
@@ -77,6 +98,8 @@ describe("Database boot & health", () => {
             vi.stubEnv("DB_PASSWORD", postgresContainer.getPassword());
             vi.stubEnv("DB_DATABASE", postgresContainer.getDatabase());
 
+            vi.resetModules();
+            const { AppModule } = await import("../src/app.module.js");
             const moduleFixture: TestingModule = await Test.createTestingModule(
                 {
                     imports: [AppModule],
@@ -91,6 +114,9 @@ describe("Database boot & health", () => {
         afterAll(async () => {
             await app?.close();
             await postgresContainer?.stop();
+            if (databaseFolder) {
+                rmSync(databaseFolder, { recursive: true, force: true });
+            }
             vi.unstubAllEnvs();
         });
 
@@ -98,6 +124,22 @@ describe("Database boot & health", () => {
             const res = await request(app.getHttpServer()).get("/health");
             expect(res.status).toBe(200);
             expect(res.body.status).toBe("ok");
+        });
+
+        test("creates the container database using migrations only", async () => {
+            const dataSource = app.get(DataSource);
+            expect(dataSource.options).toMatchObject({
+                type: "postgres",
+                host: postgresContainer.getHost(),
+                port: postgresContainer.getMappedPort(5432),
+                database: postgresContainer.getDatabase(),
+                synchronize: false,
+                migrationsRun: true,
+            });
+            await expect(dataSource.showMigrations()).resolves.toBe(false);
+            await expect(
+                dataSource.query('SELECT * FROM "tenant_entity" LIMIT 1'),
+            ).resolves.toBeDefined();
         });
     });
 });
