@@ -8,9 +8,9 @@ import {
 } from "@nestjs/common";
 import {
     type CreateSchemaMetadataMultipartDto,
-    type SchemaMetadata,
+    type Schema,
     type SchemaMetadataVocabulariesDto,
-    schemaMetadataControllerCreateSchemaMetadata,
+    schemaMetadataControllerCreateSchema,
     schemaMetadataControllerFindAll,
     schemaMetadataControllerFindAllByRelyingParty,
     schemaMetadataControllerFindOne,
@@ -21,7 +21,7 @@ import {
     schemaMetadataControllerListVersions,
     schemaMetadataControllerRemove,
     schemaMetadataControllerSetVersionDeprecation,
-    schemaMetadataControllerUpdateMetadata,
+    schemaMetadataControllerUpdateSchema,
 } from "../generated/index.js";
 import { RegistrarAuthService } from "../registrar-auth.service.js";
 import {
@@ -37,6 +37,7 @@ type SchemaMetadataFilters = {
 type CreateSchemaMetadataRequest = {
     metadata: CreateSchemaMetadataMultipartDto;
     rulebookFile: Blob | File;
+    trustListCertificateFile: Blob | File;
     schemaFiles: Array<Blob | File>;
 };
 
@@ -49,13 +50,14 @@ export class SchemaMetadataService {
     async createSchemaMetadata(
         tenantId: string,
         request: CreateSchemaMetadataRequest,
-    ): Promise<SchemaMetadata> {
+    ): Promise<Schema> {
         const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerCreateSchemaMetadata({
+        const res = await schemaMetadataControllerCreateSchema({
             client,
             body: {
-                metadata: JSON.stringify(request.metadata),
+                schema: JSON.stringify(request.metadata),
                 rulebookFile: request.rulebookFile,
+                trustListCertificateFile: request.trustListCertificateFile,
                 schemaFiles: request.schemaFiles,
             },
         });
@@ -88,7 +90,7 @@ export class SchemaMetadataService {
         return res.data!;
     }
 
-    async getMine(tenantId: string): Promise<SchemaMetadata[]> {
+    async getMine(tenantId: string): Promise<Schema[]> {
         const client = await this.authService.getClient(tenantId);
         const rpId = await this.authService.getRelyingPartyId(tenantId);
         const res = await schemaMetadataControllerFindAllByRelyingParty({
@@ -111,7 +113,7 @@ export class SchemaMetadataService {
     async findAll(
         tenantId: string,
         filters: SchemaMetadataFilters,
-    ): Promise<SchemaMetadata[]> {
+    ): Promise<Schema[]> {
         const client = await this.authService.getClient(tenantId);
         const res = await schemaMetadataControllerFindAll({
             client,
@@ -132,7 +134,7 @@ export class SchemaMetadataService {
         return res.data ?? [];
     }
 
-    async findOne(tenantId: string, id: string): Promise<SchemaMetadata> {
+    async findOne(tenantId: string, id: string): Promise<Schema> {
         const client = await this.authService.getClient(tenantId);
         const res = await schemaMetadataControllerFindOne({
             client,
@@ -151,9 +153,9 @@ export class SchemaMetadataService {
         id: string,
         version: string,
         dto: UpdateSchemaMetadataDto,
-    ): Promise<SchemaMetadata> {
+    ): Promise<Schema> {
         const client = await this.authService.getClient(tenantId);
-        const res = await schemaMetadataControllerUpdateMetadata({
+        const res = await schemaMetadataControllerUpdateSchema({
             client,
             path: { id, version },
             body: dto,
@@ -259,7 +261,7 @@ export class SchemaMetadataService {
         return internal ?? res.data;
     }
 
-    async getLatest(tenantId: string, id: string): Promise<SchemaMetadata> {
+    async getLatest(tenantId: string, id: string): Promise<Schema> {
         const client = await this.authService.getClient(tenantId);
         const res = await schemaMetadataControllerGetLatestVersionInfo({
             client,
@@ -274,10 +276,10 @@ export class SchemaMetadataService {
             );
         }
 
-        return res.data as SchemaMetadata;
+        return res.data as Schema;
     }
 
-    async getVersions(tenantId: string, id: string): Promise<SchemaMetadata[]> {
+    async getVersions(tenantId: string, id: string): Promise<Schema[]> {
         const client = await this.authService.getClient(tenantId);
         const res = await schemaMetadataControllerListVersions({
             client,
@@ -292,7 +294,7 @@ export class SchemaMetadataService {
             );
         }
 
-        return (res.data ?? []) as SchemaMetadata[];
+        return (res.data ?? []) as Schema[];
     }
 
     async deprecateVersion(
@@ -300,7 +302,7 @@ export class SchemaMetadataService {
         id: string,
         version: string,
         dto: DeprecateSchemaMetadataDto,
-    ): Promise<SchemaMetadata> {
+    ): Promise<Schema> {
         const client = await this.authService.getClient(tenantId);
         const res = await schemaMetadataControllerSetVersionDeprecation({
             client,

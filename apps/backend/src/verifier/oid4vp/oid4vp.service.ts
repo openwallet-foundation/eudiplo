@@ -31,8 +31,12 @@ import {
 import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception.js";
 import { PresentationsService } from "../presentations/presentations.service.js";
 import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util.js";
+import { createClientId } from "./client-id.util.js";
 import { AuthorizationResponse } from "./dto/authorization-response.dto.js";
-import { PresentationRequestOptions } from "./dto/presentation-request.dto.js";
+import {
+    ClientIdScheme,
+    PresentationRequestOptions,
+} from "./dto/presentation-request.dto.js";
 
 @Injectable()
 export class Oid4vpService {
@@ -254,7 +258,8 @@ export class Oid4vpService {
                 keyId: presentationConfig.accessKeyChainId ?? undefined,
             });
 
-            const certHash = this.certService.getCertHash(cert);
+            const clientId =
+                session.clientId ?? createClientId(cert, this.certService);
 
             // Use transaction_data from session (which may have been overridden) or fall back to config
             const transaction_data =
@@ -288,7 +293,7 @@ export class Oid4vpService {
             const request = {
                 payload: {
                     response_type: "vp_token",
-                    client_id: "x509_hash:" + certHash,
+                    client_id: clientId,
                     response_uri: `${host}/presentations/${walletFacingId}/oid4vp`,
                     response_mode: session.useDcApi
                         ? "dc_api.jwt"
@@ -327,7 +332,9 @@ export class Oid4vpService {
                     state: session.useDcApi ? undefined : walletFacingId,
                     transaction_data,
                     //TODO: check if this value is correct accroding to https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-aud-of-a-request-object
-                    aud: "https://self-issued.me/v2",
+                    aud: clientId.startsWith(`${ClientIdScheme.X509_SAN_DNS}:`)
+                        ? host
+                        : "https://self-issued.me/v2",
                     exp: Math.floor(Date.now() / 1000) + lifeTime,
                     iat: Math.floor(Date.now() / 1000),
                     verifier_info: regCert
@@ -419,10 +426,14 @@ export class Oid4vpService {
             keyId: presentationConfig.accessKeyChainId ?? undefined,
         });
 
-        const certHash = this.certService.getCertHash(cert);
+        const clientId = createClientId(
+            cert,
+            this.certService,
+            values.clientIdScheme,
+        );
 
         const params = {
-            client_id: "x509_hash:" + certHash,
+            client_id: clientId,
             request_uri: `${this.configService.getOrThrow<string>("PUBLIC_URL")}/presentations/${walletNonce}/oid4vp/request`,
             request_uri_method,
         };
@@ -451,7 +462,6 @@ export class Oid4vpService {
 
         if (fresh) {
             const host = this.configService.getOrThrow<string>("PUBLIC_URL");
-            const clientId = "x509_hash:" + certHash;
             const responseUri = useDcApi
                 ? undefined
                 : `${host}/presentations/${walletNonce}/oid4vp`;
@@ -503,6 +513,7 @@ export class Oid4vpService {
                 requestUrl: `openid4vp://?${queryString}`,
                 expiresAt,
                 useDcApi,
+                clientId,
             });
         }
 

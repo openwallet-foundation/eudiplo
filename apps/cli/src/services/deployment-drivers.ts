@@ -23,6 +23,7 @@ import {
     buildComposeListServicesArgs,
     buildComposeLogsArgs,
     buildComposePsArgs,
+    buildComposePullArgs,
     buildComposeRestartArgs,
     parseServiceList,
 } from "./compose-args.js";
@@ -113,6 +114,13 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
                 options,
             );
         },
+        async pull(options) {
+            const service = await resolveComposeService(options);
+            return runCompose(
+                [...buildComposePullArgs(service), ...options.args],
+                options,
+            );
+        },
         async restart(options) {
             assertWritable(options);
             const service = await resolveComposeService(options);
@@ -191,7 +199,7 @@ export const drivers: Record<DeploymentTarget, DeploymentDriver> = {
  * cluster they do not operate, so a mutation is refused outright rather than
  * attempted and left to fail on permissions.
  */
-function assertWritable({
+export function assertWritable({
     instance,
     instanceName,
 }: DriverCommandOptions): void {
@@ -744,7 +752,7 @@ export function unsupportedCommand(
     return `${command} is not available for ${target} deployments`;
 }
 
-async function runCompose(
+export async function runCompose(
     args: string[],
     { instance, context }: DriverCommandOptions,
 ): Promise<number> {
