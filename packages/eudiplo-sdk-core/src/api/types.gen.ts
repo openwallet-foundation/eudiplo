@@ -1276,9 +1276,9 @@ export type KeyChainImportDto = {
      */
     id?: string;
     /**
-     * The private key in JWK format.
+     * The private key in JWK format. Provide keyPem instead for PKCS#8 PEM input.
      */
-    key: EcJwk & {
+    key?: EcJwk & {
         /**
          * Key type (for example EC).
          */
@@ -1308,6 +1308,10 @@ export type KeyChainImportDto = {
          */
         kid?: string;
     };
+    /**
+     * PKCS#8 PEM-encoded EC private key. Provide key instead for JWK input.
+     */
+    keyPem?: string;
     /**
      * Human-readable description.
      */
@@ -2211,13 +2215,13 @@ export type TrustAuthorityEntry = {
     /**
      * Trust framework type (ignored when trustListId is set)
      */
-    frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+    frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation' | 'x509';
     /**
-     * URI of the trust list or trust anchor (ignored when trustListId is set)
+     * Trust list URI for etsi_tl or base64-encoded DER root certificate for x509 (ignored when trustListId is set)
      */
     value?: string;
     /**
-     * Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.
+     * Optional verification material for external trusted authorities (for example a JWK). Required for etsi_tl and omitted for x509 root certificate anchors. For internal trust-list URLs, EUDIPLO resolves verification material from the database.
      */
     verificationMethod?: {
         [key: string]: unknown;
@@ -2265,7 +2269,7 @@ export type SchemaMetaConfig = {
      */
     trustedAuthorities?: Array<{
         trustListId?: string;
-        frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+        frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation' | 'x509';
         value?: string;
         verificationMethod?: {
             [key: string]: unknown;
@@ -3161,7 +3165,7 @@ export type TrustAuthorityDto = {
     /**
      * Type of trust framework
      */
-    frameworkType: 'etsi_tl';
+    frameworkType: 'etsi_tl' | 'x509';
     /**
      * URI or identifier for the trust list / authority
      */
@@ -3189,7 +3193,7 @@ export type AccessCertificateRefDto = {
     id: string;
     relyingPartyId: string;
     certificate: string;
-    revoked: string;
+    revoked: string | null;
     createdAt: string;
 };
 
@@ -3246,6 +3250,22 @@ export type SchemaMetadataResponseDto = {
      * Issuer offer entries for this schema metadata. Each entry provides a credential offer URL and user-facing description.
      */
     issuerOffers: Array<IssuerOfferEntryDto>;
+    /**
+     * Current publication lifecycle state.
+     */
+    publicationStatus: 'published' | 'superseded' | 'withdrawn' | 'disputed' | 'suppressed';
+    /**
+     * Whether this entry was backfilled from the legacy publication model.
+     */
+    legacyPublication: boolean;
+    /**
+     * Current verification status for referenced assets.
+     */
+    referenceVerificationStatus: 'pending' | 'verified' | 'warning' | 'failed';
+    /**
+     * Verification checks performed for referenced assets.
+     */
+    referenceVerificationChecks: Array<unknown>;
     /**
      * The original signed JWT
      */
@@ -4607,7 +4627,7 @@ export type SignSchemaMetaConfigDto = {
         }>;
         trustedAuthorities?: Array<{
             trustListId?: string;
-            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation' | 'x509';
             value?: string;
             verificationMethod?: {
                 [key: string]: unknown;
@@ -4645,7 +4665,7 @@ export type SignVersionSchemaMetaConfigDto = {
         }>;
         trustedAuthorities?: Array<{
             trustListId?: string;
-            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation';
+            frameworkType?: 'aki' | 'etsi_tl' | 'openid_federation' | 'x509';
             value?: string;
             verificationMethod?: {
                 [key: string]: unknown;
@@ -5264,6 +5284,21 @@ export type StoredObjectResponseDto = {
     metadata?: {
         [key: string]: string;
     };
+};
+
+export type ConfigImportRunEntity = {
+    id: string;
+    tenantId: string;
+    mode: string;
+    planFingerprint: string | null;
+    status: 'running' | 'completed' | 'failed' | 'interrupted';
+    activeTenant: string | null;
+    operations: Array<{
+        [key: string]: unknown;
+    }>;
+    revision: number;
+    createdAt: string;
+    updatedAt: string;
 };
 
 export type ConfigResourceMetadataEntity = {
@@ -7759,9 +7794,13 @@ export type ConfigPortabilityControllerPlanArchiveResponse = ConfigPortabilityCo
 export type ConfigPortabilityControllerImportData = {
     body?: never;
     path?: never;
-    query?: {
+    query: {
         mode?: string;
         confirmReplace?: string;
+        /**
+         * Fingerprint from the reviewed plan
+         */
+        planFingerprint: string;
     };
     url: '/api/config-bundles/import';
 };
@@ -7777,9 +7816,13 @@ export type ConfigPortabilityControllerImportResponse = ConfigPortabilityControl
 export type ConfigPortabilityControllerImportArchiveData = {
     body?: never;
     path?: never;
-    query?: {
+    query: {
         mode?: string;
         confirmReplace?: string;
+        /**
+         * Fingerprint from the reviewed plan
+         */
+        planFingerprint: string;
     };
     url: '/api/config-bundles/import/archive';
 };
@@ -7791,6 +7834,51 @@ export type ConfigPortabilityControllerImportArchiveResponses = {
 };
 
 export type ConfigPortabilityControllerImportArchiveResponse = ConfigPortabilityControllerImportArchiveResponses[keyof ConfigPortabilityControllerImportArchiveResponses];
+
+export type ConfigPortabilityControllerOperationsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/config-bundles/operations';
+};
+
+export type ConfigPortabilityControllerOperationsResponses = {
+    200: Array<ConfigImportRunEntity>;
+};
+
+export type ConfigPortabilityControllerOperationsResponse = ConfigPortabilityControllerOperationsResponses[keyof ConfigPortabilityControllerOperationsResponses];
+
+export type ConfigPortabilityControllerOperationData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/config-bundles/operations/{id}';
+};
+
+export type ConfigPortabilityControllerOperationResponses = {
+    200: ConfigImportRunEntity;
+};
+
+export type ConfigPortabilityControllerOperationResponse = ConfigPortabilityControllerOperationResponses[keyof ConfigPortabilityControllerOperationResponses];
+
+export type ConfigPortabilityControllerAcknowledgeInterruptionData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: {
+        confirmWorkerStopped?: string;
+    };
+    url: '/api/config-bundles/operations/{id}/acknowledge-interruption';
+};
+
+export type ConfigPortabilityControllerAcknowledgeInterruptionResponses = {
+    201: ConfigImportRunEntity;
+};
+
+export type ConfigPortabilityControllerAcknowledgeInterruptionResponse = ConfigPortabilityControllerAcknowledgeInterruptionResponses[keyof ConfigPortabilityControllerAcknowledgeInterruptionResponses];
 
 export type ConfigPortabilityControllerUpgradeData = {
     body?: never;

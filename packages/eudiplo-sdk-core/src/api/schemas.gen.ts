@@ -2977,6 +2977,7 @@ export const KeyChainImportDtoSchema = {
             type: 'string'
         },
         key: {
+            description: 'The private key in JWK format. Provide keyPem instead for PKCS#8 PEM input.',
             properties: {
                 kty: {
                     type: 'string',
@@ -3008,12 +3009,16 @@ export const KeyChainImportDtoSchema = {
                 }
             },
             additionalProperties: false,
-            description: 'The private key in JWK format.',
             allOf: [
                 {
                     $ref: '#/components/schemas/EcJwk'
                 }
             ]
+        },
+        keyPem: {
+            description: 'PKCS#8 PEM-encoded EC private key. Provide key instead for JWK input.',
+            type: 'string',
+            minLength: 1
         },
         description: {
             description: 'Human-readable description.',
@@ -3070,7 +3075,6 @@ export const KeyChainImportDtoSchema = {
         }
     },
     required: [
-        'key',
         'usageType'
     ],
     additionalProperties: false
@@ -4860,13 +4864,14 @@ export const TrustAuthorityEntrySchema = {
             enum: [
                 'aki',
                 'etsi_tl',
-                'openid_federation'
+                'openid_federation',
+                'x509'
             ],
             description: 'Trust framework type (ignored when trustListId is set)'
         },
         value: {
             type: 'string',
-            description: 'URI of the trust list or trust anchor (ignored when trustListId is set)'
+            description: 'Trust list URI for etsi_tl or base64-encoded DER root certificate for x509 (ignored when trustListId is set)'
         },
         verificationMethod: {
             anyOf: [
@@ -4881,7 +4886,7 @@ export const TrustAuthorityEntrySchema = {
                     type: 'string'
                 }
             ],
-            description: 'Optional verification material for external trusted authorities (for example a JWK). For internal trust-list URLs, EUDIPLO resolves verification material from the database.',
+            description: 'Optional verification material for external trusted authorities (for example a JWK). Required for etsi_tl and omitted for x509 root certificate anchors. For internal trust-list URLs, EUDIPLO resolves verification material from the database.',
             oneOf: [
                 {
                     type: 'object',
@@ -4978,7 +4983,8 @@ export const SchemaMetaConfigSchema = {
                         enum: [
                             'aki',
                             'etsi_tl',
-                            'openid_federation'
+                            'openid_federation',
+                            'x509'
                         ]
                     },
                     value: {
@@ -6888,11 +6894,12 @@ export const TrustAuthorityDtoSchema = {
             description: 'Unique identifier for this trust authority entry'
         },
         frameworkType: {
-            type: 'string',
-            description: 'Type of trust framework',
             enum: [
-                'etsi_tl'
-            ]
+                'etsi_tl',
+                'x509'
+            ],
+            type: 'string',
+            description: 'Type of trust framework'
         },
         value: {
             type: 'string',
@@ -6942,7 +6949,10 @@ export const AccessCertificateRefDtoSchema = {
             type: 'string'
         },
         revoked: {
-            type: 'string'
+            type: [
+                'string',
+                'null'
+            ]
         },
         createdAt: {
             type: 'string'
@@ -7052,6 +7062,35 @@ export const SchemaMetadataResponseDtoSchema = {
                 $ref: '#/components/schemas/IssuerOfferEntryDto'
             }
         },
+        publicationStatus: {
+            enum: [
+                'published',
+                'superseded',
+                'withdrawn',
+                'disputed',
+                'suppressed'
+            ],
+            type: 'string',
+            description: 'Current publication lifecycle state.'
+        },
+        legacyPublication: {
+            type: 'boolean',
+            description: 'Whether this entry was backfilled from the legacy publication model.'
+        },
+        referenceVerificationStatus: {
+            enum: [
+                'pending',
+                'verified',
+                'warning',
+                'failed'
+            ],
+            type: 'string',
+            description: 'Current verification status for referenced assets.'
+        },
+        referenceVerificationChecks: {
+            type: 'array',
+            description: 'Verification checks performed for referenced assets.'
+        },
         signedJwt: {
             type: 'string',
             description: 'The original signed JWT'
@@ -7106,6 +7145,10 @@ export const SchemaMetadataResponseDtoSchema = {
         'schemaURIs',
         'trustedAuthorities',
         'issuerOffers',
+        'publicationStatus',
+        'legacyPublication',
+        'referenceVerificationStatus',
+        'referenceVerificationChecks',
         'signedJwt',
         'issuer',
         'issuedAt',
@@ -10014,7 +10057,8 @@ export const SignSchemaMetaConfigDtoSchema = {
                                 enum: [
                                     'aki',
                                     'etsi_tl',
-                                    'openid_federation'
+                                    'openid_federation',
+                                    'x509'
                                 ]
                             },
                             value: {
@@ -10141,7 +10185,8 @@ export const SignVersionSchemaMetaConfigDtoSchema = {
                                 enum: [
                                     'aki',
                                     'etsi_tl',
-                                    'openid_federation'
+                                    'openid_federation',
+                                    'x509'
                                 ]
                             },
                             value: {
@@ -11265,6 +11310,71 @@ export const StoredObjectResponseDtoSchema = {
     },
     required: [
         'key'
+    ]
+} as const;
+
+export const ConfigImportRunEntitySchema = {
+    type: 'object',
+    properties: {
+        id: {
+            type: 'string'
+        },
+        tenantId: {
+            type: 'string'
+        },
+        mode: {
+            type: 'string'
+        },
+        planFingerprint: {
+            type: [
+                'string',
+                'null'
+            ]
+        },
+        status: {
+            enum: [
+                'running',
+                'completed',
+                'failed',
+                'interrupted'
+            ],
+            type: 'string'
+        },
+        activeTenant: {
+            type: [
+                'string',
+                'null'
+            ]
+        },
+        operations: {
+            type: 'array',
+            items: {
+                type: 'object'
+            }
+        },
+        revision: {
+            type: 'number'
+        },
+        createdAt: {
+            format: 'date-time',
+            type: 'string'
+        },
+        updatedAt: {
+            format: 'date-time',
+            type: 'string'
+        }
+    },
+    required: [
+        'id',
+        'tenantId',
+        'mode',
+        'planFingerprint',
+        'status',
+        'activeTenant',
+        'operations',
+        'revision',
+        'createdAt',
+        'updatedAt'
     ]
 } as const;
 
