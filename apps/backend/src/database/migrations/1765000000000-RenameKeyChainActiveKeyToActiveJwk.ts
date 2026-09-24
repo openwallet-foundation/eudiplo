@@ -14,7 +14,7 @@ export class RenameKeyChainActiveKeyToActiveJwk1765000000000
     implements MigrationInterface
 {
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Skip on fresh installs where TypeORM sync has already created
+        // Skip on fresh installs where the baseline has already created
         // the renamed columns directly from the current entity. Both
         // SQLite (3.25+) and PostgreSQL support `RENAME COLUMN`.
         const table = await queryRunner.getTable("key_chain");

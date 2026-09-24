@@ -79,9 +79,9 @@ export const DB_VALIDATION_SCHEMA = Joi.object({
         .description("Passphrase for encrypted DB_SSL_KEY_PATH private key")
         .meta({ group: "database", order: 60 }),
     DB_SYNCHRONIZE: Joi.boolean()
-        .default(true)
+        .default(false)
         .description(
-            "Enable TypeORM schema synchronization. Set to false in production after initial setup and rely on migrations instead.",
+            "Enable TypeORM schema synchronization. Intended for development only; fresh installations are created by migrations.",
         )
         .meta({ group: "database", order: 70 }),
     DB_MIGRATIONS_RUN: Joi.boolean()

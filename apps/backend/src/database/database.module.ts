@@ -19,7 +19,7 @@ import { buildPostgresSslOptions } from "./postgres-ssl-options.js";
                 );
 
                 // Default synchronize to false for production safety
-                // Use DB_SYNCHRONIZE=true only for development or fresh installs
+                // Use DB_SYNCHRONIZE=true only for local development
                 const synchronize =
                     configService.getOrThrow<boolean>("DB_SYNCHRONIZE");
 

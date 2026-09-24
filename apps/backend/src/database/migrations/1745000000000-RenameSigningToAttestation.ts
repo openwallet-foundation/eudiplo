@@ -9,7 +9,7 @@ export class RenameSigningToAttestation1745000000000
     name = "RenameSigningToAttestation1745000000000";
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // On a fresh database, key_usage_entity won't exist yet — TypeORM synchronize will create the full schema.
+        // On a fresh database, the baseline creates the current schema, so this legacy table won't exist.
         const table = await queryRunner.getTable("key_usage_entity");
         if (!table) {
             console.log(

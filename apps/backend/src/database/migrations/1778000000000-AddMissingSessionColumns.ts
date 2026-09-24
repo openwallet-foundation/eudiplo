@@ -9,12 +9,11 @@ import { MigrationInterface, QueryRunner, TableColumn } from "typeorm";
  *   `QueryFailedError: column Session.responseEncryptionPrivateJwk does not exist`.
  * - `authorizationServerId`, the same omission on the issuance path.
  *
- * Fresh installs come up with `DB_SYNCHRONIZE=true`, so TypeORM creates the
- * columns and the gap is invisible there. Deployments that upgrade with
- * migrations only — the setting `data-source.ts` hardcodes for production —
- * end up with a schema the code cannot query.
+ * On fresh installs the baseline creates the columns from the current entity
+ * metadata, so the gap is invisible there. Deployments that upgrade with
+ * migrations only still need this explicit repair.
  *
- * Idempotent, so it is a no-op where synchronize already created them.
+ * Idempotent, so it is a no-op where the columns already exist.
  */
 export class AddMissingSessionColumns1778000000000
     implements MigrationInterface
