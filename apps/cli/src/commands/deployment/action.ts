@@ -7,7 +7,7 @@ import type { CliConfig, CommandContext, ParsedArgs } from "../../types.js";
 
 export async function runDriverCommand(
     config: CliConfig,
-    command: "up" | "down" | "logs" | "ps" | "restart",
+    command: "up" | "down" | "logs" | "ps" | "restart" | "pull",
     parsed: ParsedArgs,
     context: CommandContext,
 ): Promise<number> {
