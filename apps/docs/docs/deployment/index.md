@@ -68,6 +68,12 @@ EUDIPLO supports built-in TLS termination for serving HTTPS directly without a r
 
 See: [TLS Configuration Guide](tls)
 
+## Load Testing
+
+Use the k6 suite to validate a local stack or a dedicated self-hosted test deployment before production rollout.
+
+See: [Load Testing Guide](load-testing)
+
 ## Production Checklist
 
 Before deploying to production, ensure you:

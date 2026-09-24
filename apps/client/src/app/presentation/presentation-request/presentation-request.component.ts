@@ -24,6 +24,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { EditorComponent, extractSchema } from '../../utils/editor/editor.component';
 import { transactionDataArraySchema } from '../../utils/schemas';
 
+type PresentationRequestWithClientIdScheme = PresentationRequest & {
+  clientIdScheme?: 'x509_hash' | 'x509_san_dns';
+};
+
 @Component({
   selector: 'app-presentation-request',
   imports: [
@@ -70,6 +74,7 @@ export class PresentationRequestComponent implements OnInit {
     this.form = new FormGroup({
       requestId: new FormControl('', Validators.required),
       dcapi: new FormControl(false),
+      x509SanDns: new FormControl(false),
       transaction_data: new FormControl(undefined),
     });
   }
@@ -179,9 +184,10 @@ export class PresentationRequestComponent implements OnInit {
         }
       }
 
-      const offerRequest: PresentationRequest = {
+      const offerRequest: PresentationRequestWithClientIdScheme = {
         requestId: formValue.requestId,
         response_type: formValue.dcapi ? 'dc-api' : 'uri',
+        ...(formValue.x509SanDns && { clientIdScheme: 'x509_san_dns' }),
         ...(transactionData && { transaction_data: transactionData }),
       };
 
@@ -215,6 +221,9 @@ export class PresentationRequestComponent implements OnInit {
   resetForm(): void {
     this.form.reset({
       requestId: '',
+      dcapi: false,
+      x509SanDns: false,
+      transaction_data: undefined,
     });
     this.readinessError = null;
     this.isReadyToGenerate = false;

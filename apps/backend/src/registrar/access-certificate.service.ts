@@ -38,12 +38,7 @@ export class AccessCertificateService {
         const relyingPartyId =
             await this.authService.getRelyingPartyId(tenantId);
 
-        const host = new URL(
-            this.configService.getOrThrow<string>("PUBLIC_URL"),
-        ).hostname;
-
-        const publicKey = await this.keyChainService.getPublicKey(
-            "pem",
+        const csr = await this.keyChainService.createCertificateSigningRequest(
             tenantId,
             dto.keyId,
         );
@@ -51,8 +46,8 @@ export class AccessCertificateService {
         const res = await accessCertificateControllerRegister({
             client,
             body: {
-                publicKey,
-                dns: [host],
+                displayName: `Access certificate for ${dto.keyId}`,
+                csr,
                 rpId: relyingPartyId,
             },
         });

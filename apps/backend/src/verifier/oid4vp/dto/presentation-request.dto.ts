@@ -20,6 +20,14 @@ export const ResponseType = {
 export type ResponseTypeValue =
     (typeof ResponseType)[keyof typeof ResponseType];
 
+export const ClientIdScheme = {
+    X509_HASH: "x509_hash",
+    X509_SAN_DNS: "x509_san_dns",
+} as const;
+
+export type ClientIdSchemeValue =
+    (typeof ClientIdScheme)[keyof typeof ClientIdScheme];
+
 /**
  * DTO for the presentation request containing the response type and request ID.
  */
@@ -36,6 +44,9 @@ const PresentationRequestSchema = z
         expected_origin: z.string().optional(),
         transaction_data: z.array(TransactionDataSchema).optional(),
         skewSeconds: z.number().min(0).optional(),
+        clientIdScheme: z
+            .enum([ClientIdScheme.X509_HASH, ClientIdScheme.X509_SAN_DNS])
+            .optional(),
     })
     .strict();
 
@@ -53,6 +64,7 @@ interface PresentationRequestData {
     expected_origin?: string;
     transaction_data?: z.infer<typeof TransactionDataSchema>[];
     skewSeconds?: number;
+    clientIdScheme?: ClientIdSchemeValue;
 }
 
 @ApiExtraModels(WebhookConfig, TransactionData)
@@ -102,6 +114,15 @@ export class PresentationRequest
      * If provided, this overrides the presentation configuration for the created session.
      */
     skewSeconds?: number;
+
+    /**
+     * Client identifier scheme for the OID4VP request. Defaults to x509_hash.
+     */
+    @ApiPropertyOptional({
+        enum: ClientIdScheme,
+        default: ClientIdScheme.X509_HASH,
+    })
+    clientIdScheme?: ClientIdSchemeValue;
 }
 
 export type PresentationRequestOptions = Pick<
@@ -111,6 +132,7 @@ export type PresentationRequestOptions = Pick<
     | "expected_origin"
     | "transaction_data"
     | "skewSeconds"
+    | "clientIdScheme"
 > & {
     session?: string;
 };

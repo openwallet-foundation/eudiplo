@@ -87,27 +87,6 @@ export class SchemaMetadataSubmissionService {
         );
     }
 
-    private toPublicJwk(
-        jwk?: Record<string, unknown>,
-    ): Record<string, unknown> | undefined {
-        if (!jwk || typeof jwk !== "object") {
-            return undefined;
-        }
-        const { d, p, q, dp, dq, qi, oth, k, ...publicJwk } = jwk as Record<
-            string,
-            unknown
-        >;
-        void d;
-        void p;
-        void q;
-        void dp;
-        void dq;
-        void qi;
-        void oth;
-        void k;
-        return publicJwk;
-    }
-
     private parseInternalTrustListRef(
         value: string,
     ): { tenantId: string; trustListId: string } | undefined {
@@ -143,20 +122,77 @@ export class SchemaMetadataSubmissionService {
                 ref.tenantId,
                 trustList.keyChainId,
             );
-            const publicKeyJwk = this.toPublicJwk(
-                keyChain.activeJwk as Record<string, unknown> | undefined,
+            const x509Certificate = this.toBase64Der(
+                keyChain.activeCertificate,
             );
-            if (!publicKeyJwk) {
+            if (!x509Certificate) {
                 return undefined;
             }
 
             return {
-                type: "JsonWebKey2020",
-                publicKeyJwk,
+                type: "X509Certificate",
+                x509Certificate,
             };
         } catch {
             return undefined;
         }
+    }
+
+    private toBase64Der(certificate: string): string | undefined {
+        const base64 = certificate
+            .replaceAll("-----BEGIN CERTIFICATE-----", "")
+            .replaceAll("-----END CERTIFICATE-----", "")
+            .replace(/\s/g, "");
+
+        if (
+            !base64 ||
+            !/^[A-Za-z0-9+/]*={0,2}$/.test(base64) ||
+            base64.length % 4 !== 0
+        ) {
+            return undefined;
+        }
+
+        return base64;
+    }
+
+    private toPemCertificate(base64Der: string): string {
+        const lines = base64Der.match(/.{1,64}/g) ?? [];
+        return `-----BEGIN CERTIFICATE-----\n${lines.join("\n")}\n-----END CERTIFICATE-----\n`;
+    }
+
+    private trustListCertificateFile(
+        trustedAuthorities: Array<Record<string, unknown>>,
+    ): Blob | File {
+        for (const authority of trustedAuthorities) {
+            const certificate =
+                authority.frameworkType === "x509"
+                    ? authority.value
+                    : (
+                          authority.verificationMethod as
+                              | Record<string, unknown>
+                              | undefined
+                      )?.x509Certificate;
+
+            if (typeof certificate !== "string") {
+                continue;
+            }
+
+            const base64Der = this.toBase64Der(certificate);
+            if (!base64Der) {
+                continue;
+            }
+
+            const pem = this.toPemCertificate(base64Der);
+            return typeof File === "function"
+                ? new File([pem], "trust-list-certificate.pem", {
+                      type: "application/x-pem-file",
+                  })
+                : new Blob([pem], { type: "application/x-pem-file" });
+        }
+
+        throw new BadRequestException(
+            "At least one trusted authority must provide an X.509 certificate for the registrar.",
+        );
     }
 
     private parseVerificationMethod(
@@ -207,6 +243,24 @@ export class SchemaMetadataSubmissionService {
         entry: TrustedAuthorityInput,
         index: number,
     ): Promise<Record<string, unknown>> {
+        if (entry.frameworkType === "x509") {
+            if (!entry.value || !this.toBase64Der(entry.value)) {
+                throw new BadRequestException(
+                    `trustedAuthorities[${index}].value must be a base64-encoded DER X.509 certificate for x509 authorities.`,
+                );
+            }
+            if (entry.verificationMethod) {
+                throw new BadRequestException(
+                    `trustedAuthorities[${index}].verificationMethod must be omitted for x509 authorities.`,
+                );
+            }
+
+            return {
+                frameworkType: "x509",
+                value: this.toBase64Der(entry.value),
+            };
+        }
+
         if (entry.trustListId) {
             const trustList = await this.trustListService.findOne(
                 tenantId,
@@ -222,12 +276,12 @@ export class SchemaMetadataSubmissionService {
                 tenantId,
                 trustList.keyChainId,
             );
-            const publicKeyJwk = this.toPublicJwk(
-                keyChain.activeJwk as Record<string, unknown> | undefined,
+            const x509Certificate = this.toBase64Der(
+                keyChain.activeCertificate,
             );
-            if (!publicKeyJwk) {
+            if (!x509Certificate) {
                 throw new BadRequestException(
-                    `Trust list ${entry.trustListId} key chain has no active key.`,
+                    `Trust list ${entry.trustListId} key chain has no active certificate.`,
                 );
             }
 
@@ -239,8 +293,8 @@ export class SchemaMetadataSubmissionService {
                 frameworkType: "etsi_tl",
                 value: `${publicUrl}/issuers/${tenantId}/trust-list/${trustList.id}`,
                 verificationMethod: {
-                    type: "JsonWebKey2020",
-                    publicKeyJwk,
+                    type: "X509Certificate",
+                    x509Certificate,
                 },
             };
         }
@@ -670,6 +724,8 @@ export class SchemaMetadataSubmissionService {
                     trustedAuthorities,
                 ),
                 rulebookFile,
+                trustListCertificateFile:
+                    this.trustListCertificateFile(trustedAuthorities),
                 schemaFiles: schemaEntries.map((entry) => entry.file),
             },
         );
@@ -755,6 +811,8 @@ export class SchemaMetadataSubmissionService {
                     trustedAuthorities,
                 ),
                 rulebookFile,
+                trustListCertificateFile:
+                    this.trustListCertificateFile(trustedAuthorities),
                 schemaFiles: schemaEntries.map((entry) => entry.file),
             },
         );

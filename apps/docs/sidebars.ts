@@ -83,6 +83,7 @@ const sidebars: SidebarsConfig = {
         'deployment/cli',
         'deployment/server-setup-cookbook',
         'deployment/configuration-validation',
+        'deployment/load-testing',
         'deployment/environment-variables',
         'deployment/production',
       ],

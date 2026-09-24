@@ -72,10 +72,17 @@ export class KeyChainImportDto extends createZodDto(KeyChainImportSchema) {
     })
     id?: string;
 
-    @ApiProperty({
-        description: "The private key in JWK format.",
+    @ApiPropertyOptional({
+        description:
+            "The private key in JWK format. Provide keyPem instead for PKCS#8 PEM input.",
     })
-    key!: EcJwk;
+    key?: EcJwk;
+
+    @ApiPropertyOptional({
+        description:
+            "PKCS#8 PEM-encoded EC private key. Provide key instead for JWK input.",
+    })
+    keyPem?: string;
 
     @ApiPropertyOptional({
         description: "Human-readable description.",

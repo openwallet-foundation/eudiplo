@@ -7,7 +7,8 @@ import type {
     UpdateSchemaMetadataDto as GeneratedUpdateSchemaMetadataDto,
     IssuerOfferEntry,
     MetadataSchema,
-    SchemaMetadata,
+    ReferenceVerificationCheck,
+    Schema,
     TrustAuthority,
 } from "../../generated/index.js";
 
@@ -181,7 +182,7 @@ export class SchemaMetadataVocabulariesDto {
 // Response DTOs
 // ─────────────────────────────────────────────────────────────────────────────
 
-type MetadataSchemaBase = Omit<MetadataSchema, "schemaMetadata">;
+type MetadataSchemaBase = Omit<MetadataSchema, "schema">;
 
 export class MetadataSchemaDto implements MetadataSchemaBase {
     @ApiProperty({ description: "Unique identifier for this schema entry" })
@@ -209,7 +210,7 @@ export class MetadataSchemaDto implements MetadataSchemaBase {
     integrity?: string;
 }
 
-type TrustAuthorityBase = Omit<TrustAuthority, "schemaMetadata">;
+type TrustAuthorityBase = Omit<TrustAuthority, "schema">;
 
 export class TrustAuthorityDto implements TrustAuthorityBase {
     @ApiProperty({
@@ -219,9 +220,9 @@ export class TrustAuthorityDto implements TrustAuthorityBase {
 
     @ApiProperty({
         description: "Type of trust framework",
-        enum: ["etsi_tl"],
+        enum: ["etsi_tl", "x509"],
     })
-    frameworkType!: "etsi_tl";
+    frameworkType!: "etsi_tl" | "x509";
 
     @ApiProperty({
         description: "URI or identifier for the trust list / authority",
@@ -252,8 +253,8 @@ export class AccessCertificateRefDto implements AccessCertificateRefBase {
     @ApiProperty()
     certificate!: string;
 
-    @ApiProperty()
-    revoked!: string;
+    @ApiProperty({ nullable: true })
+    revoked!: string | null;
 
     @ApiProperty()
     createdAt!: string;
@@ -280,7 +281,7 @@ export class IssuerOfferEntryDto implements IssuerOfferEntry {
  * upstream payloads through unchanged.
  */
 type SchemaMetadataResponseBase = Omit<
-    SchemaMetadata,
+    Schema,
     "schemaURIs" | "trustedAuthorities" | "signerCertificate"
 > & {
     schemaURIs: MetadataSchemaDto[];
@@ -365,6 +366,36 @@ export class SchemaMetadataResponseDto implements SchemaMetadataResponseBase {
         type: [IssuerOfferEntryDto],
     })
     issuerOffers!: IssuerOfferEntryDto[];
+
+    @ApiProperty({
+        enum: [
+            "published",
+            "superseded",
+            "withdrawn",
+            "disputed",
+            "suppressed",
+        ],
+        description: "Current publication lifecycle state.",
+    })
+    publicationStatus!: Schema["publicationStatus"];
+
+    @ApiProperty({
+        description:
+            "Whether this entry was backfilled from the legacy publication model.",
+    })
+    legacyPublication!: boolean;
+
+    @ApiProperty({
+        enum: ["pending", "verified", "warning", "failed"],
+        description: "Current verification status for referenced assets.",
+    })
+    referenceVerificationStatus!: Schema["referenceVerificationStatus"];
+
+    @ApiProperty({
+        description: "Verification checks performed for referenced assets.",
+        type: "array",
+    })
+    referenceVerificationChecks!: ReferenceVerificationCheck[];
 
     @ApiProperty({ description: "The original signed JWT" })
     signedJwt!: string;

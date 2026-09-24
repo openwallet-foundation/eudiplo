@@ -1,5 +1,10 @@
 import { createHash } from "node:crypto";
-import { Injectable, Logger, NotFoundException } from "@nestjs/common";
+import {
+    BadRequestException,
+    Injectable,
+    Logger,
+    NotFoundException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as x509 from "@peculiar/x509";
 import { KeyChainEntity } from "../entities/key-chain.entity.js";
@@ -306,6 +311,24 @@ export class CertService {
             .digest();
         // Return as base64url (no padding)
         return hash.toString("base64url");
+    }
+
+    /**
+     * Return the first DNS Subject Alternative Name from the leaf certificate.
+     */
+    getCertDnsName(cert: CertificateInfo): string {
+        const leafPem = cert.crt[0];
+        const x509Cert = new x509.X509Certificate(leafPem);
+        const san = x509Cert.getExtension(x509.SubjectAlternativeNameExtension);
+        const dnsName = san?.names.items.find((name) => name.type === x509.DNS);
+
+        if (!dnsName) {
+            throw new BadRequestException(
+                "x509_san_dns requires a DNS Subject Alternative Name in the leaf certificate",
+            );
+        }
+
+        return dnsName.value;
     }
 
     private toBase64Der(pem: string): string {
