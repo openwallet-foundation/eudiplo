@@ -257,14 +257,14 @@ export const mdocContext: MdocContext = {
     },
 
     x509: {
-        getIssuerNameField: (input: {
+        getSubjectNameField: (input: {
             certificate: Uint8Array;
             field: string;
         }) => {
             const certificate = new X509Certificate(
                 toBuffer(input.certificate),
             );
-            return certificate.issuerName.getField(input.field);
+            return certificate.subjectName.getField(input.field);
         },
         getPublicKey: async (input: {
             certificate: Uint8Array;
