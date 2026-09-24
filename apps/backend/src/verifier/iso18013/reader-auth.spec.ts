@@ -84,7 +84,10 @@ describe("ISO 18013-7 reader authentication", () => {
         // checks the ES256 signature — resolves only on a byte-exact match.
         await expect(
             readerAuth.verify(
-                { readerAuthentication: { sessionTranscript, itemsRequest } },
+                {
+                    readerAuthentication: { sessionTranscript, itemsRequest },
+                    trustedCertificates: certificateChain,
+                },
                 mdocContext,
             ),
         ).resolves.not.toThrow();
