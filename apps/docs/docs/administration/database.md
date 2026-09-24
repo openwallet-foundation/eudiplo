@@ -105,8 +105,8 @@ Starting from v2.0.0, EUDIPLO uses TypeORM migrations for database schema manage
 
 By default, migrations run automatically when the service starts (`DB_MIGRATIONS_RUN=true`). The migration system detects whether you're running a fresh installation or upgrading:
 
-- **Fresh installation**: The baseline migration creates all tables from scratch
-- **Upgrading**: If tables already exist (from previous `synchronize: true` mode), the baseline migration is skipped, and only new migrations are applied
+- **Fresh installation**: The baseline migration creates all tables from the current entity metadata
+- **Upgrading**: If application tables already exist (for example from the previous `synchronize: true` mode), the baseline leaves the schema and data untouched, and only pending incremental migrations are applied
 
 ### Configuration
 
@@ -117,6 +117,8 @@ By default, migrations run automatically when the service starts (`DB_MIGRATIONS
 
 :::warning[Production Safety]
 Never set `DB_SYNCHRONIZE=true` in production. Use migrations instead to ensure controlled schema updates.
+Fresh installations do not require a separate synchronization start; leave
+`DB_SYNCHRONIZE=false` and `DB_MIGRATIONS_RUN=true` from the first start onward.
 :::
 
 ### Manual Migration Commands
