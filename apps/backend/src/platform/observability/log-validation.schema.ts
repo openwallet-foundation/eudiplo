@@ -35,6 +35,12 @@ export const LOG_VALIDATION_SCHEMA = Joi.object({
             "Redact sensitive request/response fields from logs. Disable only for debugging.",
         )
         .meta({ group: "log", order: 28 }),
+    LOG_OID4VP_DECRYPTED_RESPONSE: Joi.boolean()
+        .default(false)
+        .description(
+            "Log decrypted OID4VP authorization responses. Disable by default because responses may contain personal data and credentials.",
+        )
+        .meta({ group: "log", order: 29 }),
     LOG_ENABLE_SESSION_LOGGER: Joi.boolean()
         .default(false)
         .description("Enable session flow logging")

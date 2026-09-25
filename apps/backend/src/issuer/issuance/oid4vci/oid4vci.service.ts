@@ -1847,6 +1847,10 @@ export class Oid4vciService {
                 "application/openid4vci-credential-request+jwt",
             );
 
+        this.logger.debug(
+            `[${tenantId}] OID4VCI credential request received: encrypted=${isJwtContentType || typeof rawBody === "string"}, contentType=${contentType || "missing"}`,
+        );
+
         let requestBody: CredentialRequest;
         if (isJwtContentType || typeof rawBody === "string") {
             // Encrypted credential request - need to read and decrypt JWE
@@ -1966,6 +1970,10 @@ export class Oid4vciService {
             parsedCredentialRequest,
         );
 
+        this.logger.debug(
+            `[${tenantId}] OID4VCI credential request parsed: proofType=${parsedProofs.proofType}, proofCount=${parsedProofs.values.length}, hasResponseEncryption=${!!requestBody.credential_response_encryption}`,
+        );
+
         // Verify access token
         const tokenPayload = await this.verifyResourceAccessToken(
             req,
@@ -2038,6 +2046,10 @@ export class Oid4vciService {
                 issuanceConfig,
             );
 
+        this.logger.debug(
+            `[${tenantId}] OID4VCI credential request authorized: sessionId=${session.id}, credentialConfigurationId=${credentialConfigurationId}, deferred=${!!claimsResult?.deferred}, externalAs=${isExternalAsToken}, chainedAs=${isChainedAsToken}`,
+        );
+
         // Add session context to span for trace correlation
         const span = this.traceService.getSpan();
         span?.setAttributes({
@@ -2107,6 +2119,10 @@ export class Oid4vciService {
                 issuanceSetId,
             );
 
+            this.logger.debug(
+                `[${tenantId}] OID4VCI credentials issued: sessionId=${session.id}, credentialConfigurationId=${credentialConfigurationId}, credentialCount=${credentials.length}`,
+            );
+
             // Update session with notification
             const notificationId = v4();
             session.notifications.push({
@@ -2132,6 +2148,9 @@ export class Oid4vciService {
                     parsedCredentialRequest.credentialResponseEncryption,
             });
         } catch (error) {
+            this.logger.warn(
+                `[${tenantId}] OID4VCI credential request failed: sessionId=${session.id}, credentialConfigurationId=${credentialConfigurationId}, error=${error instanceof Error ? error.message : "unknown"}`,
+            );
             this.auditLogger.logFlowError(logContext, error as Error, {
                 credentialConfigurationId,
             });

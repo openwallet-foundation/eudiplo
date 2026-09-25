@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { trace } from "@opentelemetry/api";
 import { Response } from "express";
-import { Observable, tap } from "rxjs";
+import { Observable } from "rxjs";
 
 /**
  * Interceptor that adds the OpenTelemetry trace ID to HTTP response headers.
@@ -23,15 +23,13 @@ import { Observable, tap } from "rxjs";
 export class TraceIdInterceptor implements NestInterceptor {
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const response = context.switchToHttp().getResponse<Response>();
+        const span = trace.getActiveSpan();
 
-        return next.handle().pipe(
-            tap(() => {
-                const span = trace.getActiveSpan();
-                if (span) {
-                    const traceId = span.spanContext().traceId;
-                    response.setHeader("X-Trace-Id", traceId);
-                }
-            }),
-        );
+        if (span) {
+            const traceId = span.spanContext().traceId;
+            response.setHeader("X-Trace-Id", traceId);
+        }
+
+        return next.handle();
     }
 }
