@@ -30,8 +30,8 @@ import {
 } from "../presentations/dto/auth-response.dto.js";
 import { IncompletePresentationException } from "../presentations/exceptions/incomplete-presentation.exception.js";
 import { PresentationsService } from "../presentations/presentations.service.js";
-import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util.js";
 import { createClientId } from "./client-id.util.js";
+import { applyTrustedAuthoritiesPolicy } from "./dcql-trusted-authorities.util.js";
 import { AuthorizationResponse } from "./dto/authorization-response.dto.js";
 import {
     ClientIdScheme,
@@ -535,6 +535,18 @@ export class Oid4vpService {
     async getResponse(body: AuthorizationResponse, nonce: string) {
         const session = await this.resolveSessionByNonce(nonce);
 
+        this.logger.debug(
+            {
+                sessionId: session.id,
+                tenantId: session.tenantId,
+                hasEncryptedResponse: !!body.response,
+                hasWalletError: !!body.error,
+                hasState: !!body.state,
+                useDcApi: session.useDcApi,
+            },
+            "Received OID4VP authorization response",
+        );
+
         // Enforce single-use validation: prevent replay attacks
         // Check if this presentation request has already been consumed
         if (session.consumed) {
@@ -622,6 +634,17 @@ export class Oid4vpService {
                     | undefined,
             );
 
+        this.logger.debug(
+            {
+                sessionId: session.id,
+                responseKeys:
+                    decrypted && typeof decrypted === "object"
+                        ? Object.keys(decrypted)
+                        : [],
+            },
+            "Decrypted OID4VP authorization response",
+        );
+
         // Validate decrypted response against the Zod schema
 
         const parsed = AuthResponseSchema.safeParse(decrypted);
@@ -632,10 +655,16 @@ export class Oid4vpService {
         }
 
         const res: AuthResponse = parsed.data;
-        this.logger.trace(
-            { decryptedResponse: decrypted },
-            "[TRACE] Decrypted OID4VP authorization response",
-        );
+        if (
+            this.configService.getOrThrow<boolean>(
+                "LOG_OID4VP_DECRYPTED_RESPONSE",
+            )
+        ) {
+            this.logger.trace(
+                { decryptedResponse: decrypted },
+                "[TRACE] Decrypted OID4VP authorization response",
+            );
+        }
 
         //for dc api the state is no longer included in the res, see: https://openid.net/specs/openid-4-verifiable-presentations-1_0.html#name-request
 
@@ -671,6 +700,15 @@ export class Oid4vpService {
                 res,
                 presentationConfig,
                 session,
+            );
+
+            this.logger.debug(
+                {
+                    sessionId: session.id,
+                    credentialCount: credentials?.length ?? 0,
+                    hasWebhook: !!webhook,
+                },
+                "Verified OID4VP presentation response",
             );
 
             this.auditLogger.logCredentialVerification(
@@ -776,6 +814,15 @@ export class Oid4vpService {
 
             return {};
         } catch (error: any) {
+            this.logger.warn(
+                {
+                    sessionId: session.id,
+                    errorName: error?.name,
+                    errorMessage: error?.message,
+                },
+                "OID4VP presentation response processing failed",
+            );
+
             // Structured verification failures carry a machine-readable code and
             // a short, safe message; keep the verbose reason to logs/audit only.
             const structured =
